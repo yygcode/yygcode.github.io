@@ -9,13 +9,13 @@
 
 * Windows平台
 ** Sharex
-**** 介绍
+*** 介绍
 ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上. 支持截屏/录屏, 并
 进行各种各样的分享. 界面支持多语言. [[https://en.wikipedia.org/wiki/ShareX][WIKI]]和[[https://zhuanlan.zhihu.com/p/19627720][知乎]]有介绍.
 - 代码: [[https://github.com/ShareX/ShareX][github]]
 - 主页: https://getsharex.com/
 - 下载: [[https://getsharex.com/downloads/][Downloads]]
-**** 配置
+*** 配置
 在[[https://getsharex.com/][主页]]上可找到完整的介绍文档. 录屏配置主菜单位于:
 - 英文界面: Task settings->Capture->Screen recorder->Screen recorder options
 - 中文界面: 任务设置->截图->屏幕记录->屏幕录制选项
@@ -26,14 +26,37 @@ ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上.
 默认热键=Shift+PrtSc=启动/停止录屏, 启动时拖曳鼠标修改录屏区域. 点击菜单
 "截图文件夹..."查看历史截图和录屏文件. 热键和录屏文件夹均可在主界面下找到配置
 菜单.
-**** 我的配置:
+*** 我的配置:
 - FFmpeg路径: %MyDocuments%\ShareX\Tools\ffmpeg.exe
 - 录屏路径: G:\screencast
 - 截图路径: G:\screenshot
-**** DONE Q&A
+*** DONE Q&A
 - 设置录屏路径和截图路径无效
   关闭ShareX界面时, ShareX依然在后台运行. 在任务栏右键ShareX图标, 选择"退出",
   然后再次启动.
 - 什么是GDI Grab
   录屏选项中, 视频源可以选择"GDI Grab". GDI Grab是Windows系统下基于GDI的录屏设备.
   参考[[https://www.ffmpeg.org/ffmpeg-devices.html#gdigrab][FFmpeg GDI Grab]].
+* Linux平台
+=下述软件在Debian 8下使用验证=
+** Kazam
+*** 介绍
+Kazam是自由/开源软件, 使用python开发.
+- 主页: [[https://launchpad.net/kazam][Launchpad kazam]]
+- 源码: [[https://github.com/sconts/kazam][github]]
+- APT安装: =$ sudo apt-get install kazam=
+*** 配置
+kazam配置简单. 主界面和File->Preferences有少量不言自明的选项. Seconds to wait
+before caputuring是启动录屏前的等待时间, 我一般配置为3s.
+
+kazam支持快捷键, 但不可配置(或许将来版本会添加, 积极跟进[[https://github.com/sconts/kazam][github]])
+|--------------+---------------------|
+| Shortcuts    | Meaning             |
+|--------------+---------------------|
+| Super-Ctrl-r | Start screencasting |
+| Super-Ctrl-f | Stop screencasting  |
+| Super-Ctrl-p | Pause screencasting |
+| Super-Ctrl-s | Show kazam          |
+| Super-Ctrl-q | Quit kazam          |
+|--------------+---------------------|
+键盘上标记为Win键即为Super键.
