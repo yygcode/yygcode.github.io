@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-07-23 Sun 12:12 -->
+<!-- 2017-07-23 Sun 16:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Screencast Software/录屏软件</title>
@@ -11,6 +11,28 @@
 <meta name="author" content="U-HOME\yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -62,20 +84,39 @@ ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上.
 </div></li>
 <li><a id="orgaeb63f1"></a>配置<br /><div class="outline-text-5" id="text-2-1-0-2">
 <p>
-在<a href="https://getsharex.com/">主页</a>上可找到完整的介绍文档. 默认使用=Shift+PrtSc=组合键启动/停止录屏. 启动时
-拖曳鼠标修改录屏区域. 录屏默认配置未包含音频, 按照下述配置打开:
+在<a href="https://getsharex.com/">主页</a>上可找到完整的介绍文档. 录屏配置主菜单位于:
 </p>
 <ul class="org-ul">
-<li>EN
+<li>英文界面: Task settings-&gt;Capture-&gt;Screen recorder-&gt;Screen recorder options</li>
+<li>中文界面: 任务设置-&gt;截图-&gt;屏幕记录-&gt;屏幕录制选项</li>
+</ul>
+
+<p>
+录屏使用<a href="https://www.ffmpeg.org/">ffmpeg</a>实现, 菜单"录屏配置-&gt;FFmpeg路径"下点击&#x2026;设置或下载FFmpeg. 默认
+配置未包含音频, 在录屏配置菜单'音频源'中选择麦克风或适当的音频源.
+</p>
+
+<p>
+默认热键=Shift+PrtSc=启动/停止录屏, 启动时拖曳鼠标修改录屏区域. 点击菜单
+"截图文件夹&#x2026;"查看历史截图和录屏文件. 热键和录屏文件夹均可在主界面下找到配置
+菜单.
+</p>
+</div></li>
+<li><a id="org257668b"></a>我的配置:<br /><div class="outline-text-5" id="text-2-1-0-3">
 <ul class="org-ul">
-<li>Task settings-&gt;Capture-&gt;Screen recorder-&gt;Screen recorder options</li>
-<li>In 'Audio source' select MIC or  appropriate audio source.</li>
-</ul></li>
-<li>CN
+<li>FFmpeg路径: %MyDocuments%\ShareX\Tools\ffmpeg.exe</li>
+<li>录屏路径: G:\screencast</li>
+<li>截图路径: G:\screenshot</li>
+</ul>
+</div></li>
+<li><a id="orgd0a9313"></a><span class="done DONE">DONE</span> Q&amp;A<br /><div class="outline-text-5" id="text-2-1-0-4">
 <ul class="org-ul">
-<li>任务设置-&gt;截图-&gt;屏幕记录-&gt;屏幕录制选项</li>
-<li>在'音频源'中选择麦克风或适当的音频源</li>
-</ul></li>
+<li>设置录屏路径和截图路径无效
+关闭ShareX界面时, ShareX依然在后台运行. 在任务栏右键ShareX图标, 选择"退出",
+然后再次启动.</li>
+<li>什么是GDI Grab
+录屏选项中, 视频源可以选择"GDI Grab". GDI Grab是Windows系统下基于GDI的录屏设备.
+参考<a href="https://www.ffmpeg.org/ffmpeg-devices.html#gdigrab">FFmpeg GDI Grab</a>.</li>
 </ul>
 </div></li></ol>
 </div>
