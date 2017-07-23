@@ -1,11 +1,11 @@
 #+TITLE: Screencast Software/录屏软件
 
 -----
-* 功能介绍                                                        :screencast:screen capture:
+* 功能介绍                 :screencast:screen_capture:
 录屏软件(screencast or screen capture)用来录制计算机屏幕输出, 一般也会包含音频
 输出或麦克输入. 完整的名词解释参见[[https://en.wikipedia.org/wiki/Screencast][WIKI]]. 录屏在技术分享和在线教领域有广泛使用.
 
-本文介绍Windows/Linux两个系统下开源/自由的优秀录屏软件.
+本文介绍Windows/Linux系统下开源/自由的优秀录屏软件.
 
 * Windows平台
 ** Sharex
@@ -37,7 +37,7 @@ ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上.
 - 什么是GDI Grab
   录屏选项中, 视频源可以选择"GDI Grab". GDI Grab是Windows系统下基于GDI的录屏设备.
   参考[[https://www.ffmpeg.org/ffmpeg-devices.html#gdigrab][FFmpeg GDI Grab]].
-* Linux平台
+* Linux平台                :kazam:vokoscreen:obs:studio:SimpleScreenRecorder:
 =下述软件在Debian 8下使用验证=
 ** Kazam
 *** 介绍
@@ -60,3 +60,31 @@ kazam支持快捷键, 但不可配置(或许将来版本会添加, 积极跟进[
 | Super-Ctrl-q | Quit kazam          |
 |--------------+---------------------|
 键盘上标记为Win键即为Super键.
+
+** vokoscreen
+*** 介绍
+Vokoscreen是自由/开源软件, 基于QT开发, 易于使用. 支持视频摄像和录屏同时进行.
+- 主页: [[http://www.kohaupt-online.de/hp/][vokoscreen]]
+- 代码: [[https://github.com/vkohaupt/vokoscreen][github]]
+- APT安装: =$ sudo apt-get install vokoscreen=
+*** 配置
+除了文件保存路径和摄像头开启选项, 基本没有其他可配的.
+
+vokoscreen支持快捷键, 但不可配置.
+|----------------+---------------------|
+| Shortcuts      | Meaning             |
+|----------------+---------------------|
+| Ctrl-Shift-F10 | Start screencasting |
+| Ctrl-Shift-F11 | Stop screencasting  |
+| Ctrl-Shift-F12 | Pause screencasting |
+|----------------+---------------------|
+** TODO Obs-Studio
+- 安装: Debian不支持obs-studio二进制安装, 添加Ubuntu PPA失败. 手动编译方法
+  参考[[https://github.com/jp9000/obs-studio/wiki/Install-Instructions#debian-based-build-directions][Build Instructions]].
+- Unfinished
+
+** TODO SimpleScreenRecorder
+SimpleScreenRecorder是一款功能强大/特性丰富的录屏软件.
+
+** 有用的链接
+- [[https://itsfoss.com/best-linux-screen-recorders/][best linux screen recorders]]
