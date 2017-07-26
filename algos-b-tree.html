@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-07-26 Wed 22:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>B Tree</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">B Tree</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga2ed370">1. 概述</a></li>
+<li><a href="#orgbb4ffb5">2. 应用</a></li>
+<li><a href="#org0a5c11a">3. 实现</a>
+<ul>
+<li><a href="#orgfd4a4f0">3.1. 定义</a></li>
+<li><a href="#org7c272eb">3.2. 基本操作</a></li>
+<li><a href="#org5adab97">3.3. 产品化实现</a></li>
+</ul>
+</li>
+<li><a href="#org23255a1">4. 外部链接</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga2ed370" class="outline-2">
+<h2 id="orga2ed370"><span class="section-number-2">1</span> 概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+相比于内存, 访问磁盘/磁带等块设备时, 大块数据读写有更好的性能. 为高效使用这类
+设备, 应组织数据结构, 将多份数据放入一个块中. B树是解决此问题的算法统称, 具体
+实现时, 会基于应用场景进行优化. B+ Tree是典型代表.
+</p>
+
+<p>
+访问<a href="storage-disk-test-data.html">磁盘测试数据</a>了解磁盘测试数据.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb4ffb5" class="outline-2">
+<h2 id="orgbb4ffb5"><span class="section-number-2">2</span> 应用</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+B Tree广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如文件系统,
+数据库, 以及存储自精简/压缩/重删等特性中. Btrfs?
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0a5c11a" class="outline-2">
+<h2 id="org0a5c11a"><span class="section-number-2">3</span> 实现</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-orgfd4a4f0" class="outline-3">
+<h3 id="orgfd4a4f0"><span class="section-number-3">3.1</span> 定义</h3>
+</div>
+<div id="outline-container-org7c272eb" class="outline-3">
+<h3 id="org7c272eb"><span class="section-number-3">3.2</span> 基本操作</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>创建</li>
+<li>插入</li>
+<li>删除</li>
+<li>搜索</li>
+<li>销毁</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5adab97" class="outline-3">
+<h3 id="org5adab97"><span class="section-number-3">3.3</span> 产品化实现</h3>
+</div>
+</div>
+
+<div id="outline-container-org23255a1" class="outline-2">
+<h2 id="org23255a1"><span class="section-number-2">4</span> 外部链接</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>B Tree: <a href="https://en.wikipedia.org/wiki/B-tree">https://en.wikipedia.org/wiki/B-tree</a></li>
+<li>B+ Tree: <a href="https://en.wikipedia.org/wiki/B%2B_tree">https://en.wikipedia.org/wiki/B+_tree</a></li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>
