@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-07-29 Sat 01:23 -->
+<!-- 2017-07-29 Sat 01:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>B Tree</title>
@@ -62,7 +62,7 @@
 <p>
 相比于内存, 访问磁盘/磁带等块设备时, 大块数据读写有更好的性能. 为高效使用这类
 设备, 应组织数据结构, 将多份数据放入一个块中. B树是解决此问题的算法统称, 具体
-实现时, 会基于应用场景进行优化, B+/B*树是典型代表.
+实现时, 会基于应用场景进行优化, <a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>)是典型代表.
 </p>
 
 <p>
@@ -75,8 +75,8 @@
 <h2 id="orgbb4ffb5"><span class="section-number-2">2</span> 应用</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-B Tree广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如文件系统,
-数据库, 以及存储自精简/压缩/重删等特性中.
+B树(或其变形)广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如
+文件系统, 数据库, 以及存储自精简/压缩/重删等特性中.
 </p>
 </div>
 </div>
@@ -89,30 +89,35 @@ B Tree广泛应用于有大量元数据需要保存到外部存储介质的应�
 <div class="outline-text-3" id="text-3-1">
 <p>
 读过资料中, B树最完整清晰定义来自<a href="http://www-cs-faculty.stanford.edu/~uno/taocp.html">TAOCP</a>:
+</p>
+
+<blockquote>
+<p>
 1970年, R.Bayer和E.McCreight发现了一种利用多路树分支进行外部查找的新方法,
 马克.考夫曼也几乎在同一时间独立地发现了这一方法(未发表). 他们的思想基于一种
 被称为B树的通用新型数据结构, 有可能利用相对简单的算法来查找和更新大型数据文件,
 并能在最差情况下保证效率.
 </p>
+</blockquote>
 
 <p>
-m阶B树是满足以下性质的树:
+\(m\)阶B树是满足以下性质的树:
 </p>
 <ol class="org-ol">
-<li>每个节点最多有m个子节点;</li>
-<li>除了根节点及叶子外, 每个节点至少有m/2个子节点;</li>
-<li>根节点至少有2个子节点(除非它是一个叶子);</li>
+<li>每个节点最多有\(m\)个子节点;</li>
+<li>除了根节点及叶子外, 每个节点至少有\(m/2\)个子节点;</li>
+<li>根节点至少有\(2\)个子节点(除非它是一个叶子);</li>
 <li>所有叶子都出现在同一级别, 并且不携带任何信息;</li>
-<li>具有k个子节点的非叶节点包含k-1个键.</li>
+<li>具有k个子节点的非叶节点包含\(k-1\)个键.</li>
 </ol>
 
 <p>
-R.Bayer和McCreight仅考虑了m为奇数的情景, 因此m阶B树实际指2m+1阶B树.
+R.Bayer和McCreight仅考虑了\(m\)为奇数的情景, 因此m阶B树实际指\(2m+1\)阶B树.
 </p>
 
 <p>
-B树插入节点导致分割时, 是由顶部向上生长的, 而不是在底部向下延伸, 这是因为B树仅在
-分割根节点时才增高. 这正是此思想的美妙之处.
+B树插入节点导致分割时, 是由顶部向上生长的, 而不是在底部向下延伸, 这是因为
+B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </p>
 </div>
 </div>
@@ -121,7 +126,7 @@ B树插入节点导致分割时, 是由顶部向上生长的, 而不是在底部
 <h3 id="orged04ed4"><span class="section-number-3">3.2</span> 运行时间上限</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-给定\(m\)阶\(B\)树, 假定存在\(N\)个键, \(N+1\)个叶子出现在\(l\)级, 则
+给定\(m\)阶B树, 假定存在\(N\)个键, \(N+1\)个叶子出现在\(l\)级, 则
 \(1, 2, 3, \dots{}\)级上的节点数至少为
 \(2, \lceil{}m/2\rceil, \lceil{}m/2\rceil^2, \dots{}\) 因此
 \[N+1 \ge 2\lceil{}m/2\rceil^{l-1} \]
