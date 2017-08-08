@@ -1,0 +1,25 @@
+#+Title: Memory Barrier/内存屏障
+#+Date: 2017-08-06
+
+* 问题定义
+内存屏障, 又称内存栅栏, 是一种内存访问操作中的同步指令, 其功能是保证此指令之前的
+所有内存读写操作都执行后, 此指令之后的读写操作才会发起. 
+
+Intel CPU有mfence, lfence, sfence
+- sfence
+#+BEGIN_QUOTE
+The SFENCE (Store Fence) instruction controls write ordering by creating a fence
+for memory store operations. This instruction guarantees that the result of
+every store instruction that precedes the store fence in program order is
+globally visible before any store instruction that follows the fence. The SFENCE
+instruction provides an efficient way of ensuring ordering between procedures
+that produce weakly-ordered data and procedures that consume that data.
+#+END_QUOTE
+- mfence ::
+- lfence ::
+
+* 相关资料
+- [[http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html][Intel Processors Architecture Software Developer Manuals]]
+- [[http://blog.csdn.net/qb_2008/article/details/6840593][linux内核中的内存屏障]]
+- [[http://www.wowotech.net/kernel_synchronization/Why-Memory-Barriers.html][Why Memory Barriers? 中文翻译(上)]]
+- 
