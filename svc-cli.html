@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-10-29 Sun 22:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCS Command execute results</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">MCS Command execute results</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org368292b">1. 集群时间设置: time/zone</a></li>
+<li><a href="#org41e8cda">2. 查看和更新: lslicense &amp; chlicense</a></li>
+<li><a href="#org0fbdef0">3. 显示集群属性: lssystem</a></li>
+<li><a href="#org4cf87b5">4. 密码维护: setpwdreset</a></li>
+<li><a href="#orgb0732d7">5. 查看dumps</a></li>
+<li><a href="#org906b181">6. 重新扫瞄发现MDisks</a></li>
+<li><a href="#org161beff">7. 存储池</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org368292b" class="outline-2">
+<h2 id="org368292b"><span class="section-number-2">1</span> 集群时间设置: time/zone</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>显示当前时区</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:Cluster_100.2.34.2:superuser&gt;showtimezone
+id  timezone
+211 Asia/Hong_Kong
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>查看系统可用时区</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:Cluster_100.2.34.2:superuser&gt;lstimezones
+id  timezone
+0   Africa/Abidjan
+1   Africa/Accra
+2   Africa/Addis_Ababa
+3   Africa/Algiers
+4   Africa/Asmera
+...
+246 Asia/Shanghai
+247 Asia/Singapore
+248 Asia/Taipei
+...
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>显示系统时间
+<ul class="org-ul">
+<li>此命名不支持自动补齐(root登录, 查看/compass/bin了解更多不补齐命令)</li>
+</ul></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;svqueryclock
+Mon Sep  4 16:46:37 HKT 2017
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>设置时区</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">settimezone
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>设置时间</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">setsystemtime -time MMDDHHmmYYYY
+# comment: month day hour minutes year
+# other: MMDDHHmmYYYY.ss(seconds)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41e8cda" class="outline-2">
+<h2 id="org41e8cda"><span class="section-number-2">2</span> 查看和更新: lslicense &amp; chlicense</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>lslicense查看当前License(许可证)设置</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lslicense
+used_local 0.01
+used_remote 0.00
+used_virtualization 0.00
+license_local 0
+license_remote 0
+license_virtualization 0
+license_physical_disks 0
+license_physical_local off
+license_physical_remote off
+used_compression_capacity 0.00
+license_compression_capacity 0
+license_compression_enclosures 0
+license_in_tier 0
+license_cloud_enclosures 0
+scu_ratio_flash 1.00
+scu_ratio_enterprise 1.18
+scu_ratio_nearline 4.00
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>chlicense设置系统License(许可证)</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell"># HOW TO?
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0fbdef0" class="outline-2">
+<h2 id="org0fbdef0"><span class="section-number-2">3</span> 显示集群属性: lssystem</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lssystem -delim :
+id:0000000027C27034
+name:C90
+location:local
+partnership:
+total_mdisk_capacity:24.4TB
+space_in_mdisk_grps:24.4TB
+space_allocated_to_vdisks:0.00MB
+total_free_space:24.4TB
+total_vdiskcopy_capacity:0.00MB
+total_used_capacity:0.00MB
+total_overallocation:0
+total_vdisk_capacity:0.00MB
+total_allocated_extent_capacity:0.00MB
+statistics_status:on
+statistics_frequency:15
+cluster_locale:en_US
+time_zone:211 Asia/Hong_Kong
+code_level:3.1.6.10 (build 133.18.1709012304000)
+console_IP:10.151.12.90:443
+id_alias:0000000027C27034
+ac_link_tolerance:300
+ac_inter_cluster_delay_simulation:0
+ac_intra_cluster_delay_simulation:0
+ac_max_host_delay:5
+email_reply:1@1.com
+email_contact:1
+email_contact_primary:111111
+email_contact_alternate:
+email_contact_location:1
+email_contact2:
+email_contact2_primary:
+email_contact2_alternate:
+email_state:stopped
+inventory_mail_interval:7
+cluster_ntp_IP_address:
+cluster_isns_IP_address:
+iscsi_auth_method:none
+iscsi_chap_secret:
+auth_service_configured:no
+auth_service_enabled:no
+auth_service_url:
+auth_service_user_name:
+auth_service_pwd_set:no
+auth_service_cert_set:no
+auth_service_type:tip
+relationship_bandwidth_limit:25
+tier:tier0_flash
+tier_capacity:0.00MB
+tier_free_capacity:0.00MB
+tier:tier1_flash
+tier_capacity:0.00MB
+tier_free_capacity:0.00MB
+tier:tier_enterprise
+tier_capacity:0.00MB
+tier_free_capacity:0.00MB
+tier:tier_nearline
+tier_capacity:24.41TB
+tier_free_capacity:24.41TB
+in_tier_acceleration:off
+has_nas_key:no
+layer:storage
+rc_buffer_size:48
+compression_active:no
+compression_virtual_capacity:0.00MB
+compression_compressed_capacity:0.00MB
+compression_uncompressed_capacity:0.00MB
+cache_prefetch:on
+email_organization:1
+email_machine_address:1
+email_machine_city:1
+email_machine_state:XX
+email_machine_zip:11111
+email_machine_country:CN
+total_drive_raw_capacity:32.75TB
+compression_destage_mode:off
+local_fc_port_mask:1111111111111111111111111111111111111111111111111111111111111111
+partner_fc_port_mask:1111111111111111111111111111111111111111111111111111111111111111
+high_temp_mode:off
+topology:standard
+topology_status:
+rc_auth_method:none
+vdisk_protection_time:15
+vdisk_protection_enabled:no
+product_name:Inspur AS5500G2
+odx:off
+max_replication_delay:0
+partnership_exclusion_threshold:315
+gen1_compatibility_mode_enabled:no
+inspur_customer:
+inspur_component:SANVCNSW1
+inspur_country:
+tier0_flash_compressed_data_used:0.00MB
+tier1_flash_compressed_data_used:0.00MB
+tier_enterprise_compressed_data_used:0.00MB
+tier_nearline_compressed_data_used:0.00MB
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4cf87b5" class="outline-2">
+<h2 id="org4cf87b5"><span class="section-number-2">4</span> 密码维护: setpwdreset</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;setpwdreset -show
+Password status: [1]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb0732d7" class="outline-2">
+<h2 id="orgb0732d7"><span class="section-number-2">5</span> 查看dumps</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>lsdumps</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsdumps
+id filename
+0  reinst.000000.trc
+1  000000.trc
+2  inst.170807.trc
+3  mcs.config.cron.log_6577501-1
+4  mcs.config.cron.sh_6577501-1
+5  mcs.config.cron.xml_6577501-1
+6  dump.6577501-1.170808.083608
+7  dump.6577501-1.170808.104202
+8  inst.170808.trc
+9  inst.170809.trc
+10 mcs.config.cron.sh_6577501-2
+11 mcs.config.cron.log_6577501-2
+12 mcs.config.cron.bak_6577501-2
+13 mcs.config.cron.xml_6577501-2
+14 dump.6577501-1.170811.141924
+15 inst.170811.trc
+16 dump.6577501-1.170815.112234
+17 inst.170816.trc
+18 inst.170818.trc
+19 livedump.keymgr.6577501-1.170821.120041
+20 livedump.ietd.6577501-1.170821.120041
+21 livedump.keymgr.6577501-1.170821.120509
+22 livedump.ietd.6577501-1.170821.120509
+23 dump.6577501-1.170821.120525
+24 dump.6577501-1.170821.120059
+25 livedump.ietd.6577501-1.170821.121154
+26 livedump.keymgr.6577501-1.170821.121154
+27 dump.6577501-1.170821.121210
+28 dump.6577501-1.170821.142111
+29 livedump.keymgr.6577501-1.170821.143206
+30 livedump.ietd.6577501-1.170821.143206
+31 dump.6577501-1.170821.143222
+32 livedump.ietd.6577501-1.170821.145402
+33 livedump.keymgr.6577501-1.170821.145402
+34 livedump.ietd.6577501-1.170821.150054
+35 livedump.keymgr.6577501-1.170821.150054
+36 dump.6577501-1.170821.150158
+37 dump.6577501-1.170821.152314
+38 livedump.ietd.6577501-1.170821.152819
+39 livedump.keymgr.6577501-1.170821.152819
+40 dump.6577501-1.170821.152835
+41 dump.6577501-1.170821.145421
+42 inst.170821.trc
+43 inst.170822.trc
+44 keymgr.6577501-1.trc.old
+45 dump.6577501-1.170824.095831
+46 cloudd.6577501-1.trc.old
+47 dump.6577501-1.170828.103554
+48 livedump.keymgr.6577501-1.170828.135633
+49 livedump.ietd.6577501-1.170828.135633
+50 dump.6577501-1.170828.135656
+51 livedump.ietd.6577501-1.170828.142239
+52 livedump.keymgr.6577501-1.170828.142239
+53 dump.6577501-1.170828.142301
+54 dump.6577501-1.170828.163131
+55 dump.6577501-1.170828.164804
+56 dump.6577501-1.170828.172548
+57 inst.170828.trc
+58 livedump.keymgr.6577501-1.170829.111431
+59 livedump.ietd.6577501-1.170829.111431
+60 ethernet.6577501-1.stats
+61 dump.6577501-1.170829.111449
+62 inst.170829.trc
+63 cl_debug.trc
+64 inst.170830.trc
+65 inst.170831.trc
+66 bios_update.2.log
+67 pex86.2.log
+68 svc_config_push.6577501-1.trc
+69 bios_update.1.log
+70 pex86.1.log
+71 endd.trc.old
+72 inst.170901.trc
+73 fsck_test
+74 pex86.0.log
+75 bios_update.0.log
+76 boot.6577501-1.trc
+77 ec_makevpd.6577501-1.trc
+78 Techport_DHCP_DNS.old.trc
+79 keymgr.kmip.6577501-1.trc
+80 Techport_DHCP_DNS.log
+81 6577501-1.trc.old
+82 rtc.racemqB_log.txt.6577501-1.trc
+83 rtc.racemqA_log.txt.6577501-1.trc
+84 racemqA_log.txt
+85 racemqB_log.txt
+86 ethernet.6577501-1.trc
+87 keymgr.6577501-1.trc
+88 cloudd.6577501-1.trc
+89 endd.trc
+90 6577501-1.trc
+</pre>
+</div>
+<ul class="org-ul">
+<li>用prefix指定特定目录</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsdumps -prefix /dumps/audit
+id  filename
+0   auditlog_0_499_20170823155544_0000000026627034
+1   auditlog_500_999_20170823160723_0000000026627034
+2   auditlog_1000_1499_20170823160836_0000000026627034
+3   auditlog_1500_1999_20170823161113_0000000026627034
+4   auditlog_2000_2499_20170823161844_0000000026627034
+5   auditlog_2500_2999_20170823170115_0000000026627034
+6   auditlog_3000_3499_20170823214348_0000000026627034
+7   auditlog_3500_3999_20170823224521_0000000026627034
+8   auditlog_4000_4499_20170824001312_0000000026627034
+9   auditlog_4500_4999_20170824015534_0000000026627034
+10  auditlog_5000_5499_20170824035200_0000000026627034
+11  auditlog_5500_5999_20170824054846_0000000026627034
+12  auditlog_6000_6499_20170824073055_0000000026627034
+13  auditlog_6500_6999_20170824084533_0000000026627034
+14  auditlog_7000_7499_20170824095148_0000000026627034
+15  auditlog_7500_7999_20170824102125_0000000026627034
+16  auditlog_8000_8499_20170824102806_0000000026627034
+17  auditlog_8500_8999_20170824103435_0000000026627034
+18  auditlog_9000_9499_20170824104210_0000000026627034
+19  auditlog_9500_9999_20170824104900_0000000026627034
+20  auditlog_10000_10499_20170824105542_0000000026627034
+21  auditlog_10500_10999_20170824110230_0000000026627034
+22  auditlog_11000_11499_20170824110933_0000000026627034
+23  auditlog_11500_11999_20170824111622_0000000026627034
+24  auditlog_12500_12999_20170824113005_0000000026627034
+25  auditlog_13000_13499_20170824113700_0000000026627034
+26  auditlog_13500_13999_20170824114340_0000000026627034
+27  auditlog_14000_14499_20170824115027_0000000026627034
+28  auditlog_14500_14999_20170824115732_0000000026627034
+29  auditlog_15000_15499_20170824120332_0000000026627034
+30  auditlog_15500_15999_20170824121103_0000000026627034
+</pre>
+</div>
+<p>
+可选的目录前缀包括:
+</p>
+<blockquote>
+<p>
+(Optional) Specifies the name of the directory to list files for. The
+default is the /dumps directory. Valid directory names:
+</p>
+<ul class="org-ul">
+<li>/dumps</li>
+<li>/dumps/audit</li>
+<li>/dumps/cimom</li>
+<li>/dumps/cloud</li>
+<li>/dumps/elogs</li>
+<li>/dumps/feature</li>
+<li>/dumps/iostats</li>
+<li>/dumps/iotrace</li>
+<li>/dumps/mdisk</li>
+<li>/home/admin/update</li>
+<li>/dumps/drive</li>
+<li>/dumps/enclosure</li>
+</ul>
+</blockquote>
+
+<ul class="org-ul">
+<li>cpdumps从非配置节点拷贝到配置节点</li>
+<li>cleardumps删除指定节点的dump</li>
+<li>catauditlog显示内存中的audit log</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;catauditlog
+audit_seq_no timestamp    cluster_user challenge source_panel target_panel ssh_ip_address result res_obj_id action_cmd
+0            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -name C90
+1            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -ntpip 0.0.0.0
+2            170904085119 superuser                                        10.72.221.160  0                 mcsop settimezone -timezone 211
+3            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -invemailinterval 7
+4            170904085120 superuser                                        10.72.221.160  0                 mcsop chemail -address 1 -city 1 -contact 1 -country CN -location 1 -
+organization 1 -primary 111111 -reply 1@1.com -state XX -zip 11111
+5            170904085120 superuser                                        10.72.221.160  0                 mcsop chsystem -easysetup no
+6            170904085120 superuser                                        10.72.221.160  0      0          mcsop mkdnsserver -ip 10.150.1.11 -name DNS0
+7            170904085139 superuser                                        10.72.221.160  0      0          mcsop mkcloudaccountaliyunoss -name zreal -bucket new-storage-cs-shan
+ghai -accesskeyid LTAILyUd5jmlvMzf -secretaccesskey #### -region oss-cn-shanghai -encrypt no
+8            170904085258 superuser                                        10.72.221.160  0                 mcsop rmcloudaccount 0
+9            170904093334 superuser                                        10.165.21.185  0      0          mcsop mkcloudaccountswift -container jia -encrypt no -endpoint http:/
+/10.151.12.38:5000/v2.0 -gui -keystone -password #### -tenantname demo -username admin
+10           170904093456 superuser                                        10.165.21.185  0      0          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name
+Pool0 -warning 80%
+11           170904093504 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 0
+12           170904093505 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 2
+13           170904093506 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 7
+14           170904093508 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 8
+15           170904093509 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 11
+16           170904093510 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 5
+17           170904093511 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 1
+18           170904093512 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 3
+19           170904093513 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 4
+20           170904093514 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 9
+21           170904093515 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 6
+22           170904093516 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 10
+23           170904093527 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use spare 8
+24           170904093532 superuser                                        10.165.21.185  0      0          mcsop mkarray -drive 0:4:5:6:3:10:9:2:11:7:1 -gui -level raid6 -spare
+goal 1 -strip 256 Pool0
+25           170904093556 superuser                                        10.165.21.185  0      0          mcsop mkvdisk -gui -mdiskgrp 0 -name cl1 -size 1073741824 -unit b
+26           170904094709 superuser                                        10.165.21.185  0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.1991-05.com.mi
+crosoft:wang9jia11.home.langchao.com -name localhost-wj -type generic
+27           170904094739 superuser                                        10.165.21.185  0                 mcsop cfgportip -gui -gw 10.151.12.254 -ip 10.151.12.94 -mask 255.255
+.255.0 -node 1 1
+28           170904095356 superuser                                        10.165.21.185  0                 mcsop mkvdiskhostmap -force -gui -host 0 0
+29           170904095647 superuser                                        10.165.21.185  0                 mcsop chvdisk -account 0 -backup cloud -enable -gui 0
+30           170904100428 superuser                                        10.165.21.185  0                 mcsop backupvolume -gui 0
+31           170904100735 superuser                                        10.165.21.185  0                 mcsop backupvolume -gui 0
+</pre>
+</div>
+<ul class="org-ul">
+<li>dumpinternallog</li>
+<li>startstats, settrace, starttrace, stoptrace</li>
+<li>triggerdrivedump</li>
+<li>addnode, addcontrolenclosure, lsnode, lsnodecanister</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsnodecanister
+id name  UPS_serial_number WWNN             status IO_group_id IO_group_name config_node UPS_unique_id hardware iscsi_name                           iscsi_alias panel_name enclosure_id canister_id enclosure_serial_number site_id site_name
+1  node1                   5005076803002010 online 0           io_grp0       yes                       I1M      iqn.2004-12.com.inspur:mcs.c90.node1             01-1       1            1           6577501
+
+Inspur_MCS:C90:superuser&gt;lsnodecanister -delim :
+id:name:UPS_serial_number:WWNN:status:IO_group_id:IO_group_name:config_node:UPS_unique_id:hardware:iscsi_name:iscsi_alias:panel_name:enclosure_id:canister_id:enclosure_serial_number:site_id:site_name
+1:node1::5005076803002010:online:0:io_grp0:yes::I1M:iqn.2004-12.com.inspur:mcs.c90.node1::01-1:1:1:6577501::
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org906b181" class="outline-2">
+<h2 id="org906b181"><span class="section-number-2">6</span> 重新扫瞄发现MDisks</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>detectmdisk, lsmdiskcandidate, lsdiscoverystatus</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;detectmdisk
+Inspur_MCS:C90:superuser&gt;lsdiscoverystatus
+id scope     IO_group_id IO_group_name status
+1  sas_iogrp 0           io_grp0       inactive
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org161beff" class="outline-2">
+<h2 id="org161beff"><span class="section-number-2">7</span> 存储池</h2>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-10-29 Sun 22:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>性能测试/Performance Test</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">性能测试/Performance Test</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org47b86cd">1. 简述</a></li>
+<li><a href="#org8991da5">2. 名词介绍</a></li>
+<li><a href="#orgedad148">3. Resource list</a></li>
+<li><a href="#org22766b9">4. Patterns</a></li>
+<li><a href="#org3b32d8b">5. 素材搜集</a>
+<ul>
+<li><a href="#org8f82a80">5.1. 性能影响因素</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org47b86cd" class="outline-2">
+<h2 id="org47b86cd"><span class="section-number-2">1</span> 简述</h2>
+</div>
+
+<div id="outline-container-org8991da5" class="outline-2">
+<h2 id="org8991da5"><span class="section-number-2">2</span> 名词介绍</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+IOPS/Throughput/Response Time/Latency/Utilization/Saturation/Bottleneck
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">IOPS</td>
+<td class="org-left">每秒输入输出次数</td>
+</tr>
+
+<tr>
+<td class="org-left">Throughput/带宽</td>
+<td class="org-left">每秒数据量</td>
+</tr>
+
+<tr>
+<td class="org-left">Latency/延时</td>
+<td class="org-left">一个操作完成的所有时间</td>
+</tr>
+
+<tr>
+<td class="org-left">Utilization/使用率</td>
+<td class="org-left">资源的繁忙程度</td>
+</tr>
+
+<tr>
+<td class="org-left">Saturation/饱和度</td>
+<td class="org-left">等待资源服务的排队程度</td>
+</tr>
+
+<tr>
+<td class="org-left">Bottleneck/瓶颈</td>
+<td class="org-left">资源限制点</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+<p>
+SUT: System Undet Test
+Trade-offs: Pick two:
+Fast, Good, Cheap
+On-Time, Inexpensive, Performance
+</p>
+
+<p>
+<i>U=B\/T</i>
+Cache Cold, Hot, Warm, Warmth
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgedad148" class="outline-2">
+<h2 id="orgedad148"><span class="section-number-2">3</span> Resource list</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>CPU</li>
+<li>RAM</li>
+<li>Network interfaces</li>
+<li>Storage Devices</li>
+<li>Controllers</li>
+<li>Interconnect</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org22766b9" class="outline-2">
+<h2 id="org22766b9"><span class="section-number-2">4</span> Patterns</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>Linear scalability</li>
+<li>Contention</li>
+<li>Coherence</li>
+<li>Knee point</li>
+<li>scalability ceiling</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3b32d8b" class="outline-2">
+<h2 id="org3b32d8b"><span class="section-number-2">5</span> 素材搜集</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-org8f82a80" class="outline-3">
+<h3 id="org8f82a80"><span class="section-number-3">5.1</span> 性能影响因素</h3>
+<div class="outline-text-3" id="text-5-1">
+<ul class="org-ul">
+<li>是否所有IO来自首选节点(preferred node)</li>
+<li>测试工具vdbench/fio/iometer, OLTP/OLAP</li>
+<li>不同卷是否运行不同模式</li>
+<li>卷状态: RAID同步完成</li>
+<li>性能统计信息搜集</li>
+<li>链路层是否有错误</li>
+<li>预热时间: 每盘300 IOPS, 12GB缓存实现, 96盘, 4K IO, RAID写放大3倍, 240s时间
+12G*3/300*4K*96 = 327s?
+<ul class="org-ul">
+<li>影响随机+数据的测试</li>
+</ul></li>
+<li></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

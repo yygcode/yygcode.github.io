@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-08-29 Tue 00:13 -->
+<!-- 2017-10-29 Sun 22:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>随身USB盘</title>
@@ -48,8 +48,28 @@
 <h3 id="org53f939d"><span class="section-number-3">2.1</span> 分区</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-使用fdisk分区.
+使用fdisk分区. part1用做grub, part2用做live linux, part3用做Linux安装系统, part4
+是扩展分区, part5/6分别用做win安装盘和win下数据盘. 各分区大小根据USB和安装盘大小进行随意调整. 如下是64GB USB示例:
 </p>
+<div class="org-src-container">
+<pre class="src src-shell">yanyg@t:~$ sudo fdisk -l /dev/sdc
+
+Disk /dev/sdc: 57.9 GiB, 62109253632 bytes, 121307136 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xcad4ebea
+
+Device     Boot     Start       End  Sectors  Size Id Type
+/dev/sdc1            2048  33556479 33554432   16G 83 Linux
+/dev/sdc2        33556480  75499519 41943040   20G 83 Linux
+/dev/sdc3        75499520  88082431 12582912    6G 83 Linux
+/dev/sdc4        88082432 121307135 33224704 15.9G  5 Extended
+/dev/sdc5        88084480 100667391 12582912    6G  7 HPFS/NTFS/exFAT
+/dev/sdc6       100669440 121307135 20637696  9.9G  7 HPFS/NTFS/exFAT
+</pre>
+</div>
 </div>
 </div>
 </div>
