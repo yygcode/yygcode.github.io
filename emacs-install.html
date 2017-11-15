@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-11-16 周四 02:44 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs安装</title>
+<meta name="generator" content="Org mode" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Emacs安装</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc7db978">1. Windows系统下安装Emacs</a>
+<ul>
+<li><a href="#org7e5960f">1.1. 版本选择</a></li>
+<li><a href="#org9f61430">1.2. 字体安装</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc7db978" class="outline-2">
+<h2 id="orgc7db978"><span class="section-number-2">1</span> Windows系统下安装Emacs</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org7e5960f" class="outline-3">
+<h3 id="org7e5960f"><span class="section-number-3">1.1</span> 版本选择</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+从<a href="https://ftp.gnu.org/gnu/emacs/windows/">这里</a>下载稳定的Emacs, 也可以从<a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">这里</a>下载最新的Emacs. 对于一般用户而言,
+emacs-$VERSION-x86_64.zip是最合适的. 除去这个版本, 官方也提供其他no-deps, i686,
+w64版本. 此外, 还有<a href="https://sourceforge.net/projects/ntemacs/">NTEmacs</a>, 但我没使用过.
+</p>
+
+<p>
+下载zip压缩包, 解压缩到目标位置, 在合适位置创建runemacs.exe链接, 我一般配合
+<a href="https://autohotkey.com/">autohotkey</a>用用快捷方式\(Ctrl+Win+E\)启动.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9f61430" class="outline-3">
+<h3 id="org9f61430"><span class="section-number-3">1.2</span> 字体安装</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+我的<a href="https://github.com/yygcode/.emacs.d">Emacs配置</a>中, Orgmode使用<a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a>字体. 在Win7下安装该字体方法如下:
+</p>
+<ol class="org-ol">
+<li>下载<a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a>. 不使用git下载ZIP压缩包并解压缩;</li>
+<li>安装Adobe提供的<a href="http://www.adobe.com/devnet/opentype/afdko.html">AFDKO字体开发套件</a>, 下载Win版本, 根据解压缩文件夹下
+FDK/Read_Me_First.html方式操作;</li>
+</ol>
+<blockquote>
+<p>
+After downloading and decompressing the FDK, the only installation step is to add the directory for the FDK programs to your system's environment variable "PATH". This variable contains a list of directory paths, as a single string of text with the directory paths separated by semicolons. When the system needs to find a program that you have typed in a command-line, it looks for that program in all the directories listed in the PATH variable. You need to add the path to the executable FDK directory at '&lt;path to FDK&gt;\Tools\win' to this list. Fortunately, the FDK comes with a command file to do this for you. In order to run this file successfuly, your account does need system admin privileges.
+</p>
+
+<p>
+Download the AFDKO archive file and decompress it.
+You should now have a folder named "FDK". Move it wherever you want (example: C:\Program Files (x86)\FDK).
+Open the "FDK" folder. and find the file "FinishInstallWindows.cmd".
+Open a command prompt window. If you do not know how to do this, read the file "FDK\Technical Documentation\CommandLineHowTo.pdf".
+Note! The command window must be run with Administrator privileges. If you open a regular command line window, the script will fail. To open a command window with Adminstrator priviliges, right click on the command program icon, and choose "Run with Adminstrator privileges."
+Enter the path to the script file in the command window. An easy way to do this is to:
+Click once on the file "FinishInstallWindows.cmd". This will place the path to the parent directory at the top of the Explorer window.
+Copy the directory path from the top of the Explorer window by selecting the text and copying it. Paste it into the command window (right click, and choose the option "Paste"). Finish the command-line by typing the name of the script file, "FinishInstallWindows.cmd" at the end of the directory path, and then press "RETURN/ENTER".
+If all went well the FDK should now be ready to run. To test it, do the following:
+</p>
+
+<p>
+Open a Command Prompt window. (Start Menu &gt; Run&#x2026; &gt; cmd.exe)
+Type "autohint -h" (no quotes) and hit "Return". This should give you the Help information about the Autohint tool.
+NOTE: If you move the FDK directory to a new location, you will need to change the PATH variable as well.
+</p>
+</blockquote>
+<p>
+上述操作概要描述:
+</p>
+<ul class="org-ul">
+<li>拷贝FDK到软件安装目录, 假定为 C:\Program Files (x86)\FDK;</li>
+<li>以管理员权限打开Cmd, 进入FDK目录, 执行FinishInstallWindows.cmd;</li>
+<li>系统环境变量增量 C:\Program Files (x86)\FDK\Tools\win;</li>
+<li>注销或重启系统, 再次登录;</li>
+<li>进入Source Code Pro目录, 执行build.cmd;</li>
+<li>Win7打开控制面板-&gt;外观和个性化-&gt;字体, 把target目录下OTF/TTF下字体文件拖动到控制面板字体窗口安装.</li>
+<li>Win10右键字体文件, 选择导入</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

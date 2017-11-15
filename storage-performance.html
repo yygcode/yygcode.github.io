@@ -3,14 +3,35 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-01 Wed 10:00 -->
+<!-- 2017-11-16 周四 02:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>性能测试/Performance Test</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="U-HOME\yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -19,26 +40,70 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0abac8b">1. 简述</a></li>
-<li><a href="#orgf498201">2. 名词介绍</a></li>
-<li><a href="#org9dc3d27">3. Resource list</a></li>
-<li><a href="#orgc6ed2ed">4. Patterns</a></li>
-<li><a href="#orgdf38912">5. 素材搜集</a>
+<li><a href="#orgf704ccc">1. 声明</a></li>
+<li><a href="#org70dd04f">2. 简述</a></li>
+<li><a href="#org3376aac">3. 名词介绍</a>
 <ul>
-<li><a href="#orgc81b31e">5.1. 性能影响因素</a></li>
+<li><a href="#org45acb8c">3.1. 带宽</a></li>
+<li><a href="#orga719b0a">3.2. IOPS</a></li>
+</ul>
+</li>
+<li><a href="#orga215eee">4. Resource list</a></li>
+<li><a href="#org886a9c8">5. Patterns</a></li>
+<li><a href="#org1098699">6. 素材搜集</a>
+<ul>
+<li><a href="#org60e35da">6.1. 性能影响因素</a></li>
+</ul>
+</li>
+<li><a href="#orgf495f96">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
+<ul>
+<li><a href="#orga9402e3">7.1. Three Great Buckets Of Testing</a></li>
+<li><a href="#orgc1bb8c8">7.2. Block/SAN operations</a></li>
+<li><a href="#orge394470">7.3. Terminology</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0abac8b" class="outline-2">
-<h2 id="org0abac8b"><span class="section-number-2">1</span> 简述</h2>
+<div id="outline-container-orgf704ccc" class="outline-2">
+<h2 id="orgf704ccc"><span class="section-number-2">1</span> 声明</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+本文描述准确性仅限于存储系统.
+</p>
+</div>
 </div>
 
-<div id="outline-container-orgf498201" class="outline-2">
-<h2 id="orgf498201"><span class="section-number-2">2</span> 名词介绍</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org70dd04f" class="outline-2">
+<h2 id="org70dd04f"><span class="section-number-2">2</span> 简述</h2>
+</div>
+
+<div id="outline-container-org3376aac" class="outline-2">
+<h2 id="org3376aac"><span class="section-number-2">3</span> 名词介绍</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org45acb8c" class="outline-3">
+<h3 id="org45acb8c"><span class="section-number-3">3.1</span> 带宽</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+系统的最大吞吐量. 一般单位是KBps/MBps/GBps/TBps, 指每秒数据的传输量.
+</p>
+
+<p>
+在精确的定义下, KB/MB/GB/TB是以1000为单位的倍增, 而KiB/MiB/GiB/TiB是以\(2^10\)为单位的倍增. 因此有:
+\(1MB=1000KB, 1MiB=1024KiB\).
+</p>
+
+<p>
+典型存储的带宽在5GB~15GB之间.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga719b0a" class="outline-3">
+<h3 id="orga719b0a"><span class="section-number-3">3.2</span> IOPS</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 IOPS/Throughput/Response Time/Latency/Utilization/Saturation/Bottleneck
 </p>
@@ -100,10 +165,11 @@ Cache Cold, Hot, Warm, Warmth
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org9dc3d27" class="outline-2">
-<h2 id="org9dc3d27"><span class="section-number-2">3</span> Resource list</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orga215eee" class="outline-2">
+<h2 id="orga215eee"><span class="section-number-2">4</span> Resource list</h2>
+<div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>CPU</li>
 <li>RAM</li>
@@ -115,9 +181,9 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-orgc6ed2ed" class="outline-2">
-<h2 id="orgc6ed2ed"><span class="section-number-2">4</span> Patterns</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org886a9c8" class="outline-2">
+<h2 id="org886a9c8"><span class="section-number-2">5</span> Patterns</h2>
+<div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>Linear scalability</li>
 <li>Contention</li>
@@ -128,12 +194,13 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-orgdf38912" class="outline-2">
-<h2 id="orgdf38912"><span class="section-number-2">5</span> 素材搜集</h2>
-<div class="outline-text-2" id="text-5">
-</div><div id="outline-container-orgc81b31e" class="outline-3">
-<h3 id="orgc81b31e"><span class="section-number-3">5.1</span> 性能影响因素</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-org1098699" class="outline-2">
+<h2 id="org1098699"><span class="section-number-2">6</span> 素材搜集</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org60e35da" class="outline-3">
+<h3 id="org60e35da"><span class="section-number-3">6.1</span> 性能影响因素</h3>
+<div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>是否所有IO来自首选节点(preferred node)</li>
 <li>测试工具vdbench/fio/iometer, OLTP/OLAP</li>
@@ -151,9 +218,55 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 </div>
+<div id="outline-container-orgf495f96" class="outline-2">
+<h2 id="orgf495f96"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
+<div class="outline-text-2" id="text-7">
+<ul class="org-ul">
+<li>Metrics and Terminology: IOPS, MBps, Response Time</li>
+<li>System Under Test:</li>
+<li>File Components: CIFS/NFS</li>
+<li>Block Components</li>
+<li>Workload Definitions</li>
+</ul>
 </div>
-<div id="postamble" class="status">
-<p class="postamble">Created by yanyg(<a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a>)</p> <div id="disqus_thread"></div> <script type="text/javascript"> var disqus_shortname = 'yanyg'; (function() {  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);  })(); </script>
+<div id="outline-container-orga9402e3" class="outline-3">
+<h3 id="orga9402e3"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
+<div class="outline-text-3" id="text-7-1">
+<ul class="org-ul">
+<li>Bake-offs: Single Obscure Metric, DD, IOMETER, IOZONE, VDBENCH</li>
+<li>Benchmarks: Balanced Professional Approach, Spec, SFS, SPC1, LOGIN VSI VMMARK</li>
+<li>Business: Run production Applications, Database Compute Farm VDI</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc1bb8c8" class="outline-3">
+<h3 id="orgc1bb8c8"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
+<div class="outline-text-3" id="text-7-2">
+<ul class="org-ul">
+<li>LOG SENSE</li>
+<li>LOG SELECT</li>
+<li>REQUEST SENSE</li>
+<li>MODE SELECT</li>
+<li>SEND DIAGNOSTIC</li>
+<li>REPORT LUNS</li>
+<li>&#x2026;</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge394470" class="outline-3">
+<h3 id="orge394470"><span class="section-number-3">7.3</span> Terminology</h3>
+<div class="outline-text-3" id="text-7-3">
+<ul class="org-ul">
+<li>IO Operation AKA type READ WRITE</li>
+<li>Throughput Same as IOPS</li>
+<li>IOOPS count every IO Operation per second</li>
+<li>Bandwidth same as MBps</li>
+<li>MBps Payload sum of every operation per second</li>
+<li>MiB vs. MB: 1024 : 1000</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </body>
 </html>
