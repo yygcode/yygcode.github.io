@@ -1,8 +1,40 @@
 #+Title: Emacs FAQ
 
-* 无法加载一个package, 但无法正常安装
+* 使用问题记录
+** 无法加载一个package, 但无法正常安装 20171114
 - 错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai
+- 根因: 目前还不明确根因
 - 解决措施: 在~/.emacs.d/elpa目录下查找对应包(比如: ~/.emacs.d/elpa/monokai-theme-*), 部分
   文件可能异常为空(size等于0).
-- 根因: 目前还不明确根因
 
+** EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119
+- 错误提示: No next track in playlist
+- 根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致
+- 解决措施: 继续保持默认编码为UTF-8, 设置进程交互编码系统转换
+#+BEGIN_SRC emacs-lisp
+  (when (string-equal current-language-environment "Chinese-GBK")
+    (setq default-process-coding-system '(utf-8-unix . chinese-gbk-dos)))
+#+END_SRC
+- 更多:
+  + 查看Emacs帮助\(C-h v current-language-environment\)和
+    \(C-h f prefer-coding-system\), 及Emacs Manual [[https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html#International][International]]和
+    [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html#Non_002dASCII-Characters][Non-ASCII Characters]]了解更多.
+  + Windows下载[[https://www.mpg123.de/download/win64][mpg123 win64]], [[https://sourceforge.net/projects/mplayerwin/][mplayer]]
+** Emacs退出时提示"Active process exist; kill them and exit anyway"
+- 根因: 默认配置打开了确认, 调整配置即可
+- 解决措施: 修改不再提示process未退出(Emacs退出时自动退出)
+#+BEGIN_SRC emacs-lisp
+  (setq confirm-kill-processes nil)
+#+END_SRC
+
+** TODO EMMS在Windows下无法调整音量, amixer找不到
+
+* 常用功能
+|------------------------------+------------------+--------------------------|
+| Function                     | Key              | Describe                 |
+|------------------------------+------------------+--------------------------|
+| find-function                | C-c C-f          | 查看函数定义             |
+| what-cursor-position         | C-x = / C-u C-x= | 查看光标处的字符(集)信息 |
+| list-coding-system           |                  | 查看可用的字符集         |
+| describe-language-enviroment |                  |                          |
+|------------------------------+------------------+--------------------------|
