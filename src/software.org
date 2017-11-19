@@ -1,0 +1,93 @@
+#+Title: 我的软件清单
+
+感谢自由软件, 感谢[[https://stallman.org/][Richard Stallman]].
+本文软件根据字母顺序排列.
+
+* cygwin
+
+* TODO emacs                                                         :editor:
+
+* sdcv                                                           :dictionary:
+SDCV是[[http://stardict-4.sourceforge.net/][星际译王(Stardict)]]的命令行版本. 星际译王是一款跨平台的国际词典开源软件,
+项目领导[[http://www.huzheng.org/][胡正]]先生, 开发人员Sergey<kubtek@gmail.com>, Evgeniy<dushistov@mail.ru>,
+Tao Wang<dancefire@gmail.com>, 贡献人员Alex Murygin <murygin@aitoc.com>.
+因个人习惯只使其命令行版本. 感谢胡正.
+
+SDCV源码在[[https://github.com/Dushistov/sdcv/][Github]]上, 在cygwin64下默认编译选项遇到\(popen/pclose\)未定义错误, 这是
+由于\(popen\)不是ISO C++标准导致的. 修改编译参数\(-U__STRICT_ANSI__\)解决.
+
+SDCV需要单独下载词典, 点击[[http://stardict.rrr.rs/dict.org/index.html][这里]]获取字典压缩包, 根据示例命令解压.
+
+#+BEGIN_SRC shell
+  # Change to sdcv directory
+  ~$ git show --oneline
+  51db56f (HEAD -> master, origin/master, origin/HEAD) Merge pull request #38 from nijel/master
+
+  ~$ mkdir build -p
+  ~$ cd build
+  ~$ cmake -D CMAKE_CXX_FLAGS="-U__STRICT_ANSI__" -D CMAKE_INSTALL_PREFIX:PATH=/usr ..
+  ~$ make
+  ~$ make lang
+  ~$ make install
+  ~$ sdcv -v
+  Console version of Stardict, version 0.5.2
+  ~$ mkdir -p /usr/share/stardict/dic
+  ~$ tar -C /usr/share/stardict/dic -xvf ~/Downloads/stardict-langdao-ec-gb-2.4.2.tar.bz2
+  stardict-langdao-ec-gb-2.4.2/
+  stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.dict.dz
+  stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.idx
+  stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.ifo
+  ~$ sdcv 字典
+  Found 1 items, similar to 字典.
+  -->朗道汉英字典5.0
+  -->字典
+
+  dictionary; glossary; vocabulary; wordbook
+  【电】 dictionary
+  相关词组:
+    活字典
+    字典的
+    字典集
+  ~$ sdcv dictionary
+  Found 1 items, similar to dictionary.
+  -->朗道英汉字典5.0
+  -->dictionary
+
+  ,*['dikʃәnәri]
+  n. 字典, 词典
+  【计】 词典
+#+END_SRC
+
+我做了编译调整的版本在[[https://github.com/yygcode/sdcv][这里]]下载.
+
+* sharex                                                          :screencast:screen_recording:
+ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上. 支持截屏/录屏, 并
+进行各种各样的分享. 界面支持多语言. [[https://en.wikipedia.org/wiki/ShareX][WIKI]]和[[https://zhuanlan.zhihu.com/p/19627720][知乎]]有介绍.
+- 代码: [[https://github.com/ShareX/ShareX][github]]
+- 主页: https://getsharex.com/
+- 下载: [[https://getsharex.com/downloads/][Downloads]]
+
+在[[https://getsharex.com/][主页]]上可找到完整的介绍文档. 录屏配置主菜单位于:
+- 英文界面: Task settings->Capture->Screen recorder->Screen recorder options
+- 中文界面: 任务设置->截图->屏幕记录->屏幕录制选项
+
+录屏使用[[https://www.ffmpeg.org/][ffmpeg]]实现, 菜单"录屏配置->FFmpeg路径"下点击...设置或下载FFmpeg. 默认
+配置未包含音频, 在录屏配置菜单'音频源'中选择麦克风或适当的音频源.
+
+默认热键=Shift+PrtSc=启动/停止录屏, 启动时拖曳鼠标修改录屏区域. 点击菜单
+"截图文件夹..."查看历史截图和录屏文件. 热键和录屏文件夹均可在主界面下找到配置
+菜单.
+
+我的配置:
+- FFmpeg路径: %MyDocuments%\ShareX\Tools\ffmpeg.exe
+- 录屏路径: G:\screencast
+- 截图路径: G:\screenshot
+
+Q&A
+- 设置录屏路径和截图路径无效
+  关闭ShareX界面时, ShareX依然在后台运行. 在任务栏右键ShareX图标, 选择"退出",
+  然后再次启动.
+- 什么是GDI Grab
+  录屏选项中, 视频源可以选择"GDI Grab". GDI Grab是Windows系统下基于GDI的录屏设备.
+  参考[[https://www.ffmpeg.org/ffmpeg-devices.html#gdigrab][FFmpeg GDI Grab]].
+* TODO vim                                                           :editor:

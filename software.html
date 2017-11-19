@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-11-20 周一 00:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的软件清单</title>
+<meta name="generator" content="Org mode" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">我的软件清单</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4018935">1. cygwin</a></li>
+<li><a href="#org3c18b55">2. <span class="todo TODO">TODO</span> emacs&#xa0;&#xa0;&#xa0;<span class="tag"><span class="editor">editor</span></span></a></li>
+<li><a href="#org48409fc">3. sdcv&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dictionary">dictionary</span></span></a></li>
+<li><a href="#org7b5abb8">4. sharex&#xa0;&#xa0;&#xa0;<span class="tag"><span class="screencast">screencast</span>&#xa0;<span class="screen_recording">screen_recording</span></span></a></li>
+<li><a href="#orge69adda">5. <span class="todo TODO">TODO</span> vim&#xa0;&#xa0;&#xa0;<span class="tag"><span class="editor">editor</span></span></a></li>
+</ul>
+</div>
+</div>
+<p>
+感谢自由软件, 感谢<a href="https://stallman.org/">Richard Stallman</a>.
+本文软件根据字母顺序排列.
+</p>
+
+<div id="outline-container-org4018935" class="outline-2">
+<h2 id="org4018935"><span class="section-number-2">1</span> cygwin</h2>
+</div>
+
+<div id="outline-container-org3c18b55" class="outline-2">
+<h2 id="org3c18b55"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> emacs&#xa0;&#xa0;&#xa0;<span class="tag"><span class="editor">editor</span></span></h2>
+</div>
+
+<div id="outline-container-org48409fc" class="outline-2">
+<h2 id="org48409fc"><span class="section-number-2">3</span> sdcv&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dictionary">dictionary</span></span></h2>
+<div class="outline-text-2" id="text-3">
+<p>
+SDCV是<a href="http://stardict-4.sourceforge.net/">星际译王(Stardict)</a>的命令行版本. 星际译王是一款跨平台的国际词典开源软件,
+项目领导<a href="http://www.huzheng.org/">胡正</a>先生, 开发人员Sergey&lt;kubtek@gmail.com&gt;, Evgeniy&lt;dushistov@mail.ru&gt;,
+Tao Wang&lt;dancefire@gmail.com&gt;, 贡献人员Alex Murygin &lt;murygin@aitoc.com&gt;.
+因个人习惯只使其命令行版本. 感谢胡正.
+</p>
+
+<p>
+SDCV源码在<a href="https://github.com/Dushistov/sdcv/">Github</a>上, 在cygwin64下默认编译选项遇到\(popen/pclose\)未定义错误, 这是由于\(popen\)不是ISO C++标准导致的. 修改编译参数\(-U__STRICT_ANSI__\)解决.
+</p>
+
+<p>
+SDCV需要单独下载词典, 点击<a href="http://stardict.rrr.rs/dict.org/index.html">这里</a>获取字典压缩包, 根据示例命令解压.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">Change to sdcv directory</span>
+~$ git show --oneline
+<span class="org-function-name">51db56f</span> (HEAD -&gt; master, origin/master, origin/HEAD) Merge pull request <span class="org-comment-delimiter">#</span><span class="org-comment">38 from nijel/master</span>
+
+~$ mkdir build -p
+~$ cd build
+~$ cmake -D <span class="org-variable-name">CMAKE_CXX_FLAGS</span>=<span class="org-string">"-U__STRICT_ANSI__"</span> -D CMAKE_INSTALL_PREFIX:<span class="org-variable-name">PATH</span>=/usr ..
+~$ make
+~$ make lang
+~$ make install
+~$ sdcv -v
+Console version of Stardict, version 0.5.2
+~$ mkdir -p /usr/share/stardict/dic
+~$ tar -C /usr/share/stardict/dic -xvf ~/Downloads/stardict-langdao-ec-gb-2.4.2.tar.bz2
+stardict-langdao-ec-gb-2.4.2/
+stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.dict.dz
+stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.idx
+stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.ifo
+~$ sdcv &#23383;&#20856;
+Found 1 items, similar to &#23383;&#20856;.
+--&gt;&#26391;&#36947;&#27721;&#33521;&#23383;&#20856;5.0
+--&gt;&#23383;&#20856;
+
+dictionary; glossary; vocabulary; wordbook
+&#12304;&#30005;&#12305; dictionary
+&#30456;&#20851;&#35789;&#32452;:
+  &#27963;&#23383;&#20856;
+  &#23383;&#20856;&#30340;
+  &#23383;&#20856;&#38598;
+~$ sdcv dictionary
+Found 1 items, similar to dictionary.
+--&gt;&#26391;&#36947;&#33521;&#27721;&#23383;&#20856;5.0
+--&gt;dictionary
+
+*[<span class="org-string">'dik&#643;&#1241;n&#1241;ri]</span>
+<span class="org-string">n. &#23383;&#20856;, &#35789;&#20856;</span>
+<span class="org-string">&#12304;&#35745;&#12305; &#35789;&#20856;</span>
+</pre>
+</div>
+
+<p>
+我做了编译调整的版本在<a href="https://github.com/yygcode/sdcv">这里</a>下载.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7b5abb8" class="outline-2">
+<h2 id="org7b5abb8"><span class="section-number-2">4</span> sharex&#xa0;&#xa0;&#xa0;<span class="tag"><span class="screencast">screencast</span>&#xa0;<span class="screen_recording">screen_recording</span></span></h2>
+<div class="outline-text-2" id="text-4">
+<p>
+ShareX是自由/开源软件, 基于.NET开发, 只能运行在Windows系统上. 支持截屏/录屏, 并进行各种各样的分享. 界面支持多语言. <a href="https://en.wikipedia.org/wiki/ShareX">WIKI</a>和<a href="https://zhuanlan.zhihu.com/p/19627720">知乎</a>有介绍.
+</p>
+<ul class="org-ul">
+<li>代码: <a href="https://github.com/ShareX/ShareX">github</a></li>
+<li>主页: <a href="https://getsharex.com/">https://getsharex.com/</a></li>
+<li>下载: <a href="https://getsharex.com/downloads/">Downloads</a></li>
+</ul>
+
+<p>
+在<a href="https://getsharex.com/">主页</a>上可找到完整的介绍文档. 录屏配置主菜单位于:
+</p>
+<ul class="org-ul">
+<li>英文界面: Task settings-&gt;Capture-&gt;Screen recorder-&gt;Screen recorder options</li>
+<li>中文界面: 任务设置-&gt;截图-&gt;屏幕记录-&gt;屏幕录制选项</li>
+</ul>
+
+<p>
+录屏使用<a href="https://www.ffmpeg.org/">ffmpeg</a>实现, 菜单"录屏配置-&gt;FFmpeg路径"下点击&#x2026;设置或下载FFmpeg. 默认配置未包含音频, 在录屏配置菜单'音频源'中选择麦克风或适当的音频源.
+</p>
+
+<p>
+默认热键=Shift+PrtSc=启动/停止录屏, 启动时拖曳鼠标修改录屏区域. 点击菜单
+"截图文件夹&#x2026;"查看历史截图和录屏文件. 热键和录屏文件夹均可在主界面下找到配置菜单.
+</p>
+
+<p>
+我的配置:
+</p>
+<ul class="org-ul">
+<li>FFmpeg路径: %MyDocuments%\ShareX\Tools\ffmpeg.exe</li>
+<li>录屏路径: G:\screencast</li>
+<li>截图路径: G:\screenshot</li>
+</ul>
+
+<p>
+Q&amp;A
+</p>
+<ul class="org-ul">
+<li>设置录屏路径和截图路径无效关闭ShareX界面时, ShareX依然在后台运行. 在任务栏右键ShareX图标, 选择"退出",
+然后再次启动.</li>
+<li>什么是GDI Grab
+录屏选项中, 视频源可以选择"GDI Grab". GDI Grab是Windows系统下基于GDI的录屏设备.
+参考<a href="https://www.ffmpeg.org/ffmpeg-devices.html#gdigrab">FFmpeg GDI Grab</a>.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge69adda" class="outline-2">
+<h2 id="orge69adda"><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> vim&#xa0;&#xa0;&#xa0;<span class="tag"><span class="editor">editor</span></span></h2>
+</div>
+</div>
+</body>
+</html>
