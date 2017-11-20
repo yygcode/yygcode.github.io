@@ -20,7 +20,7 @@
     \(C-h f prefer-coding-system\), 及Emacs Manual [[https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html#International][International]]和
     [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html#Non_002dASCII-Characters][Non-ASCII Characters]]了解更多.
   + Windows下载[[https://www.mpg123.de/download/win64][mpg123 win64]], [[https://sourceforge.net/projects/mplayerwin/][mplayer]]
-** Emacs退出时提示"Active process exist; kill them and exit anyway"
+** Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119
 - 根因: 默认配置打开了确认, 调整配置即可
 - 解决措施: 修改不再提示process未退出(Emacs退出时自动退出)
 #+BEGIN_SRC emacs-lisp
@@ -28,10 +28,20 @@
 #+END_SRC
 
 ** TODO EMMS在Windows下无法调整音量, amixer找不到
+** TODO Windows
+- 错
+Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
+
+error: Package ‘use-package-’ is unavailable
+
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘--debug-init’ option to view a complete error backtrace.
 
 * 常用功能
 |------------------------------+------------------+--------------------------|
 | Function                     | Key              | Describe                 |
+| /                            | <>               | <>                       |
 |------------------------------+------------------+--------------------------|
 | find-function                | C-c C-f          | 查看函数定义             |
 | what-cursor-position         | C-x = / C-u C-x= | 查看光标处的字符(集)信息 |
