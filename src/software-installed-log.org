@@ -1,7 +1,43 @@
 #+TITLE: Software Installed Log
 
+* AutoHotkey
+  :PROPERTIES:
+  :CUSTOM_ID: autohotkey
+  :END:
+- Useful with favorite quickshot
+- Download from [[https://autohotkey.com/download/][here]] and install.
+- Press Start then input autohotkey find 'AutoHotkey Help File' to study
+- Write your hotkey file with .ahk name suffix, then double click run it
+- Follow is .ahk example(hotkey.ahk)
+#+BEGIN_SRC shell
+  ; Ctrl+Win+e start emacs
+  ^#e::Run C:\win-customize\emacs-26.0.90-x86_64\bin\runemacs.exe -fs
+  ; Ctrl+Win+c start cygwin64
+  ^#c::Run C:\cygwin64\bin\mintty.exe -
+  ; Ctrl+Win+m start mingw64
+  ^#m::Run E:\yanyg-data\msys64\msys2_shell.cmd -mingw64
+  ; Ctrl+Win+w open work directory
+  ^#w::Run explorer.exe E:\yanyg-data\work
+  ; Ctrl+Win+b start win 10 ubuntu bash
+  ^#b::Run C:\Windows\system32\bash.exe
+  ; Ctrl+Win+f start Firefox
+  ^#f::Run C:\Program Files\Mozilla Firefox\firefox.exe
+  ; Ctrl+Win+g start google chrome
+  ^#g::Run C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+  ; Ctrl+Win+v start vmware-view(VDI)
+  ^#v::Run C:\Program Files (x86)\VMware\VMware Horizon View Client\vmware-view.exe
+
+  ; swap caps and ctrl for emacs
+  Capslock::Ctrl
+  Ctrl::Capslock
+#+END_SRC
+
 * msys2
-** mingw64
+** DONE mingw64
+   :PROPERTIES:
+   :CUSTOM_ID: msys2-mingw64
+   :END:
+
 #+BEGIN_SRC sh
   ~$ pacman -Syuu
   :: Synchronizing package databases...
@@ -67,12 +103,8 @@
 
   ## Tips: If you network is not stable and you are annoyed by repeated work, try:
   ##  `while :; do yes | pacman -Syuu; done`
-#+END_SRC
 
-* Emacs
-** Windows Msys2
-#+BEGIN_SRC sh
-  ## Install Emacs build environment: Ref
+  ## Install developer environment (e.g.: emacs): Ref
   ## https://sourceforge.net/p/emacsbinw64/wiki/Build%20guideline%20for%20MSYS2-MinGW-w64%20system/
   ~$ pacman -S base-devel mingw-w64-x86_64-toolchain \
   mingw-w64-x86_64-xpm-nox mingw-w64-x86_64-libtiff \
@@ -82,6 +114,20 @@
   mingw-w64-x86_64-gnutls
 
   ~$ pacman -S git
+
+#+END_SRC
+
+* Emacs
+** DONE Windows
+*** binary install
+- Download from [[https://ftp.gnu.org/gnu/emacs/windows/][stable]] or [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest]] version(201711 stable 25.3, pretest 26.0.90)
+- Extract the zip to destination directory where you want(e.g.: c:\emacs-26.0.9-mingw64)
+- clone your emacs config(see [[#emacs-config][emacs-config]])
+
+*** Msys2 compile
+- install [[#msys2-mingw64][mingw64]] first.
+- clone your emacs config(see [[#emacs-config][emacs-config]])
+#+BEGIN_SRC sh
   ~$ git clone git://git.sv.gnu.org/emacs.git
   ~$ ./autogen.sh
   ~$ PKG_CONFIG_PATH=/mingw64/lib/pkgconfig ./configure --without-imagemagick
@@ -102,3 +148,20 @@
   cp /mingw64/bin/{libgmp-*.dll,libhogweed-*.dll,libnettle-*.dll} /c/emacs-mingw64/bin
   cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
 #+END_SRC
+
+** TODO Linux
+** DONE emacs configuration
+   :PROPERTIES:
+   :CUSTOM_ID: emacs-config
+   :END:
+
+- clone/update config
+#+BEGIN_SRC shell
+  # Public readonly:
+  ~$ cd ~; git clone http://github.com:yygcode/.emacs.d
+  # Modified privilege:
+  ~$ cd ~; git clone git@github.com:yygcode/.emacs.d
+  # Update:
+  ~$ cd ~/.emacs.d/; git pull
+#+END_SRC
+- create hotkey for windows(see [[#autohotkey][AutoHotkey]]).
