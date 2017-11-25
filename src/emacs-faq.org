@@ -28,7 +28,7 @@
 #+END_SRC
 
 ** TODO EMMS在Windows下无法调整音量, amixer找不到
-** TODO Windows
+** DONE Windows
 - 错误提示1:
 Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
 
@@ -49,10 +49,21 @@ cause of the error in your initialization file.  Start Emacs with
 the ‘--debug-init’ option to view a complete error backtrace.
 - 解决方法2: 重启emacs
 
-** TODO Windows下动态库加载路径设置
-- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)
+** DONE Windows下动态库加载路径设置
++- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)+
+- GnuTls and LibXml2 must be enable to find the relevant DLLs during startup.
+  failure to do so is not an error, but GnuTls or libxml2 feature won't be
+  available to the running session.
+- If set environment PATH correctly(e.g., include e:\\msys2\\mingw64\\bin and
+  e:\\msys2\\usr\\bin), GnuTls would work correctly but libxml2 still not work.
+  The libxml2 only method is to copy dlls(libiconv-2.dll, liblzma-5.dll,
+  libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.
+- variable: exec-path, load-path, dynamic-library-alist, process-environment
+- function: setenv/getenv
+
 http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/
 http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
+https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw
 
 * 常用功能
 |------------------------------+------------------+--------------------------|
