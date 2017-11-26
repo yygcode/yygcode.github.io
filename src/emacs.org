@@ -1,9 +1,123 @@
-#+TITLE: Emacs学习笔记
+#+TITLE: Emacs手记
+#+AUTHOR: yanyg
+#+EMAIL: yygcode@gmail.com
 
 * 介绍
-VIM被称为编辑器之神, EMACS被称之为神之编辑器.
+EMACS/ˈiːmæks/称为神之编辑器(vs. [[http://www.vim.org/][VIM]]称为编辑器之神). Emacs不仅仅是一个编辑器,
+使用者用它编写代码, 查看文档, 翻阅照片, 浏览网页, 收发邮件, 播放音乐. 对于
+Emacser而言, Emacs是一个操作系统, 而宿主操作系统只是一个引导程序.
+
+EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的
+编辑器出现. EMACS和VIM是硕果仅存者, 这说明了它们的优秀.
+
+使用Emacs的程序员幸福的生活在Emacs中.
 
 * 安装
-** 从源码构建
-*** Windows Msys2
-- 安装msys2
+参考[[file:software.org::#emacs-windows][Emacs安装]].
+
+* FAQ
+** ido-find-file打开文件时, 文件名是已有文件的前缀
+- 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
+
+** counsel-find-file打开文件时, 文件名是已有文件的前缀
+- 输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).
+
+** 无法加载一个package, 但无法正常安装 20171114
+- 错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai
+- 根因: 目前还不明确根因
+- 解决措施: 在~/.emacs.d/elpa目录下查找对应包(比如: ~/.emacs.d/elpa/monokai-theme-*), 部分
+  文件可能异常为空(size等于0).
+
+** EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119
+- 错误提示: No next track in playlist
+- 根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致
+- 解决措施: 继续保持默认编码为UTF-8, 设置进程交互编码系统转换
+#+BEGIN_SRC emacs-lisp
+  (when (string-equal current-language-environment "Chinese-GBK")
+    (setq default-process-coding-system '(utf-8-unix . chinese-gbk-dos)))
+#+END_SRC
+- 更多:
+  + 查看Emacs帮助\(C-h v current-language-environment\)和
+    \(C-h f prefer-coding-system\), 及Emacs Manual [[https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html#International][International]]和
+    [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html#Non_002dASCII-Characters][Non-ASCII Characters]]了解更多.
+  + Windows下载[[https://www.mpg123.de/download/win64][mpg123 win64]], [[https://sourceforge.net/projects/mplayerwin/][mplayer]]
+** Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119
+- 根因: 默认配置打开了确认, 调整配置即可
+- 解决措施: 修改不再提示process未退出(Emacs退出时自动退出)
+#+BEGIN_SRC emacs-lisp
+  (setq confirm-kill-processes nil)
+#+END_SRC
+
+** TODO EMMS在Windows下无法调整音量, amixer找不到
+** DONE Windows
+- 错误提示1:
+Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
+
+error: Package ‘use-package-’ is unavailable
+
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘--debug-init’ option to view a complete error backtrace.
+- 解决方法1: 重启emacs
+
+- 错误提示2:
+Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
+
+File is missing: Cannot open load file, No such file or directory, ggtags
+
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘--debug-init’ option to view a complete error backtrace.
+- 解决方法2: 重启emacs
+
+** DONE Windows下动态库加载路径设置
++- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)+
+- GnuTls and LibXml2 must be enable to find the relevant DLLs during startup.
+  failure to do so is not an error, but GnuTls or libxml2 feature won't be
+  available to the running session.
+- If set environment PATH correctly(e.g., include e:\\msys2\\mingw64\\bin and
+  e:\\msys2\\usr\\bin), GnuTls would work correctly but libxml2 still not work.
+  The libxml2 only method is to copy dlls(libiconv-2.dll, liblzma-5.dll,
+  libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.
+- variable: exec-path, load-path, dynamic-library-alist, process-environment
+- function: setenv/getenv
+
+http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/
+http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
+https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw
+
+* 常用快捷键
+** Global
+|-----------+------------------------------+----------------------------------------|
+| Key       | Function                     | Description                            |
+|-----------+------------------------------+----------------------------------------|
+| /         | <>                           | <>                                     |
+| C-x right | next-buffer                  | 下一个buffer                           |
+| C-x left  | prev-buffer                  | 前一个buffer                           |
+| C-x o     | other-window                 | 切换到另一个window                     |
+| C-c C-f   | find-function                | 查看函数定义                           |
+| C-x=      | what-cursor-position         | 查看光标处的字符信息                   |
+| C-u C-x=  | what-cursor-position         | 在独立buffer显示更详细的光标处字符信息 |
+| C-h L     | describe-language-enviroment |                                        |
+|           |                              |                                        |
+|           |                              |                                        |
+|-----------+------------------------------+----------------------------------------|
+
+** Org mode
+|-----+----------+-------------|
+| Key | Function | Description |
+|-----+----------+-------------|
+| /   | <>       | <>          |
+|     |          |             |
+|-----+----------+-------------|
+
+* 典型配置链接
+- purcell: https://github.com/purcell/emacs.d
+- preluede: https://github.com/bbatsov/prelude
+- spacemacs: http://spacemacs.org/
+- zilongshangren spacemacs: https://github.com/zilongshanren/spacemacs-private
+* 学习资源
+- [[https://emacs-china.org/][Emacs-China]]
+- [[https://mirror.tuna.tsinghua.edu.cn/help/elpa/][ELPA清华镜像]]
+- [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org][一年成为 Emacs 高手 (像神一样使用编辑器)]] - 陈斌
+- [[https://zilongshanren.com/][子龙山人]]

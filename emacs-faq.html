@@ -3,35 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-20 周一 01:16 -->
+<!-- 2017-11-26 Sun 21:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs FAQ</title>
 <meta name="generator" content="Org mode" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
-</script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -40,124 +18,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org6840dfb">1. 使用问题记录</a>
-<ul>
-<li><a href="#org94aa7eb">1.1. 无法加载一个package, 但无法正常安装 20171114</a></li>
-<li><a href="#orga0a9e83">1.2. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
-<li><a href="#org6e2a7ba">1.3. Emacs退出时提示"Active process exist; kill them and exit anyway"</a></li>
-<li><a href="#org81a0d90">1.4. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
-</ul>
-</li>
-<li><a href="#org15fb81e">2. 常用功能</a></li>
+<li><a href="#org06f8806">1. 使用问题记录</a></li>
+<li><a href="#orge6801cf">2. 常用功能</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org6840dfb" class="outline-2">
-<h2 id="org6840dfb"><span class="section-number-2">1</span> 使用问题记录</h2>
-<div class="outline-text-2" id="text-1">
-</div>
-<div id="outline-container-org94aa7eb" class="outline-3">
-<h3 id="org94aa7eb"><span class="section-number-3">1.1</span> 无法加载一个package, 但无法正常安装 20171114</h3>
-<div class="outline-text-3" id="text-1-1">
-<ul class="org-ul">
-<li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
-<li>根因: 目前还不明确根因</li>
-<li>解决措施: 在~/.emacs.d/elpa目录下查找对应包(比如: ~/.emacs.d/elpa/monokai-theme-*), 部分文件可能异常为空(size等于0).</li>
-</ul>
-</div>
+<div id="outline-container-org06f8806" class="outline-2">
+<h2 id="org06f8806"><span class="section-number-2">1</span> 使用问题记录</h2>
 </div>
 
-<div id="outline-container-orga0a9e83" class="outline-3">
-<h3 id="orga0a9e83"><span class="section-number-3">1.2</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
-<div class="outline-text-3" id="text-1-2">
-<ul class="org-ul">
-<li>错误提示: No next track in playlist</li>
-<li>根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致</li>
-<li>解决措施: 继续保持默认编码为UTF-8, 设置进程交互编码系统转换</li>
-</ul>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span class="org-keyword">when</span> (string-equal current-language-environment <span class="org-string">"Chinese-GBK"</span>)
-  (<span class="org-keyword">setq</span> default-process-coding-system '(utf-8-unix . chinese-gbk-dos)))
-</pre>
-</div>
-<ul class="org-ul">
-<li>更多:
-<ul class="org-ul">
-<li>查看Emacs帮助\(C-h v current-language-environment\)和
-\(C-h f prefer-coding-system\), 及Emacs Manual <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html#International">International</a>和
-<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html#Non_002dASCII-Characters">Non-ASCII Characters</a>了解更多.</li>
-<li>Windows下载<a href="https://www.mpg123.de/download/win64">mpg123 win64</a>, <a href="https://sourceforge.net/projects/mplayerwin/">mplayer</a></li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="outline-container-org6e2a7ba" class="outline-3">
-<h3 id="org6e2a7ba"><span class="section-number-3">1.3</span> Emacs退出时提示"Active process exist; kill them and exit anyway"</h3>
-<div class="outline-text-3" id="text-1-3">
-<ul class="org-ul">
-<li>根因: 默认配置打开了确认, 调整配置即可</li>
-<li>解决措施: 修改不再提示process未退出(Emacs退出时自动退出)</li>
-</ul>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span> confirm-kill-processes nil)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org81a0d90" class="outline-3">
-<h3 id="org81a0d90"><span class="section-number-3">1.4</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
-</div>
-</div>
-
-<div id="outline-container-org15fb81e" class="outline-2">
-<h2 id="org15fb81e"><span class="section-number-2">2</span> 常用功能</h2>
-<div class="outline-text-2" id="text-2">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">Function</th>
-<th scope="col" class="org-left">Key</th>
-<th scope="col" class="org-left">Describe</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">find-function</td>
-<td class="org-left">C-c C-f</td>
-<td class="org-left">查看函数定义</td>
-</tr>
-
-<tr>
-<td class="org-left">what-cursor-position</td>
-<td class="org-left">C-x = / C-u C-x=</td>
-<td class="org-left">查看光标处的字符(集)信息</td>
-</tr>
-
-<tr>
-<td class="org-left">list-coding-system</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">查看可用的字符集</td>
-</tr>
-
-<tr>
-<td class="org-left">describe-language-enviroment</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-</div>
+<div id="outline-container-orge6801cf" class="outline-2">
+<h2 id="orge6801cf"><span class="section-number-2">2</span> 常用功能</h2>
 </div>
 </div>
 </body>

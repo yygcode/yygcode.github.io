@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-11-26 Sun 21:07 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs手记</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Emacs手记</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org331149d">1. 介绍</a></li>
+<li><a href="#org71ebd07">2. 安装</a></li>
+<li><a href="#org85a9123">3. FAQ</a>
+<ul>
+<li><a href="#orgc0c1b4a">3.1. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#orgad9ef78">3.2. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org352e1f0">3.3. 无法加载一个package, 但无法正常安装 20171114</a></li>
+<li><a href="#org673a3bc">3.4. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
+<li><a href="#org3916be0">3.5. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
+<li><a href="#org02f8ad3">3.6. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
+<li><a href="#orgc093db7">3.7. <span class="done DONE">DONE</span> Windows</a></li>
+<li><a href="#org5617776">3.8. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
+</ul>
+</li>
+<li><a href="#orgef05d9a">4. 常用快捷键</a>
+<ul>
+<li><a href="#org69ea990">4.1. Global</a></li>
+<li><a href="#org66db8da">4.2. Org mode</a></li>
+</ul>
+</li>
+<li><a href="#orgcda0c03">5. 典型配置链接</a></li>
+<li><a href="#org13530b8">6. 学习资源</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org331149d" class="outline-2">
+<h2 id="org331149d"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+EMACS/ˈiːmæks/称为神之编辑器(vs. <a href="http://www.vim.org/">VIM</a>称为编辑器之神). Emacs不仅仅是一个编辑器,
+使用者用它编写代码, 查看文档, 翻阅照片, 浏览网页, 收发邮件, 播放音乐. 对于
+Emacser而言, Emacs是一个操作系统, 而宿主操作系统只是一个引导程序.
+</p>
+
+<p>
+EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的编辑器出现. EMACS和VIM是硕果仅存者, 这说明了它们的优秀.
+</p>
+
+<p>
+使用Emacs的程序员幸福的生活在Emacs中.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org71ebd07" class="outline-2">
+<h2 id="org71ebd07"><span class="section-number-2">2</span> 安装</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+参考<a href="software.html#emacs-windows">Emacs安装</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org85a9123" class="outline-2">
+<h2 id="org85a9123"><span class="section-number-2">3</span> FAQ</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgc0c1b4a" class="outline-3">
+<h3 id="orgc0c1b4a"><span class="section-number-3">3.1</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgad9ef78" class="outline-3">
+<h3 id="orgad9ef78"><span class="section-number-3">3.2</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org352e1f0" class="outline-3">
+<h3 id="org352e1f0"><span class="section-number-3">3.3</span> 无法加载一个package, 但无法正常安装 20171114</h3>
+<div class="outline-text-3" id="text-3-3">
+<ul class="org-ul">
+<li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
+<li>根因: 目前还不明确根因</li>
+<li>解决措施: 在~/.emacs.d/elpa目录下查找对应包(比如: ~/.emacs.d/elpa/monokai-theme-*), 部分文件可能异常为空(size等于0).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org673a3bc" class="outline-3">
+<h3 id="org673a3bc"><span class="section-number-3">3.4</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
+<div class="outline-text-3" id="text-3-4">
+<ul class="org-ul">
+<li>错误提示: No next track in playlist</li>
+<li>根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致</li>
+<li>解决措施: 继续保持默认编码为UTF-8, 设置进程交互编码系统转换</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">when</span> (string-equal current-language-environment <span class="org-string">"Chinese-GBK"</span>)
+  (<span class="org-keyword">setq</span> default-process-coding-system '(utf-8-unix . chinese-gbk-dos)))
+</pre>
+</div>
+<ul class="org-ul">
+<li>更多:
+<ul class="org-ul">
+<li>查看Emacs帮助\(C-h v current-language-environment\)和
+\(C-h f prefer-coding-system\), 及Emacs Manual <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html#International">International</a>和
+<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html#Non_002dASCII-Characters">Non-ASCII Characters</a>了解更多.</li>
+<li>Windows下载<a href="https://www.mpg123.de/download/win64">mpg123 win64</a>, <a href="https://sourceforge.net/projects/mplayerwin/">mplayer</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3916be0" class="outline-3">
+<h3 id="org3916be0"><span class="section-number-3">3.5</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
+<div class="outline-text-3" id="text-3-5">
+<ul class="org-ul">
+<li>根因: 默认配置打开了确认, 调整配置即可</li>
+<li>解决措施: 修改不再提示process未退出(Emacs退出时自动退出)</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span> confirm-kill-processes nil)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org02f8ad3" class="outline-3">
+<h3 id="org02f8ad3"><span class="section-number-3">3.6</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
+</div>
+<div id="outline-container-orgc093db7" class="outline-3">
+<h3 id="orgc093db7"><span class="section-number-3">3.7</span> <span class="done DONE">DONE</span> Windows</h3>
+<div class="outline-text-3" id="text-3-7">
+<ul class="org-ul">
+<li>错误提示1:</li>
+</ul>
+<p>
+Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
+</p>
+
+<p>
+error: Package ‘use-package-’ is unavailable
+</p>
+
+<p>
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘&#x2013;debug-init’ option to view a complete error backtrace.
+</p>
+<ul class="org-ul">
+<li>解决方法1: 重启emacs</li>
+
+<li>错误提示2:</li>
+</ul>
+<p>
+Warning (initialization): An error occurred while loading ‘e:/.emacs.d/init.el’:
+</p>
+
+<p>
+File is missing: Cannot open load file, No such file or directory, ggtags
+</p>
+
+<p>
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘&#x2013;debug-init’ option to view a complete error backtrace.
+</p>
+<ul class="org-ul">
+<li>解决方法2: 重启emacs</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5617776" class="outline-3">
+<h3 id="org5617776"><span class="section-number-3">3.8</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+<del>- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)</del>
+</p>
+<ul class="org-ul">
+<li>GnuTls and LibXml2 must be enable to find the relevant DLLs during startup.
+failure to do so is not an error, but GnuTls or libxml2 feature won't be
+available to the running session.</li>
+<li>If set environment PATH correctly(e.g., include e:\\msys2\\mingw64\\bin and
+e:\\msys2\\usr\\bin), GnuTls would work correctly but libxml2 still not work.
+The libxml2 only method is to copy dlls(libiconv-2.dll, liblzma-5.dll,
+libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
+<li>variable: exec-path, load-path, dynamic-library-alist, process-environment</li>
+<li>function: setenv/getenv</li>
+</ul>
+
+<p>
+<a href="http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/">http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/</a>
+<a href="http://gregorygrubbs.com/emacs/10-tips-emacs-windows/">http://gregorygrubbs.com/emacs/10-tips-emacs-windows/</a>
+<a href="https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw">https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgef05d9a" class="outline-2">
+<h2 id="orgef05d9a"><span class="section-number-2">4</span> 常用快捷键</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org69ea990" class="outline-3">
+<h3 id="org69ea990"><span class="section-number-3">4.1</span> Global</h3>
+<div class="outline-text-3" id="text-4-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x right</td>
+<td class="org-left">next-buffer</td>
+<td class="org-left">下一个buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x left</td>
+<td class="org-left">prev-buffer</td>
+<td class="org-left">前一个buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x o</td>
+<td class="org-left">other-window</td>
+<td class="org-left">切换到另一个window</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-f</td>
+<td class="org-left">find-function</td>
+<td class="org-left">查看函数定义</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x=</td>
+<td class="org-left">what-cursor-position</td>
+<td class="org-left">查看光标处的字符信息</td>
+</tr>
+
+<tr>
+<td class="org-left">C-u C-x=</td>
+<td class="org-left">what-cursor-position</td>
+<td class="org-left">在独立buffer显示更详细的光标处字符信息</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h L</td>
+<td class="org-left">describe-language-enviroment</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org66db8da" class="outline-3">
+<h3 id="org66db8da"><span class="section-number-3">4.2</span> Org mode</h3>
+<div class="outline-text-3" id="text-4-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcda0c03" class="outline-2">
+<h2 id="orgcda0c03"><span class="section-number-2">5</span> 典型配置链接</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>purcell: <a href="https://github.com/purcell/emacs.d">https://github.com/purcell/emacs.d</a></li>
+<li>preluede: <a href="https://github.com/bbatsov/prelude">https://github.com/bbatsov/prelude</a></li>
+<li>spacemacs: <a href="http://spacemacs.org/">http://spacemacs.org/</a></li>
+<li>zilongshangren spacemacs: <a href="https://github.com/zilongshanren/spacemacs-private">https://github.com/zilongshanren/spacemacs-private</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org13530b8" class="outline-2">
+<h2 id="org13530b8"><span class="section-number-2">6</span> 学习资源</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li><a href="https://emacs-china.org/">Emacs-China</a></li>
+<li><a href="https://mirror.tuna.tsinghua.edu.cn/help/elpa/">ELPA清华镜像</a></li>
+<li><a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org">一年成为 Emacs 高手 (像神一样使用编辑器)</a> - 陈斌</li>
+<li><a href="https://zilongshanren.com/">子龙山人</a></li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>
