@@ -37,6 +37,83 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 - Publish
 - Tables
 
+**** tables
+- base tables
+行首第一个非空白字符是 =|= 则org认为是表格。表格输入类似如下：
+#+BEGIN_SRC text
+|---------+-------------+-----------|
+| IO Size | Queue Depth | Bandwidth |
+|---------+-------------+-----------|
+| 4KB     |           1 | 128MBps   |
+| 4KB     |           4 | 372MBps   |
+| 16KB    |          16 | 820MBps   |
+|---------+-------------+-----------|
+#+END_SRC
+输出后显示如下:
+|---------+-------------+-----------|
+| IO Size | Queue Depth | Bandwidth |
+|---------+-------------+-----------|
+| 4KB     |           1 | 128MBps   |
+| 4KB     |           4 | 372MBps   |
+| 16KB    |          16 | 820MBps   |
+|---------+-------------+-----------|
+
+支持选择左/中/右对齐, 分组显示. 支持列宽度设置, 但导出到HTML时无效. 但不能取消
+表头加粗. 不能在开始和末尾加分割线.
+
+#+BEGIN_SRC text
+|---------+-------------+-----------+------------|
+| IO Size | Queue Depth | Bandwidth | Comments   |
+|---------+-------------+-----------+------------|
+| /       | <>          |        <> | <>         |
+| <l>     | <c>         |       <r> | <10>       |
+| 4KB     | 1           |   128MBps | The resu=> |
+| 4KB     | 4           |   372MBps | OK         |
+| 16KB    | 16          |   820MBps | OK         |
+|         |             |           |            |
+|---------+-------------+-----------+------------|
+#+END_SRC
+|---------+-------------+-----------+------------|
+| IO Size | Queue Depth | Bandwidth | Comments   |
+|---------+-------------+-----------+------------|
+| /       | <>          |        <> | <>         |
+| <l>     | <c>         |       <r> | <10>       |
+| 4KB     | 1           |   128MBps | The result is to slow |
+| 4KB     | 4           |   372MBps | OK         |
+| 16KB    | 16          |   820MBps | OK         |
+|---------+-------------+-----------+------------|
+
+- Multicolumn table
+Press C-c ~ trigger. [[https://sourceforge.net/projects/table/files/][Source Forge]].
+#+BEGIN_SRC text
++------------+-------------+-----------+------------+
+| <b>IO Size | Queue Depth | Bandwidth | Comments   |
++------------+-------------+-----------+------------+
+| 4KB        |      1      |   128MBps | The Result |
+|            |             |           | is slow    |
++------------+-------------+-----------+------------+
+| 4KB        |      4      |   372MBps | OK  Result |
++------------+-------------+-----------+------------+
+| 4KB        | 4           |   372MBps | OK         |
+| 16KB       | 16          |   820MBps | OK         |
++------------+-------------+-----------+------------+
+#+END_SRC
+
++------------+-------------+-----------+------------+
+| <b>IO Size | Queue Depth | Bandwidth | Comments   |
++------------+-------------+-----------+------------+
+| 4KB        |      1      |   128MBps | The Result |
+|            |             |           | is slow    |
++------------+-------------+-----------+------------+
+| 4KB        |      4      |   372MBps | OK  Result |
++------------+-------------+-----------+------------+
+| 4KB        | 4           |   372MBps | OK         |
+| 16KB       | 16          |   820MBps | OK         |
++------------+-------------+-----------+------------+
+
+FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再调整为此种模式更为
+便捷. 需要写一个函数转换分割行.
+
 * FAQ
 ** ido-find-file打开文件时, 文件名是已有文件的前缀
 - 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
@@ -121,8 +198,7 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 | C-x=      | what-cursor-position         | 查看光标处的字符信息                   |
 | C-u C-x=  | what-cursor-position         | 在独立buffer显示更详细的光标处字符信息 |
 | C-h L     | describe-language-enviroment |                                        |
-|           |                              |                                        |
-|           |                              |                                        |
+| C-h b     | describe-bindings            | 当前buffer绑定的键                     |
 |-----------+------------------------------+----------------------------------------|
 
 ** Org mode

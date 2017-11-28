@@ -3,11 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-27 Mon 01:28 -->
+<!-- 2017-11-28 Tue 21:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="css/site.css" />
 </head>
@@ -18,43 +19,43 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5c44c6f">1. 介绍</a>
+<li><a href="#org6ceb455">1. 介绍</a>
 <ul>
-<li><a href="#org379923f">1.1. 发展历史</a></li>
-<li><a href="#orgb33d347">1.2. 衡量评测</a></li>
+<li><a href="#org5bc547f">1.1. 发展历史</a></li>
+<li><a href="#org4e46621">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#orgdd933fb">2. 存储产品分析</a>
+<li><a href="#org5eb2e7a">2. 存储产品分析</a>
 <ul>
-<li><a href="#orgb17d879">2.1. IBM V7000</a></li>
+<li><a href="#org9f44ef2">2.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#org26be478">3. 软件架构</a></li>
-<li><a href="#org3110272">4. 驱动</a>
+<li><a href="#org0ded6dd">3. 软件架构</a></li>
+<li><a href="#org07afd53">4. 驱动</a>
 <ul>
-<li><a href="#org537879b">4.1. 双控互联NTB</a></li>
-<li><a href="#org472fa9b">4.2. FC卡</a></li>
-<li><a href="#orgd4433a4">4.3. SAS卡</a></li>
-<li><a href="#orgbd15352">4.4. 网卡</a></li>
-<li><a href="#orgaae25ef">4.5. IB卡</a></li>
+<li><a href="#orge74e111">4.1. 双控互联NTB</a></li>
+<li><a href="#org81c8554">4.2. FC卡</a></li>
+<li><a href="#org77948c7">4.3. SAS卡</a></li>
+<li><a href="#orgb7f40a9">4.4. 网卡</a></li>
+<li><a href="#orgfd32320">4.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#orgfbd9b05">5. SCSI协议</a></li>
-<li><a href="#orgab1d719">6. </a></li>
+<li><a href="#org776b904">5. SCSI协议</a></li>
+<li><a href="#org36125e3">6. BACKUP</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5c44c6f" class="outline-2">
-<h2 id="org5c44c6f"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org6ceb455" class="outline-2">
+<h2 id="org6ceb455"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org379923f" class="outline-3">
-<h3 id="org379923f"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-org5bc547f" class="outline-3">
+<h3 id="org5bc547f"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-orgb33d347" class="outline-3">
-<h3 id="orgb33d347"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-org4e46621" class="outline-3">
+<h3 id="org4e46621"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注六个方面:
@@ -71,12 +72,12 @@ SAN存储需要关注六个方面:
 </div>
 </div>
 
-<div id="outline-container-orgdd933fb" class="outline-2">
-<h2 id="orgdd933fb"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-org5eb2e7a" class="outline-2">
+<h2 id="org5eb2e7a"><span class="section-number-2">2</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgb17d879" class="outline-3">
-<h3 id="orgb17d879"><span class="section-number-3">2.1</span> IBM V7000</h3>
+<div id="outline-container-org9f44ef2" class="outline-3">
+<h3 id="org9f44ef2"><span class="section-number-3">2.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -86,40 +87,56 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-org26be478" class="outline-2">
-<h2 id="org26be478"><span class="section-number-2">3</span> 软件架构</h2>
+<div id="outline-container-org0ded6dd" class="outline-2">
+<h2 id="org0ded6dd"><span class="section-number-2">3</span> 软件架构</h2>
 </div>
-<div id="outline-container-org3110272" class="outline-2">
-<h2 id="org3110272"><span class="section-number-2">4</span> 驱动</h2>
+<div id="outline-container-org07afd53" class="outline-2">
+<h2 id="org07afd53"><span class="section-number-2">4</span> 驱动</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org537879b" class="outline-3">
-<h3 id="org537879b"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
+<div id="outline-container-orge74e111" class="outline-3">
+<h3 id="orge74e111"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-org472fa9b" class="outline-3">
-<h3 id="org472fa9b"><span class="section-number-3">4.2</span> FC卡</h3>
+<div id="outline-container-org81c8554" class="outline-3">
+<h3 id="org81c8554"><span class="section-number-3">4.2</span> FC卡</h3>
 </div>
-<div id="outline-container-orgd4433a4" class="outline-3">
-<h3 id="orgd4433a4"><span class="section-number-3">4.3</span> SAS卡</h3>
+<div id="outline-container-org77948c7" class="outline-3">
+<h3 id="org77948c7"><span class="section-number-3">4.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-orgbd15352" class="outline-3">
-<h3 id="orgbd15352"><span class="section-number-3">4.4</span> 网卡</h3>
+<div id="outline-container-orgb7f40a9" class="outline-3">
+<h3 id="orgb7f40a9"><span class="section-number-3">4.4</span> 网卡</h3>
 </div>
-<div id="outline-container-orgaae25ef" class="outline-3">
-<h3 id="orgaae25ef"><span class="section-number-3">4.5</span> IB卡</h3>
+<div id="outline-container-orgfd32320" class="outline-3">
+<h3 id="orgfd32320"><span class="section-number-3">4.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-orgfbd9b05" class="outline-2">
-<h2 id="orgfbd9b05"><span class="section-number-2">5</span> SCSI协议</h2>
+<div id="outline-container-org776b904" class="outline-2">
+<h2 id="org776b904"><span class="section-number-2">5</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-orgab1d719" class="outline-2">
-<h2 id="orgab1d719"><span class="section-number-2">6</span> </h2>
+<div id="outline-container-org36125e3" class="outline-2">
+<h2 id="org36125e3"><span class="section-number-2">6</span> BACKUP</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>ALUA, AP(Active-Passive)</li>
+<li>VVOL, NPIV, ALUA, AA,</li>
+<li>Sync Remote Copy, Async Remote Copy, Dual A-A</li>
+<li>FlashCopy, Clone, Backup</li>
+<li>Mirror, SE, Compression</li>
+<li>Tier, Migration</li>
+<li>RAID</li>
+<li>T10 DIF, Virtualization, Quorum Disk</li>
+<li>Volume, Extent, Mdisk, VL,</li>
+<li>Local copy: flashcopy, clone, incremental backup</li>
+<li>Prepare, Copying, Full copied</li>
+<li></li>
+</ul>
+</div>
 </div>
 </div>
 </body>

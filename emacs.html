@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-28 Tue 00:55 -->
+<!-- 2017-11-28 Tue 21:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs手记</title>
@@ -41,44 +41,44 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org331149d">1. 介绍</a></li>
-<li><a href="#org71ebd07">2. 安装</a></li>
-<li><a href="#orgd3271d2">3. Packages</a>
+<li><a href="#org626f372">1. 介绍</a></li>
+<li><a href="#orgc74f06f">2. 安装</a></li>
+<li><a href="#org1b6305c">3. Packages</a>
 <ul>
-<li><a href="#orgbf69cbf">3.1. org-mode</a>
+<li><a href="#orgf588cb9">3.1. org-mode</a>
 <ul>
-<li><a href="#org93e9a26">3.1.1. What is Orgmode</a></li>
-<li><a href="#org290a796">3.1.2. Functions</a></li>
+<li><a href="#org7012f15">3.1.1. What is Orgmode</a></li>
+<li><a href="#orgff19346">3.1.2. Functions</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org85a9123">4. FAQ</a>
+<li><a href="#orgcbdd5fa">4. FAQ</a>
 <ul>
-<li><a href="#orgc0c1b4a">4.1. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#orgad9ef78">4.2. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#org352e1f0">4.3. 无法加载一个package, 但无法正常安装 20171114</a></li>
-<li><a href="#org673a3bc">4.4. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
-<li><a href="#org3916be0">4.5. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
-<li><a href="#org02f8ad3">4.6. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
-<li><a href="#orgc093db7">4.7. <span class="done DONE">DONE</span> Windows</a></li>
-<li><a href="#org5617776">4.8. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
+<li><a href="#org7c16dd2">4.1. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org1ebc94c">4.2. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org2f954eb">4.3. 无法加载一个package, 但无法正常安装 20171114</a></li>
+<li><a href="#org863ef1f">4.4. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
+<li><a href="#org64813e5">4.5. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
+<li><a href="#org3732cd7">4.6. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
+<li><a href="#orgb84c9ac">4.7. <span class="done DONE">DONE</span> Windows</a></li>
+<li><a href="#org4ac0a65">4.8. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
 </ul>
 </li>
-<li><a href="#orgef05d9a">5. 常用快捷键</a>
+<li><a href="#org344e6b9">5. 常用快捷键</a>
 <ul>
-<li><a href="#org69ea990">5.1. Global</a></li>
-<li><a href="#org66db8da">5.2. Org mode</a></li>
+<li><a href="#orgf122da6">5.1. Global</a></li>
+<li><a href="#orgd6ab701">5.2. Org mode</a></li>
 </ul>
 </li>
-<li><a href="#orgcda0c03">6. 典型配置链接</a></li>
-<li><a href="#org13530b8">7. 学习资源</a></li>
+<li><a href="#orgd169bd4">6. 典型配置链接</a></li>
+<li><a href="#org73068aa">7. 学习资源</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org331149d" class="outline-2">
-<h2 id="org331149d"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org626f372" class="outline-2">
+<h2 id="org626f372"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 EMACS/ˈiːmæks/称为神之编辑器(vs. <a href="http://www.vim.org/">VIM</a>称为编辑器之神). Emacs不仅仅是一个编辑器,
@@ -96,8 +96,8 @@ EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的
 </div>
 </div>
 
-<div id="outline-container-org71ebd07" class="outline-2">
-<h2 id="org71ebd07"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-orgc74f06f" class="outline-2">
+<h2 id="orgc74f06f"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 参考<a href="software.html#emacs-windows">Emacs安装</a>.
@@ -105,16 +105,16 @@ EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的
 </div>
 </div>
 
-<div id="outline-container-orgd3271d2" class="outline-2">
-<h2 id="orgd3271d2"><span class="section-number-2">3</span> Packages</h2>
+<div id="outline-container-org1b6305c" class="outline-2">
+<h2 id="org1b6305c"><span class="section-number-2">3</span> Packages</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgbf69cbf" class="outline-3">
-<h3 id="orgbf69cbf"><span class="section-number-3">3.1</span> org-mode</h3>
+<div id="outline-container-orgf588cb9" class="outline-3">
+<h3 id="orgf588cb9"><span class="section-number-3">3.1</span> org-mode</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org93e9a26" class="outline-4">
-<h4 id="org93e9a26"><span class="section-number-4">3.1.1</span> What is Orgmode</h4>
+<div id="outline-container-org7012f15" class="outline-4">
+<h4 id="org7012f15"><span class="section-number-4">3.1.1</span> What is Orgmode</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Orgmode is a system for note taking and project planning using plain text files.
@@ -132,8 +132,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-org290a796" class="outline-4">
-<h4 id="org290a796"><span class="section-number-4">3.1.2</span> Functions</h4>
+<div id="outline-container-orgff19346" class="outline-4">
+<h4 id="orgff19346"><span class="section-number-4">3.1.2</span> Functions</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <ul class="org-ul">
 <li>Outline</li>
@@ -147,16 +147,239 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 <li>Tables</li>
 </ul>
 </div>
+
+<ol class="org-ol">
+<li><a id="orgc090c62"></a>tables<br />
+<div class="outline-text-5" id="text-3-1-2-1">
+<ul class="org-ul">
+<li>base tables</li>
+</ul>
+<p>
+行首第一个非空白字符是 <code>|</code> 则org认为是表格。表格输入类似如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">|---------+-------------+-----------|
+| IO Size | Queue Depth | Bandwidth |
+|---------+-------------+-----------|
+| 4KB     |           1 | 128MBps   |
+| 4KB     |           4 | 372MBps   |
+| 16KB    |          16 | 820MBps   |
+|---------+-------------+-----------|
+</pre>
+</div>
+<p>
+输出后显示如下:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">IO Size</th>
+<th scope="col" class="org-right">Queue Depth</th>
+<th scope="col" class="org-left">Bandwidth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">4KB</td>
+<td class="org-right">1</td>
+<td class="org-left">128MBps</td>
+</tr>
+
+<tr>
+<td class="org-left">4KB</td>
+<td class="org-right">4</td>
+<td class="org-left">372MBps</td>
+</tr>
+
+<tr>
+<td class="org-left">16KB</td>
+<td class="org-right">16</td>
+<td class="org-left">820MBps</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+支持选择左/中/右对齐, 分组显示. 支持列宽度设置, 但导出到HTML时无效. 但不能取消表头加粗. 不能在开始和末尾加分割线.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">|---------+-------------+-----------+------------|
+| IO Size | Queue Depth | Bandwidth | Comments   |
+|---------+-------------+-----------+------------|
+| /       | &lt;&gt;          |        &lt;&gt; | &lt;&gt;         |
+| &lt;l&gt;     | &lt;c&gt;         |       &lt;r&gt; | &lt;10&gt;       |
+| 4KB     | 1           |   128MBps | The resu=&gt; |
+| 4KB     | 4           |   372MBps | OK         |
+| 16KB    | 16          |   820MBps | OK         |
+|         |             |           |            |
+|---------+-------------+-----------+------------|
+</pre>
+</div>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-center" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">IO Size</th>
+<th scope="col" class="org-center">Queue Depth</th>
+<th scope="col" class="org-right">Bandwidth</th>
+<th scope="col" class="org-left">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">4KB</td>
+<td class="org-center">1</td>
+<td class="org-right">128MBps</td>
+<td class="org-left">The result is to slow</td>
+</tr>
+
+<tr>
+<td class="org-left">4KB</td>
+<td class="org-center">4</td>
+<td class="org-right">372MBps</td>
+<td class="org-left">OK</td>
+</tr>
+
+<tr>
+<td class="org-left">16KB</td>
+<td class="org-center">16</td>
+<td class="org-right">820MBps</td>
+<td class="org-left">OK</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>Multicolumn table</li>
+</ul>
+<p>
+Press C-c ~ trigger. <a href="https://sourceforge.net/projects/table/files/">Source Forge</a>.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">+------------+-------------+-----------+------------+
+| &lt;b&gt;IO Size | Queue Depth | Bandwidth | Comments   |
++------------+-------------+-----------+------------+
+| 4KB        |      1      |   128MBps | The Result |
+|            |             |           | is slow    |
++------------+-------------+-----------+------------+
+| 4KB        |      4      |   372MBps | OK  Result |
++------------+-------------+-----------+------------+
+| 4KB        | 4           |   372MBps | OK         |
+| 16KB       | 16          |   820MBps | OK         |
++------------+-------------+-----------+------------+
+</pre>
+</div>
+
+<!-- This HTML table template is generated by emacs 26.0.50 -->
+<table border="1">
+  <tr>
+    <td align="left" valign="top">
+      &nbsp;<b>IO&nbsp;Size&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;Queue&nbsp;Depth&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;Bandwidth&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;Comments&nbsp;&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      &nbsp;4KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;&nbsp;&nbsp;128MBps&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;The&nbsp;Result&nbsp;<br />
+      &nbsp;is&nbsp;slow&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      &nbsp;4KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;&nbsp;&nbsp;372MBps&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;OK&nbsp;&nbsp;Result&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      &nbsp;4KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      &nbsp;16KB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      &nbsp;16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;&nbsp;&nbsp;372MBps&nbsp;<br />
+      &nbsp;&nbsp;&nbsp;820MBps&nbsp;
+    </td>
+    <td align="left" valign="top">
+      &nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      &nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+  </tr>
+</table>
+
+<p>
+FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再调整为此种模式更为便捷. 需要写一个函数转换分割行.
+</p>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org85a9123" class="outline-2">
-<h2 id="org85a9123"><span class="section-number-2">4</span> FAQ</h2>
+<div id="outline-container-orgcbdd5fa" class="outline-2">
+<h2 id="orgcbdd5fa"><span class="section-number-2">4</span> FAQ</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgc0c1b4a" class="outline-3">
-<h3 id="orgc0c1b4a"><span class="section-number-3">4.1</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div id="outline-container-org7c16dd2" class="outline-3">
+<h3 id="org7c16dd2"><span class="section-number-3">4.1</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).</li>
@@ -164,8 +387,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-orgad9ef78" class="outline-3">
-<h3 id="orgad9ef78"><span class="section-number-3">4.2</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div id="outline-container-org1ebc94c" class="outline-3">
+<h3 id="org1ebc94c"><span class="section-number-3">4.2</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
 <div class="outline-text-3" id="text-4-2">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).</li>
@@ -173,8 +396,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-org352e1f0" class="outline-3">
-<h3 id="org352e1f0"><span class="section-number-3">4.3</span> 无法加载一个package, 但无法正常安装 20171114</h3>
+<div id="outline-container-org2f954eb" class="outline-3">
+<h3 id="org2f954eb"><span class="section-number-3">4.3</span> 无法加载一个package, 但无法正常安装 20171114</h3>
 <div class="outline-text-3" id="text-4-3">
 <ul class="org-ul">
 <li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
@@ -184,8 +407,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-org673a3bc" class="outline-3">
-<h3 id="org673a3bc"><span class="section-number-3">4.4</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
+<div id="outline-container-org863ef1f" class="outline-3">
+<h3 id="org863ef1f"><span class="section-number-3">4.4</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
 <div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li>错误提示: No next track in playlist</li>
@@ -208,8 +431,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </ul>
 </div>
 </div>
-<div id="outline-container-org3916be0" class="outline-3">
-<h3 id="org3916be0"><span class="section-number-3">4.5</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
+<div id="outline-container-org64813e5" class="outline-3">
+<h3 id="org64813e5"><span class="section-number-3">4.5</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
 <div class="outline-text-3" id="text-4-5">
 <ul class="org-ul">
 <li>根因: 默认配置打开了确认, 调整配置即可</li>
@@ -222,11 +445,11 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-org02f8ad3" class="outline-3">
-<h3 id="org02f8ad3"><span class="section-number-3">4.6</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
+<div id="outline-container-org3732cd7" class="outline-3">
+<h3 id="org3732cd7"><span class="section-number-3">4.6</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
 </div>
-<div id="outline-container-orgc093db7" class="outline-3">
-<h3 id="orgc093db7"><span class="section-number-3">4.7</span> <span class="done DONE">DONE</span> Windows</h3>
+<div id="outline-container-orgb84c9ac" class="outline-3">
+<h3 id="orgb84c9ac"><span class="section-number-3">4.7</span> <span class="done DONE">DONE</span> Windows</h3>
 <div class="outline-text-3" id="text-4-7">
 <ul class="org-ul">
 <li>错误提示1:</li>
@@ -268,8 +491,8 @@ the ‘&#x2013;debug-init’ option to view a complete error backtrace.
 </div>
 </div>
 
-<div id="outline-container-org5617776" class="outline-3">
-<h3 id="org5617776"><span class="section-number-3">4.8</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
+<div id="outline-container-org4ac0a65" class="outline-3">
+<h3 id="org4ac0a65"><span class="section-number-3">4.8</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 <del>- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)</del>
@@ -295,12 +518,12 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgef05d9a" class="outline-2">
-<h2 id="orgef05d9a"><span class="section-number-2">5</span> 常用快捷键</h2>
+<div id="outline-container-org344e6b9" class="outline-2">
+<h2 id="org344e6b9"><span class="section-number-2">5</span> 常用快捷键</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org69ea990" class="outline-3">
-<h3 id="org69ea990"><span class="section-number-3">5.1</span> Global</h3>
+<div id="outline-container-orgf122da6" class="outline-3">
+<h3 id="orgf122da6"><span class="section-number-3">5.1</span> Global</h3>
 <div class="outline-text-3" id="text-5-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -367,23 +590,17 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">C-h b</td>
+<td class="org-left">describe-bindings</td>
+<td class="org-left">当前buffer绑定的键</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org66db8da" class="outline-3">
-<h3 id="org66db8da"><span class="section-number-3">5.2</span> Org mode</h3>
+<div id="outline-container-orgd6ab701" class="outline-3">
+<h3 id="orgd6ab701"><span class="section-number-3">5.2</span> Org mode</h3>
 <div class="outline-text-3" id="text-5-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -418,8 +635,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgcda0c03" class="outline-2">
-<h2 id="orgcda0c03"><span class="section-number-2">6</span> 典型配置链接</h2>
+<div id="outline-container-orgd169bd4" class="outline-2">
+<h2 id="orgd169bd4"><span class="section-number-2">6</span> 典型配置链接</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>purcell: <a href="https://github.com/purcell/emacs.d">https://github.com/purcell/emacs.d</a></li>
@@ -429,8 +646,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org13530b8" class="outline-2">
-<h2 id="org13530b8"><span class="section-number-2">7</span> 学习资源</h2>
+<div id="outline-container-org73068aa" class="outline-2">
+<h2 id="org73068aa"><span class="section-number-2">7</span> 学习资源</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li><a href="https://emacs-china.org/">Emacs-China</a></li>
