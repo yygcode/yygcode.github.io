@@ -1,5 +1,15 @@
 #+TITLE: Emacs手记
-#+INCLUDE: exportopt.org
+#+INCLUDE: export-notes.org
+
+#+BEGIN_COMMENT
+#+HTML_HEAD: <link rel="shortcut icon" href="http://tychoish.com/img/favicon.ico">
+#+HTML_HEAD:     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/2.1.2/normalize.min.css">
+
+#+HTML_HEAD:     <!-- Stylesheets -->
+#+HTML_HEAD:     <link rel="stylesheet" href="http://tychoish.com/css/screen.css">
+#+HTML_HEAD:     <link rel="stylesheet" href="http://tychoish.com/css/github.css">
+#+HTML_HEAD:     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/default.min.css">
+#+END_COMMENT
 
 * 介绍
 EMACS/ˈiːmæks/称为神之编辑器(vs. [[http://www.vim.org/][VIM]]称为编辑器之神). Emacs不仅仅是一个编辑器,
@@ -20,7 +30,7 @@ EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的
 Orgmode is a system for note taking and project planning using plain text files.
 The author is [[https://staff.science.uva.nl/c.dominik/][Carsten Dominik]], created in 2003.
 
-Ref Orgmode [[http://orgmode.org/][Homepage]]([[http://orgmode.org/manual/][Manual]]) and [[https://www.youtube.com/watch?v=oJTwQvgfgMM][Youtube]] for more details.
+Ref Orgmode [[http://orgmode.org/][Homepage]]([[http://orgmode.org/manual/][Manual]], [[http://orgmode.org/worg/][community]]) and [[https://www.youtube.com/watch?v=oJTwQvgfgMM][Youtube]] for more details.
 
 Core advantage: Plain text [[http://gettingthingsdone.com/][GTD]] tools. Truely Portable Format. Working together
 with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
@@ -133,6 +143,24 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
           return 0;
   }
 #+END_SRC
+* 使用
+** source code
+- Need require ob-C
+- Mingw needs to install gcc
+- upper case C
+#+BEGIN_SRC C
+  #include <stdio.h>
+
+  int main()
+  {
+          printf("hello world\n");
+          return 0;
+  }
+#+END_SRC
+
+#+RESULTS:
+: hello world
+
 * FAQ
 ** ido-find-file打开文件时, 文件名是已有文件的前缀
 - 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
@@ -238,3 +266,6 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 - [[https://mirror.tuna.tsinghua.edu.cn/help/elpa/][ELPA清华镜像]]
 - [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org][一年成为 Emacs 高手 (像神一样使用编辑器)]] - 陈斌
 - [[https://zilongshanren.com/][子龙山人]]
+- https://ogbe.net/emacsconfig.html
+- http://bastibe.de/2013-11-13-blogging-with-emacs.html
+- https://justin.abrah.ms/emacs/orgmode_static_site_generator.html
