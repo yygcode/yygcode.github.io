@@ -1,6 +1,5 @@
 #+TITLE: Emacs手记
-#+AUTHOR: yanyg
-#+EMAIL: yygcode@gmail.com
+#+INCLUDE: exportopt.org
 
 * 介绍
 EMACS/ˈiːmæks/称为神之编辑器(vs. [[http://www.vim.org/][VIM]]称为编辑器之神). Emacs不仅仅是一个编辑器,
@@ -56,7 +55,18 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 | 4KB     |           1 | 128MBps   |
 | 4KB     |           4 | 372MBps   |
 | 16KB    |          16 | 820MBps   |
+|         |           7 |           |
 |---------+-------------+-----------|
+#+TBLFM: @5$2=vmean(@2$2..@4$2)
+
+| Student  | Maths |   Physics | Mean |
+|----------+-------+-----------+------|
+| Bertrand |    13 |        09 |   11 |
+| Henri    |    15 |        14 | 14.5 |
+| Arnold   |    17 |        18 | 17.5 |
+|----------+-------+-----------+------|
+| Means    |    15 | 13.666667 | 13.5 |
+#+TBLFM: $4=vmean($2..$3)::@5$2=vmean(@2$2..@4$2)::@5$3=vmean(@2$3..@4$3)
 
 支持选择左/中/右对齐, 分组显示. 支持列宽度设置, 但导出到HTML时无效. 但不能取消
 表头加粗. 不能在开始和末尾加分割线.
@@ -114,6 +124,15 @@ Press C-c ~ trigger. [[https://sourceforge.net/projects/table/files/][Source For
 FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再调整为此种模式更为
 便捷. 需要写一个函数转换分割行.
 
+
+**** source
+#+BEGIN_SRC c
+  int main(int argc, char **argv)
+  {
+          printf("hello world\n");
+          return 0;
+  }
+#+END_SRC
 * FAQ
 ** ido-find-file打开文件时, 文件名是已有文件的前缀
 - 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
