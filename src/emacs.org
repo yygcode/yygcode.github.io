@@ -1,5 +1,84 @@
 #+TITLE: Emacs手记
-#+INCLUDE: export-notes.org
+#+HTML_HEAD: <link rel="stylesheet" title="Standard" href="css/worg.css" type="text/css" />
+#+HTML_HEAD: <link rel="alternate stylesheet" title="Zenburn" href="css/worg-zenburn.css" type="text/css" />
+#+HTML_HEAD: <link rel="alternate stylesheet" title="Classic" href="css/worg-classic.css" type="text/css" />
+
+#+BEGIN_EXPORT html
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7691209-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+  document.addEventListener('DOMContentLoaded',function() {
+      document.getElementById("table-of-contents").onclick = function() {
+          var elem = document.getElementById("text-table-of-contents");
+          elem.style.display = elem.style.display == "block" ? "none" : "block";
+      }
+  });
+
+  var url = document.location.href;
+  var orgsource = url.substring(0, url.lastIndexOf("."))+".org.html";
+  function show_org_source(){
+      document.location.href = orgsource;
+  }
+</script>
+#+END_EXPORT
 
 #+BEGIN_COMMENT
 #+HTML_HEAD: <link rel="shortcut icon" href="http://tychoish.com/img/favicon.ico">
@@ -161,7 +240,13 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 #+RESULTS:
 : hello world
 
+** windows
+*** w32-select-font
+
 * FAQ
+** win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"
+- win10下看到显示正常, 字体为Lucida San, 拷贝字体覆盖依然无效. 显示为蓝色长方块
+
 ** ido-find-file打开文件时, 文件名是已有文件的前缀
 - 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
 
@@ -255,6 +340,25 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 | /   | <>       | <>          |
 |     |          |             |
 |-----+----------+-------------|
+*** insert literal hot key
+Input '<' and the key character, then input TAB:
+|-----+--------------+-------------|
+| Key | Literal      | Description |
+|-----+--------------+-------------|
+| /   | <>           | <>          |
+| a   | Export ascii |             |
+| c   | Center       |             |
+| e   | Example      |             |
+| h   | Export html  |             |
+| i   | +INDEX       |             |
+| l   | Export latex |             |
+| q   | Quote        |             |
+| s   | Source       |             |
+| v   | verse        |             |
+| A   | +ASCII       |             |
+|-----+--------------+-------------|
+
+#+ASCII: hello test
 
 * 典型配置链接
 - purcell: https://github.com/purcell/emacs.d
@@ -269,3 +373,29 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 - https://ogbe.net/emacsconfig.html
 - http://bastibe.de/2013-11-13-blogging-with-emacs.html
 - https://justin.abrah.ms/emacs/orgmode_static_site_generator.html
+- https://mmmyddd.github.io/wiki/emacs/picture.html
+- https://emacs-fu.blogspot.jp/2009/01/drawing-pictures.html
+* Candidate                                                  
+** picture-mode
+#+BEGIN_SRC ditaa :file 1.png
+                              +----------+
+          Drawing with        |cYEL   {s}|
+            ditaa             +          +
+                              | emacs fu |
+                              +----------+
+                                  ^  
+                                  |  
+    +--------+   +-------+    +-------+    
+    |cGRE    |-->+ ditaa +--> |       |    
+    |  Text  |   +-------+    |diagram|  
+    |Document|   | magic!|    |       |    
+    |     {d}|   |cBLU   |    | cRED  |    
+    +---+----+   +-------+    +-------+     
+        ^     
+        |
+    +--------+
+    |cPNK{io}| 
+    |  user  |
+    +--------+
+#+END_SRC
+** artist-mode                                     
