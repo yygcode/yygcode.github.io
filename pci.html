@@ -3,60 +3,109 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-28 Tue 21:04 -->
+<!-- 2017-12-03 Sun 01:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PCI技术</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/site.css" />
+    <link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">PCI技术</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga4ccad3">1. 错误处理</a>
+<li><a href="#orgde7980a">1. 错误处理</a>
 <ul>
-<li><a href="#orga9e6c62">1.1. ROB超时问题</a></li>
-<li><a href="#org3798c73">1.2. </a></li>
-<li><a href="#org218add6">1.3. </a></li>
-<li><a href="#org3eff360">1.4. </a></li>
+<li><a href="#org448520e">1.1. ROB超时问题</a></li>
+<li><a href="#org80ea118">1.2. </a></li>
+<li><a href="#org7088bb4">1.3. </a></li>
+<li><a href="#org88aa210">1.4. </a></li>
 </ul>
 </li>
-<li><a href="#org4746217">2. 资源链接</a>
+<li><a href="#org4257dcd">2. 资源链接</a>
 <ul>
-<li><a href="#orgc4c5165">2.1. ECN Internal Error Reporting</a></li>
-<li><a href="#org7d76f49">2.2. ROB timeout debug guide</a></li>
+<li><a href="#orgc27c7ee">2.1. ECN Internal Error Reporting</a></li>
+<li><a href="#org0398a59">2.2. ROB timeout debug guide</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga4ccad3" class="outline-2">
-<h2 id="orga4ccad3"><span class="section-number-2">1</span> 错误处理</h2>
+<div id="outline-container-orgde7980a" class="outline-2">
+<h2 id="orgde7980a"><span class="section-number-2">1</span> 错误处理</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga9e6c62" class="outline-3">
-<h3 id="orga9e6c62"><span class="section-number-3">1.1</span> ROB超时问题</h3>
+<div id="outline-container-org448520e" class="outline-3">
+<h3 id="org448520e"><span class="section-number-3">1.1</span> ROB超时问题</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之后按照原有顺序提交. 目前普遍使用<a href="https://en.wikipedia.org/wiki/Tomasulo_algorithm">Tomasulo算法</a>. 
 </p>
 </div>
 </div>
-<div id="outline-container-org3798c73" class="outline-3">
-<h3 id="org3798c73"><span class="section-number-3">1.2</span> </h3>
+<div id="outline-container-org80ea118" class="outline-3">
+<h3 id="org80ea118"><span class="section-number-3">1.2</span> </h3>
 </div>
-<div id="outline-container-org218add6" class="outline-3">
-<h3 id="org218add6"><span class="section-number-3">1.3</span> </h3>
+<div id="outline-container-org7088bb4" class="outline-3">
+<h3 id="org7088bb4"><span class="section-number-3">1.3</span> </h3>
 </div>
-<div id="outline-container-org3eff360" class="outline-3">
-<h3 id="org3eff360"><span class="section-number-3">1.4</span> </h3>
+<div id="outline-container-org88aa210" class="outline-3">
+<h3 id="org88aa210"><span class="section-number-3">1.4</span> </h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 **
@@ -65,12 +114,12 @@ ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之�
 </div>
 </div>
 
-<div id="outline-container-org4746217" class="outline-2">
-<h2 id="org4746217"><span class="section-number-2">2</span> 资源链接</h2>
+<div id="outline-container-org4257dcd" class="outline-2">
+<h2 id="org4257dcd"><span class="section-number-2">2</span> 资源链接</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgc4c5165" class="outline-3">
-<h3 id="orgc4c5165"><span class="section-number-3">2.1</span> ECN Internal Error Reporting</h3>
+<div id="outline-container-orgc27c7ee" class="outline-3">
+<h3 id="orgc27c7ee"><span class="section-number-3">2.1</span> ECN Internal Error Reporting</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 <a href="https://pcisig.com/sites/default/files/specification_documents/ECN_Internal-Error-Reporting_24Apr08.pdf">https://pcisig.com/sites/default/files/specification_documents/ECN_Internal-Error-Reporting_24Apr08.pdf</a>
@@ -78,8 +127,8 @@ ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之�
 </div>
 </div>
 
-<div id="outline-container-org7d76f49" class="outline-3">
-<h3 id="org7d76f49"><span class="section-number-3">2.2</span> ROB timeout debug guide</h3>
+<div id="outline-container-org0398a59" class="outline-3">
+<h3 id="org0398a59"><span class="section-number-3">2.2</span> ROB timeout debug guide</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <a href="https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/rob-timeout-debug-guide-paper.pdf">https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/rob-timeout-debug-guide-paper.pdf</a>
