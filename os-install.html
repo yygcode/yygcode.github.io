@@ -3,17 +3,67 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-28 Tue 21:04 -->
+<!-- 2017-12-03 Sun 01:08 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OS安装与基本配置</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/site.css" />
+    <link rel="stylesheet" type="text/css" href="css/site.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">OS安装与基本配置</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -21,8 +71,12 @@
 <ul>
 <li><a href="#win">1. <span class="todo TODO">TODO</span> Windows</a>
 <ul>
-<li><a href="#org695d366">1.1. 安装Windows 7/10</a></li>
-<li><a href="#org3cf9ba5">1.2. 配置Win10</a></li>
+<li><a href="#org806a6c5">1.1. 安装Windows 7/10</a></li>
+<li><a href="#org784b59a">1.2. 配置Win10</a>
+<ul>
+<li><a href="#orgd4ee10e">1.2.1. 禁止Win+g弹出游戏录制工具栏提示</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#linux">2. <span class="todo TODO">TODO</span> Linux</a>
@@ -30,19 +84,19 @@
 <li><a href="#linux-debian">2.1. <span class="todo TODO">TODO</span> Debian</a>
 <ul>
 <li><a href="#debian-install">2.1.1. 安装</a></li>
-<li><a href="#org3aad41d">2.1.2. 配置</a></li>
+<li><a href="#org12cc104">2.1.2. 配置</a></li>
 </ul>
 </li>
-<li><a href="#org8396a83">2.2. <span class="todo TODO">TODO</span> LFS</a></li>
+<li><a href="#orgc24bc25">2.2. <span class="todo TODO">TODO</span> LFS</a></li>
 </ul>
 </li>
 <li><a href="#partition">3. <span class="todo TODO">TODO</span> Partition</a></li>
 <li><a href="#usb-stick">4. <span class="todo TODO">TODO</span> 随身USB盘</a>
 <ul>
-<li><a href="#org2e74cf5">4.1. 工作原理</a></li>
-<li><a href="#org12c8d7a">4.2. 制作方式</a>
+<li><a href="#org81df454">4.1. 工作原理</a></li>
+<li><a href="#org7aec04f">4.2. 制作方式</a>
 <ul>
-<li><a href="#orga48d538">4.2.1. 分区</a></li>
+<li><a href="#org37dabb5">4.2.1. 分区</a></li>
 </ul>
 </li>
 </ul>
@@ -51,12 +105,12 @@
 </div>
 </div>
 
-<div id="outline-container-org9c2dd70" class="outline-2">
-<h2 id="win"><a id="org9c2dd70"></a><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> Windows</h2>
+<div id="outline-container-org1ea2a11" class="outline-2">
+<h2 id="win"><a id="org1ea2a11"></a><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> Windows</h2>
 <div class="outline-text-2" id="text-win">
 </div>
-<div id="outline-container-org695d366" class="outline-3">
-<h3 id="org695d366"><span class="section-number-3">1.1</span> 安装Windows 7/10</h3>
+<div id="outline-container-org806a6c5" class="outline-3">
+<h3 id="org806a6c5"><span class="section-number-3">1.1</span> 安装Windows 7/10</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 新的设备一般不再提供CD/DVD驱动器, 而只有USB接口. <a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是微软提供的USB安装盘制作工具. USB盘分区复杂或异常可能导致引导失败. 最简单可靠的分区是只保留一个分区, 格式化为NTFS. 如果想用一个大容量USB制作随身USB盘, 请参考
@@ -79,21 +133,32 @@ Win/Linux双系统参考<a href="#partition">Partition</a>分区. 先安装Win�
 </div>
 </div>
 
-<div id="outline-container-org3cf9ba5" class="outline-3">
-<h3 id="org3cf9ba5"><span class="section-number-3">1.2</span> 配置Win10</h3>
+<div id="outline-container-org784b59a" class="outline-3">
+<h3 id="org784b59a"><span class="section-number-3">1.2</span> 配置Win10</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-orgd4ee10e" class="outline-4">
+<h4 id="orgd4ee10e"><span class="section-number-4">1.2.1</span> 禁止Win+g弹出游戏录制工具栏提示</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li>Autohotkey配置 <code>Win+g</code> google搜索剪贴板内容，不希望弹出提示栏；</li>
+<li>配置方法：开始-&gt;设置-&gt;游戏-&gt;关掉“使用游戏栏记录游戏剪辑、屏幕截图和广播”。</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org41e26b0" class="outline-2">
-<h2 id="linux"><a id="org41e26b0"></a><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Linux</h2>
+<div id="outline-container-orgeeecea8" class="outline-2">
+<h2 id="linux"><a id="orgeeecea8"></a><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Linux</h2>
 <div class="outline-text-2" id="text-linux">
 </div>
-<div id="outline-container-org506cf46" class="outline-3">
-<h3 id="linux-debian"><a id="org506cf46"></a><span class="section-number-3">2.1</span> <span class="todo TODO">TODO</span> Debian</h3>
+<div id="outline-container-orgcbd0cb2" class="outline-3">
+<h3 id="linux-debian"><a id="orgcbd0cb2"></a><span class="section-number-3">2.1</span> <span class="todo TODO">TODO</span> Debian</h3>
 <div class="outline-text-3" id="text-linux-debian">
 </div>
-<div id="outline-container-org8ae4a73" class="outline-4">
-<h4 id="debian-install"><a id="org8ae4a73"></a><span class="section-number-4">2.1.1</span> 安装</h4>
+<div id="outline-container-orgf44b9e4" class="outline-4">
+<h4 id="debian-install"><a id="orgf44b9e4"></a><span class="section-number-4">2.1.1</span> 安装</h4>
 <div class="outline-text-4" id="text-debian-install">
 <p>
 使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘, U盘引导安装.
@@ -106,19 +171,19 @@ Win/Linux双系统参考<a href="#partition">Partition</a>分区. 先安装Win�
 </div>
 </div>
 
-<div id="outline-container-org3aad41d" class="outline-4">
-<h4 id="org3aad41d"><span class="section-number-4">2.1.2</span> 配置</h4>
+<div id="outline-container-org12cc104" class="outline-4">
+<h4 id="org12cc104"><span class="section-number-4">2.1.2</span> 配置</h4>
 <div class="outline-text-4" id="text-2-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="orgac77f46"></a>Apt-Source配置<br />
+<li><a id="org3396772"></a>Apt-Source配置<br />
 <div class="outline-text-5" id="text-2-1-2-1">
 <p>
 配置 <code>/etc/apt/sources.list</code>:
 </p>
 <div class="org-src-container">
 <pre class="src src-conf">deb http://httpredir.debian.org/debian jessie main contrib non-free
-<span class="org-comment-delimiter">#</span><span class="org-comment">deb http://ftp.us.debian.org/debian/dists/jessie jessie main contrib</span>
+#deb http://ftp.us.debian.org/debian/dists/jessie jessie main contrib
 deb-src http://httpredir.debian.org/debian jessie main contrib non-free
 
 deb http://httpredir.debian.org/debian jessie-updates main contrib non-free
@@ -139,7 +204,7 @@ deb-src http://security.debian.org/ jessie/updates main contrib non-free
 </div>
 </li>
 
-<li><a id="org1150d53"></a>Thinkpad Trackpoint(小红点)配置<br />
+<li><a id="orgf103768"></a>Thinkpad Trackpoint(小红点)配置<br />
 <div class="outline-text-5" id="text-2-1-2-2">
 <p>
 <a href="https://wiki.debian.org/InstallingDebianOn/Thinkpad/Trackpoint">Debian WIKI</a>中配置介绍, 不同Debian配置方式有差异. 示例如下:
@@ -174,19 +239,19 @@ Linux t400 3.16.0-4-amd64 <span class="org-comment-delimiter">#</span><span clas
 </div>
 </div>
 
-<div id="outline-container-org8396a83" class="outline-3">
-<h3 id="org8396a83"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> LFS</h3>
+<div id="outline-container-orgc24bc25" class="outline-3">
+<h3 id="orgc24bc25"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> LFS</h3>
 </div>
 </div>
 
-<div id="outline-container-orgc5db1b9" class="outline-2">
-<h2 id="partition"><a id="orgc5db1b9"></a><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Partition</h2>
+<div id="outline-container-orgd2091b4" class="outline-2">
+<h2 id="partition"><a id="orgd2091b4"></a><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Partition</h2>
 <div class="outline-text-2" id="text-partition">
 </div>
 </div>
 
-<div id="outline-container-org8b732c9" class="outline-2">
-<h2 id="usb-stick"><a id="org8b732c9"></a><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
+<div id="outline-container-org530c6b2" class="outline-2">
+<h2 id="usb-stick"><a id="org530c6b2"></a><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
 <div class="outline-text-2" id="text-usb-stick">
 <p>
 随身携带一个大容量USB(32G/64G), 包含完整可引导的操作系统, 以及Debian, Redhat,
@@ -194,8 +259,8 @@ CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB
 </p>
 </div>
 
-<div id="outline-container-org2e74cf5" class="outline-3">
-<h3 id="org2e74cf5"><span class="section-number-3">4.1</span> 工作原理</h3>
+<div id="outline-container-org81df454" class="outline-3">
+<h3 id="org81df454"><span class="section-number-3">4.1</span> 工作原理</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 用<a href="https://www.gnu.org/software/grub/">GRUB</a>和<a href="https://sourceforge.net/projects/grub4dos/">grub4dos</a>提供多系统引导, 安装Linux到USB盘, 或用<a href="http://www.linuxfromscratch.org/">LFS</a>制作自己的系统.
@@ -203,12 +268,12 @@ CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB
 </div>
 </div>
 
-<div id="outline-container-org12c8d7a" class="outline-3">
-<h3 id="org12c8d7a"><span class="section-number-3">4.2</span> 制作方式</h3>
+<div id="outline-container-org7aec04f" class="outline-3">
+<h3 id="org7aec04f"><span class="section-number-3">4.2</span> 制作方式</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-orga48d538" class="outline-4">
-<h4 id="orga48d538"><span class="section-number-4">4.2.1</span> 分区</h4>
+<div id="outline-container-org37dabb5" class="outline-4">
+<h4 id="org37dabb5"><span class="section-number-4">4.2.1</span> 分区</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 使用fdisk分区. part1用做grub, part2用做live linux, part3用做Linux安装系统, part4

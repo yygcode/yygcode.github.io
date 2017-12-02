@@ -1,61 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-11-28 Tue 21:04 -->
+<!-- 2017-12-03 Sun 01:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/site.css" />
+<link rel="stylesheet" type="text/css" href="css/pre1.css" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">存储指南</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org6ceb455">1. 介绍</a>
+<li><a href="#orgc3faa7f">1. 介绍</a>
 <ul>
-<li><a href="#org5bc547f">1.1. 发展历史</a></li>
-<li><a href="#org4e46621">1.2. 衡量评测</a></li>
+<li><a href="#org9d09acd">1.1. 发展历史</a></li>
+<li><a href="#orgc285ee8">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org5eb2e7a">2. 存储产品分析</a>
+<li><a href="#org458e911">2. 存储产品分析</a>
 <ul>
-<li><a href="#org9f44ef2">2.1. IBM V7000</a></li>
+<li><a href="#org29a827d">2.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#org0ded6dd">3. 软件架构</a></li>
-<li><a href="#org07afd53">4. 驱动</a>
+<li><a href="#orga7c4601">3. 软件架构</a></li>
+<li><a href="#org5fe7abc">4. 驱动</a>
 <ul>
-<li><a href="#orge74e111">4.1. 双控互联NTB</a></li>
-<li><a href="#org81c8554">4.2. FC卡</a></li>
-<li><a href="#org77948c7">4.3. SAS卡</a></li>
-<li><a href="#orgb7f40a9">4.4. 网卡</a></li>
-<li><a href="#orgfd32320">4.5. IB卡</a></li>
+<li><a href="#org8641506">4.1. 双控互联NTB</a></li>
+<li><a href="#orgbaca2ca">4.2. FC卡</a></li>
+<li><a href="#org1b2439d">4.3. SAS卡</a></li>
+<li><a href="#org2158a05">4.4. 网卡</a></li>
+<li><a href="#orgc4d19a2">4.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#org776b904">5. SCSI协议</a></li>
-<li><a href="#org36125e3">6. BACKUP</a></li>
+<li><a href="#org388eb78">5. SCSI协议</a></li>
+<li><a href="#org7aa415f">6. BACKUP</a></li>
+<li><a href="#org1057b08">7. 方案</a>
+<ul>
+<li><a href="#org090526b">7.1. 容灾</a>
+<ul>
+<li><a href="#org5b3fa70">7.1.1. 介绍</a></li>
+<li><a href="#orgab34e4b">7.1.2. 技术点</a></li>
+<li><a href="#orgee46cb0">7.1.3. 两地三中心</a></li>
+<li><a href="#orga43f1a5">7.1.4. 双活</a></li>
+<li><a href="#org106603d">7.1.5. 关键词</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org6ceb455" class="outline-2">
-<h2 id="org6ceb455"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgc3faa7f" class="outline-2">
+<h2 id="orgc3faa7f"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org5bc547f" class="outline-3">
-<h3 id="org5bc547f"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-org9d09acd" class="outline-3">
+<h3 id="org9d09acd"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-org4e46621" class="outline-3">
-<h3 id="org4e46621"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-orgc285ee8" class="outline-3">
+<h3 id="orgc285ee8"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注六个方面:
@@ -72,12 +140,12 @@ SAN存储需要关注六个方面:
 </div>
 </div>
 
-<div id="outline-container-org5eb2e7a" class="outline-2">
-<h2 id="org5eb2e7a"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-org458e911" class="outline-2">
+<h2 id="org458e911"><span class="section-number-2">2</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org9f44ef2" class="outline-3">
-<h3 id="org9f44ef2"><span class="section-number-3">2.1</span> IBM V7000</h3>
+<div id="outline-container-org29a827d" class="outline-3">
+<h3 id="org29a827d"><span class="section-number-3">2.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -87,40 +155,40 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-org0ded6dd" class="outline-2">
-<h2 id="org0ded6dd"><span class="section-number-2">3</span> 软件架构</h2>
+<div id="outline-container-orga7c4601" class="outline-2">
+<h2 id="orga7c4601"><span class="section-number-2">3</span> 软件架构</h2>
 </div>
-<div id="outline-container-org07afd53" class="outline-2">
-<h2 id="org07afd53"><span class="section-number-2">4</span> 驱动</h2>
+<div id="outline-container-org5fe7abc" class="outline-2">
+<h2 id="org5fe7abc"><span class="section-number-2">4</span> 驱动</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orge74e111" class="outline-3">
-<h3 id="orge74e111"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
+<div id="outline-container-org8641506" class="outline-3">
+<h3 id="org8641506"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-org81c8554" class="outline-3">
-<h3 id="org81c8554"><span class="section-number-3">4.2</span> FC卡</h3>
+<div id="outline-container-orgbaca2ca" class="outline-3">
+<h3 id="orgbaca2ca"><span class="section-number-3">4.2</span> FC卡</h3>
 </div>
-<div id="outline-container-org77948c7" class="outline-3">
-<h3 id="org77948c7"><span class="section-number-3">4.3</span> SAS卡</h3>
+<div id="outline-container-org1b2439d" class="outline-3">
+<h3 id="org1b2439d"><span class="section-number-3">4.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-orgb7f40a9" class="outline-3">
-<h3 id="orgb7f40a9"><span class="section-number-3">4.4</span> 网卡</h3>
+<div id="outline-container-org2158a05" class="outline-3">
+<h3 id="org2158a05"><span class="section-number-3">4.4</span> 网卡</h3>
 </div>
-<div id="outline-container-orgfd32320" class="outline-3">
-<h3 id="orgfd32320"><span class="section-number-3">4.5</span> IB卡</h3>
+<div id="outline-container-orgc4d19a2" class="outline-3">
+<h3 id="orgc4d19a2"><span class="section-number-3">4.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-org776b904" class="outline-2">
-<h2 id="org776b904"><span class="section-number-2">5</span> SCSI协议</h2>
+<div id="outline-container-org388eb78" class="outline-2">
+<h2 id="org388eb78"><span class="section-number-2">5</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org36125e3" class="outline-2">
-<h2 id="org36125e3"><span class="section-number-2">6</span> BACKUP</h2>
+<div id="outline-container-org7aa415f" class="outline-2">
+<h2 id="org7aa415f"><span class="section-number-2">6</span> BACKUP</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
@@ -134,10 +202,151 @@ hello world
 <li>Volume, Extent, Mdisk, VL,</li>
 <li>Local copy: flashcopy, clone, incremental backup</li>
 <li>Prepare, Copying, Full copied</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1057b08" class="outline-2">
+<h2 id="org1057b08"><span class="section-number-2">7</span> 方案</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org090526b" class="outline-3">
+<h3 id="org090526b"><span class="section-number-3">7.1</span> 容灾</h3>
+<div class="outline-text-3" id="text-7-1">
+</div>
+<div id="outline-container-org5b3fa70" class="outline-4">
+<h4 id="org5b3fa70"><span class="section-number-4">7.1.1</span> 介绍</h4>
+<div class="outline-text-4" id="text-7-1-1">
+<p>
+随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="all :frame: border" frame="hsides">
+<caption class="t-above"><span class="table-number">&#34920;1&nbsp;</span> IDC宕机损失统计</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">可用性/Availability(%)</th>
+<th scope="col" class="org-right">年宕机时间</th>
+<th scope="col" class="org-right">零售业宕机损失($)</th>
+<th scope="col" class="org-right">金融业宕机损失($)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">99.9999</td>
+<td class="org-right">30秒</td>
+<td class="org-right">950</td>
+<td class="org-right">53,750</td>
+</tr>
+
+<tr>
+<td class="org-left">99.999</td>
+<td class="org-right">5分钟</td>
+<td class="org-right">9,417</td>
+<td class="org-right">537,500</td>
+</tr>
+
+<tr>
+<td class="org-left">99.99</td>
+<td class="org-right">52分钟</td>
+<td class="org-right">98,000</td>
+<td class="org-right">5,790,000</td>
+</tr>
+
+<tr>
+<td class="org-left">99.9</td>
+<td class="org-right">8.75小时</td>
+<td class="org-right">988,750</td>
+<td class="org-right">56,000,000</td>
+</tr>
+
+<tr>
+<td class="org-left">99.5</td>
+<td class="org-right">53.7小时</td>
+<td class="org-right">5,000,000</td>
+<td class="org-right">280,000,000</td>
+</tr>
+
+<tr>
+<td class="org-left">99</td>
+<td class="org-right">87.6小时</td>
+<td class="org-right">10,000,000</td>
+<td class="org-right">560,000,000</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+“两地三中心”是业界认可的容灾建设方案。两地是指同城和异地，三中心是指生产数据中心、同城灾备中心、异地灾备中心。部署客户主要是国内外银行等高端客户。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgab34e4b" class="outline-4">
+<h4 id="orgab34e4b"><span class="section-number-4">7.1.2</span> 技术点</h4>
+<div class="outline-text-4" id="text-7-1-2">
+<p>
+容灾技术用以解决这类异常将导致严重的后果。不同行业对业务连续性和数据可靠性有不同的要求，
+</p>
+
+<p>
+政务系统、
+</p>
+
+<p>
+根据IDC统计数据，
+</p>
+
+<p>
+银行系统、政务系统
+</p>
+
+<p>
+分布式系统CAP理论（定理）。多活，数据中心CAP原理：Consist, Availability, Partition
+</p>
+</div>
+</div>
+<div id="outline-container-orgee46cb0" class="outline-4">
+<h4 id="orgee46cb0"><span class="section-number-4">7.1.3</span> 两地三中心</h4>
+<div class="outline-text-4" id="text-7-1-3">
+<p>
+“两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
+</p>
+</div>
+</div>
+<div id="outline-container-orga43f1a5" class="outline-4">
+<h4 id="orga43f1a5"><span class="section-number-4">7.1.4</span> 双活</h4>
+</div>
+<div id="outline-container-org106603d" class="outline-4">
+<h4 id="org106603d"><span class="section-number-4">7.1.5</span> 关键词</h4>
+<div class="outline-text-4" id="text-7-1-5">
+<ul class="org-ul">
+<li>CAP</li>
+<li>RTO/RPO</li>
 <li></li>
 </ul>
 </div>
 </div>
 </div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+未看到参考IDC报告，摘抄自NetApp的某宣传手册。
+</p></div></div>
+
+
+</div>
+</div></div>
 </body>
 </html>

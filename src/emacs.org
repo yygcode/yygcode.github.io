@@ -1,4 +1,4 @@
-#+TITLE: Emacs手记
+#+TITLE: Emacs笔记
 #+INCLUDE: export-notes.org
 
 #+BEGIN_COMMENT
@@ -12,17 +12,99 @@
 #+END_COMMENT
 
 * 介绍
-EMACS/ˈiːmæks/称为神之编辑器(vs. [[http://www.vim.org/][VIM]]称为编辑器之神). Emacs不仅仅是一个编辑器,
-使用者用它编写代码, 查看文档, 翻阅照片, 浏览网页, 收发邮件, 播放音乐. 对于
-Emacser而言, Emacs是一个操作系统, 而宿主操作系统只是一个引导程序.
+[[https://www.gnu.org/software/emacs/][Emacs]]/ˈiːmæks/称为神之编辑器(vs. [[http://www.vim.org/][VIM]]称为编辑器之神)。Emacs不仅仅是一个编辑器，而
+是一个[[http://wiki.c2.com/?EmacsAsOperatingSystem][操作系统]]，宿主操作系统是Emacs的引导程序。使用者用Emacs编写代码、查看文档、
+翻阅照片、浏览网页、收发邮件、播放音乐、……
 
-EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的
-编辑器出现. EMACS和VIM是硕果仅存者, 这说明了它们的优秀.
+Emacs发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的
+编辑器出现. Emacs和vim是硕果仅存者, 这说明了它们的优秀.
 
-使用Emacs的程序员幸福的生活在Emacs中.
+Emacs有无限定制的可能，使用Emacs的程序员幸福的生活在Emacs中。
 
 * 安装
-参考[[file:software.org::#emacs-windows][Emacs安装]].
+** Windows平台安装
+*** 版本选择
+从[[https://ftp.gnu.org/gnu/emacs/windows/][这里]]下载稳定的Emacs, 也可以从[[https://alpha.gnu.org/gnu/emacs/pretest/windows/][这里]]下载最新的Emacs. 对于一般用户而言,
+emacs-$VERSION-x86_64.zip是最合适的. 除去这个版本, 官方也提供其他no-deps, i686,
+w64版本. 此外, 还有[[https://sourceforge.net/projects/ntemacs/][NTEmacs]], 但我没使用过.
+
+下载zip压缩包, 解压缩到目标位置, 执行emacs.exe或runemacs.exe启动.
+
+*** 环境变量
+一般用户不希望使用默认的路径([[https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html][Emacs MS-Windows默认路径]]). 一般通过添加环境变量
+(我的电脑->属性->高级系统设置->环境变量)HOME设置.
+
+*** Msys2 Mingw
+[[http://www.msys2.org/][MSYS2]]是Windows下软件发布和构建平台. 参考[[file:software.org::#msys2][我的MSYS2安装配置]]. MSYS2/Mingw64用以增强
+emacs下shell使用体验. 添加 =MSYS2, Mingw64= 可执行文件/动态库路径到环境变量
+=PATH=.
+
+*** 快捷键
+用[[https://autohotkey.com/][AutoHotkey]](安装配置参考[[file:software.org::#autohotkey][我的AutoHotkey安装配置]])管理快捷键, 更加便捷的修改环境
+变量, 启动Emacs:
+#+BEGIN_SRC sh
+  EnvSet, PATH, F:\msys64\usr\bin;F:\msys64\mingw64\bin;%PATH%
+  ^#e::Run C:\emacs-26.0.90-x86_64\bin\runemacs.exe -fs
+#+END_SRC
+AutoHotkey配置完毕后按下 =Ctrl+Win+e= 启动Emacs.
+
+*** 字体安装
+我的[[https://github.com/yygcode/.emacs.d][Emacs配置]]中, Orgmode使用[[https://github.com/adobe-fonts/source-code-pro][Source Code Pro]]字体. 参考[[file:software.org::#source-code-pro][Win下安装Source Code Pro]]安装.
+不安装字体时[[https://github.com/sabof/org-bullets][Org Bullets]]显示异常, 可设置 =org-bullets-bullet-list= 为其他符号规避.
+
+*** 动态库配置
+Emacs部分功能依赖外部动态库或者命令行程序。比如浏览网页依赖GnuTls和libxml2，听
+音乐依赖mplayer，代码跳转依赖global/gtags/ctags。相关EXE/DLL文件可以从deps包
+(e.g.: emacs-26.0.90-x86)64-deps)获取, 也可从
+[[https://sourceforge.net/projects/ezwinports/][Sourceforge ezwinports(GNU software ports to MS-Windows)]]下载, 或参考
+[[file:software.org#msys2][我的MSYS2安装配置]]安装MSYS2，用pacman安装需要的任意库。我极力推荐安装MSYS2。安装
+MSYS2环境后，EXE/DLL文件在 =msys2/usr/bin, msys2/mingw64/bin= 两个目录。动态库
+GnuTls与libxml2需要在启动时可用，不能通过配置文件设置（参考[[#ref-w32-readme][W32 README]]），因此
+需要提前拷贝DLL到emacs可执行文件目录，或者设置合理的 =PATH= 环境变量，其他修改
+=exec-path, load-path= 等变量，或在emacs配置文件中执行函数 =setenv= 都是无效的。
+设置环境变量 =PATH= 方式是“我的电脑->属性->高级系统设置->高级”，修改环境变量
+=PATH= ，修改完成后注销重新登录或重启生效。[[https://autohotkey.com/][AutoHotkey]]是更便捷的修改方式。
+AutoHotkey设置环境变量不需要重新登入登出，也不会影响其他程序运行环境。缺点是只在
+AutoHotkey上下文有效，双击图标启动程序时环境变量不起作用。AutohotKey的更多细节
+参见我的[[file:software.org#autohotkey][AutoHotkey安装配置]]。Emacs环境变量 =PATH= AutoHotkey配置如下：
+#+BEGIN_EXPORT ascii
+EnvSet, PATH, F:\msys64\usr\bin;F:\msys64\mingw64\bin;C:\ProgramData\Oracle\Java\javapath;%PATH%
+#+END_EXPORT
+
+最后需要处理的一个例外是libxml2。libxml及相关文件必须拷贝到runemacs.exe所在目录
+才生效，这应该是Emacs libxml2相关编码或代码缺陷导致的（不支持搜索 =PATH= ）。
+libxml2相关文件不多，只有四个：libxml2-2.dll、libiconv-2.dll、liblzma-5.dll、
+zlib1.dll。使用ldd确认哪些库是libxml相关的：
+#+BEGIN_SRC sh
+~$ ldd libxml2-2.dll | grep mingw
+libiconv-2.dll => /mingw64/bin/libiconv-2.dll (0x66000000)
+liblzma-5.dll => /mingw64/bin/liblzma-5.dll (0x63cc0000)
+zlib1.dll => /mingw64/bin/zlib1.dll (0x62e80000)
+~$ cp libxml2-2.dll libiconv-2.dll liblzma-5.dll zlib1.dll c:/emacs-26.0.90-x86_64/bin/
+#+END_SRC
+
+设置完毕后启动Emacs，查看 =process-environment= (C-h v) 观察 =PATH= 是否正确。
+如果一切正常，而部分功能因找不到DLL异常，请确认库的版本是否正确。如果两者
+不一致，请下载一致的版本，或尝试设置 =dynamic-library-alist= 变量解决。
+
+** Linux平台安装
+#+BEGIN_SRC sh
+  sudo apt-get install emacs
+#+END_SRC
+*** TODO 字体安装方式后期增补
+** TODO 从源码构建
+*** TODO Windows Msys2
+- 自己构建版本是一种烧时间行为. 之前没保留下来记录, 后期再处理吧.
+
+** 配置
+- 下载配置.
+#+BEGIN_SRC sh
+# if you are visitor:
+~$ git clone https://github.com/yygcode/.emacs.d.git
+# if you are contributor:
+~$ git clone git@github.com:yygcode/.emacs.d.git
+#+END_SRC
+- 启动Emacs, Windows安装packages过程中可能出现部分错误, 可能需退出重启多次.
 
 * Packages
 ** org-mode
@@ -255,6 +337,345 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 | /   | <>       | <>          |
 |     |          |             |
 |-----+----------+-------------|
+
+* 参考文档
+*** w32 Readme
+    :PROPERTIES:
+    :CUSTOM_ID: ref-w32-readme
+    :END:
+#+BEGIN_QUOTE
+http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/
+Copyright (C) 2001-2014 Free Software Foundation, Inc.
+See the end of the file for license conditions.
+
+			   Emacs for Windows
+
+  This README.W32 file describes how to set up and run a precompiled
+  distribution of GNU Emacs for Windows.  You can find the precompiled
+  distribution on the ftp.gnu.org server and its mirrors:
+
+   	ftp://ftp.gnu.org/gnu/emacs/windows/
+
+  This server contains other distributions, including the full Emacs
+  source distribution, as well as older releases of Emacs for Windows.
+
+  Information on how to compile Emacs from sources on Windows is in
+  the files README and INSTALL in the nt/ sub-directory of the
+  top-level Emacs directory in the source distribution.  If you
+  received this file as part of the Emacs source distribution, and are
+  looking for information on how to build Emacs on MS-Windows, please
+  read those 2 files and not this one.
+
+- Preliminaries
+
+  The binary distribution has these top-level directories:
+  + bin
+  + libexec
+  + share
+  + var
+
+- Setting up Emacs
+
+  To install Emacs, simply unpack the binary package into a directory
+  of your choice.  To complete the installation process, you can
+  optionally run the program addpm.exe in the bin subdirectory.  This
+  will put an icon for Emacs in the Start Menu under
+  "Start -> Programs -> Gnu Emacs".
+
+  Some users have reported that the Start Menu item is not created for
+  them.  If this happens, just create your own shortcut to runemacs.exe,
+  eg. by dragging it on to the desktop or the Start button.
+
+  Note that running addpm is now an optional step; Emacs is able to
+  locate all of its files without needing any information to be set in
+  the environment or the registry, although such settings will still
+  be obeyed if present.  This is convenient for running Emacs on a
+  machine which disallows registry changes, or on which software
+  should not be installed.  For instance, you can now run Emacs
+  directly from a CD or USB flash drive without copying or installing
+  anything on the machine itself.
+
+- Prerequisites for Windows 9X
+
+  To run Emacs on Windows 9X (Windows 95/98/Me), you will need to have
+  the Microsoft Layer for Unicode (MSLU) installed.  It can be
+  downloaded from the Microsoft site, and comes in a form of a single
+  dynamic library called UNICOWS.DLL.  If this library is not
+  accessible to Emacs, it will pop up a dialog saying that it cannot
+  find the library, and will refuse to start up.
+
+- Starting Emacs
+
+  To run Emacs, simply select Emacs from the Start Menu, or invoke
+  runemacs.exe directly from Explorer or from a command prompt.  This
+  will start Emacs in its default GUI mode, ready to use.  If you have
+  never used Emacs before, you should follow the tutorial at this
+  point (select Emacs Tutorial from the Help menu), since Emacs is
+  quite different from ordinary Windows applications in many respects.
+
+  If you want to use Emacs in tty or character mode within a command
+  window, you can start it by typing "emacs -nw" at the command prompt.
+  (Obviously, you need to ensure that the Emacs bin subdirectory is in
+  your PATH first, or specify the path to emacs.exe.)  The -nw
+  (non-windowed) mode of operation is most useful if you have a telnet
+  server on your machine, allowing you to run Emacs remotely.
+
+- EXE files included
+
+  Emacs comes with the following executable files in the bin directory.
+
+  + emacs.exe - The main Emacs executable.  As this is designed to run
+    as both a text-mode application (emacs -nw) and as a GUI application,
+    it will pop up a command prompt window if run directly from Explorer.
+
+  + runemacs.exe - A wrapper for running Emacs as a GUI application
+    without popping up a command prompt window.  If you create a
+    desktop shortcut for invoking Emacs, make it point to this
+    executable, not to emacs.exe.
+
+  + emacsclient.exe - A command-line client program that can
+    communicate with a running Emacs process.  See the `Emacs Server'
+    node of the Emacs manual.
+
+  + emacsclientw.exe - A version of emacsclient that does not open
+    a command-line window.
+
+  + addpm.exe - A basic installer that creates Start Menu icons for Emacs.
+    Running this is optional.
+
+  + ctags.exe, etags.exe - Tools for generating tag files.  See the
+    `Tags' node of the Emacs manual.
+
+  + ebrowse.exe - A tool for generating C++ browse information.  See the
+    `Ebrowse' manual.
+
+  Several helper programs are in a version-specific subdirectory of
+  the libexec directory:
+
+  + cmdproxy.exe - Used internally by Emacs to work around problems with
+    the native shells in various versions of Windows.
+
+  + ddeclient.exe - A tool for interacting with DDE servers.  To be
+    invoked as "ddeclient SERVER [TOPIC]", where SERVER is the DDE
+    server name, and sends each line of its standard input to the DDE
+    server using the DdeClientTransaction API.  This program is
+    supposed to be invoked via the 'call-process-region' Emacs
+    primitive.
+
+  + hexl.exe - A tool for producing hex dumps of binary files.  See the
+    `Editing Binary Files' node of the Emacs manual.
+
+  + movemail.exe - A helper application for safely moving mail from
+    a mail spool or POP server to a local user mailbox.  See the
+    `Movemail' node of the Emacs manual.
+
+  + profile.exe - A helper program that generates periodic events for
+    profiling Emacs Lisp code.
+
+  + update-game-score.exe - A utility for updating the score files of
+    Emacs games.
+
+- Image support
+
+  Emacs has built in support for XBM and PPM/PGM/PBM images, and the
+  libXpm library is bundled, providing XPM support (required for color
+  toolbar icons and splash screen).  Source for libXpm should be available
+  from the same place from which you got this binary distribution.
+
+  Emacs can also support some other image formats with appropriate
+  libraries.  These libraries are all available on the following sites:
+
+  1. http://sourceforge.net/projects/ezwinports/files/
+     -- leaner, more up-to-date builds, only for 32-bit Emacs
+  2. http://www.gtk.org/download/win32.php
+     http://www.gtk.org/download/win64.php
+     -- the GTK project site; offers much fatter builds, but includes
+        64-bit DLLs (from the 2nd URL)
+  3. GnuWin32 project -- very old builds, not recommended
+
+  The libraries to download are mentioned below.  Some libraries
+  depend on others that need to be downloaded separately from the same
+  site; please consult the download instructions on each site for the
+  details.  In general, the ezwinports site mentioned above has all
+  the dependencies bundled in the same zip archive, so installing from
+  there is the easiest.
+
+  Emacs will find these libraries if the directory they are installed
+  in is on the PATH or in the same directory where you have emacs.exe.
+  Here are some specific comments about each image type:
+
+      PNG: requires the PNG reference library 1.4 or later, which will
+      be named libpngNN.dll or libpngNN-NN.dll.  LibPNG requires zlib,
+      which should come from the same source as you got libpng.
+      Starting with Emacs 23.3, the precompiled Emacs binaries are
+      built with libpng 1.4.x and later, and are incompatible with
+      earlier versions of libpng DLLs.  So if you have libpng 1.2.x,
+      the PNG support will not work, and you will have to download
+      newer versions.
+
+      JPEG: requires the Independent JPEG Group's libjpeg 6b or later,
+      which will be called jpeg62.dll, libjpeg.dll, jpeg-62.dll or jpeg.dll.
+
+      TIFF: requires libTIFF 3.0 or later, which will be called libtiffN.dll
+      or libtiff-N.dll or libtiff.dll.
+
+      GIF: requires libungif or giflib 4.1 or later, which will be
+      called libgif-6.dll, giflib4.dll, libungif4.dll or libungif.dll.
+
+      SVG: requires librsvg 2.x whose DLL will be called
+      librsvg-2-2.dll.  SVG also requires several dependency DLLs,
+      such as Pango, Cairo, and Glib, all of them found on the
+      above-mentioned sites.  If you download from the ezwinports
+      site, you need only librsvg-2.nn.mm-x-w32-bin.zip, it comes with
+      all the other dependencies bundled.
+
+   If you have image support DLLs under different names, customize the
+   value of `dynamic-library-alist'.
+
+- GnuTLS support
+
+  GnuTLS provides SSL/TLS network support for Emacs (https, imaps and
+  so on.)
+
+  In order to support GnuTLS at runtime, Emacs must be able to find
+  the relevant DLLs during startup; failure to do so is not an error,
+  but GnuTLS won't be available to the running session.
+
+  You can get pre-built binaries (including any dependency DLLs) at
+  http://sourceforge.net/projects/ezwinports/files/.
+
+- libxml2 support
+
+  libxml2 provides HTML parsing support for Emacs, which is necessary
+  to use the built-in eww browser.
+
+  In order to support libxml2 at runtime, a libxml2-enabled Emacs must
+  be able to find the relevant DLLs during startup; failure to do so
+  is not an error, but libxml2 features won't be available to the
+  running session.
+
+  You can get pre-built binaries (including any required DLL and the
+  header files) at http://sourceforge.net/projects/ezwinports/files/.
+
+- Uninstalling Emacs
+
+  If you should need to uninstall Emacs, simply delete all the files
+  and subdirectories from the directory where it was unpacked (Emacs
+  does not install or update any files in system directories or
+  anywhere else).  If you ran the addpm.exe program to create the
+  registry entries and the Start menu icon, then you can remove the
+  registry entries using regedit.  All of the settings are written
+  under the Software\GNU\Emacs key in HKEY_LOCAL_MACHINE, or if you
+  didn't have administrator privileges when you installed, the same
+  key in HKEY_CURRENT_USER.  Just delete the whole Software\GNU\Emacs
+  key.
+
+  The Start menu entry can be removed by right-clicking on the Taskbar
+  and selecting Properties, then using the Remove option on the Start
+  Menu Programs page.  (If you installed under an account with
+  administrator privileges, then you need to click the Advanced button
+  and look for the Gnu Emacs menu item under All Users.)
+
+- Troubleshooting
+
+  Unpacking the distributions
+
+  If you encounter trouble trying to run Emacs, there are a number of
+  possible causes.  Check the following for indications that the
+  distribution was not corrupted by the tools used to unpack it:
+
+    * Be sure to disable CR/LF translation or the executables will
+      be unusable.  Older versions of WinZipNT would enable this
+      translation by default.  If you are using WinZipNT, disable it.
+      (I don't have WinZipNT myself, and I do not know the specific
+      commands necessary to disable it.)
+
+    * Check that filenames were not truncated to 8.3.  For example,
+      there should be a file lisp\abbrevlist.elc; if this has been
+      truncated to abbrevli.elc, your distribution has been corrupted
+      while unpacking and Emacs will not start.
+
+    * On Windows 9X, make sure you have the UNICOWS.DLL library either
+      in the same directory where you have emacs.exe or in the
+      directory where system-wide DLLs are kept.
+
+  If you believe you have unpacked the distributions correctly and are
+  still encountering problems, see the section on Further Information
+  below.
+
+  Virus scanners
+
+  Some virus scanners interfere with Emacs' use of subprocesses.  If you
+  are unable to use subprocesses and you use Dr. Solomon's WinGuard or
+  McAfee's Vshield, turn off "Scan all files" (WinGuard) or "boot sector
+  scanning" (McAfee exclusion properties).
+
+- Further information
+
+  The FAQ for the MS Windows port of Emacs is distributed with Emacs
+  (info manual "efaq-w32"), and also available at
+
+        http://www.gnu.org/software/emacs/manual/efaq-w32.html
+
+  In addition to the FAQ, there is a mailing list for discussing issues
+  related to the Windows port of Emacs.  For information about the
+  list, see this Web page:
+
+	http://lists.gnu.org/mailman/listinfo/help-emacs-windows
+
+  To ask questions on the mailing list, send email to
+  help-emacs-windows@gnu.org.  (You don't need to subscribe for that.)
+  To subscribe to the list or unsubscribe from it, fill the form you
+  find at http://lists.gnu.org/mailman/listinfo/help-emacs-windows as
+  explained there.
+
+  Another valuable source of information and help which should not be
+  overlooked is the various Usenet news groups dedicated to Emacs.
+  These are particularly good for help with general issues which aren't
+  specific to the Windows port of Emacs.  The main news groups to use
+  for seeking help are:
+
+	gnu.emacs.help
+	comp.emacs
+
+  There are also fairly regular postings and announcements of new or
+  updated Emacs packages on this group:
+
+	gnu.emacs.sources
+
+- Reporting bugs
+
+  If you encounter a bug in this port of Emacs, we would like to hear
+  about it.  First check the FAQ on the web page above to see if the bug
+  is already known and if there are any workarounds.  Then check whether
+  the bug has something to do with code in your .emacs file, e.g. by
+  invoking Emacs with the "-Q" option.
+
+  If you decide that it is a bug in Emacs, use the built in bug
+  reporting facility to report it (from the menu; Help -> Send Bug Report).
+  If you have not yet configured Emacs for mail, then when you press
+  C-c C-c to send the report, it will ask you to paste the text of the
+  report into your mail client.  If the bug is related to subprocesses,
+  also specify which shell you are using (e.g., include the values of
+  `shell-file-name' and `explicit-shell-file-name' in your message).
+
+  Enjoy!
+
+This file is part of GNU Emacs.
+
+GNU Emacs is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GNU Emacs is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+#+END_QUOTE
 
 * 典型配置链接
 - purcell: https://github.com/purcell/emacs.d

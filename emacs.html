@@ -1,16 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-11-28 Tue 21:49 -->
+<!-- 2017-12-03 Sun 01:08 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Emacs手记</title>
+<title>Emacs笔记</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="css/site.css" />
+<link rel="stylesheet" type="text/css" href="css/pre1.css" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -35,86 +86,270 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
-<h1 class="title">Emacs手记</h1>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
+<h1 class="title">Emacs笔记</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org626f372">1. 介绍</a></li>
-<li><a href="#orgc74f06f">2. 安装</a></li>
-<li><a href="#org1b6305c">3. Packages</a>
+<li><a href="#org331149d">1. 介绍</a></li>
+<li><a href="#org71ebd07">2. 安装</a>
 <ul>
-<li><a href="#orgf588cb9">3.1. org-mode</a>
+<li><a href="#org88bd15f">2.1. Windows平台安装</a>
 <ul>
-<li><a href="#org7012f15">3.1.1. What is Orgmode</a></li>
-<li><a href="#orgff19346">3.1.2. Functions</a></li>
+<li><a href="#orge7a58b1">2.1.1. 版本选择</a></li>
+<li><a href="#orga301ed7">2.1.2. 环境变量</a></li>
+<li><a href="#orga8f3694">2.1.3. Msys2 Mingw</a></li>
+<li><a href="#org376ee10">2.1.4. 快捷键</a></li>
+<li><a href="#orga1e6ab4">2.1.5. 字体安装</a></li>
+<li><a href="#org27afb05">2.1.6. 动态库配置</a></li>
+</ul>
+</li>
+<li><a href="#org7d07066">2.2. Linux平台安装</a>
+<ul>
+<li><a href="#org7a813bc">2.2.1. <span class="todo TODO">TODO</span> 字体安装方式后期增补</a></li>
+</ul>
+</li>
+<li><a href="#org548230a">2.3. <span class="todo TODO">TODO</span> 从源码构建</a>
+<ul>
+<li><a href="#org157f308">2.3.1. <span class="todo TODO">TODO</span> Windows Msys2</a></li>
+</ul>
+</li>
+<li><a href="#org3ae0d9b">2.4. 配置</a></li>
+</ul>
+</li>
+<li><a href="#orgd3271d2">3. Packages</a>
+<ul>
+<li><a href="#orgbf69cbf">3.1. org-mode</a>
+<ul>
+<li><a href="#org93e9a26">3.1.1. What is Orgmode</a></li>
+<li><a href="#org290a796">3.1.2. Functions</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgcbdd5fa">4. FAQ</a>
+<li><a href="#orgf609e6d">4. 使用</a>
 <ul>
-<li><a href="#org7c16dd2">4.1. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#org1ebc94c">4.2. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#org2f954eb">4.3. 无法加载一个package, 但无法正常安装 20171114</a></li>
-<li><a href="#org863ef1f">4.4. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
-<li><a href="#org64813e5">4.5. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
-<li><a href="#org3732cd7">4.6. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
-<li><a href="#orgb84c9ac">4.7. <span class="done DONE">DONE</span> Windows</a></li>
-<li><a href="#org4ac0a65">4.8. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
+<li><a href="#org239ba24">4.1. source code</a></li>
 </ul>
 </li>
-<li><a href="#org344e6b9">5. 常用快捷键</a>
+<li><a href="#org85a9123">5. FAQ</a>
 <ul>
-<li><a href="#orgf122da6">5.1. Global</a></li>
-<li><a href="#orgd6ab701">5.2. Org mode</a></li>
+<li><a href="#orgc0c1b4a">5.1. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#orgad9ef78">5.2. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org352e1f0">5.3. 无法加载一个package, 但无法正常安装 20171114</a></li>
+<li><a href="#org673a3bc">5.4. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
+<li><a href="#org3916be0">5.5. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
+<li><a href="#org02f8ad3">5.6. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
+<li><a href="#orgc093db7">5.7. <span class="done DONE">DONE</span> Windows</a></li>
+<li><a href="#org5617776">5.8. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
 </ul>
 </li>
-<li><a href="#orgd169bd4">6. 典型配置链接</a></li>
-<li><a href="#org73068aa">7. 学习资源</a></li>
+<li><a href="#orgef05d9a">6. 常用快捷键</a>
+<ul>
+<li><a href="#org69ea990">6.1. Global</a></li>
+<li><a href="#org66db8da">6.2. Org mode</a></li>
+</ul>
+</li>
+<li><a href="#org4a3acdc">7. 参考文档</a>
+<ul>
+<li>
+<ul>
+<li><a href="#ref-w32-readme">7.0.1. w32 Readme</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgcda0c03">8. 典型配置链接</a></li>
+<li><a href="#org13530b8">9. 学习资源</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org626f372" class="outline-2">
-<h2 id="org626f372"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org331149d" class="outline-2">
+<h2 id="org331149d"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-EMACS/ˈiːmæks/称为神之编辑器(vs. <a href="http://www.vim.org/">VIM</a>称为编辑器之神). Emacs不仅仅是一个编辑器,
-使用者用它编写代码, 查看文档, 翻阅照片, 浏览网页, 收发邮件, 播放音乐. 对于
-Emacser而言, Emacs是一个操作系统, 而宿主操作系统只是一个引导程序.
+<a href="https://www.gnu.org/software/emacs/">Emacs</a>/ˈiːmæks/称为神之编辑器(vs. <a href="http://www.vim.org/">VIM</a>称为编辑器之神)。Emacs不仅仅是一个编辑器，而是一个<a href="http://wiki.c2.com/?EmacsAsOperatingSystem">操作系统</a>，宿主操作系统是Emacs的引导程序。使用者用Emacs编写代码、查看文档、翻阅照片、浏览网页、收发邮件、播放音乐、……
 </p>
 
 <p>
-EMACS发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的编辑器出现. EMACS和VIM是硕果仅存者, 这说明了它们的优秀.
+Emacs发布于1972年, 距今已40多年. 70年代中期至后期是编辑器的井喷期, 有数以百计的编辑器出现. Emacs和vim是硕果仅存者, 这说明了它们的优秀.
 </p>
 
 <p>
-使用Emacs的程序员幸福的生活在Emacs中.
+Emacs有无限定制的可能，使用Emacs的程序员幸福的生活在Emacs中。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgc74f06f" class="outline-2">
-<h2 id="orgc74f06f"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-org71ebd07" class="outline-2">
+<h2 id="org71ebd07"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org88bd15f" class="outline-3">
+<h3 id="org88bd15f"><span class="section-number-3">2.1</span> Windows平台安装</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-orge7a58b1" class="outline-4">
+<h4 id="orge7a58b1"><span class="section-number-4">2.1.1</span> 版本选择</h4>
+<div class="outline-text-4" id="text-2-1-1">
 <p>
-参考<a href="software.html#emacs-windows">Emacs安装</a>.
+从<a href="https://ftp.gnu.org/gnu/emacs/windows/">这里</a>下载稳定的Emacs, 也可以从<a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">这里</a>下载最新的Emacs. 对于一般用户而言,
+emacs-$VERSION-x86_64.zip是最合适的. 除去这个版本, 官方也提供其他no-deps, i686,
+w64版本. 此外, 还有<a href="https://sourceforge.net/projects/ntemacs/">NTEmacs</a>, 但我没使用过.
+</p>
+
+<p>
+下载zip压缩包, 解压缩到目标位置, 执行emacs.exe或runemacs.exe启动.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1b6305c" class="outline-2">
-<h2 id="org1b6305c"><span class="section-number-2">3</span> Packages</h2>
+<div id="outline-container-orga301ed7" class="outline-4">
+<h4 id="orga301ed7"><span class="section-number-4">2.1.2</span> 环境变量</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+一般用户不希望使用默认的路径(<a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html">Emacs MS-Windows默认路径</a>). 一般通过添加环境变量
+(我的电脑-&gt;属性-&gt;高级系统设置-&gt;环境变量)HOME设置.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga8f3694" class="outline-4">
+<h4 id="orga8f3694"><span class="section-number-4">2.1.3</span> Msys2 Mingw</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+<a href="http://www.msys2.org/">MSYS2</a>是Windows下软件发布和构建平台. 参考<a href="software.html#msys2">我的MSYS2安装配置</a>. MSYS2/Mingw64用以增强
+emacs下shell使用体验. 添加 <code>MSYS2, Mingw64</code> 可执行文件/动态库路径到环境变量
+<code>PATH</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org376ee10" class="outline-4">
+<h4 id="org376ee10"><span class="section-number-4">2.1.4</span> 快捷键</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+用<a href="https://autohotkey.com/">AutoHotkey</a>(安装配置参考<a href="software.html#autohotkey">我的AutoHotkey安装配置</a>)管理快捷键, 更加便捷的修改环境变量, 启动Emacs:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">EnvSet, PATH, F:\msys64\usr\bin;F:\msys64\mingw64\bin;%PATH%
+^#e::Run C:\emacs-26.0.90-x86_64\bin\runemacs.exe -fs
+</pre>
+</div>
+<p>
+AutoHotkey配置完毕后按下 <code>Ctrl+Win+e</code> 启动Emacs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga1e6ab4" class="outline-4">
+<h4 id="orga1e6ab4"><span class="section-number-4">2.1.5</span> 字体安装</h4>
+<div class="outline-text-4" id="text-2-1-5">
+<p>
+我的<a href="https://github.com/yygcode/.emacs.d">Emacs配置</a>中, Orgmode使用<a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a>字体. 参考<a href="software.html#source-code-pro">Win下安装Source Code Pro</a>安装.
+不安装字体时<a href="https://github.com/sabof/org-bullets">Org Bullets</a>显示异常, 可设置 <code>org-bullets-bullet-list</code> 为其他符号规避.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org27afb05" class="outline-4">
+<h4 id="org27afb05"><span class="section-number-4">2.1.6</span> 动态库配置</h4>
+<div class="outline-text-4" id="text-2-1-6">
+<p>
+Emacs部分功能依赖外部动态库或者命令行程序。比如浏览网页依赖GnuTls和libxml2，听音乐依赖mplayer，代码跳转依赖global/gtags/ctags。相关EXE/DLL文件可以从deps包
+(e.g.: emacs-26.0.90-x86)64-deps)获取, 也可从
+<a href="https://sourceforge.net/projects/ezwinports/">Sourceforge ezwinports(GNU software ports to MS-Windows)</a>下载, 或参考
+<a href="software.org#msys2">我的MSYS2安装配置</a>安装MSYS2，用pacman安装需要的任意库。我极力推荐安装MSYS2。安装
+MSYS2环境后，EXE/DLL文件在 <code>msys2/usr/bin, msys2/mingw64/bin</code> 两个目录。动态库
+GnuTls与libxml2需要在启动时可用，不能通过配置文件设置（参考<a href="#ref-w32-readme">W32 README</a>），因此需要提前拷贝DLL到emacs可执行文件目录，或者设置合理的 <code>PATH</code> 环境变量，其他修改
+<code>exec-path, load-path</code> 等变量，或在emacs配置文件中执行函数 <code>setenv</code> 都是无效的。设置环境变量 <code>PATH</code> 方式是“我的电脑-&gt;属性-&gt;高级系统设置-&gt;高级”，修改环境变量
+<code>PATH</code> ，修改完成后注销重新登录或重启生效。<a href="https://autohotkey.com/">AutoHotkey</a>是更便捷的修改方式。
+AutoHotkey设置环境变量不需要重新登入登出，也不会影响其他程序运行环境。缺点是只在
+AutoHotkey上下文有效，双击图标启动程序时环境变量不起作用。AutohotKey的更多细节参见我的<a href="software.org#autohotkey">AutoHotkey安装配置</a>。Emacs环境变量 <code>PATH</code> AutoHotkey配置如下：
+</p>
+<p>
+最后需要处理的一个例外是libxml2。libxml及相关文件必须拷贝到runemacs.exe所在目录才生效，这应该是Emacs libxml2相关编码或代码缺陷导致的（不支持搜索 <code>PATH</code> ）。
+libxml2相关文件不多，只有四个：libxml2-2.dll、libiconv-2.dll、liblzma-5.dll、
+zlib1.dll。使用ldd确认哪些库是libxml相关的：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ ldd libxml2-2.dll | grep mingw
+libiconv-2.dll =&gt; /mingw64/bin/libiconv-2.dll (0x66000000)
+liblzma-5.dll =&gt; /mingw64/bin/liblzma-5.dll (0x63cc0000)
+zlib1.dll =&gt; /mingw64/bin/zlib1.dll (0x62e80000)
+~$ cp libxml2-2.dll libiconv-2.dll liblzma-5.dll zlib1.dll c:/emacs-26.0.90-x86_64/bin/
+</pre>
+</div>
+
+<p>
+设置完毕后启动Emacs，查看 <code>process-environment</code> (C-h v) 观察 <code>PATH</code> 是否正确。如果一切正常，而部分功能因找不到DLL异常，请确认库的版本是否正确。如果两者不一致，请下载一致的版本，或尝试设置 <code>dynamic-library-alist</code> 变量解决。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7d07066" class="outline-3">
+<h3 id="org7d07066"><span class="section-number-3">2.2</span> Linux平台安装</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt-get install emacs
+</pre>
+</div>
+</div>
+<div id="outline-container-org7a813bc" class="outline-4">
+<h4 id="org7a813bc"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> 字体安装方式后期增补</h4>
+</div>
+</div>
+<div id="outline-container-org548230a" class="outline-3">
+<h3 id="org548230a"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> 从源码构建</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="outline-container-org157f308" class="outline-4">
+<h4 id="org157f308"><span class="section-number-4">2.3.1</span> <span class="todo TODO">TODO</span> Windows Msys2</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<ul class="org-ul">
+<li>自己构建版本是一种烧时间行为. 之前没保留下来记录, 后期再处理吧.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3ae0d9b" class="outline-3">
+<h3 id="org3ae0d9b"><span class="section-number-3">2.4</span> 配置</h3>
+<div class="outline-text-3" id="text-2-4">
+<ul class="org-ul">
+<li>下载配置.</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">if you are visitor:</span>
+~$ git clone https://github.com/yygcode/.emacs.d.git
+<span class="org-comment-delimiter"># </span><span class="org-comment">if you are contributor:</span>
+~$ git clone git@github.com:yygcode/.emacs.d.git
+</pre>
+</div>
+<ul class="org-ul">
+<li>启动Emacs, Windows安装packages过程中可能出现部分错误, 可能需退出重启多次.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3271d2" class="outline-2">
+<h2 id="orgd3271d2"><span class="section-number-2">3</span> Packages</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf588cb9" class="outline-3">
-<h3 id="orgf588cb9"><span class="section-number-3">3.1</span> org-mode</h3>
+<div id="outline-container-orgbf69cbf" class="outline-3">
+<h3 id="orgbf69cbf"><span class="section-number-3">3.1</span> org-mode</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org7012f15" class="outline-4">
-<h4 id="org7012f15"><span class="section-number-4">3.1.1</span> What is Orgmode</h4>
+<div id="outline-container-org93e9a26" class="outline-4">
+<h4 id="org93e9a26"><span class="section-number-4">3.1.1</span> What is Orgmode</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Orgmode is a system for note taking and project planning using plain text files.
@@ -122,7 +357,7 @@ The author is <a href="https://staff.science.uva.nl/c.dominik/">Carsten Dominik<
 </p>
 
 <p>
-Ref Orgmode <a href="http://orgmode.org/">Homepage</a>(<a href="http://orgmode.org/manual/">Manual</a>) and <a href="https://www.youtube.com/watch?v=oJTwQvgfgMM">Youtube</a> for more details.
+Ref Orgmode <a href="http://orgmode.org/">Homepage</a>(<a href="http://orgmode.org/manual/">Manual</a>, <a href="http://orgmode.org/worg/">community</a>) and <a href="https://www.youtube.com/watch?v=oJTwQvgfgMM">Youtube</a> for more details.
 </p>
 
 <p>
@@ -132,8 +367,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-orgff19346" class="outline-4">
-<h4 id="orgff19346"><span class="section-number-4">3.1.2</span> Functions</h4>
+<div id="outline-container-org290a796" class="outline-4">
+<h4 id="org290a796"><span class="section-number-4">3.1.2</span> Functions</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <ul class="org-ul">
 <li>Outline</li>
@@ -149,7 +384,7 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 
 <ol class="org-ol">
-<li><a id="orgc090c62"></a>tables<br />
+<li><a id="org63b398c"></a>tables<br />
 <div class="outline-text-5" id="text-3-1-2-1">
 <ul class="org-ul">
 <li>base tables</li>
@@ -204,6 +439,64 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 <td class="org-left">16KB</td>
 <td class="org-right">16</td>
 <td class="org-left">820MBps</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">7</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Student</th>
+<th scope="col" class="org-right">Maths</th>
+<th scope="col" class="org-right">Physics</th>
+<th scope="col" class="org-right">Mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Bertrand</td>
+<td class="org-right">13</td>
+<td class="org-right">09</td>
+<td class="org-right">11</td>
+</tr>
+
+<tr>
+<td class="org-left">Henri</td>
+<td class="org-right">15</td>
+<td class="org-right">14</td>
+<td class="org-right">14.5</td>
+</tr>
+
+<tr>
+<td class="org-left">Arnold</td>
+<td class="org-right">17</td>
+<td class="org-right">18</td>
+<td class="org-right">17.5</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Means</td>
+<td class="org-right">15</td>
+<td class="org-right">13.666667</td>
+<td class="org-right">13.5</td>
 </tr>
 </tbody>
 </table>
@@ -296,7 +589,7 @@ Press C-c ~ trigger. <a href="https://sourceforge.net/projects/table/files/">Sou
 </pre>
 </div>
 
-<!-- This HTML table template is generated by emacs 26.0.50 -->
+<!-- This HTML table template is generated by emacs 26.0.90 -->
 <table border="1">
   <tr>
     <td align="left" valign="top">
@@ -369,36 +662,75 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </p>
 </div>
 </li>
+
+
+<li><a id="org5266d40"></a>source<br />
+<div class="outline-text-5" id="text-3-1-2-2">
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> **<span class="org-variable-name">argv</span>)
+{
+        printf(<span class="org-string">"hello world\n"</span>);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgcbdd5fa" class="outline-2">
-<h2 id="orgcbdd5fa"><span class="section-number-2">4</span> FAQ</h2>
+<div id="outline-container-orgf609e6d" class="outline-2">
+<h2 id="orgf609e6d"><span class="section-number-2">4</span> 使用</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org7c16dd2" class="outline-3">
-<h3 id="org7c16dd2"><span class="section-number-3">4.1</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div id="outline-container-org239ba24" class="outline-3">
+<h3 id="org239ba24"><span class="section-number-3">4.1</span> source code</h3>
 <div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>Need require ob-C</li>
+<li>Mingw needs to install gcc</li>
+<li>upper case C</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        printf(<span class="org-string">"hello world\n"</span>);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org85a9123" class="outline-2">
+<h2 id="org85a9123"><span class="section-number-2">5</span> FAQ</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgc0c1b4a" class="outline-3">
+<h3 id="orgc0c1b4a"><span class="section-number-3">5.1</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-5-1">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1ebc94c" class="outline-3">
-<h3 id="org1ebc94c"><span class="section-number-3">4.2</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgad9ef78" class="outline-3">
+<h3 id="orgad9ef78"><span class="section-number-3">5.2</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-5-2">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2f954eb" class="outline-3">
-<h3 id="org2f954eb"><span class="section-number-3">4.3</span> 无法加载一个package, 但无法正常安装 20171114</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org352e1f0" class="outline-3">
+<h3 id="org352e1f0"><span class="section-number-3">5.3</span> 无法加载一个package, 但无法正常安装 20171114</h3>
+<div class="outline-text-3" id="text-5-3">
 <ul class="org-ul">
 <li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
 <li>根因: 目前还不明确根因</li>
@@ -407,9 +739,9 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </div>
 </div>
 
-<div id="outline-container-org863ef1f" class="outline-3">
-<h3 id="org863ef1f"><span class="section-number-3">4.4</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-org673a3bc" class="outline-3">
+<h3 id="org673a3bc"><span class="section-number-3">5.4</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
+<div class="outline-text-3" id="text-5-4">
 <ul class="org-ul">
 <li>错误提示: No next track in playlist</li>
 <li>根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致</li>
@@ -431,9 +763,9 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </ul>
 </div>
 </div>
-<div id="outline-container-org64813e5" class="outline-3">
-<h3 id="org64813e5"><span class="section-number-3">4.5</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
-<div class="outline-text-3" id="text-4-5">
+<div id="outline-container-org3916be0" class="outline-3">
+<h3 id="org3916be0"><span class="section-number-3">5.5</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
+<div class="outline-text-3" id="text-5-5">
 <ul class="org-ul">
 <li>根因: 默认配置打开了确认, 调整配置即可</li>
 <li>解决措施: 修改不再提示process未退出(Emacs退出时自动退出)</li>
@@ -445,12 +777,12 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </div>
 </div>
 
-<div id="outline-container-org3732cd7" class="outline-3">
-<h3 id="org3732cd7"><span class="section-number-3">4.6</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
+<div id="outline-container-org02f8ad3" class="outline-3">
+<h3 id="org02f8ad3"><span class="section-number-3">5.6</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
 </div>
-<div id="outline-container-orgb84c9ac" class="outline-3">
-<h3 id="orgb84c9ac"><span class="section-number-3">4.7</span> <span class="done DONE">DONE</span> Windows</h3>
-<div class="outline-text-3" id="text-4-7">
+<div id="outline-container-orgc093db7" class="outline-3">
+<h3 id="orgc093db7"><span class="section-number-3">5.7</span> <span class="done DONE">DONE</span> Windows</h3>
+<div class="outline-text-3" id="text-5-7">
 <ul class="org-ul">
 <li>错误提示1:</li>
 </ul>
@@ -491,9 +823,9 @@ the ‘&#x2013;debug-init’ option to view a complete error backtrace.
 </div>
 </div>
 
-<div id="outline-container-org4ac0a65" class="outline-3">
-<h3 id="org4ac0a65"><span class="section-number-3">4.8</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
-<div class="outline-text-3" id="text-4-8">
+<div id="outline-container-org5617776" class="outline-3">
+<h3 id="org5617776"><span class="section-number-3">5.8</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
+<div class="outline-text-3" id="text-5-8">
 <p>
 <del>- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)</del>
 </p>
@@ -518,13 +850,13 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-org344e6b9" class="outline-2">
-<h2 id="org344e6b9"><span class="section-number-2">5</span> 常用快捷键</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgef05d9a" class="outline-2">
+<h2 id="orgef05d9a"><span class="section-number-2">6</span> 常用快捷键</h2>
+<div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgf122da6" class="outline-3">
-<h3 id="orgf122da6"><span class="section-number-3">5.1</span> Global</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-org69ea990" class="outline-3">
+<h3 id="org69ea990"><span class="section-number-3">6.1</span> Global</h3>
+<div class="outline-text-3" id="text-6-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -599,9 +931,9 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd6ab701" class="outline-3">
-<h3 id="orgd6ab701"><span class="section-number-3">5.2</span> Org mode</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-org66db8da" class="outline-3">
+<h3 id="org66db8da"><span class="section-number-3">6.2</span> Org mode</h3>
+<div class="outline-text-3" id="text-6-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -635,9 +967,497 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd169bd4" class="outline-2">
-<h2 id="orgd169bd4"><span class="section-number-2">6</span> 典型配置链接</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org4a3acdc" class="outline-2">
+<h2 id="org4a3acdc"><span class="section-number-2">7</span> 参考文档</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org6796d4f" class="outline-4">
+<h4 id="ref-w32-readme"><a id="org6796d4f"></a><span class="section-number-4">7.0.1</span> w32 Readme</h4>
+<div class="outline-text-4" id="text-ref-w32-readme">
+<blockquote>
+<p>
+<a href="http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/">http://ftp.uni-bayreuth.de/packages/editors/emacs/windows/</a>
+Copyright (C) 2001-2014 Free Software Foundation, Inc.
+See the end of the file for license conditions.
+</p>
+
+<p>
+Emacs for Windows
+</p>
+
+<p>
+This README.W32 file describes how to set up and run a precompiled
+distribution of GNU Emacs for Windows.  You can find the precompiled
+distribution on the ftp.gnu.org server and its mirrors:
+</p>
+
+<p>
+<a href="ftp://ftp.gnu.org/gnu/emacs/windows/">ftp://ftp.gnu.org/gnu/emacs/windows/</a>
+</p>
+
+<p>
+This server contains other distributions, including the full Emacs
+source distribution, as well as older releases of Emacs for Windows.
+</p>
+
+<p>
+Information on how to compile Emacs from sources on Windows is in
+the files README and INSTALL in the nt/ sub-directory of the
+top-level Emacs directory in the source distribution.  If you
+received this file as part of the Emacs source distribution, and are
+looking for information on how to build Emacs on MS-Windows, please
+read those 2 files and not this one.
+</p>
+
+<ul class="org-ul">
+<li><p>
+Preliminaries
+</p>
+
+<p>
+The binary distribution has these top-level directories:
+</p>
+<ul class="org-ul">
+<li>bin</li>
+<li>libexec</li>
+<li>share</li>
+<li>var</li>
+</ul></li>
+
+<li><p>
+Setting up Emacs
+</p>
+
+<p>
+To install Emacs, simply unpack the binary package into a directory
+of your choice.  To complete the installation process, you can
+optionally run the program addpm.exe in the bin subdirectory.  This
+will put an icon for Emacs in the Start Menu under
+"Start -&gt; Programs -&gt; Gnu Emacs".
+</p>
+
+<p>
+Some users have reported that the Start Menu item is not created for
+them.  If this happens, just create your own shortcut to runemacs.exe,
+eg. by dragging it on to the desktop or the Start button.
+</p>
+
+<p>
+Note that running addpm is now an optional step; Emacs is able to
+locate all of its files without needing any information to be set in
+the environment or the registry, although such settings will still
+be obeyed if present.  This is convenient for running Emacs on a
+machine which disallows registry changes, or on which software
+should not be installed.  For instance, you can now run Emacs
+directly from a CD or USB flash drive without copying or installing
+anything on the machine itself.
+</p></li>
+
+<li><p>
+Prerequisites for Windows 9X
+</p>
+
+<p>
+To run Emacs on Windows 9X (Windows 95/98/Me), you will need to have
+the Microsoft Layer for Unicode (MSLU) installed.  It can be
+downloaded from the Microsoft site, and comes in a form of a single
+dynamic library called UNICOWS.DLL.  If this library is not
+accessible to Emacs, it will pop up a dialog saying that it cannot
+find the library, and will refuse to start up.
+</p></li>
+
+<li><p>
+Starting Emacs
+</p>
+
+<p>
+To run Emacs, simply select Emacs from the Start Menu, or invoke
+runemacs.exe directly from Explorer or from a command prompt.  This
+will start Emacs in its default GUI mode, ready to use.  If you have
+never used Emacs before, you should follow the tutorial at this
+point (select Emacs Tutorial from the Help menu), since Emacs is
+quite different from ordinary Windows applications in many respects.
+</p>
+
+<p>
+If you want to use Emacs in tty or character mode within a command
+window, you can start it by typing "emacs -nw" at the command prompt.
+(Obviously, you need to ensure that the Emacs bin subdirectory is in
+your PATH first, or specify the path to emacs.exe.)  The -nw
+(non-windowed) mode of operation is most useful if you have a telnet
+server on your machine, allowing you to run Emacs remotely.
+</p></li>
+
+<li><p>
+EXE files included
+</p>
+
+<p>
+Emacs comes with the following executable files in the bin directory.
+</p>
+
+<ul class="org-ul">
+<li>emacs.exe - The main Emacs executable.  As this is designed to run
+as both a text-mode application (emacs -nw) and as a GUI application,
+it will pop up a command prompt window if run directly from Explorer.</li>
+
+<li>runemacs.exe - A wrapper for running Emacs as a GUI application
+without popping up a command prompt window.  If you create a
+desktop shortcut for invoking Emacs, make it point to this
+executable, not to emacs.exe.</li>
+
+<li>emacsclient.exe - A command-line client program that can
+communicate with a running Emacs process.  See the `Emacs Server'
+node of the Emacs manual.</li>
+
+<li>emacsclientw.exe - A version of emacsclient that does not open
+a command-line window.</li>
+
+<li>addpm.exe - A basic installer that creates Start Menu icons for Emacs.
+Running this is optional.</li>
+
+<li>ctags.exe, etags.exe - Tools for generating tag files.  See the
+`Tags' node of the Emacs manual.</li>
+
+<li>ebrowse.exe - A tool for generating C++ browse information.  See the
+`Ebrowse' manual.</li>
+</ul>
+
+<p>
+Several helper programs are in a version-specific subdirectory of
+the libexec directory:
+</p>
+
+<ul class="org-ul">
+<li>cmdproxy.exe - Used internally by Emacs to work around problems with
+the native shells in various versions of Windows.</li>
+
+<li>ddeclient.exe - A tool for interacting with DDE servers.  To be
+invoked as "ddeclient SERVER [TOPIC]", where SERVER is the DDE
+server name, and sends each line of its standard input to the DDE
+server using the DdeClientTransaction API.  This program is
+supposed to be invoked via the 'call-process-region' Emacs
+primitive.</li>
+
+<li>hexl.exe - A tool for producing hex dumps of binary files.  See the
+`Editing Binary Files' node of the Emacs manual.</li>
+
+<li>movemail.exe - A helper application for safely moving mail from
+a mail spool or POP server to a local user mailbox.  See the
+`Movemail' node of the Emacs manual.</li>
+
+<li>profile.exe - A helper program that generates periodic events for
+profiling Emacs Lisp code.</li>
+
+<li>update-game-score.exe - A utility for updating the score files of
+Emacs games.</li>
+</ul></li>
+
+<li><p>
+Image support
+</p>
+
+<p>
+Emacs has built in support for XBM and PPM/PGM/PBM images, and the
+libXpm library is bundled, providing XPM support (required for color
+toolbar icons and splash screen).  Source for libXpm should be available
+from the same place from which you got this binary distribution.
+</p>
+
+<p>
+Emacs can also support some other image formats with appropriate
+libraries.  These libraries are all available on the following sites:
+</p>
+
+<ol class="org-ol">
+<li><a href="http://sourceforge.net/projects/ezwinports/files/">http://sourceforge.net/projects/ezwinports/files/</a>
+&#x2013; leaner, more up-to-date builds, only for 32-bit Emacs</li>
+<li><a href="http://www.gtk.org/download/win32.php">http://www.gtk.org/download/win32.php</a>
+<a href="http://www.gtk.org/download/win64.php">http://www.gtk.org/download/win64.php</a>
+&#x2013; the GTK project site; offers much fatter builds, but includes
+   64-bit DLLs (from the 2nd URL)</li>
+<li>GnuWin32 project &#x2013; very old builds, not recommended</li>
+</ol>
+
+<p>
+The libraries to download are mentioned below.  Some libraries
+depend on others that need to be downloaded separately from the same
+site; please consult the download instructions on each site for the
+details.  In general, the ezwinports site mentioned above has all
+the dependencies bundled in the same zip archive, so installing from
+there is the easiest.
+</p>
+
+<p>
+Emacs will find these libraries if the directory they are installed
+in is on the PATH or in the same directory where you have emacs.exe.
+Here are some specific comments about each image type:
+</p>
+
+<p>
+PNG: requires the PNG reference library 1.4 or later, which will
+be named libpngNN.dll or libpngNN-NN.dll.  LibPNG requires zlib,
+which should come from the same source as you got libpng.
+Starting with Emacs 23.3, the precompiled Emacs binaries are
+built with libpng 1.4.x and later, and are incompatible with
+earlier versions of libpng DLLs.  So if you have libpng 1.2.x,
+the PNG support will not work, and you will have to download
+newer versions.
+</p>
+
+<p>
+JPEG: requires the Independent JPEG Group's libjpeg 6b or later,
+which will be called jpeg62.dll, libjpeg.dll, jpeg-62.dll or jpeg.dll.
+</p>
+
+<p>
+TIFF: requires libTIFF 3.0 or later, which will be called libtiffN.dll
+or libtiff-N.dll or libtiff.dll.
+</p>
+
+<p>
+GIF: requires libungif or giflib 4.1 or later, which will be
+called libgif-6.dll, giflib4.dll, libungif4.dll or libungif.dll.
+</p>
+
+<p>
+SVG: requires librsvg 2.x whose DLL will be called
+librsvg-2-2.dll.  SVG also requires several dependency DLLs,
+such as Pango, Cairo, and Glib, all of them found on the
+above-mentioned sites.  If you download from the ezwinports
+site, you need only librsvg-2.nn.mm-x-w32-bin.zip, it comes with
+all the other dependencies bundled.
+</p>
+
+<p>
+If you have image support DLLs under different names, customize the
+value of `dynamic-library-alist'.
+</p></li>
+
+<li><p>
+GnuTLS support
+</p>
+
+<p>
+GnuTLS provides SSL/TLS network support for Emacs (https, imaps and
+so on.)
+</p>
+
+<p>
+In order to support GnuTLS at runtime, Emacs must be able to find
+the relevant DLLs during startup; failure to do so is not an error,
+but GnuTLS won't be available to the running session.
+</p>
+
+<p>
+You can get pre-built binaries (including any dependency DLLs) at
+<a href="http://sourceforge.net/projects/ezwinports/files/">http://sourceforge.net/projects/ezwinports/files/</a>.
+</p></li>
+
+<li><p>
+libxml2 support
+</p>
+
+<p>
+libxml2 provides HTML parsing support for Emacs, which is necessary
+to use the built-in eww browser.
+</p>
+
+<p>
+In order to support libxml2 at runtime, a libxml2-enabled Emacs must
+be able to find the relevant DLLs during startup; failure to do so
+is not an error, but libxml2 features won't be available to the
+running session.
+</p>
+
+<p>
+You can get pre-built binaries (including any required DLL and the
+header files) at <a href="http://sourceforge.net/projects/ezwinports/files/">http://sourceforge.net/projects/ezwinports/files/</a>.
+</p></li>
+
+<li><p>
+Uninstalling Emacs
+</p>
+
+<p>
+If you should need to uninstall Emacs, simply delete all the files
+and subdirectories from the directory where it was unpacked (Emacs
+does not install or update any files in system directories or
+anywhere else).  If you ran the addpm.exe program to create the
+registry entries and the Start menu icon, then you can remove the
+registry entries using regedit.  All of the settings are written
+under the Software\GNU\Emacs key in HKEY_LOCAL_MACHINE, or if you
+didn't have administrator privileges when you installed, the same
+key in HKEY_CURRENT_USER.  Just delete the whole Software\GNU\Emacs
+key.
+</p>
+
+<p>
+The Start menu entry can be removed by right-clicking on the Taskbar
+and selecting Properties, then using the Remove option on the Start
+Menu Programs page.  (If you installed under an account with
+administrator privileges, then you need to click the Advanced button
+and look for the Gnu Emacs menu item under All Users.)
+</p></li>
+
+<li><p>
+Troubleshooting
+</p>
+
+<p>
+Unpacking the distributions
+</p>
+
+<p>
+If you encounter trouble trying to run Emacs, there are a number of
+possible causes.  Check the following for indications that the
+distribution was not corrupted by the tools used to unpack it:
+</p>
+
+<ul class="org-ul">
+<li>Be sure to disable CR/LF translation or the executables will
+be unusable.  Older versions of WinZipNT would enable this
+translation by default.  If you are using WinZipNT, disable it.
+(I don't have WinZipNT myself, and I do not know the specific
+commands necessary to disable it.)</li>
+
+<li>Check that filenames were not truncated to 8.3.  For example,
+there should be a file lisp\abbrevlist.elc; if this has been
+truncated to abbrevli.elc, your distribution has been corrupted
+while unpacking and Emacs will not start.</li>
+
+<li>On Windows 9X, make sure you have the UNICOWS.DLL library either
+in the same directory where you have emacs.exe or in the
+directory where system-wide DLLs are kept.</li>
+</ul>
+
+<p>
+If you believe you have unpacked the distributions correctly and are
+still encountering problems, see the section on Further Information
+below.
+</p>
+
+<p>
+Virus scanners
+</p>
+
+<p>
+Some virus scanners interfere with Emacs' use of subprocesses.  If you
+are unable to use subprocesses and you use Dr. Solomon's WinGuard or
+McAfee's Vshield, turn off "Scan all files" (WinGuard) or "boot sector
+scanning" (McAfee exclusion properties).
+</p></li>
+
+<li><p>
+Further information
+</p>
+
+<p>
+The FAQ for the MS Windows port of Emacs is distributed with Emacs
+(info manual "efaq-w32"), and also available at
+</p>
+
+<p>
+<a href="http://www.gnu.org/software/emacs/manual/efaq-w32.html">http://www.gnu.org/software/emacs/manual/efaq-w32.html</a>
+</p>
+
+<p>
+In addition to the FAQ, there is a mailing list for discussing issues
+related to the Windows port of Emacs.  For information about the
+list, see this Web page:
+</p>
+
+<p>
+<a href="http://lists.gnu.org/mailman/listinfo/help-emacs-windows">http://lists.gnu.org/mailman/listinfo/help-emacs-windows</a>
+</p>
+
+<p>
+To ask questions on the mailing list, send email to
+help-emacs-windows@gnu.org.  (You don't need to subscribe for that.)
+To subscribe to the list or unsubscribe from it, fill the form you
+find at <a href="http://lists.gnu.org/mailman/listinfo/help-emacs-windows">http://lists.gnu.org/mailman/listinfo/help-emacs-windows</a> as
+explained there.
+</p>
+
+<p>
+Another valuable source of information and help which should not be
+overlooked is the various Usenet news groups dedicated to Emacs.
+These are particularly good for help with general issues which aren't
+specific to the Windows port of Emacs.  The main news groups to use
+for seeking help are:
+</p>
+
+<p>
+gnu.emacs.help
+comp.emacs
+</p>
+
+<p>
+There are also fairly regular postings and announcements of new or
+updated Emacs packages on this group:
+</p>
+
+<p>
+gnu.emacs.sources
+</p></li>
+
+<li><p>
+Reporting bugs
+</p>
+
+<p>
+If you encounter a bug in this port of Emacs, we would like to hear
+about it.  First check the FAQ on the web page above to see if the bug
+is already known and if there are any workarounds.  Then check whether
+the bug has something to do with code in your .emacs file, e.g. by
+invoking Emacs with the "-Q" option.
+</p>
+
+<p>
+If you decide that it is a bug in Emacs, use the built in bug
+reporting facility to report it (from the menu; Help -&gt; Send Bug Report).
+If you have not yet configured Emacs for mail, then when you press
+C-c C-c to send the report, it will ask you to paste the text of the
+report into your mail client.  If the bug is related to subprocesses,
+also specify which shell you are using (e.g., include the values of
+`shell-file-name' and `explicit-shell-file-name' in your message).
+</p>
+
+<p>
+Enjoy!
+</p></li>
+</ul>
+
+<p>
+This file is part of GNU Emacs.
+</p>
+
+<p>
+GNU Emacs is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+</p>
+
+<p>
+GNU Emacs is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+</p>
+
+<p>
+You should have received a copy of the GNU General Public License
+along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcda0c03" class="outline-2">
+<h2 id="orgcda0c03"><span class="section-number-2">8</span> 典型配置链接</h2>
+<div class="outline-text-2" id="text-8">
 <ul class="org-ul">
 <li>purcell: <a href="https://github.com/purcell/emacs.d">https://github.com/purcell/emacs.d</a></li>
 <li>preluede: <a href="https://github.com/bbatsov/prelude">https://github.com/bbatsov/prelude</a></li>
@@ -646,14 +1466,17 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org73068aa" class="outline-2">
-<h2 id="org73068aa"><span class="section-number-2">7</span> 学习资源</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org13530b8" class="outline-2">
+<h2 id="org13530b8"><span class="section-number-2">9</span> 学习资源</h2>
+<div class="outline-text-2" id="text-9">
 <ul class="org-ul">
 <li><a href="https://emacs-china.org/">Emacs-China</a></li>
 <li><a href="https://mirror.tuna.tsinghua.edu.cn/help/elpa/">ELPA清华镜像</a></li>
 <li><a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org">一年成为 Emacs 高手 (像神一样使用编辑器)</a> - 陈斌</li>
 <li><a href="https://zilongshanren.com/">子龙山人</a></li>
+<li><a href="https://ogbe.net/emacsconfig.html">https://ogbe.net/emacsconfig.html</a></li>
+<li><a href="http://bastibe.de/2013-11-13-blogging-with-emacs.html">http://bastibe.de/2013-11-13-blogging-with-emacs.html</a></li>
+<li><a href="https://justin.abrah.ms/emacs/orgmode_static_site_generator.html">https://justin.abrah.ms/emacs/orgmode_static_site_generator.html</a></li>
 </ul>
 </div>
 </div>
