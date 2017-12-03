@@ -243,7 +243,13 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 #+RESULTS:
 : hello world
 
+** windows
+*** w32-select-font
+
 * FAQ
+** win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"
+- win10下看到显示正常, 字体为Lucida San, 拷贝字体覆盖依然无效. 显示为蓝色长方块
+
 ** ido-find-file打开文件时, 文件名是已有文件的前缀
 - 输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).
 
@@ -337,6 +343,25 @@ https://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin
 | /   | <>       | <>          |
 |     |          |             |
 |-----+----------+-------------|
+*** insert literal hot key
+Input '<' and the key character, then input TAB:
+|-----+--------------+-------------|
+| Key | Literal      | Description |
+|-----+--------------+-------------|
+| /   | <>           | <>          |
+| a   | Export ascii |             |
+| c   | Center       |             |
+| e   | Example      |             |
+| h   | Export html  |             |
+| i   | +INDEX       |             |
+| l   | Export latex |             |
+| q   | Quote        |             |
+| s   | Source       |             |
+| v   | verse        |             |
+| A   | +ASCII       |             |
+|-----+--------------+-------------|
+
+#+ASCII: hello test
 
 * 参考文档
 *** w32 Readme
@@ -690,3 +715,29 @@ along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 - https://ogbe.net/emacsconfig.html
 - http://bastibe.de/2013-11-13-blogging-with-emacs.html
 - https://justin.abrah.ms/emacs/orgmode_static_site_generator.html
+- https://mmmyddd.github.io/wiki/emacs/picture.html
+- https://emacs-fu.blogspot.jp/2009/01/drawing-pictures.html
+* Candidate                                                  
+** picture-mode
+#+BEGIN_SRC ditaa :file 1.png
+                              +----------+
+          Drawing with        |cYEL   {s}|
+            ditaa             +          +
+                              | emacs fu |
+                              +----------+
+                                  ^  
+                                  |  
+    +--------+   +-------+    +-------+    
+    |cGRE    |-->+ ditaa +--> |       |    
+    |  Text  |   +-------+    |diagram|  
+    |Document|   | magic!|    |       |    
+    |     {d}|   |cBLU   |    | cRED  |    
+    +---+----+   +-------+    +-------+     
+        ^     
+        |
+    +--------+
+    |cPNK{io}| 
+    |  user  |
+    +--------+
+#+END_SRC
+** artist-mode                                     
