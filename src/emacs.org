@@ -106,6 +106,39 @@ zlib1.dll => /mingw64/bin/zlib1.dll (0x62e80000)
 #+END_SRC
 - 启动Emacs, Windows安装packages过程中可能出现部分错误, 可能需退出重启多次.
 
+* Org mode
+** 文学编程
+*** 代码求值与安全性问题
+Org mode代码块 =END_SRC= 处 =C-c C-c= 对代码块求值，结果在代码块其后 =#+RESULTS=
+行。例如在如下代码 =END_SRC= 处求值：
+#+BEGIN_EXPORT ascii
+#+BEGIN_SRC emacs-lisp
+(message "Hello org mode source block")
+#+END_SRC
+
+#+RESULTS:
+: Hello org mode source block
+#+END_EXPORT
+
+也可执行 =C-c C-v e= 求值，对应函数 =org-babel-execute-maybe= 。
+
+Org mode每个代码块类似于程序，运行会有风险。Org在代码块求值时，默认配置下交互式
+提示降低风险。这可以阻止用户偶然性运行不可信代码。对于经验丰富的用户，通过修改
+=org-confirm-babel-evaluate= 可定义交互方式。设置为 =nil= 时不进行任何提示，设置
+为自定义的函数时，在求值前运行该函数，函数必须返回t或nil，返回t提示，返回nil不
+提示。一般定义ditaa为不提示（没有风险）。参考如下定义：
+#+BEGIN_EXPORT ascii
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (ditaa . t)
+     (C . t)))
+
+  (defun y:org-confirm-babel-evaluate(lang body)
+    (not (or (string= lang "ditaa"))))
+  (setq org-confirm-babel-evaluate 'y:org-confirm-babel-evaluate)
+#+END_EXPORT
+
 * Packages
 ** org-mode
 *** What is Orgmode
@@ -225,6 +258,8 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
           return 0;
   }
 #+END_SRC
+*** Edit tips
+- Special symbols: http://orgmode.org/worg/org-symbols.html
 * 使用
 ** source code
 - Need require ob-C
