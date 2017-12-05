@@ -1,0 +1,292 @@
+#+TITLE: 内存管理技术
+#+INCLUDE: export-notes.org
+
+* TODO 概述
+待定内容：
+介绍用户态内存使用于管理、内核态内存使用与管理、内存池、伙伴系统、虚拟内存管理等。
+
+* 用户态内存管理技术
+  :PROPERTIES:
+  :CUSTOM_ID: us
+  :END:
+** 从程序地址空间布局谈起
+   :PROPERTIES:
+   :CUSTOM_ID: us-process-layout
+   :END:
+二进制可执行文件是由特定格式的二进制代码和数据组成。常见的格式有如下三种：
+- COFF :: COFF是Common File Object，由UNIX System V引入，基本被ELF替代；
+- PE :: PE是Portable Execuable，Windows系统基本都是此类格式。mingw查看ls类别：
+#+BEGIN_SRC sh
+~$ file /bin/ls
+/bin/ls: PE32+ executable (console) x86-64 (stripped to external PDB), for MS Windows
+#+END_SRC
+- ELF :: ELF是Executable and Linkable Format，首次在SVR4发布，1999年成为UNIX
+和类UNIX操作系统的标准二进制格式。
+
+这里是它们的WIKI：[[https://en.wikipedia.org/wiki/COFF][COFF]]， [[https://en.wikipedia.org/wiki/Portable_Executable][PE]]， [[https://en.wikipedia.org/wiki/Executable_and_Linkable_Format][ELF]]。
+
+可执行文件加载到内存中时，分为代码段和数据段。数据段又进一步分为初始化数据段、
+未初始化数据段、栈和堆。关于进程的内存布局细节参考[[file:kernel.org::#process-address-space][进程地址空间]]，本文主要介绍
+数据段内存管理。
+
+初始化数据段(initialized data)位于可执行文件data段，占用存储空间。未初始化数据段
+(uninitialized data)位于BSS(Block Storage Start, 来自IBM 704机器的汇编指令。也有
+记作Block Start of Symbol)。未初始化或初始化为0的全局变量都在BSS段。这两种数据
+结构都是静态确定的，无法在运行时分配或释放。
+
+栈(start)用于保存所有的局部变量，比如函数参数、返回地址、非整型的返回值、函数内部
+局部变量都保存在栈中。栈后进先出特点非常适合保存/恢复现场。因为函数的返回地址保存
+在栈中，修改返回地址数值，可以改变程序的预期行为，这是栈溢出攻击。为了阻止栈溢出
+攻击，LINUX内核添加了栈随机变量，通过修改 =/proc/sys/kernel/randomize_va_space= 为
+0关闭栈随机化，为2打开栈随机化。
+
+堆(heap)用于存放动态分配的内存。典型分配器函数 =malloc= 分配堆内存，目前比较好的
+分配器包括glibc的 =ptmalloc= 、google的 =tcmalloc= 、facebook的 =jemalloc= 。
+LINUX系统提供 =brk= 和 =mmap= 扩展/收缩堆内存。堆内存使用不当可导致内存泄漏。
+通用的分配器函数（比如glibc的malloc）要考虑多种场景下的内存占用和性能的平衡问题，
+在某种特定场景下性能往往不是最优的，因此可以通过定制（特化）分配器函数的方式，
+优化堆内存的分配性能，提高其使用率、减少碎片化。这种定制的分配器称为内存池。C++
+标准库STL allocator、Boost pool、memcached都是典型的内存池。2017年底整理内存技术
+时，翻出了2008年实现的内存池，放到了GitHub上mempool.c和mempool.h。通用内存分配器
+经过这么多年发展已经非常成熟，一般而言，所有的优化都是特化优化，比如，程序非常
+频繁的分配释放特定大小的结构体。
+
+下图是一个典型的进程地址空间布局概要图：
+#+CAPTION: 进程地址空间布局
+#+BEGIN_SRC ditaa :file img/memory.process-layout.png :cmdline -E -S -s 0.8
+  +-----------------+ <-:-:-:Task Size
+  |      GAPS cAAA  |
+  +-----------------+ <-:-:-:STACK TOP randomized variable
+  |      cBLU       |
+  |                 |
+  |      Stack      | <-:-:-:Already Used                
+  |        |        |
+  |        |        |
+  +-----------------+
+  |        |        |
+  |        V        |
+  |                 |
+  |      cPNK       |
+  |        ^ MMAP   |
+  |        |        |
+  |        |        |
+  +-----------------+ <-:-:-:mm.mmap_base (TASK_UNMAPPED_SIZE)
+  |                 |
+  |      cGRE       |
+  |        ^ HEAP   |
+  |        |        |
+  +-----------------+
+  |      c96E       |
+  |      TEXT       |
+  +-----------------+
+#+END_SRC
+
+#+RESULTS:
+[[file:img/memory.process-layout.png]]
+
+** 可执行程序大小与地址空间分析
+   :PROPERTIES:
+   :CUSTOM_ID: us-exe-size-analysis
+   :END:
+先参考如下示例代码：
+#+CAPTION: 数据段示例代码
+#+BEGIN_SRC C
+#include <malloc.h>
+
+int initialized_data[1024*1024] = {1};
+int uninitialized_data[1024*1024];
+void *global_heap_data;
+
+int main()
+{
+        int stack_data[1024*1024];
+        void *heap_data = malloc(1024*1024);
+        global_heap_data = malloc(1024*1024);
+
+        return 0;
+}
+#+END_SRC
+
+保存为data.c编译，观察结果，大小为4.1MB左右。
+#+BEGIN_SRC sh
+~$ gcc -o data data.c
+~$ ls -lh data
+-rwxrwxr-x. 1 yanyg yanyg 4.1M Dec  5 22:22 data
+ls -l data
+-rwxrwxr-x. 1 yanyg yanyg 4202981 Dec  5 22:26 data
+#+END_SRC
+
+将代码第三行initialized_data初始化为0： ~int initialized_data[1024*1024]= {0}~ 。
+再次编译观察，大小为8.5KB左右。
+#+BEGIN_SRC sh
+~$ gcc -o data data.c
+~$ ls -lh data
+-rwxrwxr-x. 1 yanyg yanyg 8.5K Dec  5 22:25 data
+~$ ls -l data
+-rwxrwxr-x. 1 yanyg yanyg 8629 Dec  5 22:25 data
+#+END_SRC
+
+减少的4MB左右即为初始化数据段所占有。
+
+使用readelf -a对initialized_data初始化为1的程序（4.1MB左右）进行进一步分析：
+#+BEGIN_EXPORT sh
+~$ readelf -S data
+  [13] .text             PROGBITS         0000000000400440  00000440
+       00000000000001a4  0000000000000000  AX       0     0     16
+  [24] .data             PROGBITS         0000000000601040  00001040
+       0000000000400020  0000000000000000  WA       0     0     32
+  [25] .bss              NOBITS           0000000000a01060  00401060
+       0000000000400040  0000000000000000  WA       0     0     32
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)
+  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)
+  O (extra OS processing required) o (OS specific), p (processor specific)
+
+~$ readelf -s data
+    24: 0000000000601040     0 SECTION LOCAL  DEFAULT   24
+    25: 0000000000a01060     0 SECTION LOCAL  DEFAULT   25
+    47: 0000000000601040     0 NOTYPE  WEAK   DEFAULT   24 data_start
+    48: 0000000000a01060     0 NOTYPE  GLOBAL DEFAULT   24 _edata
+    51: 0000000000601040     0 NOTYPE  GLOBAL DEFAULT   24 __data_start
+    57: 0000000000e010a0     0 NOTYPE  GLOBAL DEFAULT   25 _end
+    58: 0000000000601060 0x400000 OBJECT  GLOBAL DEFAULT   24 initialized_data
+    59: 0000000000400440     0 FUNC    GLOBAL DEFAULT   13 _start
+    60: 0000000000a01060     0 NOTYPE  GLOBAL DEFAULT   25 __bss_start
+    61: 0000000000400530    49 FUNC    GLOBAL DEFAULT   13 main
+    62: 0000000000a01080     8 OBJECT  GLOBAL DEFAULT   25 global_heap_data
+    64: 0000000000a010a0 0x400000 OBJECT  GLOBAL DEFAULT   25 uninitialized_data
+    67: 00000000004003e0     0 FUNC    GLOBAL DEFAULT   11 _init
+#+END_EXPORT
+初始化数据段地址空间0x601040~0xa01060，长度0x400020；未初始化数据段地址空间
+0xa01060~e010a0，长度0x400040。顺便说一句，_start(0x400440)为程序起始地址，而
+main(400530)为main函数入口地址。
+
+** ASLR(地址空间布局随机化)策略
+   :PROPERTIES:
+   :CUSTOM_ID: us-alsr
+   :END:
+上一小节分析中，通过reaelf并未看到stack和heap起始地址与长度限制，因为这是在
+运行时确定的。系统调用exec用load_elf_binary函数加载ELF文件，该函数检测
+randomize_va_space确定是否进行堆栈随机化(fs/binfmt_elf.c)：
+- randomize_va_space=0 :: 不进行随机化
+- randomize_va_space=1 :: 栈(stack)、vdso、mmap基地址随机化
+- randomize_va_space=2 :: 栈(stack)、vdso、mmap，以及brk区域堆进行随机化
+上述实现称为LINUX ALSR(Address Space layout Randomization)策略，可以通过sysctl
+或/proc/sys/kernel/randomize_va_space配置：
+#+BEGIN_SRC sh
+# set the value need superuser(root) privilege
+~# echo 0 > /proc/sys/kernel/randomize_va_space
+~# sysctl -n kernel.randomize_va_space
+2
+~$ sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+~$  sysctl -n kernel.randomize_va_space
+0
+#+END_SRC
+设置不同的ALSR策略，多次运行cat /proc/self/maps或ls -l /proc/self/map_files/，
+观察每次地址是否相同：
+#+BEGIN_SRC sh
+~# sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ddb000-7ffff7dfc000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ffc000-7ffff7ffd000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ffd000-7ffff7ffe000 -> /usr/lib64/ld-2.17.so
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ddb000-7ffff7dfc000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ffc000-7ffff7ffd000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ffd000-7ffff7ffe000 -> /usr/lib64/ld-2.17.so
+
+~# sysctl -w kernel.randomize_va_space=2
+kernel.randomize_va_space = 2
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7f12a95e5000-7f12a9606000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f12a9806000-7f12a9807000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f12a9807000-7f12a9808000 -> /usr/lib64/ld-2.17.so
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7f80c2ef5000-7f80c2f16000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f80c3116000-7f80c3117000 -> /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f80c3117000-7f80c3118000 -> /usr/lib64/ld-2.17.so
+#+END_SRC
+
+64位体系下，地址空间比较充足，可以设置较大随机化范围提高安全性。brk的随机范围是
+32MB(参见函数arch_randomize_brk)，stack在1GB范围内随机，vdso在随机栈(stack)之上
+一个PMD(Page Middle Directory, 16MB)范围再次随机，mmap随机范围受变量
+/proc/sys/vm/mmap_rnd_bits控制，但会控制在2^16~2^24之间。相关代码包括
+[[https://elixir.free-electrons.com/linux/latest/source/arch/x86/entry/vdso/vma.c][arch/x86/vdso/vma.c]](function vdso_addr)、[[https://elixir.free-electrons.com/linux/latest/source/fs/binfmt_elf.c][fs/binfmt_elf.c]]、[[https://elixir.free-electrons.com/linux/latest/source/mm/mmap.c][mm/mmap.c]]。
+
+** TODO 栈空间管理
+   :PROPERTIES:
+   :CUSTOM_ID: us-stack
+   :END:
+- 栈默认大小、栈溢出、攻击
+
+** TODO 堆内存管理
+   :PROPERTIES:
+   :CUSTOM_ID: us-heap
+   :END:
+- 内存泄漏、进程退出时全部回收、brk与mmap
+#+BEGIN_SRC C
+  #include <malloc.h>
+  #include <stdio.h>
+  #include <string.h>
+
+  int main()
+  {
+          int i;
+          void *p[10000];
+          printf("Test memory usage\n");
+          for (i = 0; i < 10000; ++i) {
+                  p[i] = malloc(1024*512);
+                  if (!p[i]) {
+                          fprintf(stderr, "alloc %d failed\n", i);
+                  }
+                  memset(p[i], 0, 1024*512);
+          }
+
+          printf("Watch your memory usage, then press any key continue ...\n");
+          getchar();
+
+          printf("Do free ...\n");
+          for (i = 0; i < 10000; ++i) {
+                  free(p[i]);
+          }
+
+          printf("Watch your memory usage, then press any key exit ...\n");
+          getchar();
+
+          return 0;
+  }
+#+END_SRC
+
+** TODO 内存池的实现
+   :PROPERTIES:
+   :CUSTOM_ID: us-mempool
+   :END:
+- 特化实现、均衡技术、缓存对齐与性能
+
+* 内核态内存管理
+** dummy
+*** brk
+brk stands for break. means program break
+#+BEGIN_SRC C
+/* mm/mmap.c */
+SYSCALL_DEFINE1(brk, unsigned long, brk)
+{
+    ...
+}
+sched.h: task_struct: brk_randomized
+CONFIG_COMPAT_BRK: disable heap randomization
+/proc/sys/kernel/randomize_va_space
+sysctl -n kernel.randomize_va_space
+Generate two:
+Same:
+echo 0 > /proc/sys/kernel/randomize_va_space; cat /proc/self/maps > cat.maps.1; cat /proc/self/maps > cat.maps.2; diff cat.maps.[12] >/dev/null; echo $?
+
+Diff:
+echo 2 > /proc/sys/kernel/randomize_va_space; cat /proc/self/maps > cat.maps.1; cat /proc/self/maps > cat.maps.2; diff cat.maps.[12] >/dev/null; echo $?
+#+END_SRC
+* 读书笔记
+** Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)
+*** Chapter 
+1

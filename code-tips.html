@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2017-12-06 Wed 01:02 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>代码阅读笔记</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
+<h1 class="title">代码阅读笔记</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc171924">1. glibc</a>
+<ul>
+<li><a href="#orgb2c67c0">1.1. definitions</a>
+<ul>
+<li><a href="#orgcb2a75d">1.1.1. <code>__THROW</code></a></li>
+<li><a href="#org8bdd90b">1.1.2. <code>__leaf__</code></a></li>
+<li><a href="#orgdec6d61">1.1.3. <code>__wul</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc171924" class="outline-2">
+<h2 id="orgc171924"><span class="section-number-2">1</span> glibc</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgb2c67c0" class="outline-3">
+<h3 id="orgb2c67c0"><span class="section-number-3">1.1</span> definitions</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgcb2a75d" class="outline-4">
+<h4 id="orgcb2a75d"><span class="section-number-4">1.1.1</span> <code>__THROW</code></h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+glibc/malloc/malloc.h中malloc函数声明如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">Allocate SIZE bytes of memory.  </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">extern</span> <span class="org-type">void</span> *<span class="org-function-name">malloc</span> (<span class="org-type">size_t</span> <span class="org-variable-name">__size</span>) __THROW <span class="org-type">__attribute_malloc__</span> <span class="org-variable-name">__wur</span>;
+</pre>
+</div>
+<p>
+malloc是熟悉的。什么是 <code>__THROW</code> 和 <code>__wur</code> ？__THROW是一个针对GCC 3.3以上版本，以及C++的定义。
+</p>
+
+<p>
+GCC 3.3版本以上添加__attribute__ ((<span class="underline"><span class="underline">nothrow</span></span> __LEAF))，通知编译器一个函数不能抛出异常。绝大多数的C标准库函数不抛出异常。其中一个例外是使用函数指针作为参数的函数，例如qsort和bsearch。单纯C语言程序中此属性时没有作用。在C++中调用C代码时，编译器可基于此做优化。<a href="https://stackoverflow.com/questions/24882645/gcc-what-is-attribute-nothrow-used-for">Stackoverflow</a>有这个问题的讨论。
+</p>
+
+<p>
+GCC手册关于nothrow说明如下：
+</p>
+<blockquote>
+<p>
+The nothrow attribute is used to inform the compiler that a function cannot
+throw an exception. For example, most functions in the standard C library can
+be guaranteed not to throw an exception with the notable exceptions of qsort
+and bsearch that take function pointer arguments.
+</p>
+
+<p>
+&#x2013; <br />
+Using the GCC Compiler Collection,<br />
+Chapter 6, 6.31 Declaring Attributes of Functions
+</p>
+</blockquote>
+
+<p>
+misc/cdefs.h定义如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">GCC can always grok prototypes.  For C++ programs we add throw()</span>
+<span class="org-comment">   to help it optimize the function calls.  But this works only with</span>
+<span class="org-comment">   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions</span>
+<span class="org-comment">   as non-throwing using a function attribute since programs can use</span>
+<span class="org-comment">   the -fexceptions options for C code as well.  </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor"># if</span> <span class="org-negation-char">!</span><span class="org-preprocessor">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (3, 3)
+<span class="org-preprocessor">#  define</span> <span class="org-variable-name">__THROW</span>       <span class="org-keyword">__attribute__</span> ((<span class="org-type">__nothrow__</span> <span class="org-variable-name">__LEAF</span>))
+<span class="org-preprocessor">#  define</span> <span class="org-variable-name">__THROWNL</span>     <span class="org-keyword">__attribute__</span> ((__nothrow__))
+<span class="org-preprocessor">#  define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)    <span class="org-keyword">__attribute__</span> ((<span class="org-type">__nothrow__</span> <span class="org-variable-name">__LEAF</span>)) fct
+<span class="org-preprocessor"># else</span>
+<span class="org-preprocessor">#  if</span> <span class="org-preprocessor">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (2,8)
+<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROW</span>      throw ()
+<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROWNL</span>    throw ()
+<span class="org-preprocessor">#   define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)   __LEAF_ATTR <span class="org-type">fct</span> <span class="org-function-name">throw</span> ()
+<span class="org-preprocessor">#  else</span>
+<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROW</span>
+<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROWNL</span>
+<span class="org-preprocessor">#   define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)   fct
+<span class="org-preprocessor">#  endif</span>
+<span class="org-preprocessor"># endif</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8bdd90b" class="outline-4">
+<h4 id="org8bdd90b"><span class="section-number-4">1.1.2</span> <code>__leaf__</code></h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+leaf属性仅用于加速编译器链接，没什么边界效果，可忽略不管。
+</p>
+
+<p>
+GCC 手册说明：
+</p>
+<blockquote>
+<p>
+Calls to external functions with this attribute must return to the current
+compilation unit only by return or by exception handling. In particular, leaf
+functions are not allowed to call callback function passed to it from the
+current compilation unit or directly call functions exported by the unit or
+longjmp into the unit. Leaf function might still call functions from other
+compilation units and thus they are not necessarily leaf in the sense that they
+contain no function calls at all.
+</p>
+
+<p>
+The attribute is intended for library functions to improve dataﬂow analysis.
+The compiler takes the hint that any data not escaping the current compilation
+unit can not be used or modifed by the leaf function. For example, the sin
+function is a leaf function, but qsort is not.
+</p>
+
+<p>
+Note that leaf functions might invoke signals and signal handlers might be
+defned in the current compilation unit and use static variables. The only
+compliant way to write such a signal handler is to declare such variables
+volatile.
+</p>
+
+<p>
+The attribute has no eﬀect on functions defned within the current compilation
+unit. This is to allow easy merging of multiple compilation units into one, for
+example, by using the link-time optimization. For this reason the attribute is
+not allowed on types to annotate indirect calls.
+</p>
+
+<p>
+&#x2013; <br />
+Using the GCC Compiler Collection,<br />
+Chapter 6, 6.31 Declaring Attributes of Functions
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-orgdec6d61" class="outline-4">
+<h4 id="orgdec6d61"><span class="section-number-4">1.1.3</span> <code>__wul</code></h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+__wur是 <code>__attribute_warn_unused_result__</code> 缩写，关联GCC属性warn_unused_result。调用设置此属性的函数时，如果不使用其返回值，会发出警告。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">extern</span> <span class="org-type">int</span> <span class="org-function-name">func</span>() <span class="org-keyword">__attribute__</span>((warn_unused_result));
+<span class="org-type">int</span> <span class="org-function-name">func</span>()
+{
+        <span class="org-keyword">return</span> 0;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        func();
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+编译时有返回值未使用的警告：
+</p>
+<blockquote>
+<p>
+wur.c:9:15: warning: ignoring return value of ‘func’, declared with attribute warn_unused_result [-Wunused-result]
+           func();
+               ^
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
