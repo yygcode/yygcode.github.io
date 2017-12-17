@@ -3,12 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-17 周日 16:39 -->
+<!-- 2017-12-17 周日 22:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>内存管理技术</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -63,13 +62,17 @@ for the JavaScript code in this tag.
 </script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">内存管理技术</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd9142ae">1. <span class="todo TODO">TODO</span> 概述</a></li>
+<li><a href="#org4f2acc6">1. <span class="todo TODO">TODO</span> 概述</a></li>
 <li><a href="#us">2. 用户态内存管理技术</a>
 <ul>
 <li><a href="#us-process-layout">2.1. 从程序地址空间布局谈起</a></li>
@@ -77,28 +80,28 @@ for the JavaScript code in this tag.
 <li><a href="#us-alsr">2.3. ASLR(地址空间布局随机化)策略</a></li>
 <li><a href="#us-stack">2.4. 栈空间管理</a></li>
 <li><a href="#us-heap">2.5. <span class="todo TODO">TODO</span> 堆内存管理</a></li>
-<li><a href="#orgdf8cf12">2.6. 典型分配器分析</a>
+<li><a href="#org7b0e835">2.6. 典型分配器分析</a>
 <ul>
-<li><a href="#org1a0a13b">2.6.1. tcmalloc</a></li>
+<li><a href="#org66fed57">2.6.1. tcmalloc</a></li>
 </ul>
 </li>
 <li><a href="#us-mempool">2.7. <span class="todo TODO">TODO</span> 内存池的实现</a></li>
 </ul>
 </li>
-<li><a href="#org496635f">3. 内核态内存管理</a>
+<li><a href="#orgf7cf67a">3. 内核态内存管理</a>
 <ul>
-<li><a href="#org718500e">3.1. dummy</a>
+<li><a href="#org53d7dc7">3.1. dummy</a>
 <ul>
-<li><a href="#orgcb2dd79">3.1.1. brk</a></li>
+<li><a href="#org3d6f425">3.1.1. brk</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org085f73e">4. 读书笔记</a>
+<li><a href="#org04baa48">4. 读书笔记</a>
 <ul>
-<li><a href="#org7380908">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
+<li><a href="#org51853ad">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
 <ul>
-<li><a href="#orga3b84b2">4.1.1. Chapter</a></li>
+<li><a href="#orgaf00a1b">4.1.1. Chapter</a></li>
 </ul>
 </li>
 </ul>
@@ -107,8 +110,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgd9142ae" class="outline-2">
-<h2 id="orgd9142ae"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
+<div id="outline-container-org4f2acc6" class="outline-2">
+<h2 id="org4f2acc6"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 待定内容：
@@ -117,12 +120,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgddc5dbd" class="outline-2">
-<h2 id="us"><a id="orgddc5dbd"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
+<div id="outline-container-org187692a" class="outline-2">
+<h2 id="us"><a id="org187692a"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
 <div class="outline-text-2" id="text-us">
 </div>
-<div id="outline-container-orge979377" class="outline-3">
-<h3 id="us-process-layout"><a id="orge979377"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
+<div id="outline-container-org1e00318" class="outline-3">
+<h3 id="us-process-layout"><a id="org1e00318"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
 <div class="outline-text-3" id="text-us-process-layout">
 <p>
 二进制可执行文件是由特定格式的二进制代码和数据组成。常见的格式有如下三种：
@@ -215,8 +218,8 @@ LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存�
 </div>
 </div>
 
-<div id="outline-container-org46883ed" class="outline-3">
-<h3 id="us-exe-size-analysis"><a id="org46883ed"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
+<div id="outline-container-org046f4e6" class="outline-3">
+<h3 id="us-exe-size-analysis"><a id="org046f4e6"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
 <div class="outline-text-3" id="text-us-exe-size-analysis">
 <p>
 先参考如下示例代码：
@@ -252,7 +255,7 @@ ls -l data
 </div>
 
 <p>
-将代码第三行initialized<sub>data初始化为0</sub>： <code>int initialized_data[1024*1024]= {0}</code> 。
+将代码第三行initialized_data初始化为0： <code>int initialized_data[1024*1024]= {0}</code> 。
 再次编译观察，大小为8.5KB左右。
 </p>
 <div class="org-src-container">
@@ -269,32 +272,32 @@ ls -l data
 </p>
 
 <p>
-使用readelf -a对initialized<sub>data初始化为1的程序</sub>（4.1MB左右）进行进一步分析：
+使用readelf -a对initialized_data初始化为1的程序（4.1MB左右）进行进一步分析：
 </p>
 <p>
 初始化数据段地址空间0x601040~0xa01060，长度0x400020；未初始化数据段地址空间
-0xa01060~e010a0，长度0x400040。顺便说一句，<sub>start</sub>(0x400440)为程序起始地址，而
+0xa01060~e010a0，长度0x400040。顺便说一句，_start(0x400440)为程序起始地址，而
 main(400530)为main函数入口地址。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8ac9d04" class="outline-3">
-<h3 id="us-alsr"><a id="org8ac9d04"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
+<div id="outline-container-org1dcbd62" class="outline-3">
+<h3 id="us-alsr"><a id="org1dcbd62"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
 <div class="outline-text-3" id="text-us-alsr">
 <p>
 上一小节分析中，通过reaelf并未看到stack和heap起始地址与长度限制，因为这是在
-运行时确定的。系统调用exec用load<sub>elf</sub><sub>binary函数加载ELF文件</sub>，该函数检测
-randomize<sub>va</sub><sub>space确定是否进行堆栈随机化</sub>(fs/binfmt<sub>elf.c</sub>)：
+运行时确定的。系统调用exec用load_elf_binary函数加载ELF文件，该函数检测
+randomize_va_space确定是否进行堆栈随机化(fs/binfmt_elf.c)：
 </p>
 <dl class="org-dl">
-<dt>randomize<sub>va</sub><sub>space</sub>=0</dt><dd>不进行随机化</dd>
-<dt>randomize<sub>va</sub><sub>space</sub>=1</dt><dd>栈(stack)、vdso、mmap基地址随机化</dd>
-<dt>randomize<sub>va</sub><sub>space</sub>=2</dt><dd>栈(stack)、vdso、mmap，以及brk区域堆进行随机化</dd>
+<dt>randomize_va_space=0</dt><dd>不进行随机化</dd>
+<dt>randomize_va_space=1</dt><dd>栈(stack)、vdso、mmap基地址随机化</dd>
+<dt>randomize_va_space=2</dt><dd>栈(stack)、vdso、mmap，以及brk区域堆进行随机化</dd>
 </dl>
 <p>
 上述实现称为LINUX ALSR(Address Space layout Randomization)策略，可以通过sysctl
-或/proc/sys/kernel/randomize<sub>va</sub><sub>space配置</sub>：
+或/proc/sys/kernel/randomize_va_space配置：
 </p>
 <div class="org-src-container">
 <pre class="src src-sh"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">set the value need superuser(root) privilege</span>
@@ -308,7 +311,7 @@ kernel.randomize_va_space = 0
 </pre>
 </div>
 <p>
-设置不同的ALSR策略，多次运行cat /proc/self/maps或ls -l /proc/self/map<sub>files</sub>/，
+设置不同的ALSR策略，多次运行cat /proc/self/maps或ls -l /proc/self/map_files/，
 观察每次地址是否相同：
 </p>
 <div class="org-src-container">
@@ -338,16 +341,16 @@ lr--------. 1 root root 64 Dec  5 23:49 7f80c3117000-7f80c3118000 -&gt; /usr/lib
 
 <p>
 64位体系下，地址空间比较充足，可以设置较大随机化范围提高安全性。brk的随机范围是
-32MB(参见函数arch<sub>randomize</sub><sub>brk</sub>)，stack在1GB范围内随机，vdso在随机栈(stack)之上
+32MB(参见函数arch_randomize_brk)，stack在1GB范围内随机，vdso在随机栈(stack)之上
 一个PMD(Page Middle Directory, 16MB)范围再次随机，mmap随机范围受变量
-/proc/sys/vm/mmap<sub>rnd</sub><sub>bits控制</sub>，但会控制在2<sup>16</sup>~2<sup>24之间</sup>。相关代码包括
-<a href="https://elixir.free-electrons.com/linux/latest/source/arch/x86/entry/vdso/vma.c">arch/x86/vdso/vma.c</a>(function vdso<sub>addr</sub>)、<a href="https://elixir.free-electrons.com/linux/latest/source/fs/binfmt_elf.c">fs/binfmt<sub>elf.c</sub></a>、<a href="https://elixir.free-electrons.com/linux/latest/source/mm/mmap.c">mm/mmap.c</a>。
+/proc/sys/vm/mmap_rnd_bits控制，但会控制在2^16~2^24之间。相关代码包括
+<a href="https://elixir.free-electrons.com/linux/latest/source/arch/x86/entry/vdso/vma.c">arch/x86/vdso/vma.c</a>(function vdso_addr)、<a href="https://elixir.free-electrons.com/linux/latest/source/fs/binfmt_elf.c">fs/binfmt_elf.c</a>、<a href="https://elixir.free-electrons.com/linux/latest/source/mm/mmap.c">mm/mmap.c</a>。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org22abab8" class="outline-3">
-<h3 id="us-stack"><a id="org22abab8"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
+<div id="outline-container-org3d907b1" class="outline-3">
+<h3 id="us-stack"><a id="org3d907b1"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
 <div class="outline-text-3" id="text-us-stack">
 <p>
 用户态进程栈大小通过 <code>ulimit -s</code> 查看，通过 <code>ulimit -s new_size</code> 修改。默认大小
@@ -405,14 +408,14 @@ Segmentation fault (core dumped)
 <p>
 栈上定义变量大于等于栈大小时，运行出现段错误，这是栈溢出导致的问题。程序启动、
 调用已经占用一部分栈空间，因此当栈上局部变量空间略小于栈大小时，也会溢出，具体
-数据与平台、系统、函数调用深度相关。上述测试程序，只有TEST<sub>STACK</sub><sub>SIZE小于栈大小</sub>
+数据与平台、系统、函数调用深度相关。上述测试程序，只有TEST_STACK_SIZE小于栈大小
 10KB及以上时才能避免段错误。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga286bb2" class="outline-3">
-<h3 id="us-heap"><a id="orga286bb2"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
+<div id="outline-container-org45f1e8c" class="outline-3">
+<h3 id="us-heap"><a id="org45f1e8c"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
 <div class="outline-text-3" id="text-us-heap">
 <ul class="org-ul">
 <li>内存泄漏、进程退出时全部回收、brk与mmap</li>
@@ -453,12 +456,12 @@ Segmentation fault (core dumped)
 </div>
 </div>
 
-<div id="outline-container-orgdf8cf12" class="outline-3">
-<h3 id="orgdf8cf12"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
+<div id="outline-container-org7b0e835" class="outline-3">
+<h3 id="org7b0e835"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-org1a0a13b" class="outline-4">
-<h4 id="org1a0a13b"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
+<div id="outline-container-org66fed57" class="outline-4">
+<h4 id="org66fed57"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a>
@@ -468,8 +471,8 @@ Segmentation fault (core dumped)
 </div>
 
 
-<div id="outline-container-orgeb1b357" class="outline-3">
-<h3 id="us-mempool"><a id="orgeb1b357"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
+<div id="outline-container-orgbff4355" class="outline-3">
+<h3 id="us-mempool"><a id="orgbff4355"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
 <div class="outline-text-3" id="text-us-mempool">
 <ul class="org-ul">
 <li>特化实现、均衡技术、缓存对齐与性能</li>
@@ -478,16 +481,16 @@ Segmentation fault (core dumped)
 </div>
 </div>
 
-<div id="outline-container-org496635f" class="outline-2">
-<h2 id="org496635f"><span class="section-number-2">3</span> 内核态内存管理</h2>
+<div id="outline-container-orgf7cf67a" class="outline-2">
+<h2 id="orgf7cf67a"><span class="section-number-2">3</span> 内核态内存管理</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org718500e" class="outline-3">
-<h3 id="org718500e"><span class="section-number-3">3.1</span> dummy</h3>
+<div id="outline-container-org53d7dc7" class="outline-3">
+<h3 id="org53d7dc7"><span class="section-number-3">3.1</span> dummy</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orgcb2dd79" class="outline-4">
-<h4 id="orgcb2dd79"><span class="section-number-4">3.1.1</span> brk</h4>
+<div id="outline-container-org3d6f425" class="outline-4">
+<h4 id="org3d6f425"><span class="section-number-4">3.1.1</span> brk</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 brk stands for break. means program break
@@ -514,16 +517,16 @@ echo 2 &gt; /proc/sys/kernel/randomize_va_space; cat /proc/self/maps &gt; cat.ma
 </div>
 </div>
 </div>
-<div id="outline-container-org085f73e" class="outline-2">
-<h2 id="org085f73e"><span class="section-number-2">4</span> 读书笔记</h2>
+<div id="outline-container-org04baa48" class="outline-2">
+<h2 id="org04baa48"><span class="section-number-2">4</span> 读书笔记</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org7380908" class="outline-3">
-<h3 id="org7380908"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
+<div id="outline-container-org51853ad" class="outline-3">
+<h3 id="org51853ad"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-orga3b84b2" class="outline-4">
-<h4 id="orga3b84b2"><span class="section-number-4">4.1.1</span> Chapter</h4>
+<div id="outline-container-orgaf00a1b" class="outline-4">
+<h4 id="orgaf00a1b"><span class="section-number-4">4.1.1</span> Chapter</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 1
@@ -532,12 +535,6 @@ echo 2 &gt; /proc/sys/kernel/randomize_va_space; cat /proc/self/maps &gt; cat.ma
 </div>
 </div>
 </div>
-</div>
-<div id="postamble" class="status">
-<p class="author">&#20316;&#32773;: yanyg</p>
-<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
-<p class="date">Created: 2017-12-17 周日 16:39</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

@@ -3,12 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-17 周日 16:39 -->
+<!-- 2017-12-17 周日 22:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -63,44 +62,48 @@ for the JavaScript code in this tag.
 </script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">存储指南</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org84f0c39">1. 介绍</a>
+<li><a href="#orgd588790">1. 介绍</a>
 <ul>
-<li><a href="#org64143c8">1.1. 发展历史</a></li>
-<li><a href="#org16527cb">1.2. 衡量评测</a></li>
+<li><a href="#orge532f76">1.1. 发展历史</a></li>
+<li><a href="#org8a3ebd9">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org3f10c79">2. 存储产品分析</a>
+<li><a href="#org628be12">2. 存储产品分析</a>
 <ul>
-<li><a href="#org6d17465">2.1. IBM V7000</a></li>
+<li><a href="#org2e6ba91">2.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#orgabfe032">3. 软件架构</a></li>
-<li><a href="#org5089ad7">4. 驱动</a>
+<li><a href="#org5f3e6cd">3. 软件架构</a></li>
+<li><a href="#org69d8277">4. 驱动</a>
 <ul>
-<li><a href="#org2496883">4.1. 双控互联NTB</a></li>
-<li><a href="#orgbe5eb89">4.2. FC卡</a></li>
-<li><a href="#org73ba96d">4.3. SAS卡</a></li>
-<li><a href="#org3fde189">4.4. 网卡</a></li>
-<li><a href="#org528df86">4.5. IB卡</a></li>
+<li><a href="#org2bd9875">4.1. 双控互联NTB</a></li>
+<li><a href="#orgd77bed9">4.2. FC卡</a></li>
+<li><a href="#org421dca3">4.3. SAS卡</a></li>
+<li><a href="#org639ae02">4.4. 网卡</a></li>
+<li><a href="#org62923b0">4.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#org6d38a6e">5. SCSI协议</a></li>
-<li><a href="#org5f1d10e">6. BACKUP</a></li>
-<li><a href="#org49e06ac">7. 方案</a>
+<li><a href="#org4f73cee">5. SCSI协议</a></li>
+<li><a href="#org6b044ef">6. BACKUP</a></li>
+<li><a href="#orga7abfac">7. 方案</a>
 <ul>
-<li><a href="#orgc6eb527">7.1. 容灾</a>
+<li><a href="#orgdb28c54">7.1. 容灾</a>
 <ul>
-<li><a href="#orgfe51852">7.1.1. 介绍</a></li>
-<li><a href="#orgb0e52a2">7.1.2. 技术点</a></li>
-<li><a href="#orgf9bd017">7.1.3. 两地三中心</a></li>
-<li><a href="#org7264f9c">7.1.4. 双活</a></li>
-<li><a href="#org9cb003c">7.1.5. 关键词</a></li>
+<li><a href="#orgca0c54d">7.1.1. 介绍</a></li>
+<li><a href="#orgb73cb94">7.1.2. 技术点</a></li>
+<li><a href="#org6e21f1e">7.1.3. 两地三中心</a></li>
+<li><a href="#org5b0bdc5">7.1.4. 双活</a></li>
+<li><a href="#org2d3fb72">7.1.5. 关键词</a></li>
 </ul>
 </li>
 </ul>
@@ -109,16 +112,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org84f0c39" class="outline-2">
-<h2 id="org84f0c39"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgd588790" class="outline-2">
+<h2 id="orgd588790"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org64143c8" class="outline-3">
-<h3 id="org64143c8"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-orge532f76" class="outline-3">
+<h3 id="orge532f76"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-org16527cb" class="outline-3">
-<h3 id="org16527cb"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-org8a3ebd9" class="outline-3">
+<h3 id="org8a3ebd9"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注六个方面:
@@ -135,12 +138,12 @@ SAN存储需要关注六个方面:
 </div>
 </div>
 
-<div id="outline-container-org3f10c79" class="outline-2">
-<h2 id="org3f10c79"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-org628be12" class="outline-2">
+<h2 id="org628be12"><span class="section-number-2">2</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org6d17465" class="outline-3">
-<h3 id="org6d17465"><span class="section-number-3">2.1</span> IBM V7000</h3>
+<div id="outline-container-org2e6ba91" class="outline-3">
+<h3 id="org2e6ba91"><span class="section-number-3">2.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -150,40 +153,40 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-orgabfe032" class="outline-2">
-<h2 id="orgabfe032"><span class="section-number-2">3</span> 软件架构</h2>
+<div id="outline-container-org5f3e6cd" class="outline-2">
+<h2 id="org5f3e6cd"><span class="section-number-2">3</span> 软件架构</h2>
 </div>
-<div id="outline-container-org5089ad7" class="outline-2">
-<h2 id="org5089ad7"><span class="section-number-2">4</span> 驱动</h2>
+<div id="outline-container-org69d8277" class="outline-2">
+<h2 id="org69d8277"><span class="section-number-2">4</span> 驱动</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2496883" class="outline-3">
-<h3 id="org2496883"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
+<div id="outline-container-org2bd9875" class="outline-3">
+<h3 id="org2bd9875"><span class="section-number-3">4.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-orgbe5eb89" class="outline-3">
-<h3 id="orgbe5eb89"><span class="section-number-3">4.2</span> FC卡</h3>
+<div id="outline-container-orgd77bed9" class="outline-3">
+<h3 id="orgd77bed9"><span class="section-number-3">4.2</span> FC卡</h3>
 </div>
-<div id="outline-container-org73ba96d" class="outline-3">
-<h3 id="org73ba96d"><span class="section-number-3">4.3</span> SAS卡</h3>
+<div id="outline-container-org421dca3" class="outline-3">
+<h3 id="org421dca3"><span class="section-number-3">4.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-org3fde189" class="outline-3">
-<h3 id="org3fde189"><span class="section-number-3">4.4</span> 网卡</h3>
+<div id="outline-container-org639ae02" class="outline-3">
+<h3 id="org639ae02"><span class="section-number-3">4.4</span> 网卡</h3>
 </div>
-<div id="outline-container-org528df86" class="outline-3">
-<h3 id="org528df86"><span class="section-number-3">4.5</span> IB卡</h3>
+<div id="outline-container-org62923b0" class="outline-3">
+<h3 id="org62923b0"><span class="section-number-3">4.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-org6d38a6e" class="outline-2">
-<h2 id="org6d38a6e"><span class="section-number-2">5</span> SCSI协议</h2>
+<div id="outline-container-org4f73cee" class="outline-2">
+<h2 id="org4f73cee"><span class="section-number-2">5</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org5f1d10e" class="outline-2">
-<h2 id="org5f1d10e"><span class="section-number-2">6</span> BACKUP</h2>
+<div id="outline-container-org6b044ef" class="outline-2">
+<h2 id="org6b044ef"><span class="section-number-2">6</span> BACKUP</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
@@ -200,16 +203,16 @@ hello world
 </ul>
 </div>
 </div>
-<div id="outline-container-org49e06ac" class="outline-2">
-<h2 id="org49e06ac"><span class="section-number-2">7</span> 方案</h2>
+<div id="outline-container-orga7abfac" class="outline-2">
+<h2 id="orga7abfac"><span class="section-number-2">7</span> 方案</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgc6eb527" class="outline-3">
-<h3 id="orgc6eb527"><span class="section-number-3">7.1</span> 容灾</h3>
+<div id="outline-container-orgdb28c54" class="outline-3">
+<h3 id="orgdb28c54"><span class="section-number-3">7.1</span> 容灾</h3>
 <div class="outline-text-3" id="text-7-1">
 </div>
-<div id="outline-container-orgfe51852" class="outline-4">
-<h4 id="orgfe51852"><span class="section-number-4">7.1.1</span> 介绍</h4>
+<div id="outline-container-orgca0c54d" class="outline-4">
+<h4 id="orgca0c54d"><span class="section-number-4">7.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-7-1-1">
 <p>
 随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、
@@ -295,8 +298,8 @@ hello world
 </div>
 </div>
 
-<div id="outline-container-orgb0e52a2" class="outline-4">
-<h4 id="orgb0e52a2"><span class="section-number-4">7.1.2</span> 技术点</h4>
+<div id="outline-container-orgb73cb94" class="outline-4">
+<h4 id="orgb73cb94"><span class="section-number-4">7.1.2</span> 技术点</h4>
 <div class="outline-text-4" id="text-7-1-2">
 <p>
 容灾技术
@@ -324,19 +327,19 @@ hello world
 </p>
 </div>
 </div>
-<div id="outline-container-orgf9bd017" class="outline-4">
-<h4 id="orgf9bd017"><span class="section-number-4">7.1.3</span> 两地三中心</h4>
+<div id="outline-container-org6e21f1e" class="outline-4">
+<h4 id="org6e21f1e"><span class="section-number-4">7.1.3</span> 两地三中心</h4>
 <div class="outline-text-4" id="text-7-1-3">
 <p>
 “两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
 </p>
 </div>
 </div>
-<div id="outline-container-org7264f9c" class="outline-4">
-<h4 id="org7264f9c"><span class="section-number-4">7.1.4</span> 双活</h4>
+<div id="outline-container-org5b0bdc5" class="outline-4">
+<h4 id="org5b0bdc5"><span class="section-number-4">7.1.4</span> 双活</h4>
 </div>
-<div id="outline-container-org9cb003c" class="outline-4">
-<h4 id="org9cb003c"><span class="section-number-4">7.1.5</span> 关键词</h4>
+<div id="outline-container-org2d3fb72" class="outline-4">
+<h4 id="org2d3fb72"><span class="section-number-4">7.1.5</span> 关键词</h4>
 <div class="outline-text-4" id="text-7-1-5">
 <ul class="org-ul">
 <li>CAP</li>
@@ -358,11 +361,5 @@ hello world
 
 </div>
 </div></div>
-<div id="postamble" class="status">
-<p class="author">&#20316;&#32773;: yanyg</p>
-<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
-<p class="date">Created: 2017-12-17 周日 16:39</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
-</div>
 </body>
 </html>

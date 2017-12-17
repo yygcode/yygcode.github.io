@@ -3,12 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-17 周日 16:40 -->
+<!-- 2017-12-17 周日 22:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs笔记</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -85,106 +84,110 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">Emacs笔记</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0a436d5">1. 介绍</a></li>
-<li><a href="#orgba771b7">2. 安装</a>
+<li><a href="#org06ba641">1. 介绍</a></li>
+<li><a href="#org92f2432">2. 安装</a>
 <ul>
 <li><a href="#install-ms">2.1. Windows平台安装</a>
 <ul>
-<li><a href="#orgb7b8dc8">2.1.1. 版本选择</a></li>
-<li><a href="#orgf306732">2.1.2. 环境变量</a></li>
-<li><a href="#orgd9dbee1">2.1.3. Msys2 Mingw</a></li>
-<li><a href="#org81709bb">2.1.4. 快捷键</a></li>
-<li><a href="#org2ee71bb">2.1.5. 字体安装</a></li>
-<li><a href="#orge0079bb">2.1.6. 动态库配置</a></li>
+<li><a href="#org057cffc">2.1.1. 版本选择</a></li>
+<li><a href="#org65a7e4a">2.1.2. 环境变量</a></li>
+<li><a href="#org7a91190">2.1.3. Msys2 Mingw</a></li>
+<li><a href="#org2063ed0">2.1.4. 快捷键</a></li>
+<li><a href="#org8bcb45a">2.1.5. 字体安装</a></li>
+<li><a href="#org0fea95e">2.1.6. 动态库配置</a></li>
 </ul>
 </li>
-<li><a href="#orge1f1b6e">2.2. Linux平台安装</a>
+<li><a href="#orgd53f4da">2.2. Linux平台安装</a>
 <ul>
-<li><a href="#orge862834">2.2.1. <span class="todo TODO">TODO</span> 字体安装方式后期增补</a></li>
+<li><a href="#org2ccc8b6">2.2.1. <span class="todo TODO">TODO</span> 字体安装方式后期增补</a></li>
 </ul>
 </li>
-<li><a href="#org6f9fc75">2.3. <span class="todo TODO">TODO</span> 从源码构建</a>
+<li><a href="#org9f221dd">2.3. <span class="todo TODO">TODO</span> 从源码构建</a>
 <ul>
-<li><a href="#org4070d48">2.3.1. <span class="todo TODO">TODO</span> Windows Msys2</a></li>
+<li><a href="#org159a399">2.3.1. <span class="todo TODO">TODO</span> Windows Msys2</a></li>
 </ul>
 </li>
-<li><a href="#orgf569661">2.4. 配置</a></li>
+<li><a href="#orgbb99314">2.4. 配置</a></li>
 </ul>
 </li>
-<li><a href="#orgdefa04d">3. Org mode</a>
+<li><a href="#org394c07b">3. Org mode</a>
 <ul>
-<li><a href="#org4ab3e5a">3.1. 文学编程</a>
+<li><a href="#orgf24d98d">3.1. 文学编程</a>
 <ul>
-<li><a href="#orge393d2f">3.1.1. 代码求值与安全性问题</a></li>
+<li><a href="#org9b6315a">3.1.1. 代码求值与安全性问题</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org6827bf1">4. 开发环境</a>
+<li><a href="#org9b16292">4. 开发环境</a>
 <ul>
-<li><a href="#orgd42b03c">4.1. 功能</a></li>
-<li><a href="#org9a5e65b">4.2. tools</a></li>
+<li><a href="#orgbc7e4d6">4.1. 功能</a></li>
+<li><a href="#orgae622c9">4.2. tools</a></li>
 </ul>
 </li>
-<li><a href="#org90d776c">5. Packages</a>
+<li><a href="#org6f79ebc">5. Packages</a>
 <ul>
-<li><a href="#org7560978">5.1. org-mode</a>
+<li><a href="#org526f6a2">5.1. org-mode</a>
 <ul>
-<li><a href="#orga165880">5.1.1. What is Orgmode</a></li>
-<li><a href="#orga07fe98">5.1.2. Functions</a></li>
-<li><a href="#org5d999ae">5.1.3. Edit tips</a></li>
+<li><a href="#org156a703">5.1.1. What is Orgmode</a></li>
+<li><a href="#orgf9c6f9b">5.1.2. Functions</a></li>
+<li><a href="#org87c5064">5.1.3. Edit tips</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org2afa72f">6. lisp</a>
+<li><a href="#org9194fc7">6. lisp</a>
 <ul>
-<li><a href="#orgad298e0">6.1. thing-at-point</a></li>
+<li><a href="#org540b196">6.1. thing-at-point</a></li>
 </ul>
 </li>
-<li><a href="#org3b649ec">7. 使用</a>
+<li><a href="#orgf6ea293">7. 使用</a>
 <ul>
-<li><a href="#org4881684">7.1. source code</a></li>
-<li><a href="#orgea44a74">7.2. windows</a>
+<li><a href="#orgbf4df34">7.1. source code</a></li>
+<li><a href="#org30c3bc6">7.2. windows</a>
 <ul>
-<li><a href="#org60d4cf6">7.2.1. w32-select-font</a></li>
+<li><a href="#org18b6f5e">7.2.1. w32-select-font</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org8b14e97">8. FAQ</a>
+<li><a href="#org1e281b8">8. FAQ</a>
 <ul>
-<li><a href="#orgdcf46e5">8.1. mingw下gtags遇到aux.h/aux.c时报错退出</a></li>
-<li><a href="#org39cdd80">8.2. win下使能M-w拷贝选定字符串</a></li>
-<li><a href="#org03686cd">8.3. win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</a></li>
-<li><a href="#org171e774">8.4. win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</a></li>
-<li><a href="#org092b173">8.5. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#orgc3d855c">8.6. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#orgb80a89c">8.7. 无法加载一个package, 但无法正常安装 20171114</a></li>
-<li><a href="#org479c431">8.8. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
-<li><a href="#org2b947d4">8.9. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
-<li><a href="#org0b09d1c">8.10. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
-<li><a href="#org2876c79">8.11. <span class="done DONE">DONE</span> Windows</a></li>
-<li><a href="#org57f1993">8.12. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
+<li><a href="#org57d9047">8.1. mingw下gtags遇到aux.h/aux.c时报错退出</a></li>
+<li><a href="#org658d273">8.2. win下使能M-w拷贝选定字符串</a></li>
+<li><a href="#org1c94482">8.3. win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</a></li>
+<li><a href="#org5618994">8.4. win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</a></li>
+<li><a href="#org394cc47">8.5. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#orgac7cbd5">8.6. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org183da73">8.7. 无法加载一个package, 但无法正常安装 20171114</a></li>
+<li><a href="#org6bcd315">8.8. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
+<li><a href="#orgbbf41ab">8.9. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
+<li><a href="#org7e96d1a">8.10. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
+<li><a href="#org41324ca">8.11. <span class="done DONE">DONE</span> Windows</a></li>
+<li><a href="#org37d94c7">8.12. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
 </ul>
 </li>
-<li><a href="#orgec57077">9. 常用快捷键</a>
+<li><a href="#org8ee487b">9. 常用快捷键</a>
 <ul>
-<li><a href="#orgdb9785c">9.1. Global</a></li>
-<li><a href="#orgb2c6860">9.2. Org mode</a>
+<li><a href="#org0043fef">9.1. Global</a></li>
+<li><a href="#org13c470f">9.2. Org mode</a>
 <ul>
-<li><a href="#orgbbeeb01">9.2.1. insert literal hot key</a></li>
+<li><a href="#org7c433ee">9.2.1. insert literal hot key</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org076bd19">10. 参考文档</a>
+<li><a href="#org85e7adc">10. 参考文档</a>
 <ul>
 <li>
 <ul>
@@ -193,22 +196,22 @@ for the JavaScript code in this tag.
 </li>
 </ul>
 </li>
-<li><a href="#org03db299">11. 典型配置链接</a></li>
-<li><a href="#org8fd35b5">12. 学习资源</a></li>
-<li><a href="#orgacf1316">13. Candidate</a>
+<li><a href="#orge24b962">11. 典型配置链接</a></li>
+<li><a href="#org19e3517">12. 学习资源</a></li>
+<li><a href="#org321baec">13. Candidate</a>
 <ul>
-<li><a href="#org4ddf1fe">13.1. picture-mode</a></li>
-<li><a href="#org1230c7d">13.2. artist-mode</a></li>
+<li><a href="#org0c5ea4c">13.1. picture-mode</a></li>
+<li><a href="#org0052120">13.2. artist-mode</a></li>
 </ul>
 </li>
-<li><a href="#org665e722">14. Packages Github List</a></li>
-<li><a href="#orgdb09c57">15. youtube</a></li>
+<li><a href="#orgc919f0e">14. Packages Github List</a></li>
+<li><a href="#org1f001cc">15. youtube</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0a436d5" class="outline-2">
-<h2 id="org0a436d5"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org06ba641" class="outline-2">
+<h2 id="org06ba641"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://www.gnu.org/software/emacs/">Emacs</a>/ˈiːmæks/称为神之编辑器(vs. <a href="http://www.vim.org/">VIM</a>称为编辑器之神)。Emacs不仅仅是一个编辑器，而
@@ -227,20 +230,20 @@ Emacs有无限定制的可能，使用Emacs的程序员幸福的生活在Emacs�
 </div>
 </div>
 
-<div id="outline-container-orgba771b7" class="outline-2">
-<h2 id="orgba771b7"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-org92f2432" class="outline-2">
+<h2 id="org92f2432"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgaa3940a" class="outline-3">
-<h3 id="install-ms"><a id="orgaa3940a"></a><span class="section-number-3">2.1</span> Windows平台安装</h3>
+<div id="outline-container-orgc98594b" class="outline-3">
+<h3 id="install-ms"><a id="orgc98594b"></a><span class="section-number-3">2.1</span> Windows平台安装</h3>
 <div class="outline-text-3" id="text-install-ms">
 </div>
-<div id="outline-container-orgb7b8dc8" class="outline-4">
-<h4 id="orgb7b8dc8"><span class="section-number-4">2.1.1</span> 版本选择</h4>
+<div id="outline-container-org057cffc" class="outline-4">
+<h4 id="org057cffc"><span class="section-number-4">2.1.1</span> 版本选择</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 从<a href="https://ftp.gnu.org/gnu/emacs/windows/">这里</a>下载稳定的Emacs, 也可以从<a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">这里</a>下载最新的Emacs. 对于一般用户而言,
-emacs-$VERSION-x86<sub>64.zip是最合适的</sub>. 除去这个版本, 官方也提供其他no-deps, i686,
+emacs-$VERSION-x86_64.zip是最合适的. 除去这个版本, 官方也提供其他no-deps, i686,
 w64版本. 此外, 还有<a href="https://sourceforge.net/projects/ntemacs/">NTEmacs</a>, 但我没使用过.
 </p>
 
@@ -250,8 +253,8 @@ w64版本. 此外, 还有<a href="https://sourceforge.net/projects/ntemacs/">NTE
 </div>
 </div>
 
-<div id="outline-container-orgf306732" class="outline-4">
-<h4 id="orgf306732"><span class="section-number-4">2.1.2</span> 环境变量</h4>
+<div id="outline-container-org65a7e4a" class="outline-4">
+<h4 id="org65a7e4a"><span class="section-number-4">2.1.2</span> 环境变量</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 一般用户不希望使用默认的路径(<a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html">Emacs MS-Windows默认路径</a>). 一般通过添加环境变量
@@ -260,8 +263,8 @@ w64版本. 此外, 还有<a href="https://sourceforge.net/projects/ntemacs/">NTE
 </div>
 </div>
 
-<div id="outline-container-orgd9dbee1" class="outline-4">
-<h4 id="orgd9dbee1"><span class="section-number-4">2.1.3</span> Msys2 Mingw</h4>
+<div id="outline-container-org7a91190" class="outline-4">
+<h4 id="org7a91190"><span class="section-number-4">2.1.3</span> Msys2 Mingw</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 <a href="http://www.msys2.org/">MSYS2</a>是Windows下软件发布和构建平台. 参考<a href="software.html#msys2">我的MSYS2安装配置</a>. MSYS2/Mingw64用以增强
@@ -271,8 +274,8 @@ emacs下shell使用体验. 添加 <code>MSYS2, Mingw64</code> 可执行文件/�
 </div>
 </div>
 
-<div id="outline-container-org81709bb" class="outline-4">
-<h4 id="org81709bb"><span class="section-number-4">2.1.4</span> 快捷键</h4>
+<div id="outline-container-org2063ed0" class="outline-4">
+<h4 id="org2063ed0"><span class="section-number-4">2.1.4</span> 快捷键</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 用<a href="https://autohotkey.com/">AutoHotkey</a>(安装配置参考<a href="software.html#autohotkey">我的AutoHotkey安装配置</a>)管理快捷键, 更加便捷的修改环境
@@ -289,8 +292,8 @@ AutoHotkey配置完毕后按下 <code>Ctrl+Win+e</code> 启动Emacs.
 </div>
 </div>
 
-<div id="outline-container-org2ee71bb" class="outline-4">
-<h4 id="org2ee71bb"><span class="section-number-4">2.1.5</span> 字体安装</h4>
+<div id="outline-container-org8bcb45a" class="outline-4">
+<h4 id="org8bcb45a"><span class="section-number-4">2.1.5</span> 字体安装</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <p>
 我的<a href="https://github.com/yygcode/.emacs.d">Emacs配置</a>中, Orgmode使用<a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a>字体. 参考<a href="software.html#source-code-pro">Win下安装Source Code Pro</a>安装.
@@ -299,8 +302,8 @@ AutoHotkey配置完毕后按下 <code>Ctrl+Win+e</code> 启动Emacs.
 </div>
 </div>
 
-<div id="outline-container-orge0079bb" class="outline-4">
-<h4 id="orge0079bb"><span class="section-number-4">2.1.6</span> 动态库配置</h4>
+<div id="outline-container-org0fea95e" class="outline-4">
+<h4 id="org0fea95e"><span class="section-number-4">2.1.6</span> 动态库配置</h4>
 <div class="outline-text-4" id="text-2-1-6">
 <p>
 Emacs部分功能依赖外部动态库或者命令行程序。比如浏览网页依赖GnuTls和libxml2，听
@@ -342,24 +345,24 @@ zlib1.dll =&gt; /mingw64/bin/zlib1.dll (0x62e80000)
 </div>
 </div>
 
-<div id="outline-container-orge1f1b6e" class="outline-3">
-<h3 id="orge1f1b6e"><span class="section-number-3">2.2</span> Linux平台安装</h3>
+<div id="outline-container-orgd53f4da" class="outline-3">
+<h3 id="orgd53f4da"><span class="section-number-3">2.2</span> Linux平台安装</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt-get install emacs
 </pre>
 </div>
 </div>
-<div id="outline-container-orge862834" class="outline-4">
-<h4 id="orge862834"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> 字体安装方式后期增补</h4>
+<div id="outline-container-org2ccc8b6" class="outline-4">
+<h4 id="org2ccc8b6"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> 字体安装方式后期增补</h4>
 </div>
 </div>
-<div id="outline-container-org6f9fc75" class="outline-3">
-<h3 id="org6f9fc75"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> 从源码构建</h3>
+<div id="outline-container-org9f221dd" class="outline-3">
+<h3 id="org9f221dd"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> 从源码构建</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org4070d48" class="outline-4">
-<h4 id="org4070d48"><span class="section-number-4">2.3.1</span> <span class="todo TODO">TODO</span> Windows Msys2</h4>
+<div id="outline-container-org159a399" class="outline-4">
+<h4 id="org159a399"><span class="section-number-4">2.3.1</span> <span class="todo TODO">TODO</span> Windows Msys2</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <ul class="org-ul">
 <li>自己构建版本是一种烧时间行为. 之前没保留下来记录, 后期再处理吧.</li>
@@ -368,8 +371,8 @@ zlib1.dll =&gt; /mingw64/bin/zlib1.dll (0x62e80000)
 </div>
 </div>
 
-<div id="outline-container-orgf569661" class="outline-3">
-<h3 id="orgf569661"><span class="section-number-3">2.4</span> 配置</h3>
+<div id="outline-container-orgbb99314" class="outline-3">
+<h3 id="orgbb99314"><span class="section-number-3">2.4</span> 配置</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li>下载配置.</li>
@@ -388,16 +391,16 @@ zlib1.dll =&gt; /mingw64/bin/zlib1.dll (0x62e80000)
 </div>
 </div>
 
-<div id="outline-container-orgdefa04d" class="outline-2">
-<h2 id="orgdefa04d"><span class="section-number-2">3</span> Org mode</h2>
+<div id="outline-container-org394c07b" class="outline-2">
+<h2 id="org394c07b"><span class="section-number-2">3</span> Org mode</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4ab3e5a" class="outline-3">
-<h3 id="org4ab3e5a"><span class="section-number-3">3.1</span> 文学编程</h3>
+<div id="outline-container-orgf24d98d" class="outline-3">
+<h3 id="orgf24d98d"><span class="section-number-3">3.1</span> 文学编程</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orge393d2f" class="outline-4">
-<h4 id="orge393d2f"><span class="section-number-4">3.1.1</span> 代码求值与安全性问题</h4>
+<div id="outline-container-org9b6315a" class="outline-4">
+<h4 id="org9b6315a"><span class="section-number-4">3.1.1</span> 代码求值与安全性问题</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Org mode代码块 <code>END_SRC</code> 处 <code>C-c C-c</code> 对代码块求值，结果在代码块其后 <code>#+RESULTS</code>
@@ -419,12 +422,12 @@ Org mode每个代码块类似于程序，运行会有风险。Org在代码块求
 </div>
 </div>
 
-<div id="outline-container-org6827bf1" class="outline-2">
-<h2 id="org6827bf1"><span class="section-number-2">4</span> 开发环境</h2>
+<div id="outline-container-org9b16292" class="outline-2">
+<h2 id="org9b16292"><span class="section-number-2">4</span> 开发环境</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgd42b03c" class="outline-3">
-<h3 id="orgd42b03c"><span class="section-number-3">4.1</span> 功能</h3>
+<div id="outline-container-orgbc7e4d6" class="outline-3">
+<h3 id="orgbc7e4d6"><span class="section-number-3">4.1</span> 功能</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>Jump to definition</li>
@@ -436,8 +439,8 @@ Org mode每个代码块类似于程序，运行会有风险。Org在代码块求
 </ul>
 </div>
 </div>
-<div id="outline-container-org9a5e65b" class="outline-3">
-<h3 id="org9a5e65b"><span class="section-number-3">4.2</span> tools</h3>
+<div id="outline-container-orgae622c9" class="outline-3">
+<h3 id="orgae622c9"><span class="section-number-3">4.2</span> tools</h3>
 <div class="outline-text-3" id="text-4-2">
 <ul class="org-ul">
 <li>tagging: ctags, etags, cscope, gtags/global</li>
@@ -459,16 +462,16 @@ Org mode每个代码块类似于程序，运行会有风险。Org在代码块求
 </div>
 </div>
 
-<div id="outline-container-org90d776c" class="outline-2">
-<h2 id="org90d776c"><span class="section-number-2">5</span> Packages</h2>
+<div id="outline-container-org6f79ebc" class="outline-2">
+<h2 id="org6f79ebc"><span class="section-number-2">5</span> Packages</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org7560978" class="outline-3">
-<h3 id="org7560978"><span class="section-number-3">5.1</span> org-mode</h3>
+<div id="outline-container-org526f6a2" class="outline-3">
+<h3 id="org526f6a2"><span class="section-number-3">5.1</span> org-mode</h3>
 <div class="outline-text-3" id="text-5-1">
 </div>
-<div id="outline-container-orga165880" class="outline-4">
-<h4 id="orga165880"><span class="section-number-4">5.1.1</span> What is Orgmode</h4>
+<div id="outline-container-org156a703" class="outline-4">
+<h4 id="org156a703"><span class="section-number-4">5.1.1</span> What is Orgmode</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 Orgmode is a system for note taking and project planning using plain text files.
@@ -486,8 +489,8 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 </div>
 
-<div id="outline-container-orga07fe98" class="outline-4">
-<h4 id="orga07fe98"><span class="section-number-4">5.1.2</span> Functions</h4>
+<div id="outline-container-orgf9c6f9b" class="outline-4">
+<h4 id="orgf9c6f9b"><span class="section-number-4">5.1.2</span> Functions</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <ul class="org-ul">
 <li>Outline</li>
@@ -503,7 +506,7 @@ with UNIX tools(e.g.: grep), git, and process easily by python, shell, etc.
 </div>
 
 <ol class="org-ol">
-<li><a id="org8cdda13"></a>tables<br />
+<li><a id="orga438ba8"></a>tables<br />
 <div class="outline-text-5" id="text-5-1-2-1">
 <ul class="org-ul">
 <li>base tables</li>
@@ -785,7 +788,7 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </li>
 
 
-<li><a id="orgbcf3bbc"></a>source<br />
+<li><a id="org594d1b6"></a>source<br />
 <div class="outline-text-5" id="text-5-1-2-2">
 <div class="org-src-container">
 <pre class="src src-c"><span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">main</span>(<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">argc</span>, <span style="font-weight: bold; text-decoration: underline;">char</span> **<span style="font-weight: bold; font-style: italic;">argv</span>)
@@ -799,8 +802,8 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </li>
 </ol>
 </div>
-<div id="outline-container-org5d999ae" class="outline-4">
-<h4 id="org5d999ae"><span class="section-number-4">5.1.3</span> Edit tips</h4>
+<div id="outline-container-org87c5064" class="outline-4">
+<h4 id="org87c5064"><span class="section-number-4">5.1.3</span> Edit tips</h4>
 <div class="outline-text-4" id="text-5-1-3">
 <ul class="org-ul">
 <li>Special symbols: <a href="http://orgmode.org/worg/org-symbols.html">http://orgmode.org/worg/org-symbols.html</a></li>
@@ -809,12 +812,12 @@ FIXME: 这种table不支持自动补齐, 用内置的table editor写完整, 再�
 </div>
 </div>
 </div>
-<div id="outline-container-org2afa72f" class="outline-2">
-<h2 id="org2afa72f"><span class="section-number-2">6</span> lisp</h2>
+<div id="outline-container-org9194fc7" class="outline-2">
+<h2 id="org9194fc7"><span class="section-number-2">6</span> lisp</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgad298e0" class="outline-3">
-<h3 id="orgad298e0"><span class="section-number-3">6.1</span> thing-at-point</h3>
+<div id="outline-container-org540b196" class="outline-3">
+<h3 id="org540b196"><span class="section-number-3">6.1</span> thing-at-point</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 defun thing-at-point (thing &amp;optional no-properties)
@@ -833,12 +836,12 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org3b649ec" class="outline-2">
-<h2 id="org3b649ec"><span class="section-number-2">7</span> 使用</h2>
+<div id="outline-container-orgf6ea293" class="outline-2">
+<h2 id="orgf6ea293"><span class="section-number-2">7</span> 使用</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org4881684" class="outline-3">
-<h3 id="org4881684"><span class="section-number-3">7.1</span> source code</h3>
+<div id="outline-container-orgbf4df34" class="outline-3">
+<h3 id="orgbf4df34"><span class="section-number-3">7.1</span> source code</h3>
 <div class="outline-text-3" id="text-7-1">
 <ul class="org-ul">
 <li>Need require ob-C</li>
@@ -858,22 +861,22 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-orgea44a74" class="outline-3">
-<h3 id="orgea44a74"><span class="section-number-3">7.2</span> windows</h3>
+<div id="outline-container-org30c3bc6" class="outline-3">
+<h3 id="org30c3bc6"><span class="section-number-3">7.2</span> windows</h3>
 <div class="outline-text-3" id="text-7-2">
 </div>
-<div id="outline-container-org60d4cf6" class="outline-4">
-<h4 id="org60d4cf6"><span class="section-number-4">7.2.1</span> w32-select-font</h4>
+<div id="outline-container-org18b6f5e" class="outline-4">
+<h4 id="org18b6f5e"><span class="section-number-4">7.2.1</span> w32-select-font</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8b14e97" class="outline-2">
-<h2 id="org8b14e97"><span class="section-number-2">8</span> FAQ</h2>
+<div id="outline-container-org1e281b8" class="outline-2">
+<h2 id="org1e281b8"><span class="section-number-2">8</span> FAQ</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-orgdcf46e5" class="outline-3">
-<h3 id="orgdcf46e5"><span class="section-number-3">8.1</span> mingw下gtags遇到aux.h/aux.c时报错退出</h3>
+<div id="outline-container-org57d9047" class="outline-3">
+<h3 id="org57d9047"><span class="section-number-3">8.1</span> mingw下gtags遇到aux.h/aux.c时报错退出</h3>
 <div class="outline-text-3" id="text-8-1">
 <ul class="org-ul">
 <li>mingw下遇到aux目录，或者aux.h/aux.h，则报错：
@@ -886,16 +889,16 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org39cdd80" class="outline-3">
-<h3 id="org39cdd80"><span class="section-number-3">8.2</span> win下使能M-w拷贝选定字符串</h3>
+<div id="outline-container-org658d273" class="outline-3">
+<h3 id="org658d273"><span class="section-number-3">8.2</span> win下使能M-w拷贝选定字符串</h3>
 <div class="outline-text-3" id="text-8-2">
 <ul class="org-ul">
 <li>注册M-w：(w32-register-hot-key [M-w])</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org03686cd" class="outline-3">
-<h3 id="org03686cd"><span class="section-number-3">8.3</span> win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</h3>
+<div id="outline-container-org1c94482" class="outline-3">
+<h3 id="org1c94482"><span class="section-number-3">8.3</span> win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</h3>
 <div class="outline-text-3" id="text-8-3">
 <ul class="org-ul">
 <li>default-process-coding-system设置问题。当设置为(setq default-process-coding-system '(utf-8 . chinese-gbk)或者(setq default-process-coding-system '(utf-8-dos . chinese-gbk-dos)</li>
@@ -909,8 +912,8 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org171e774" class="outline-3">
-<h3 id="org171e774"><span class="section-number-3">8.4</span> win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</h3>
+<div id="outline-container-org5618994" class="outline-3">
+<h3 id="org5618994"><span class="section-number-3">8.4</span> win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</h3>
 <div class="outline-text-3" id="text-8-4">
 <ul class="org-ul">
 <li>win10下看到显示正常, 字体为Lucida San, 拷贝字体覆盖依然无效. 显示为蓝色长方块</li>
@@ -918,8 +921,8 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org092b173" class="outline-3">
-<h3 id="org092b173"><span class="section-number-3">8.5</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div id="outline-container-org394cc47" class="outline-3">
+<h3 id="org394cc47"><span class="section-number-3">8.5</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
 <div class="outline-text-3" id="text-8-5">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).</li>
@@ -927,8 +930,8 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-orgc3d855c" class="outline-3">
-<h3 id="orgc3d855c"><span class="section-number-3">8.6</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div id="outline-container-orgac7cbd5" class="outline-3">
+<h3 id="orgac7cbd5"><span class="section-number-3">8.6</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
 <div class="outline-text-3" id="text-8-6">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).</li>
@@ -936,8 +939,8 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-orgb80a89c" class="outline-3">
-<h3 id="orgb80a89c"><span class="section-number-3">8.7</span> 无法加载一个package, 但无法正常安装 20171114</h3>
+<div id="outline-container-org183da73" class="outline-3">
+<h3 id="org183da73"><span class="section-number-3">8.7</span> 无法加载一个package, 但无法正常安装 20171114</h3>
 <div class="outline-text-3" id="text-8-7">
 <ul class="org-ul">
 <li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
@@ -948,8 +951,8 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org479c431" class="outline-3">
-<h3 id="org479c431"><span class="section-number-3">8.8</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
+<div id="outline-container-org6bcd315" class="outline-3">
+<h3 id="org6bcd315"><span class="section-number-3">8.8</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
 <div class="outline-text-3" id="text-8-8">
 <ul class="org-ul">
 <li>错误提示: No next track in playlist</li>
@@ -972,8 +975,8 @@ strip text properties from the return value.
 </ul>
 </div>
 </div>
-<div id="outline-container-org2b947d4" class="outline-3">
-<h3 id="org2b947d4"><span class="section-number-3">8.9</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
+<div id="outline-container-orgbbf41ab" class="outline-3">
+<h3 id="orgbbf41ab"><span class="section-number-3">8.9</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
 <div class="outline-text-3" id="text-8-9">
 <ul class="org-ul">
 <li>根因: 默认配置打开了确认, 调整配置即可</li>
@@ -986,11 +989,11 @@ strip text properties from the return value.
 </div>
 </div>
 
-<div id="outline-container-org0b09d1c" class="outline-3">
-<h3 id="org0b09d1c"><span class="section-number-3">8.10</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
+<div id="outline-container-org7e96d1a" class="outline-3">
+<h3 id="org7e96d1a"><span class="section-number-3">8.10</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
 </div>
-<div id="outline-container-org2876c79" class="outline-3">
-<h3 id="org2876c79"><span class="section-number-3">8.11</span> <span class="done DONE">DONE</span> Windows</h3>
+<div id="outline-container-org41324ca" class="outline-3">
+<h3 id="org41324ca"><span class="section-number-3">8.11</span> <span class="done DONE">DONE</span> Windows</h3>
 <div class="outline-text-3" id="text-8-11">
 <ul class="org-ul">
 <li>错误提示1:</li>
@@ -1032,8 +1035,8 @@ the ‘&#x2013;debug-init’ option to view a complete error backtrace.
 </div>
 </div>
 
-<div id="outline-container-org57f1993" class="outline-3">
-<h3 id="org57f1993"><span class="section-number-3">8.12</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
+<div id="outline-container-org37d94c7" class="outline-3">
+<h3 id="org37d94c7"><span class="section-number-3">8.12</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
 <div class="outline-text-3" id="text-8-12">
 <p>
 <del>- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)</del>
@@ -1059,12 +1062,12 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgec57077" class="outline-2">
-<h2 id="orgec57077"><span class="section-number-2">9</span> 常用快捷键</h2>
+<div id="outline-container-org8ee487b" class="outline-2">
+<h2 id="org8ee487b"><span class="section-number-2">9</span> 常用快捷键</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-orgdb9785c" class="outline-3">
-<h3 id="orgdb9785c"><span class="section-number-3">9.1</span> Global</h3>
+<div id="outline-container-org0043fef" class="outline-3">
+<h3 id="org0043fef"><span class="section-number-3">9.1</span> Global</h3>
 <div class="outline-text-3" id="text-9-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1140,8 +1143,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orgb2c6860" class="outline-3">
-<h3 id="orgb2c6860"><span class="section-number-3">9.2</span> Org mode</h3>
+<div id="outline-container-org13c470f" class="outline-3">
+<h3 id="org13c470f"><span class="section-number-3">9.2</span> Org mode</h3>
 <div class="outline-text-3" id="text-9-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1173,8 +1176,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </tbody>
 </table>
 </div>
-<div id="outline-container-orgbbeeb01" class="outline-4">
-<h4 id="orgbbeeb01"><span class="section-number-4">9.2.1</span> insert literal hot key</h4>
+<div id="outline-container-org7c433ee" class="outline-4">
+<h4 id="org7c433ee"><span class="section-number-4">9.2.1</span> insert literal hot key</h4>
 <div class="outline-text-4" id="text-9-2-1">
 <p>
 Input '&lt;' and the key character, then input TAB:
@@ -1267,12 +1270,12 @@ Input '&lt;' and the key character, then input TAB:
 </div>
 </div>
 
-<div id="outline-container-org076bd19" class="outline-2">
-<h2 id="org076bd19"><span class="section-number-2">10</span> 参考文档</h2>
+<div id="outline-container-org85e7adc" class="outline-2">
+<h2 id="org85e7adc"><span class="section-number-2">10</span> 参考文档</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-orgee2f25d" class="outline-4">
-<h4 id="ref-w32-readme"><a id="orgee2f25d"></a><span class="section-number-4">10.0.1</span> w32 Readme</h4>
+<div id="outline-container-orgcaca771" class="outline-4">
+<h4 id="ref-w32-readme"><a id="orgcaca771"></a><span class="section-number-4">10.0.1</span> w32 Readme</h4>
 <div class="outline-text-4" id="text-ref-w32-readme">
 <blockquote>
 <p>
@@ -1586,9 +1589,9 @@ does not install or update any files in system directories or
 anywhere else).  If you ran the addpm.exe program to create the
 registry entries and the Start menu icon, then you can remove the
 registry entries using regedit.  All of the settings are written
-under the Software\GNU\Emacs key in HKEY<sub>LOCAL</sub><sub>MACHINE</sub>, or if you
+under the Software\GNU\Emacs key in HKEY_LOCAL_MACHINE, or if you
 didn't have administrator privileges when you installed, the same
-key in HKEY<sub>CURRENT</sub><sub>USER</sub>.  Just delete the whole Software\GNU\Emacs
+key in HKEY_CURRENT_USER.  Just delete the whole Software\GNU\Emacs
 key.
 </p>
 
@@ -1755,8 +1758,8 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </div>
 </div>
 
-<div id="outline-container-org03db299" class="outline-2">
-<h2 id="org03db299"><span class="section-number-2">11</span> 典型配置链接</h2>
+<div id="outline-container-orge24b962" class="outline-2">
+<h2 id="orge24b962"><span class="section-number-2">11</span> 典型配置链接</h2>
 <div class="outline-text-2" id="text-11">
 <ul class="org-ul">
 <li>purcell: <a href="https://github.com/purcell/emacs.d">https://github.com/purcell/emacs.d</a></li>
@@ -1766,8 +1769,8 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </ul>
 </div>
 </div>
-<div id="outline-container-org8fd35b5" class="outline-2">
-<h2 id="org8fd35b5"><span class="section-number-2">12</span> 学习资源</h2>
+<div id="outline-container-org19e3517" class="outline-2">
+<h2 id="org19e3517"><span class="section-number-2">12</span> 学习资源</h2>
 <div class="outline-text-2" id="text-12">
 <ul class="org-ul">
 <li><a href="https://emacs-china.org/">Emacs-China</a></li>
@@ -1782,12 +1785,12 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </ul>
 </div>
 </div>
-<div id="outline-container-orgacf1316" class="outline-2">
-<h2 id="orgacf1316"><span class="section-number-2">13</span> Candidate</h2>
+<div id="outline-container-org321baec" class="outline-2">
+<h2 id="org321baec"><span class="section-number-2">13</span> Candidate</h2>
 <div class="outline-text-2" id="text-13">
 </div>
-<div id="outline-container-org4ddf1fe" class="outline-3">
-<h3 id="org4ddf1fe"><span class="section-number-3">13.1</span> picture-mode</h3>
+<div id="outline-container-org0c5ea4c" class="outline-3">
+<h3 id="org0c5ea4c"><span class="section-number-3">13.1</span> picture-mode</h3>
 <div class="outline-text-3" id="text-13-1">
 <div class="org-src-container">
 <pre class="src src-ditaa">                          +----------+
@@ -1814,12 +1817,12 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </div>
 </div>
 
-<div id="outline-container-org1230c7d" class="outline-3">
-<h3 id="org1230c7d"><span class="section-number-3">13.2</span> artist-mode</h3>
+<div id="outline-container-org0052120" class="outline-3">
+<h3 id="org0052120"><span class="section-number-3">13.2</span> artist-mode</h3>
 </div>
 </div>
-<div id="outline-container-org665e722" class="outline-2">
-<h2 id="org665e722"><span class="section-number-2">14</span> Packages Github List</h2>
+<div id="outline-container-orgc919f0e" class="outline-2">
+<h2 id="orgc919f0e"><span class="section-number-2">14</span> Packages Github List</h2>
 <div class="outline-text-2" id="text-14">
 <dl class="org-dl">
 <dt>Auto-complete</dt><dd></dd>
@@ -1842,8 +1845,8 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </div>
 </div>
 </div>
-<div id="outline-container-orgdb09c57" class="outline-2">
-<h2 id="orgdb09c57"><span class="section-number-2">15</span> youtube</h2>
+<div id="outline-container-org1f001cc" class="outline-2">
+<h2 id="org1f001cc"><span class="section-number-2">15</span> youtube</h2>
 <div class="outline-text-2" id="text-15">
 <dl class="org-dl">
 <dt>C/C++ IDE</dt><dd></dd>
@@ -1853,12 +1856,6 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 </p>
 </div>
 </div>
-</div>
-<div id="postamble" class="status">
-<p class="author">&#20316;&#32773;: yanyg</p>
-<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
-<p class="date">Created: 2017-12-17 周日 16:40</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
