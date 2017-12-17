@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-06 Wed 01:02 -->
+<!-- 2017-12-17 周日 16:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>代码阅读笔记</title>
@@ -63,23 +63,19 @@ for the JavaScript code in this tag.
 </script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">代码阅读笔记</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc171924">1. glibc</a>
+<li><a href="#org7e69f67">1. glibc</a>
 <ul>
-<li><a href="#orgb2c67c0">1.1. definitions</a>
+<li><a href="#org9297064">1.1. definitions</a>
 <ul>
-<li><a href="#orgcb2a75d">1.1.1. <code>__THROW</code></a></li>
-<li><a href="#org8bdd90b">1.1.2. <code>__leaf__</code></a></li>
-<li><a href="#orgdec6d61">1.1.3. <code>__wul</code></a></li>
+<li><a href="#orga62f39c">1.1.1. <code>__THROW</code></a></li>
+<li><a href="#org61673d0">1.1.2. <code>__leaf__</code></a></li>
+<li><a href="#orga00dad7">1.1.3. <code>__wul</code></a></li>
 </ul>
 </li>
 </ul>
@@ -88,31 +84,35 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgc171924" class="outline-2">
-<h2 id="orgc171924"><span class="section-number-2">1</span> glibc</h2>
+<div id="outline-container-org7e69f67" class="outline-2">
+<h2 id="org7e69f67"><span class="section-number-2">1</span> glibc</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgb2c67c0" class="outline-3">
-<h3 id="orgb2c67c0"><span class="section-number-3">1.1</span> definitions</h3>
+<div id="outline-container-org9297064" class="outline-3">
+<h3 id="org9297064"><span class="section-number-3">1.1</span> definitions</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-orgcb2a75d" class="outline-4">
-<h4 id="orgcb2a75d"><span class="section-number-4">1.1.1</span> <code>__THROW</code></h4>
+<div id="outline-container-orga62f39c" class="outline-4">
+<h4 id="orga62f39c"><span class="section-number-4">1.1.1</span> <code>__THROW</code></h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 glibc/malloc/malloc.h中malloc函数声明如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">Allocate SIZE bytes of memory.  </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">extern</span> <span class="org-type">void</span> *<span class="org-function-name">malloc</span> (<span class="org-type">size_t</span> <span class="org-variable-name">__size</span>) __THROW <span class="org-type">__attribute_malloc__</span> <span class="org-variable-name">__wur</span>;
+<pre class="src src-C"><span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Allocate SIZE bytes of memory.  </span><span style="font-weight: bold; font-style: italic;">*/</span>
+<span style="font-weight: bold;">extern</span> <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold;">malloc</span> (<span style="font-weight: bold; text-decoration: underline;">size_t</span> <span style="font-weight: bold; font-style: italic;">__size</span>) __THROW <span style="font-weight: bold; text-decoration: underline;">__attribute_malloc__</span> <span style="font-weight: bold; font-style: italic;">__wur</span>;
 </pre>
 </div>
 <p>
-malloc是熟悉的。什么是 <code>__THROW</code> 和 <code>__wur</code> ？__THROW是一个针对GCC 3.3以上版本，以及C++的定义。
+malloc是熟悉的。什么是 <code>__THROW</code> 和 <code>__wur</code> ？_<sub>THROW是一个针对GCC</sub> 3.3以上版本，
+以及C++的定义。
 </p>
 
 <p>
-GCC 3.3版本以上添加__attribute__ ((<span class="underline"><span class="underline">nothrow</span></span> __LEAF))，通知编译器一个函数不能抛出异常。绝大多数的C标准库函数不抛出异常。其中一个例外是使用函数指针作为参数的函数，例如qsort和bsearch。单纯C语言程序中此属性时没有作用。在C++中调用C代码时，编译器可基于此做优化。<a href="https://stackoverflow.com/questions/24882645/gcc-what-is-attribute-nothrow-used-for">Stackoverflow</a>有这个问题的讨论。
+GCC 3.3版本以上添加_<sub>attribute</sub>__ ((<span class="underline"><span class="underline">nothrow</span></span> _<sub>LEAF</sub>))，通知编译器一个函数不能
+抛出异常。绝大多数的C标准库函数不抛出异常。其中一个例外是使用函数指针作为参数的
+函数，例如qsort和bsearch。单纯C语言程序中此属性时没有作用。在C++中调用C代码时，
+编译器可基于此做优化。<a href="https://stackoverflow.com/questions/24882645/gcc-what-is-attribute-nothrow-used-for">Stackoverflow</a>有这个问题的讨论。
 </p>
 
 <p>
@@ -137,32 +137,32 @@ Chapter 6, 6.31 Declaring Attributes of Functions
 misc/cdefs.h定义如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">GCC can always grok prototypes.  For C++ programs we add throw()</span>
-<span class="org-comment">   to help it optimize the function calls.  But this works only with</span>
-<span class="org-comment">   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions</span>
-<span class="org-comment">   as non-throwing using a function attribute since programs can use</span>
-<span class="org-comment">   the -fexceptions options for C code as well.  </span><span class="org-comment-delimiter">*/</span>
-<span class="org-preprocessor"># if</span> <span class="org-negation-char">!</span><span class="org-preprocessor">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (3, 3)
-<span class="org-preprocessor">#  define</span> <span class="org-variable-name">__THROW</span>       <span class="org-keyword">__attribute__</span> ((<span class="org-type">__nothrow__</span> <span class="org-variable-name">__LEAF</span>))
-<span class="org-preprocessor">#  define</span> <span class="org-variable-name">__THROWNL</span>     <span class="org-keyword">__attribute__</span> ((__nothrow__))
-<span class="org-preprocessor">#  define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)    <span class="org-keyword">__attribute__</span> ((<span class="org-type">__nothrow__</span> <span class="org-variable-name">__LEAF</span>)) fct
-<span class="org-preprocessor"># else</span>
-<span class="org-preprocessor">#  if</span> <span class="org-preprocessor">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (2,8)
-<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROW</span>      throw ()
-<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROWNL</span>    throw ()
-<span class="org-preprocessor">#   define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)   __LEAF_ATTR <span class="org-type">fct</span> <span class="org-function-name">throw</span> ()
-<span class="org-preprocessor">#  else</span>
-<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROW</span>
-<span class="org-preprocessor">#   define</span> <span class="org-variable-name">__THROWNL</span>
-<span class="org-preprocessor">#   define</span> <span class="org-function-name">__NTH</span>(<span class="org-variable-name">fct</span>)   fct
-<span class="org-preprocessor">#  endif</span>
-<span class="org-preprocessor"># endif</span>
+<pre class="src src-C"><span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">GCC can always grok prototypes.  For C++ programs we add throw()</span>
+<span style="font-weight: bold; font-style: italic;">   to help it optimize the function calls.  But this works only with</span>
+<span style="font-weight: bold; font-style: italic;">   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions</span>
+<span style="font-weight: bold; font-style: italic;">   as non-throwing using a function attribute since programs can use</span>
+<span style="font-weight: bold; font-style: italic;">   the -fexceptions options for C code as well.  </span><span style="font-weight: bold; font-style: italic;">*/</span>
+<span style="font-weight: bold;"># if</span> !<span style="font-weight: bold;">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (3, 3)
+<span style="font-weight: bold;">#  define</span> <span style="font-weight: bold; font-style: italic;">__THROW</span>       <span style="font-weight: bold;">__attribute__</span> ((<span style="font-weight: bold; text-decoration: underline;">__nothrow__</span> <span style="font-weight: bold; font-style: italic;">__LEAF</span>))
+<span style="font-weight: bold;">#  define</span> <span style="font-weight: bold; font-style: italic;">__THROWNL</span>     <span style="font-weight: bold;">__attribute__</span> ((__nothrow__))
+<span style="font-weight: bold;">#  define</span> <span style="font-weight: bold;">__NTH</span>(<span style="font-weight: bold; font-style: italic;">fct</span>)    <span style="font-weight: bold;">__attribute__</span> ((<span style="font-weight: bold; text-decoration: underline;">__nothrow__</span> <span style="font-weight: bold; font-style: italic;">__LEAF</span>)) fct
+<span style="font-weight: bold;"># else</span>
+<span style="font-weight: bold;">#  if</span> <span style="font-weight: bold;">defined</span> __cplusplus &amp;&amp; __GNUC_PREREQ (2,8)
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold; font-style: italic;">__THROW</span>      throw ()
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold; font-style: italic;">__THROWNL</span>    throw ()
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold;">__NTH</span>(<span style="font-weight: bold; font-style: italic;">fct</span>)   __LEAF_ATTR <span style="font-weight: bold; text-decoration: underline;">fct</span> <span style="font-weight: bold;">throw</span> ()
+<span style="font-weight: bold;">#  else</span>
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold; font-style: italic;">__THROW</span>
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold; font-style: italic;">__THROWNL</span>
+<span style="font-weight: bold;">#   define</span> <span style="font-weight: bold;">__NTH</span>(<span style="font-weight: bold; font-style: italic;">fct</span>)   fct
+<span style="font-weight: bold;">#  endif</span>
+<span style="font-weight: bold;"># endif</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8bdd90b" class="outline-4">
-<h4 id="org8bdd90b"><span class="section-number-4">1.1.2</span> <code>__leaf__</code></h4>
+<div id="outline-container-org61673d0" class="outline-4">
+<h4 id="org61673d0"><span class="section-number-4">1.1.2</span> <code>__leaf__</code></h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 leaf属性仅用于加速编译器链接，没什么边界效果，可忽略不管。
@@ -211,23 +211,24 @@ Chapter 6, 6.31 Declaring Attributes of Functions
 </blockquote>
 </div>
 </div>
-<div id="outline-container-orgdec6d61" class="outline-4">
-<h4 id="orgdec6d61"><span class="section-number-4">1.1.3</span> <code>__wul</code></h4>
+<div id="outline-container-orga00dad7" class="outline-4">
+<h4 id="orga00dad7"><span class="section-number-4">1.1.3</span> <code>__wul</code></h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
-__wur是 <code>__attribute_warn_unused_result__</code> 缩写，关联GCC属性warn_unused_result。调用设置此属性的函数时，如果不使用其返回值，会发出警告。
+_<sub>wur是</sub> <code>__attribute_warn_unused_result__</code> 缩写，关联GCC属性warn<sub>unused</sub><sub>result</sub>。
+调用设置此属性的函数时，如果不使用其返回值，会发出警告。
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">extern</span> <span class="org-type">int</span> <span class="org-function-name">func</span>() <span class="org-keyword">__attribute__</span>((warn_unused_result));
-<span class="org-type">int</span> <span class="org-function-name">func</span>()
+<pre class="src src-C"><span style="font-weight: bold;">extern</span> <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">func</span>() <span style="font-weight: bold;">__attribute__</span>((warn_unused_result));
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">func</span>()
 {
-        <span class="org-keyword">return</span> 0;
+        <span style="font-weight: bold;">return</span> 0;
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">main</span>()
 {
         func();
-        <span class="org-keyword">return</span> 0;
+        <span style="font-weight: bold;">return</span> 0;
 }
 </pre>
 </div>
@@ -237,7 +238,7 @@ __wur是 <code>__attribute_warn_unused_result__</code> 缩写，关联GCC属性w
 </p>
 <blockquote>
 <p>
-wur.c:9:15: warning: ignoring return value of ‘func’, declared with attribute warn_unused_result [-Wunused-result]
+wur.c:9:15: warning: ignoring return value of ‘func’, declared with attribute warn<sub>unused</sub><sub>result</sub> [-Wunused-result]
            func();
                ^
 </p>
@@ -246,6 +247,12 @@ wur.c:9:15: warning: ignoring return value of ‘func’, declared with attribut
 </div>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+<p class="author">&#20316;&#32773;: yanyg</p>
+<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
+<p class="date">Created: 2017-12-17 周日 16:40</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

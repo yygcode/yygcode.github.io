@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-17 周日 16:39 -->
+<!-- 2017-12-17 周日 16:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Memory Barrier/内存屏障</title>
+<title>工作空间层级</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
@@ -60,66 +60,40 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Memory Barrier/内存屏障</h1>
+<h1 class="title">工作空间层级</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgdaf4e69">1. 问题定义</a></li>
-<li><a href="#org3fe7327">2. 相关资料</a></li>
+<li><a href="#org3dab5c5">1. Top Directory</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgdaf4e69" class="outline-2">
-<h2 id="orgdaf4e69"><span class="section-number-2">1</span> 问题定义</h2>
+<div id="outline-container-org3dab5c5" class="outline-2">
+<h2 id="org3dab5c5"><span class="section-number-2">1</span> Top Directory</h2>
 <div class="outline-text-2" id="text-1">
-<p>
-内存屏障, 又称内存栅栏, 是一种内存访问操作中的同步指令, 其功能是保证此指令之前的
-所有内存读写操作都执行后, 此指令之后的读写操作才会发起. 
-</p>
-
-<p>
-Intel CPU有mfence, lfence, sfence
-</p>
-<ul class="org-ul">
-<li>sfence</li>
-</ul>
-<blockquote>
-<p>
-The SFENCE (Store Fence) instruction controls write ordering by creating a fence
-for memory store operations. This instruction guarantees that the result of
-every store instruction that precedes the store fence in program order is
-globally visible before any store instruction that follows the fence. The SFENCE
-instruction provides an efficient way of ensuring ordering between procedures
-that produce weakly-ordered data and procedures that consume that data.
-</p>
-</blockquote>
 <dl class="org-dl">
-<dt>mfence</dt><dd></dd>
-
-<dt>lfence</dt><dd></dd>
+<dt>Dot Files</dt><dd>All configuration files</dd>
+<dt>git</dt><dd>Git Repo</dd>
+<dt>gnu</dt><dd>specific version code for all public projects</dd>
+<dt>books</dt><dd>electronic</dd>
+<dt>inspur</dt><dd>working directory</dd>
+<dt>org</dt><dd>gtd org directory</dd>
+<dt>software</dt><dd>binary software packages</dd>
+<dt>study</dt><dd>currently study materials</dd>
+<dt>english</dt><dd>english materials</dd>
+<dt>svn</dt><dd>Svn repo</dd>
+<dt>photos</dt><dd>private photos</dd>
+<dt>misc</dt><dd>all others</dd>
 </dl>
-</div>
-</div>
-
-<div id="outline-container-org3fe7327" class="outline-2">
-<h2 id="org3fe7327"><span class="section-number-2">2</span> 相关资料</h2>
-<div class="outline-text-2" id="text-2">
-<ul class="org-ul">
-<li><a href="http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html">Intel Processors Architecture Software Developer Manuals</a></li>
-<li><a href="http://blog.csdn.net/qb_2008/article/details/6840593">linux内核中的内存屏障</a></li>
-<li><a href="http://www.wowotech.net/kernel_synchronization/Why-Memory-Barriers.html">Why Memory Barriers? 中文翻译(上)</a></li>
-<li></li>
-</ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Date: 2017-08-06</p>
 <p class="author">Author: yanyg</p>
 <p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
-<p class="date">Created: 2017-12-17 周日 16:39</p>
+<p class="date">Created: 2017-12-17 周日 16:38</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

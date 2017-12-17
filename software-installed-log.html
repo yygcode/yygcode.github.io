@@ -3,13 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-03 Sun 01:16 -->
+<!-- 2017-12-17 周日 16:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Software Installed Log</title>
 <meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/site.css" />
+      <link rel="stylesheet" type="text/css" href="css/site.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -80,31 +81,27 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">Software Installed Log</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#autohotkey">1. AutoHotkey</a></li>
-<li><a href="#org0dd7c21">2. msys2</a>
+<li><a href="#org46cdaf6">2. msys2</a>
 <ul>
 <li><a href="#msys2-mingw64">2.1. <span class="done DONE">DONE</span> mingw64</a></li>
 </ul>
 </li>
-<li><a href="#org50ebd15">3. Emacs</a>
+<li><a href="#org965998f">3. Emacs</a>
 <ul>
-<li><a href="#org74a2243">3.1. <span class="done DONE">DONE</span> Windows</a>
+<li><a href="#orgb88711e">3.1. <span class="done DONE">DONE</span> Windows</a>
 <ul>
-<li><a href="#org37769cc">3.1.1. binary install</a></li>
-<li><a href="#org08a557b">3.1.2. Msys2 compile</a></li>
+<li><a href="#orgfc2ae47">3.1.1. binary install</a></li>
+<li><a href="#org65fb060">3.1.2. Msys2 compile</a></li>
 </ul>
 </li>
-<li><a href="#org5798451">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
+<li><a href="#org1a98af8">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
 <li><a href="#emacs-config">3.3. <span class="done DONE">DONE</span> emacs configuration</a></li>
 </ul>
 </li>
@@ -112,8 +109,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org02b9999" class="outline-2">
-<h2 id="autohotkey"><a id="org02b9999"></a><span class="section-number-2">1</span> AutoHotkey</h2>
+<div id="outline-container-orgcd99707" class="outline-2">
+<h2 id="autohotkey"><a id="orgcd99707"></a><span class="section-number-2">1</span> AutoHotkey</h2>
 <div class="outline-text-2" id="text-autohotkey">
 <ul class="org-ul">
 <li>Useful with favorite quickshot</li>
@@ -148,17 +145,17 @@ Ctrl::Capslock
 </div>
 </div>
 
-<div id="outline-container-org0dd7c21" class="outline-2">
-<h2 id="org0dd7c21"><span class="section-number-2">2</span> msys2</h2>
+<div id="outline-container-org46cdaf6" class="outline-2">
+<h2 id="org46cdaf6"><span class="section-number-2">2</span> msys2</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org20cd413" class="outline-3">
-<h3 id="msys2-mingw64"><a id="org20cd413"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
+<div id="outline-container-org2ccc2f6" class="outline-3">
+<h3 id="msys2-mingw64"><a id="org2ccc2f6"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
 <div class="outline-text-3" id="text-msys2-mingw64">
 <div class="org-src-container">
 <pre class="src src-sh">~$ pacman -Syuu
 :: Synchronizing package databases...
-error: failed retrieving file <span class="org-string">'mingw32.db'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds#################################################################---]  97%
+error: failed retrieving file <span style="font-style: italic;">'mingw32.db'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds#################################################################---]  97%
  mingw32                                                                                               366.7 KiB   343K/s 00:01 [#############################################################################] 100%
  mingw32.sig                                                                                            96.0   B  0.00B/s 00:00 [#############################################################################] 100%
  mingw64                                                                                               366.6 KiB  11.6K/s 00:32 [#############################################################################] 100%
@@ -170,7 +167,7 @@ warning: terminate other MSYS2 programs before proceeding
 resolving dependencies...
 looking for conflicting packages...
 
-<span class="org-function-name">Packages</span> (5) bash-4.4.012-1  filesystem-2017.05-1  mintty-1~2.8.1-1  msys2-runtime-2.9.0-2  pacman-5.0.1-4
+<span style="font-weight: bold;">Packages</span> (5) bash-4.4.012-1  filesystem-2017.05-1  mintty-1~2.8.1-1  msys2-runtime-2.9.0-2  pacman-5.0.1-4
 
 Total Download Size:   11.52 MiB
 Total Installed Size:  54.80 MiB
@@ -178,15 +175,15 @@ Net Upgrade Size:       3.20 MiB
 
 :: Proceed with installation? [Y/n] y
 :: Retrieving packages...
-error: failed retrieving file <span class="org-string">'msys2-runtime-2.9.0-2-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds---------------------------------------]   7%
+error: failed retrieving file <span style="font-style: italic;">'msys2-runtime-2.9.0-2-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds---------------------------------------]   7%
  msys2-runtime-2.9.0-2-x86_64                                                                            2.2 MiB   306K/s 00:07 [#############################################################################] 100%
-error: failed retrieving file <span class="org-string">'bash-4.4.012-1-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds----------------------------------------------]   0%
+error: failed retrieving file <span style="font-style: italic;">'bash-4.4.012-1-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds----------------------------------------------]   0%
  bash-4.4.012-1-x86_64                                                                                1969.4 KiB   442K/s 00:04 [#############################################################################] 100%
  filesystem-2017.05-1-x86_64                                                                            40.0 KiB  45.1K/s 00:01 [#############################################################################] 100%
  mintty-1~2.8.1-1-x86_64                                                                               233.8 KiB  6.32K/s 00:37 [#############################################################################] 100%
-error: failed retrieving file <span class="org-string">'pacman-5.0.1-4-x86_64.pkg.tar.xz'</span> from repo.msys2.org : transfer closed with 6869232 bytes remaining to read-------------------------------------------------------------------]   5%
+error: failed retrieving file <span style="font-style: italic;">'pacman-5.0.1-4-x86_64.pkg.tar.xz'</span> from repo.msys2.org : transfer closed with 6869232 bytes remaining to read-------------------------------------------------------------------]   5%
  pacman-5.0.1-4-x86_64                                                                                   6.6 MiB   200K/s 00:34 [#############################################################################] 100%
-(5/5) checking keys<span class="org-keyword"> in</span> keyring                                                                                                  [#############################################################################] 100%
+(5/5) checking keys<span style="font-weight: bold;"> in</span> keyring                                                                                                  [#############################################################################] 100%
 (5/5) checking package integrity                                                                                                [#############################################################################] 100%
 (5/5) loading package files                                                                                                     [#############################################################################] 100%
 (5/5) checking for file conflicts                                                                                               [#############################################################################] 100%
@@ -202,12 +199,12 @@ warning: could not get file information for opt/
 warning: terminate MSYS2 without returning to shell and check for updates again
 warning: for example close your terminal window instead of calling exit
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Comments: Now exit by click 'close' in windows task bar. And you may see</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">Comments: Now exit by click 'close' in windows task bar. And you may see</span>
 Hangup signal received
-<span class="org-comment-delimiter">## </span><span class="org-comment">Comments:</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">If the mingw64 does not closed, then repeat again or kill by task management.</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Then start again and run pacman -Syuu many times until all packages updated.</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">The final log looks like as:</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">Comments:</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">If the mingw64 does not closed, then repeat again or kill by task management.</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">Then start again and run pacman -Syuu many times until all packages updated.</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">The final log looks like as:</span>
 ~$ $ pacman -Syuu
 :: Synchronizing package databases...
  mingw32 is up to date
@@ -218,16 +215,16 @@ Hangup signal received
 :: Starting full system upgrade...
  there is nothing to do
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Tips: If you network is not stable and you are annoyed by repeated work, try:</span>
-<span class="org-comment-delimiter">##  </span><span class="org-comment">`while :; do yes | pacman -Syuu; done`</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">Tips: If you network is not stable and you are annoyed by repeated work, try:</span>
+<span style="font-weight: bold; font-style: italic;">##  </span><span style="font-weight: bold; font-style: italic;">`while :; do yes | pacman -Syuu; done`</span>
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Install developer environment (e.g.: emacs): Ref</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">https://sourceforge.net/p/emacsbinw64/wiki/Build%20guideline%20for%20MSYS2-MinGW-w64%20system/</span>
-~$ pacman -S base-devel mingw-w64-x86_64-toolchain <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-xpm-nox mingw-w64-x86_64-libtiff <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-giflib mingw-w64-x86_64-jbigkit <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-libpng mingw-w64-x86_64-libjpeg-turbo <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-librsvg mingw-w64-x86_64-libxml2 <span class="org-sh-escaped-newline">\</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">Install developer environment (e.g.: emacs): Ref</span>
+<span style="font-weight: bold; font-style: italic;">## </span><span style="font-weight: bold; font-style: italic;">https://sourceforge.net/p/emacsbinw64/wiki/Build%20guideline%20for%20MSYS2-MinGW-w64%20system/</span>
+~$ pacman -S base-devel mingw-w64-x86_64-toolchain <span style="font-style: italic;">\</span>
+mingw-w64-x86_64-xpm-nox mingw-w64-x86_64-libtiff <span style="font-style: italic;">\</span>
+mingw-w64-x86_64-giflib mingw-w64-x86_64-jbigkit <span style="font-style: italic;">\</span>
+mingw-w64-x86_64-libpng mingw-w64-x86_64-libjpeg-turbo <span style="font-style: italic;">\</span>
+mingw-w64-x86_64-librsvg mingw-w64-x86_64-libxml2 <span style="font-style: italic;">\</span>
 mingw-w64-x86_64-gnutls
 
 ~$ pacman -S git
@@ -238,16 +235,16 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-org50ebd15" class="outline-2">
-<h2 id="org50ebd15"><span class="section-number-2">3</span> Emacs</h2>
+<div id="outline-container-org965998f" class="outline-2">
+<h2 id="org965998f"><span class="section-number-2">3</span> Emacs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org74a2243" class="outline-3">
-<h3 id="org74a2243"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
+<div id="outline-container-orgb88711e" class="outline-3">
+<h3 id="orgb88711e"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org37769cc" class="outline-4">
-<h4 id="org37769cc"><span class="section-number-4">3.1.1</span> binary install</h4>
+<div id="outline-container-orgfc2ae47" class="outline-4">
+<h4 id="orgfc2ae47"><span class="section-number-4">3.1.1</span> binary install</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <ul class="org-ul">
 <li>Download from <a href="https://ftp.gnu.org/gnu/emacs/windows/">stable</a> or <a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">pretest</a> version(201711 stable 25.3, pretest 26.0.90)</li>
@@ -257,8 +254,8 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-org08a557b" class="outline-4">
-<h4 id="org08a557b"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
+<div id="outline-container-org65fb060" class="outline-4">
+<h4 id="org65fb060"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <ul class="org-ul">
 <li>install <a href="#msys2-mingw64">mingw64</a> first.</li>
@@ -267,9 +264,9 @@ mingw-w64-x86_64-gnutls
 <div class="org-src-container">
 <pre class="src src-sh">~$ git clone git://git.sv.gnu.org/emacs.git
 ~$ ./autogen.sh
-~$ <span class="org-variable-name">PKG_CONFIG_PATH</span>=/mingw64/lib/pkgconfig ./configure --without-imagemagick
+~$ <span style="font-weight: bold; font-style: italic;">PKG_CONFIG_PATH</span>=/mingw64/lib/pkgconfig ./configure --without-imagemagick
 ~$ make
-~$ make install <span class="org-variable-name">prefix</span>=/c/emacs
+~$ make install <span style="font-weight: bold; font-style: italic;">prefix</span>=/c/emacs
 ~$ cp /mingw64/bin/{libwinpthread-*.dll,libXpm-noX*.dll,libdbus-*.dll} /c/emacs-mingw64/bin
 cp /mingw64/bin/{libgomp-*.dll,libgcc_s_seh-*.dll,libglib-*.dll} /c/emacs-mingw64/bin
 cp /mingw64/bin/{libintl-*.dll,libiconv-*.dll,libgobject-*.dll} /c/emacs-mingw64/bin
@@ -290,21 +287,21 @@ cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
 </div>
 </div>
 
-<div id="outline-container-org5798451" class="outline-3">
-<h3 id="org5798451"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
+<div id="outline-container-org1a98af8" class="outline-3">
+<h3 id="org1a98af8"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
 </div>
-<div id="outline-container-orgd0fdd26" class="outline-3">
-<h3 id="emacs-config"><a id="orgd0fdd26"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
+<div id="outline-container-org589e267" class="outline-3">
+<h3 id="emacs-config"><a id="org589e267"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
 <div class="outline-text-3" id="text-emacs-config">
 <ul class="org-ul">
 <li>clone/update config</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">Public readonly:</span>
+<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Public readonly:</span>
 ~$ cd ~; git clone http://github.com:yygcode/.emacs.d
-<span class="org-comment-delimiter"># </span><span class="org-comment">Modified privilege:</span>
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Modified privilege:</span>
 ~$ cd ~; git clone git@github.com:yygcode/.emacs.d
-<span class="org-comment-delimiter"># </span><span class="org-comment">Update:</span>
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">Update:</span>
 ~$ cd ~/.emacs.d/; git pull
 </pre>
 </div>
@@ -314,6 +311,12 @@ cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
 </div>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yanyg</p>
+<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
+<p class="date">Created: 2017-12-17 周日 16:39</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

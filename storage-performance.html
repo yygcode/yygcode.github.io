@@ -3,13 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-03 Sun 01:14 -->
+<!-- 2017-12-17 周日 16:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>性能测试/Performance Test</title>
 <meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/site.css" />
+      <link rel="stylesheet" type="text/css" href="css/site.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -80,44 +81,40 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">性能测试/Performance Test</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfc0164b">1. 声明</a></li>
-<li><a href="#org7240505">2. 简述</a></li>
-<li><a href="#org6d38b18">3. 名词介绍</a>
+<li><a href="#orgd66693a">1. 声明</a></li>
+<li><a href="#org5d08ee0">2. 简述</a></li>
+<li><a href="#org24db90a">3. 名词介绍</a>
 <ul>
-<li><a href="#org8fd476d">3.1. 带宽</a></li>
-<li><a href="#orgeb08585">3.2. IOPS</a></li>
+<li><a href="#org5624194">3.1. 带宽</a></li>
+<li><a href="#org2afbff9">3.2. IOPS</a></li>
 </ul>
 </li>
-<li><a href="#org1af7826">4. Resource list</a></li>
-<li><a href="#org7eba2c0">5. Patterns</a></li>
-<li><a href="#org4ad29ef">6. 素材搜集</a>
+<li><a href="#org1d9dca9">4. Resource list</a></li>
+<li><a href="#org1dce9a2">5. Patterns</a></li>
+<li><a href="#org17e00e6">6. 素材搜集</a>
 <ul>
-<li><a href="#org110f52b">6.1. 性能影响因素</a></li>
+<li><a href="#org7e25780">6.1. 性能影响因素</a></li>
 </ul>
 </li>
-<li><a href="#orgc7f9778">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
+<li><a href="#orgd60f573">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
 <ul>
-<li><a href="#org8f9cae6">7.1. Three Great Buckets Of Testing</a></li>
-<li><a href="#orgc059b00">7.2. Block/SAN operations</a></li>
-<li><a href="#org1596107">7.3. Terminology</a></li>
+<li><a href="#org205856a">7.1. Three Great Buckets Of Testing</a></li>
+<li><a href="#org8f27ec2">7.2. Block/SAN operations</a></li>
+<li><a href="#org0dc801f">7.3. Terminology</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfc0164b" class="outline-2">
-<h2 id="orgfc0164b"><span class="section-number-2">1</span> 声明</h2>
+<div id="outline-container-orgd66693a" class="outline-2">
+<h2 id="orgd66693a"><span class="section-number-2">1</span> 声明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文描述准确性仅限于存储系统.
@@ -125,16 +122,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7240505" class="outline-2">
-<h2 id="org7240505"><span class="section-number-2">2</span> 简述</h2>
+<div id="outline-container-org5d08ee0" class="outline-2">
+<h2 id="org5d08ee0"><span class="section-number-2">2</span> 简述</h2>
 </div>
 
-<div id="outline-container-org6d38b18" class="outline-2">
-<h2 id="org6d38b18"><span class="section-number-2">3</span> 名词介绍</h2>
+<div id="outline-container-org24db90a" class="outline-2">
+<h2 id="org24db90a"><span class="section-number-2">3</span> 名词介绍</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org8fd476d" class="outline-3">
-<h3 id="org8fd476d"><span class="section-number-3">3.1</span> 带宽</h3>
+<div id="outline-container-org5624194" class="outline-3">
+<h3 id="org5624194"><span class="section-number-3">3.1</span> 带宽</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 系统的最大吞吐量. 一般单位是KBps/MBps/GBps/TBps, 指每秒数据的传输量.
@@ -151,8 +148,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgeb08585" class="outline-3">
-<h3 id="orgeb08585"><span class="section-number-3">3.2</span> IOPS</h3>
+<div id="outline-container-org2afbff9" class="outline-3">
+<h3 id="org2afbff9"><span class="section-number-3">3.2</span> IOPS</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 IOPS/Throughput/Response Time/Latency/Utilization/Saturation/Bottleneck
@@ -217,8 +214,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org1af7826" class="outline-2">
-<h2 id="org1af7826"><span class="section-number-2">4</span> Resource list</h2>
+<div id="outline-container-org1d9dca9" class="outline-2">
+<h2 id="org1d9dca9"><span class="section-number-2">4</span> Resource list</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>CPU</li>
@@ -231,8 +228,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org7eba2c0" class="outline-2">
-<h2 id="org7eba2c0"><span class="section-number-2">5</span> Patterns</h2>
+<div id="outline-container-org1dce9a2" class="outline-2">
+<h2 id="org1dce9a2"><span class="section-number-2">5</span> Patterns</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>Linear scalability</li>
@@ -244,12 +241,12 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org4ad29ef" class="outline-2">
-<h2 id="org4ad29ef"><span class="section-number-2">6</span> 素材搜集</h2>
+<div id="outline-container-org17e00e6" class="outline-2">
+<h2 id="org17e00e6"><span class="section-number-2">6</span> 素材搜集</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org110f52b" class="outline-3">
-<h3 id="org110f52b"><span class="section-number-3">6.1</span> 性能影响因素</h3>
+<div id="outline-container-org7e25780" class="outline-3">
+<h3 id="org7e25780"><span class="section-number-3">6.1</span> 性能影响因素</h3>
 <div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>是否所有IO来自首选节点(preferred node)</li>
@@ -268,8 +265,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 </div>
-<div id="outline-container-orgc7f9778" class="outline-2">
-<h2 id="orgc7f9778"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
+<div id="outline-container-orgd60f573" class="outline-2">
+<h2 id="orgd60f573"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>Metrics and Terminology: IOPS, MBps, Response Time</li>
@@ -279,8 +276,8 @@ Cache Cold, Hot, Warm, Warmth
 <li>Workload Definitions</li>
 </ul>
 </div>
-<div id="outline-container-org8f9cae6" class="outline-3">
-<h3 id="org8f9cae6"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
+<div id="outline-container-org205856a" class="outline-3">
+<h3 id="org205856a"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
 <div class="outline-text-3" id="text-7-1">
 <ul class="org-ul">
 <li>Bake-offs: Single Obscure Metric, DD, IOMETER, IOZONE, VDBENCH</li>
@@ -289,8 +286,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc059b00" class="outline-3">
-<h3 id="orgc059b00"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
+<div id="outline-container-org8f27ec2" class="outline-3">
+<h3 id="org8f27ec2"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
 <div class="outline-text-3" id="text-7-2">
 <ul class="org-ul">
 <li>LOG SENSE</li>
@@ -303,8 +300,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-org1596107" class="outline-3">
-<h3 id="org1596107"><span class="section-number-3">7.3</span> Terminology</h3>
+<div id="outline-container-org0dc801f" class="outline-3">
+<h3 id="org0dc801f"><span class="section-number-3">7.3</span> Terminology</h3>
 <div class="outline-text-3" id="text-7-3">
 <ul class="org-ul">
 <li>IO Operation AKA type READ WRITE</li>
@@ -317,6 +314,12 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yanyg</p>
+<p class="email">Email: <a href="mailto:yygcode@gmail.com">yygcode@gmail.com</a></p>
+<p class="date">Created: 2017-12-17 周日 16:39</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
