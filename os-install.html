@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-17 周日 22:42 -->
+<!-- 2017-12-23 Sat 09:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OS安装与基本配置</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -56,6 +60,28 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -65,37 +91,46 @@ for the JavaScript code in this tag.
 </div><div id="content">
 <h1 class="title">OS安装与基本配置</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#win">1. <span class="todo TODO">TODO</span> Windows</a>
+<li><a href="#win">1. Windows</a>
 <ul>
-<li><a href="#org7fe4f41">1.1. 安装Windows 7/10</a></li>
-<li><a href="#org901256b">1.2. 配置Win10</a>
+<li><a href="#org9cceb0a">1.1. 安装</a></li>
+<li><a href="#orgad3121f">1.2. 配置</a>
 <ul>
-<li><a href="#org46ba21d">1.2.1. 禁止Win+g弹出游戏录制工具栏提示</a></li>
+<li><a href="#org3dda194">1.2.1. 输入法</a></li>
+<li><a href="#org7954215">1.2.2. Shell环境</a></li>
+<li><a href="#org67574ca">1.2.3. 快捷键(热键)</a></li>
+<li><a href="#org830f572">1.2.4. 文件搜索</a></li>
+<li><a href="#orgeaf1a15">1.2.5. 其他</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#linux">2. <span class="todo TODO">TODO</span> Linux</a>
+<li><a href="#linux">2. Linux</a>
 <ul>
-<li><a href="#linux-debian">2.1. <span class="todo TODO">TODO</span> Debian</a>
+<li><a href="#linux-debian">2.1. Debian</a>
 <ul>
 <li><a href="#debian-install">2.1.1. 安装</a></li>
-<li><a href="#org6479bf8">2.1.2. 配置</a></li>
+<li><a href="#org5656375">2.1.2. 配置(9.3.0)</a></li>
+<li><a href="#orgb04d7e9">2.1.3. 配置(8.x.x)</a></li>
 </ul>
 </li>
-<li><a href="#orgcfafc7d">2.2. <span class="todo TODO">TODO</span> LFS</a></li>
 </ul>
 </li>
-<li><a href="#partition">3. <span class="todo TODO">TODO</span> Partition</a></li>
-<li><a href="#usb-stick">4. <span class="todo TODO">TODO</span> 随身USB盘</a>
+<li><a href="#org9a73e1e">3. Common</a>
 <ul>
-<li><a href="#org68b1412">4.1. 工作原理</a></li>
-<li><a href="#orga07818b">4.2. 制作方式</a>
+<li><a href="#orgec0e07b">3.1. Google</a></li>
+</ul>
+</li>
+<li><a href="#partition">4. Partition</a></li>
+<li><a href="#usb-stick">5. <span class="todo TODO">TODO</span> 随身USB盘</a>
 <ul>
-<li><a href="#org8b9f23d">4.2.1. 分区</a></li>
+<li><a href="#org81cc187">5.1. 工作原理</a></li>
+<li><a href="#orgb806faa">5.2. 制作方式</a>
+<ul>
+<li><a href="#org0d09387">5.2.1. 分区</a></li>
 </ul>
 </li>
 </ul>
@@ -104,89 +139,406 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgb66b493" class="outline-2">
-<h2 id="win"><a id="orgb66b493"></a><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> Windows</h2>
+<div id="outline-container-org31ee92c" class="outline-2">
+<h2 id="win"><a id="org31ee92c"></a><span class="section-number-2">1</span> Windows</h2>
 <div class="outline-text-2" id="text-win">
 </div>
-<div id="outline-container-org7fe4f41" class="outline-3">
-<h3 id="org7fe4f41"><span class="section-number-3">1.1</span> 安装Windows 7/10</h3>
+<div id="outline-container-org9cceb0a" class="outline-3">
+<h3 id="org9cceb0a"><span class="section-number-3">1.1</span> 安装</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-新的设备一般不再提供CD/DVD驱动器, 而只有USB接口. <a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是
-微软提供的USB安装盘制作工具. USB盘分区复杂或异常可能导致引导失败. 最简单可靠的
-分区是只保留一个分区, 格式化为NTFS. 如果想用一个大容量USB制作随身USB盘, 请参考
-<a href="#usb-stick">随身USB盘</a>.
+新的设备一般不再提供CD/DVD驱动器，而只有USB接口。<a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是
+微软提供的USB安装盘制作工具。USB盘分区复杂或异常可能导致引导失败。最简单可靠的
+分区是只保留一个分区，格式化为NTFS。如果想用一个大容量USB制作随身USB盘，请参考
+<a href="#usb-stick">随身USB盘</a>。
 </p>
 
 <p>
-Win7/Win10在安装时会自动生成一个小的隐藏分区, 存放引导文件. 对分区无特殊规划的
-用户, 这不会有问题. 如果要控制分区方式, 需安装前完成分区, 此时Win7/Win10把引导
-分区内容放置到系统分区内(C盘). 定制分区参见<a href="#partition">Partition</a>.
+Win7/Win10在安装时会自动生成一个小的隐藏分区，存放引导文件。对分区无特殊规划的
+用户，这不会有问题。如果要控制分区方式，需安装前完成分区，此时Win7/Win10把引导
+分区内容放置到系统分区内(C盘)。定制分区参见<a href="#partition">Partition</a>。
 </p>
 
 <p>
-Win单系统安装十分简单. 制作USB安装盘, (可选的)准备分区, 接入USB盘开机, 配置BIOS
-或使用F12(部分硬件可能是F9~F12的其他键), 用USB引导安装.
+Win单系统安装十分简单。制作USB安装盘，(可选的)准备分区，接入USB盘开机，配置BIOS
+或使用F12(部分硬件可能是F9~F12的其他键)，用USB引导安装。
 </p>
 
 <p>
-Win/Linux双系统参考<a href="#partition">Partition</a>分区. 先安装Win系统, 完成后安装Linux系统, 设置GRUB
-引导两个系统. 参见<a href="#debian-install">Debian Install</a>.
+部分用户使用盗版系统，Win7破解程序(比如WIN7 Activation.exe)，需要引导分区可见，
+右键“我的电脑”，选择“管理”-&gt;“磁盘管理”，右键引导分区，分配驱动器号。
+</p>
+
+<p>
+Win/Linux双系统参考<a href="#partition">Partition</a>分区。先安装Win系统，完成后安装Linux系统，设置GRUB
+引导两个系统，细节参见<a href="#debian-install">Debian Install</a>。如已安装好Linux系统，先在Linux系统下准备好
+Windows系统分区，备份磁盘前1MB数据，之后正常Windows，安装完成后使用Live Linux或
+Linux安装盘引导，重新刷入备份的1MB数据，调用"update-grub"更新grub，即可完成双
+系统引导。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org901256b" class="outline-3">
-<h3 id="org901256b"><span class="section-number-3">1.2</span> 配置Win10</h3>
+<div id="outline-container-orgad3121f" class="outline-3">
+<h3 id="orgad3121f"><span class="section-number-3">1.2</span> 配置</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-org46ba21d" class="outline-4">
-<h4 id="org46ba21d"><span class="section-number-4">1.2.1</span> 禁止Win+g弹出游戏录制工具栏提示</h4>
+<div id="outline-container-org3dda194" class="outline-4">
+<h4 id="org3dda194"><span class="section-number-4">1.2.1</span> 输入法</h4>
 <div class="outline-text-4" id="text-1-2-1">
-<ul class="org-ul">
-<li>Autohotkey配置 <code>Win+g</code> google搜索剪贴板内容，不希望弹出提示栏；</li>
-<li>配置方法：开始-&gt;设置-&gt;游戏-&gt;关掉“使用游戏栏记录游戏剪辑、屏幕截图和广播”。</li>
-</ul>
+<p>
+谷歌拼音(google pinyin)输入法是我一直在用的输入法，高效安静。默认配置英文输入，
+使用Ctrl+Shift切换，去除Ctrl+Space等配置(因<a href="emacs.html">Emacs</a>频繁使用Ctrl+Space)。
+</p>
+
+<p>
+谷歌拼音配置关闭状态切换，初始状态中文语言、标点，半角。皮肤黑白分明。词典
+自动记录自造词，并调整词频。状态栏取消浮动状态栏。
+</p>
+
+<p>
+Window 10热键设置路径控制面板\时钟、语言和区域\语言\高级设置\更改语言栏热键。
+操作“在输入语言之间”配置为Ctrl+Shift，中英标点符号配置"Ctrl+."，全半角切换
+"Shift+Space"。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7954215" class="outline-4">
+<h4 id="org7954215"><span class="section-number-4">1.2.2</span> Shell环境</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+大量文件需分类在各级文件夹下保存，相对Linux下的Shell(cd)，Windows的目录切换操作
+非常低效。<a href="software.html#msys2">MSYS2</a>和<a href="software.html#cygwin">Cygwin</a>均可提供功能Shell环境。之前多年一直在用Cygwin，后切换
+到MSYS2，因为Cygwin缺少一个良好的包管理器(参见分析什么是好的<a href="software-design.html#package-manage">包管理器</a>)，且性能
+较MSYS2差，切换到了MSYS2，MSYS2的pacman在安装各类软件时，速度和便捷性都不错。
+</p>
+
+<p>
+安装配置参见<a href="software.html#msys2">MSYS2</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org67574ca" class="outline-4">
+<h4 id="org67574ca"><span class="section-number-4">1.2.3</span> 快捷键(热键)</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+每天需要频繁重复打开切换多个可执行程序和文件夹，操作乏味低效。自定义丰富的组合
+热键，快速启动/退出/切换软件、进入指定文件夹，能大幅度提高效率和工作愉悦度。
+</p>
+
+<p>
+典型地，"Ctrl+Win+I"进入工作目录，"Ctrl+Win+E"启动Emacs，"Ctrl+Win+M"启动MSYS2，
+"Win+g"启动浏览器Google搜索剪贴板内容<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>。
+</p>
+
+<p>
+AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.html#autohotkey">AutoHotkey</a>学习安装配置。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org830f572" class="outline-4">
+<h4 id="org830f572"><span class="section-number-4">1.2.4</span> 文件搜索</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+在硬盘空间动辄TB级的大数据时代，Windows的文件搜索效率导致其已不具有可用性。
+<a href="https://www.voidtools.com/downloads/">Everything</a>完美的解决了这个问题，支持正则，秒级完成。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeaf1a15" class="outline-4">
+<h4 id="orgeaf1a15"><span class="section-number-4">1.2.5</span> 其他</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<p>
+请参考<a href="software.html">我的软件</a>。
+</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0454cc5" class="outline-2">
-<h2 id="linux"><a id="org0454cc5"></a><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Linux</h2>
+<div id="outline-container-orgfe1888c" class="outline-2">
+<h2 id="linux"><a id="orgfe1888c"></a><span class="section-number-2">2</span> Linux</h2>
 <div class="outline-text-2" id="text-linux">
 </div>
-<div id="outline-container-org102953b" class="outline-3">
-<h3 id="linux-debian"><a id="org102953b"></a><span class="section-number-3">2.1</span> <span class="todo TODO">TODO</span> Debian</h3>
+<div id="outline-container-org13c9686" class="outline-3">
+<h3 id="linux-debian"><a id="org13c9686"></a><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-linux-debian">
 </div>
-<div id="outline-container-org555663d" class="outline-4">
-<h4 id="debian-install"><a id="org555663d"></a><span class="section-number-4">2.1.1</span> 安装</h4>
+<div id="outline-container-org4de59ef" class="outline-4">
+<h4 id="debian-install"><a id="org4de59ef"></a><span class="section-number-4">2.1.1</span> 安装</h4>
 <div class="outline-text-4" id="text-debian-install">
 <p>
-使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘, U盘引导安装.
+使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘，U盘引导安装。当前unetbootin支持FAT32，不支持NTFS。
 </p>
 
 <p>
-使用Win/Linux双系统配置的, 执行~update-grub~更新配置文件, 手动修改=defaults=
-设置默认操作系统.
+Linux分区尝试过将/、boot、swap、home使用不同分区，多年使用经验证明几乎没有必要。
+将home分区分离一定程度是有价值的————将来重格做新系统时，只格系统分区，保留home
+分区，避免数据备份工作。
+</p>
+
+<p>
+Win/Linux双系统安装，先安装Windows，再安装Linux，安装完Linux后，root权限下运行
+<code>update-grub</code> 更新配置文件, 手动修改 <code>defaults</code> 设置默认操作系统，如果只安装了
+Debian和Windows，一般更改/boot/grub/grub.cfg <code>set defaults="2"</code> 默认从Windows
+启动。
+</p>
+
+<p>
+GRUB图形配置和Windows图形配置在部分平台上有缺陷，会导致Windows开机过程中出现
+花屏死机。设置GRUB为console模式解决此问题。Debian系统修改/etc/default/grub文件，
+去掉 <code>GRUB_TERMINAL=console</code> 行注释，如没有此行直接在最后加入。修改完成后，需
+执行 <code>update-grub</code> 使其生效。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org6479bf8" class="outline-4">
-<h4 id="org6479bf8"><span class="section-number-4">2.1.2</span> 配置</h4>
+<div id="outline-container-org5656375" class="outline-4">
+<h4 id="org5656375"><span class="section-number-4">2.1.2</span> 配置(9.3.0)</h4>
 <div class="outline-text-4" id="text-2-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="orgc12ba0c"></a>Apt-Source配置<br />
+<li><a id="org7480171"></a>APT源(apt source)<br />
 <div class="outline-text-5" id="text-2-1-2-1">
 <p>
-配置 <code>/etc/apt/sources.list</code>:
+打开终端，使用su升级为root用户，执行本节操作。
+</p>
+
+<p>
+参考<a href="https://wiki.debian.org/SourcesList">https://wiki.debian.org/SourcesList</a>。修改/etc/apt/sources.list如下，该文件
+其他内容可用#打头注释或直接移除。
+</p>
+<div class="org-src-container">
+<pre class="src src-conf">deb  http://deb.debian.org/debian stretch main contrib non-free
+deb-src  http://deb.debian.org/debian stretch main contrib non-free
+
+deb  http://deb.debian.org/debian stretch-updates main contrib non-free
+deb-src  http://deb.debian.org/debian stretch-updates main contrib non-free
+
+deb http://security.debian.org/ stretch/updates main contrib non-free
+deb-src http://security.debian.org/ stretch/updates main contrib non-free
+</pre>
+</div>
+
+<p>
+9.3.0版本自启动服务unattended-upgrades后台更新，这会占用/var/lib/dpkg/lock锁，
+导致后面的安装失败。我个人更喜欢自己控制更新与软件包安装，因此直接停掉该服务：
+</p>
+<dl class="org-dl">
+<dt>Step 1</dt><dd>修改文件/etc/apt/apt.conf.d/20auto-upgrades停止自动升级：<br /></dd>
+</dl>
+<p>
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "0";
+</p>
+<dl class="org-dl">
+<dt>Step 2</dt><dd>立即停止服务 systemctl stop unattended-upgrades</dd>
+</dl>
+<p>
+查看可以看是否已停止：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~# systemctl list-units -t service | grep unattended-upgrades
+<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">or use lsof</span>
+~# sudo lsof | grep /var/lib/dpkg/lock
+</pre>
+</div>
+
+<p>
+执行更新，超级用户安装vim和sudo：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">~# apt-get update
+~# apt-get install vim sudo
+</pre>
+</div>
+
+<p>
+编辑/etc/sudoers，在root行下面添加yanyg用户：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~# vim /etc/sudoers
+root    <span style="font-weight: bold; font-style: italic;">ALL</span>=(ALL:ALL) ALL
+yanyg   <span style="font-weight: bold; font-style: italic;">ALL</span>=(ALL:ALL) ALL
+</pre>
+</div>
+<p>
+/etc/sudoers禁止普通写入，vim执行 :x!强制写入。
+</p>
+
+<p>
+请退出超级用户，后续安装使用sudo进行，降低操作风险。
+</p>
+</div>
+</li>
+
+<li><a id="orgb89904e"></a>安装研发环境<br />
+<div class="outline-text-5" id="text-2-1-2-2">
+<p>
+APT源已配置好sudo，请使用添加了sudo的普通用户安装如下软件包。
+</p>
+
+<p>
+研发环境软件包下载大小为200MB~300MB，安装后占用在600MB~1GB之间。如下开发环境安装
+后可构建Emacs、内核、模块。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">~$ yes | <span style="font-style: italic;">\</span>
+    sudo apt-get install gcc linux-headers-4.9.0-4-amd64 tmux terminator <span style="font-style: italic;">\</span>
+         manpages manpages-dev manpages-zh manpages-posix manpages-posix-dev <span style="font-style: italic;">\</span>
+         gnome-shell-extension-taskbar gnome-shell-extension-weather <span style="font-style: italic;">\</span>
+         gnome-shell-extension-system-monitor <span style="font-style: italic;">\</span>
+         gnome-shell-extension-autohidetopbar <span style="font-style: italic;">\</span>
+         gnome-shell-extension-multi-monitors <span style="font-style: italic;">\</span>
+         gconf-service gconf2-common libappindicator1 libdbusmenu-glib4 <span style="font-style: italic;">\</span>
+         libdbusmenu-gtk4 libgconf-2-4 libindicator7 <span style="font-style: italic;">\</span>
+         libappindicator3-0.1-cil ntp <span style="font-style: italic;">\</span>
+         autoconf automake libtool cmake info texinfo texi2html gettext <span style="font-style: italic;">\</span>
+         gettext-doc autopoint libasprintf-dev libgettextpo-dev <span style="font-style: italic;">\</span>
+         libxaw7-dev libxaw3dxft8-dev libxaw-doc libxt-doc <span style="font-style: italic;">\</span>
+         libx11-dev libgtk3.0-cil-dev libwxgtk3.0-dev <span style="font-style: italic;">\</span>
+         libgnutls28-dev libtiff5-dev giflib-tools libgif-dev libjpeg-dev <span style="font-style: italic;">\</span>
+         gmp-doc libgmp10-doc libmpfr-dev gnutls-doc gnutls-bin liblzma-doc <span style="font-style: italic;">\</span>
+         libtinfo-dev libncursesw5-dev libncurses5-dev <span style="font-style: italic;">\</span>
+         mailutils mailutils-doc xaw3dg-dev libcairo2-dev librsvg2-dev <span style="font-style: italic;">\</span>
+         liblcms2-dev imagemagick libmagick++-dev <span style="font-style: italic;">\</span>
+         libdbus-1-dev libdbus-glib-1-dev libdbus-c++-dev gconf2 <span style="font-style: italic;">\</span>
+         libgconf2-dev libm17n-dev libotf-dev libxft-dev libcairo2-dev <span style="font-style: italic;">\</span>
+         gir1.2-poppler-0.18 libpoppler-dev libpoppler-glib-dev <span style="font-style: italic;">\</span>
+         libpoppler-dev libpoppler-glib-dev libpoppler-private-dev <span style="font-style: italic;">\</span>
+         global fcitx-googlepinyin <span style="font-style: italic;">\</span>
+         fonts-arphic-bkai00mp fonts-arphic-bsmi00lp <span style="font-style: italic;">\</span>
+         fonts-arphic-gbsn00lp fonts-arphic-gkai00mp fonts-arphic-ukai <span style="font-style: italic;">\</span>
+         rdesktop mplayer ffmpeg vlc libgtk-3-dev mjpegtools mediainfo <span style="font-style: italic;">\</span>
+         libwebkitgtk-3.0-dev libwebkitgtk-dev libwebkit2gtk-4.0-dev <span style="font-style: italic;">\</span>
+</pre>
+</div>
+
+<p>
+默认安装为英文en_US.UTF-8的，中文环境需要安装locales zh_CN.UTF-8：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo dpkg-reconfigure locales
+</pre>
+</div>
+<p>
+不安装zh_CN.UTF-8 locales时，emacs无法输入中文。
+</p>
+</div>
+</li>
+
+<li><a id="orgea769da"></a>配置上网环境<br />
+<div class="outline-text-5" id="text-2-1-2-3">
+<p>
+安装Google Chrome浏览器，并安装lantern代理：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo dpkg -i google-chrome-stable-20171220.deb
+~$ sudo dpkg -i lantern-installer-64-bit-20171219.deb
+</pre>
+</div>
+<p>
+安装后在终端运行lantern，确认可以正常启动运行，如果报告缺少某些库退出，用apt-get
+手动安装对应软件包。
+</p>
+
+<dl class="org-dl">
+<dt>Lantern Debian</dt><dd><a href="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb">GitHub Lantern 4.4.1 Deb</a></dd>
+<dt>Google Chrome</dt><dd><a href="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb">Google Chrome Amd64 Deb (Current Version)</a></dd>
+</dl>
+</div>
+</li>
+
+<li><a id="org29821d7"></a>配置X11界面<br />
+<div class="outline-text-5" id="text-2-1-2-4">
+<p>
+启动tweak tool配置自己预期的X桌面环境：
+</p>
+<ul class="org-ul">
+<li>static workspace: 4</li>
+<li>auto hide top bar</li>
+<li>config weather: Beijing, CN</li>
+</ul>
+</div>
+</li>
+
+<li><a id="org14f24c6"></a>时间配置<br />
+<div class="outline-text-5" id="text-2-1-2-5">
+<p>
+通常会遇到时间Linux/Windows下时间不一致问题。这是因为两者一个使用UTC，一个使用
+Local-RTC导致，修改为一致即可。修改时间与时区命令如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo timedatectl set-local-rtc 0
+~$ sudo timedatectl set-timezone Asia/Shanghai
+~$ sudo timedatectl set-ntp yes
+</pre>
+</div>
+
+<p>
+重启NTP服务，立即与网络时间同步：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo /etc/init.d/ntp restart
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orgc0ae188"></a>字体增强<br />
+<div class="outline-text-5" id="text-2-1-2-6">
+<p>
+Windows微软雅黑字体设计良好，是我的Emacs默认配置。Linux系统下创建
+/usr/share/fonts/windows目录，从Windows系统目录Windows/Fonts(一般是
+c:\Windows\Fonts)拷贝文件到新建目录/usr/share/fonts/windows，
+执行 <code>sudo fc-cache -fsrv</code> 更新缓存。
+</p>
+
+<p>
+Debian APT有提供更多字体，使用如下方式查找安装：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ apt-cache search chinese | grep font
+</pre>
+</div>
+
+<p>
+目前的配置英文字体使用<a href="software.html#source-code-pro">Source Code Pro</a>，中文使用微软雅黑(来自Windows)。
+</p>
+</div>
+</li>
+
+<li><a id="org69f550d"></a>其他配置<br />
+<div class="outline-text-5" id="text-2-1-2-7">
+<ul class="org-ul">
+<li>参考<a href="software.html">我的软件</a></li>
+<li>Emacs参考<a href="emacs.html">Emacs笔记</a>
+<ul class="org-ul">
+<li>Debian 9.3 + emacs 26.0.90 en_US.UTF-8安装，需要安装zh_CN.UTF-8 locales、
+配置 LC_CTYPE=zh_CN.UTF-8、设置 fcitx后才可输入中文。</li>
+</ul></li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-orgb04d7e9" class="outline-4">
+<h4 id="orgb04d7e9"><span class="section-number-4">2.1.3</span> 配置(8.x.x)</h4>
+<div class="outline-text-4" id="text-2-1-3">
+</div>
+<ol class="org-ol">
+<li><a id="orgae85d4f"></a>APT源(apt source)<br />
+<div class="outline-text-5" id="text-2-1-3-1">
+<p>
+配置 <code>/etc/apt/sources.list</code>
 </p>
 <div class="org-src-container">
 <pre class="src src-conf">deb http://httpredir.debian.org/debian jessie main contrib non-free
-#deb http://ftp.us.debian.org/debian/dists/jessie jessie main contrib
 deb-src http://httpredir.debian.org/debian jessie main contrib non-free
 
 deb http://httpredir.debian.org/debian jessie-updates main contrib non-free
@@ -196,19 +548,11 @@ deb http://security.debian.org/ jessie/updates main contrib non-free
 deb-src http://security.debian.org/ jessie/updates main contrib non-free
 </pre>
 </div>
-<p>
-执行更新和安装:
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">~$ sudo apt-get update
-~$ sudo apt-get install vim
-</pre>
-</div>
 </div>
 </li>
 
-<li><a id="org0b167b5"></a>Thinkpad Trackpoint(小红点)配置<br />
-<div class="outline-text-5" id="text-2-1-2-2">
+<li><a id="orgf81a3ba"></a>Thinkpad Trackpoint(小红点)配置<br />
+<div class="outline-text-5" id="text-2-1-3-2">
 <p>
 <a href="https://wiki.debian.org/InstallingDebianOn/Thinkpad/Trackpoint">Debian WIKI</a>中配置介绍, 不同Debian配置方式有差异. 示例如下:
 </p>
@@ -241,20 +585,67 @@ Linux t400 3.16.0-4-amd64 <span style="font-weight: bold; font-style: italic;">#
 </ol>
 </div>
 </div>
-
-<div id="outline-container-orgcfafc7d" class="outline-3">
-<h3 id="orgcfafc7d"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> LFS</h3>
-</div>
 </div>
 
-<div id="outline-container-orgcb57322" class="outline-2">
-<h2 id="partition"><a id="orgcb57322"></a><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Partition</h2>
+<div id="outline-container-org9a73e1e" class="outline-2">
+<h2 id="org9a73e1e"><span class="section-number-2">3</span> Common</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgec0e07b" class="outline-3">
+<h3 id="orgec0e07b"><span class="section-number-3">3.1</span> Google</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+使用代理设置时，google会选择错误的位置，默认搜索优先当地语言结果。通过链接
+<a href="https://www.google.com/preferences">https://www.google.com/preferences</a>配置Region Settings。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5aca8df" class="outline-2">
+<h2 id="partition"><a id="org5aca8df"></a><span class="section-number-2">4</span> Partition</h2>
 <div class="outline-text-2" id="text-partition">
+<p>
+T440分区清单示例如下。sda1安装Windows，sda2安装Debian，sdb做数据盘：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo fdisk -luc
+Disk /dev/sda: 232.9 GiB, 250059350016 bytes, 488397168 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xbfdedd62
+
+Device     Boot     Start       End   Sectors   Size Id Type
+/dev/sda1  *         2048 251660287 251658240   120G  7 HPFS/NTFS/exFAT
+/dev/sda2       251660288 488397167 236736880 112.9G 83 Linux
+
+
+Disk /dev/sdb: 931.5 GiB, 1000204886016 bytes, 1953525168 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0xa348c330
+
+Device     Boot      Start        End   Sectors   Size Id Type
+/dev/sdb1             2048  419432447 419430400   200G 83 Linux
+/dev/sdb2        419432448  943720447 524288000   250G  7 HPFS/NTFS/exFAT
+/dev/sdb3  *     943720448 1153435647 209715200   100G  7 HPFS/NTFS/exFAT
+/dev/sdb4       1153437694 1953525167 800087474 381.5G  f W95 Ext<span style="font-style: italic;">'d (LBA)</span>
+<span style="font-style: italic;">/dev/sdb5       1468016640 1572874239 104857600    50G 83 Linux</span>
+<span style="font-style: italic;">/dev/sdb6       1572876288 1589653503  16777216     8G 82 Linux swap / Solaris</span>
+<span style="font-style: italic;">/dev/sdb7       1589655552 1835415551 245760000 117.2G  7 HPFS/NTFS/exFAT</span>
+<span style="font-style: italic;">/dev/sdb8       1835417600 1953523711 118106112  56.3G  7 HPFS/NTFS/exFAT</span>
+<span style="font-style: italic;">/dev/sdb9       1153439744 1468016639 314576896   150G  7 HPFS/NTFS/exFAT</span>
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org6dd799b" class="outline-2">
-<h2 id="usb-stick"><a id="org6dd799b"></a><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
+<div id="outline-container-org5c0304d" class="outline-2">
+<h2 id="usb-stick"><a id="org5c0304d"></a><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
 <div class="outline-text-2" id="text-usb-stick">
 <p>
 随身携带一个大容量USB(32G/64G), 包含完整可引导的操作系统, 以及Debian, Redhat,
@@ -262,23 +653,22 @@ CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB
 解决系统引导异常. 这在开发底层系统, 或对系统做深度定制时是常见的.
 </p>
 </div>
-
-<div id="outline-container-org68b1412" class="outline-3">
-<h3 id="org68b1412"><span class="section-number-3">4.1</span> 工作原理</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-org81cc187" class="outline-3">
+<h3 id="org81cc187"><span class="section-number-3">5.1</span> 工作原理</h3>
+<div class="outline-text-3" id="text-5-1">
 <p>
 用<a href="https://www.gnu.org/software/grub/">GRUB</a>和<a href="https://sourceforge.net/projects/grub4dos/">grub4dos</a>提供多系统引导, 安装Linux到USB盘, 或用<a href="http://www.linuxfromscratch.org/">LFS</a>制作自己的系统.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga07818b" class="outline-3">
-<h3 id="orga07818b"><span class="section-number-3">4.2</span> 制作方式</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgb806faa" class="outline-3">
+<h3 id="orgb806faa"><span class="section-number-3">5.2</span> 制作方式</h3>
+<div class="outline-text-3" id="text-5-2">
 </div>
-<div id="outline-container-org8b9f23d" class="outline-4">
-<h4 id="org8b9f23d"><span class="section-number-4">4.2.1</span> 分区</h4>
-<div class="outline-text-4" id="text-4-2-1">
+<div id="outline-container-org0d09387" class="outline-4">
+<h4 id="org0d09387"><span class="section-number-4">5.2.1</span> 分区</h4>
+<div class="outline-text-4" id="text-5-2-1">
 <p>
 使用fdisk分区. part1用做grub, part2用做live linux, part3用做Linux安装系统, part4
 是扩展分区, part5/6分别用做win安装盘和win下数据盘. 各分区大小根据USB和安装盘
@@ -307,6 +697,15 @@ Device     Boot     Start       End  Sectors  Size Id Type
 </div>
 </div>
 </div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara">Win10游戏录制占用该快捷键，进入
+开始-&gt;设置-&gt;游戏-&gt;关掉“使用游戏栏记录游戏剪辑、屏幕截图和广播”。</div></div>
+
+
 </div>
+</div></div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-17 周日 22:43 -->
+<!-- 2017-12-23 Sat 09:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>B Tree</title>
@@ -90,23 +90,23 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org16ba7a1">1. 概述</a></li>
-<li><a href="#org0f85c79">2. 应用</a></li>
-<li><a href="#orgbb8d917">3. 分析</a>
+<li><a href="#org25599d7">1. 概述</a></li>
+<li><a href="#org626e627">2. 应用</a></li>
+<li><a href="#orgda31a86">3. 分析</a>
 <ul>
-<li><a href="#org3c9181b">3.1. 定义</a></li>
-<li><a href="#org69abcc6">3.2. 运行时间上限</a></li>
-<li><a href="#org449f53f">3.3. 改进与变形</a></li>
+<li><a href="#org6d7564a">3.1. 定义</a></li>
+<li><a href="#orga7c3009">3.2. 运行时间上限</a></li>
+<li><a href="#org65ce2ac">3.3. 改进与变形</a></li>
 </ul>
 </li>
-<li><a href="#org4175e30">4. B树实现</a></li>
-<li><a href="#org6ca37ab">5. 外部链接</a></li>
+<li><a href="#org9e5891e">4. B树实现</a></li>
+<li><a href="#org8f79b22">5. 外部链接</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org16ba7a1" class="outline-2">
-<h2 id="org16ba7a1"><span class="section-number-2">1</span> 概述</h2>
+<div id="outline-container-org25599d7" class="outline-2">
+<h2 id="org25599d7"><span class="section-number-2">1</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 相比于内存, 访问磁盘/磁带等块设备时, 大块数据读写有更好的性能. 为高效使用这类
@@ -120,8 +120,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org0f85c79" class="outline-2">
-<h2 id="org0f85c79"><span class="section-number-2">2</span> 应用</h2>
+<div id="outline-container-org626e627" class="outline-2">
+<h2 id="org626e627"><span class="section-number-2">2</span> 应用</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 B树(或其变形)广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如
@@ -130,12 +130,12 @@ B树(或其变形)广泛应用于有大量元数据需要保存到外部存储�
 </div>
 </div>
 
-<div id="outline-container-orgbb8d917" class="outline-2">
-<h2 id="orgbb8d917"><span class="section-number-2">3</span> 分析</h2>
+<div id="outline-container-orgda31a86" class="outline-2">
+<h2 id="orgda31a86"><span class="section-number-2">3</span> 分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org3c9181b" class="outline-3">
-<h3 id="org3c9181b"><span class="section-number-3">3.1</span> 定义</h3>
+<div id="outline-container-org6d7564a" class="outline-3">
+<h3 id="org6d7564a"><span class="section-number-3">3.1</span> 定义</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 读过资料中, B树最完整清晰定义来自<a href="http://www-cs-faculty.stanford.edu/~uno/taocp.html">TAOCP</a>:
@@ -172,8 +172,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org69abcc6" class="outline-3">
-<h3 id="org69abcc6"><span class="section-number-3">3.2</span> 运行时间上限</h3>
+<div id="outline-container-orga7c3009" class="outline-3">
+<h3 id="orga7c3009"><span class="section-number-3">3.2</span> 运行时间上限</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 给定\(m\)阶B树, 假定存在\(N\)个键, \(N+1\)个叶子出现在\(l\)级, 则
@@ -195,8 +195,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org449f53f" class="outline-3">
-<h3 id="org449f53f"><span class="section-number-3">3.3</span> 改进与变形</h3>
+<div id="outline-container-org65ce2ac" class="outline-3">
+<h3 id="org65ce2ac"><span class="section-number-3">3.3</span> 改进与变形</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 参考<a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>).
@@ -205,8 +205,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org4175e30" class="outline-2">
-<h2 id="org4175e30"><span class="section-number-2">4</span> B树实现</h2>
+<div id="outline-container-org9e5891e" class="outline-2">
+<h2 id="org9e5891e"><span class="section-number-2">4</span> B树实现</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;uncompleted&gt;
@@ -214,8 +214,8 @@ B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;un
 </div>
 </div>
 
-<div id="outline-container-org6ca37ab" class="outline-2">
-<h2 id="org6ca37ab"><span class="section-number-2">5</span> 外部链接</h2>
+<div id="outline-container-org8f79b22" class="outline-2">
+<h2 id="org8f79b22"><span class="section-number-2">5</span> 外部链接</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>B Tree: <a href="https://en.wikipedia.org/wiki/B-tree">https://en.wikipedia.org/wiki/B-tree</a></li>
