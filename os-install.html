@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-01 Mon 21:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OS安装与基本配置</title>
@@ -96,7 +96,7 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#win">1. Windows</a>
 <ul>
-<li><a href="#org9cceb0a">1.1. 安装</a></li>
+<li><a href="#org4de59ef">1.1. 安装</a></li>
 <li><a href="#orgad3121f">1.2. 配置</a>
 <ul>
 <li><a href="#org3dda194">1.2.1. 输入法</a></li>
@@ -143,8 +143,8 @@ for the JavaScript code in this tag.
 <h2 id="win"><a id="org31ee92c"></a><span class="section-number-2">1</span> Windows</h2>
 <div class="outline-text-2" id="text-win">
 </div>
-<div id="outline-container-org9cceb0a" class="outline-3">
-<h3 id="org9cceb0a"><span class="section-number-3">1.1</span> 安装</h3>
+<div id="outline-container-org4de59ef" class="outline-3">
+<h3 id="org4de59ef"><span class="section-number-3">1.1</span> 安装</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 新的设备一般不再提供CD/DVD驱动器，而只有USB接口。<a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是
@@ -268,8 +268,8 @@ AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.htm
 <h3 id="linux-debian"><a id="org13c9686"></a><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-linux-debian">
 </div>
-<div id="outline-container-org4de59ef" class="outline-4">
-<h4 id="debian-install"><a id="org4de59ef"></a><span class="section-number-4">2.1.1</span> 安装</h4>
+<div id="outline-container-org516c386" class="outline-4">
+<h4 id="debian-install"><a id="org516c386"></a><span class="section-number-4">2.1.1</span> 安装</h4>
 <div class="outline-text-4" id="text-debian-install">
 <p>
 使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘，U盘引导安装。当前unetbootin支持FAT32，不支持NTFS。
@@ -302,7 +302,7 @@ GRUB图形配置和Windows图形配置在部分平台上有缺陷，会导致Win
 <div class="outline-text-4" id="text-2-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="org7480171"></a>APT源(apt source)<br />
+<li><a id="orgae85d4f"></a>APT源(apt source)<br />
 <div class="outline-text-5" id="text-2-1-2-1">
 <p>
 打开终端，使用su升级为root用户，执行本节操作。
@@ -490,8 +490,8 @@ Local-RTC导致，修改为一致即可。修改时间与时区命令如下：
 </div>
 </li>
 
-<li><a id="orgc0ae188"></a>字体增强<br />
-<div class="outline-text-5" id="text-2-1-2-6">
+<li><a id="debian-config-font"></a><a id="orgc0ae188"></a>字体增强<br />
+<div class="outline-text-5" id="text-debian-config-font">
 <p>
 Windows微软雅黑字体设计良好，是我的Emacs默认配置。Linux系统下创建
 /usr/share/fonts/windows目录，从Windows系统目录Windows/Fonts(一般是
@@ -522,17 +522,36 @@ Debian APT有提供更多字体，使用如下方式查找安装：
 <li>Debian 9.3 + emacs 26.0.90 en_US.UTF-8安装，需要安装zh_CN.UTF-8 locales、
 配置 LC_CTYPE=zh_CN.UTF-8、设置 fcitx后才可输入中文。</li>
 </ul></li>
+<li>Alt-Tab切换只显示当前workspace窗口
+<ul class="org-ul">
+<li>follows:
+<ol class="org-ol">
+<li>install dconf-editor</li>
+</ol></li>
+</ul></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo apt-get install dconf-editor
+</pre>
+</div>
+<ol class="org-ol">
+<li>exec dconf-editor, Navigate to: org -&gt; gnome -&gt; shell -&gt; app-switcher, Set "current-workspace-only" to true</li>
+<li>Another: gsettings set org.gnome.shell.app-switcher current-workspace-only true</li>
+</ol>
+<ul class="org-ul">
+<li><a href="https://askubuntu.com/questions/464946/ubuntu-gnome-force-alt-tab-to-only-switch-on-current-workspace">https://askubuntu.com/questions/464946/ubuntu-gnome-force-alt-tab-to-only-switch-on-current-workspace</a></li>
 </ul>
 </div>
 </li>
 </ol>
 </div>
+
 <div id="outline-container-orgb04d7e9" class="outline-4">
 <h4 id="orgb04d7e9"><span class="section-number-4">2.1.3</span> 配置(8.x.x)</h4>
 <div class="outline-text-4" id="text-2-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgae85d4f"></a>APT源(apt source)<br />
+<li><a id="org77da03a"></a>APT源(apt source)<br />
 <div class="outline-text-5" id="text-2-1-3-1">
 <p>
 配置 <code>/etc/apt/sources.list</code>
