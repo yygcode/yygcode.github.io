@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2018-01-01 Mon 22:47 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- 2018-01-08 Mon 14:41 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Emacs Demostrates MP4</title>
-<meta name="generator" content="Org mode" />
+<meta name="generator" content="Org mode">
 <link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
+    <link rel="stylesheet" type="text/css" href="css/site.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -62,15 +60,38 @@ for the JavaScript code in this tag.
  <a accesskey="h" href=""> UP </a>
  |
  <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
-<h1 class="title">Emacs Demostrates MP4</h1>
-<hr />
-<p>
-大小为2.4MB，点击播放。
-</p>
-<p>
-<a href="./img/emacs.mp4">Emacs MP4 (Video,2.4MB)</a>
-</p>
 </div>
+<div id="content">
+<h1 class="title">Emacs Demostrates MP4</h1>
+<hr>
+</div>
+<p>
+视频大小为2.4MB
+</p>
+
+<!-- "Video For Everybody" v0.4.1 by Kroc Camen of Camen Design <camendesign.com/code/video_for_everybody>
+     =================================================================================================================== -->
+     <!-- first try HTML5 playback: if serving as XML, expand `controls` to `controls="controls"` and autoplay likewise       -->
+     <!-- warning: playback does not work on iPad/iPhone if you include the poster attribute! fixed in iOS4.0                 -->
+     <video width="640" height="360" controls preload="none">
+       <!-- MP4 must be first for iPad! -->
+       <source src="img/emacs.mp4" type="video/mp4" /><!-- WebKit video    -->
+       <source src="__VIDEO__.webm" type="video/webm" /><!-- Chrome / Newest versions of Firefox and Opera -->
+       <source src="__VIDEO__.OGV" type="video/ogg" /><!-- Firefox / Opera -->
+       <!-- fallback to Flash: -->
+       <object width="640" height="384" type="application/x-shockwave-flash" data="__FLASH__.SWF">
+	 <!-- Firefox uses the `data` attribute above, IE/Safari uses the param below -->
+	 <param name="movie" value="__FLASH__.SWF" />
+	 <param name="flashvars" value="image=__POSTER__.JPG&amp;file=__VIDEO__.MP4" />
+	 <!-- fallback image. note the title field below, put the title of the video there -->
+	 <img src="__VIDEO__.JPG" width="640" height="360" alt="__TITLE__"
+	      title="No video playback capabilities, please download the video below" />
+       </object>
+     </video>
+     <!-- you *must* offer a download link as they may be able to play the file locally. customise this bit all you want -->
+     <p> <strong>Download Video:</strong>
+       Closed Format:  <a href="img/emacs.mp4">"MP4"</a>
+       Open Format:    <a href="__VIDEO__.OGV">"OGG"</a>
+     </p>
 </body>
 </html>
