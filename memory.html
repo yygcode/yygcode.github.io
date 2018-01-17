@@ -3,12 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-16 Tue 23:24 -->
+<!-- 2018-01-18 Thu 02:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>内存管理技术</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -20,7 +19,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2018 Free Software Foundation, Inc.
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -73,7 +72,7 @@ for the JavaScript code in this tag.
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4f2acc6">1. <span class="todo TODO">TODO</span> 概述</a></li>
+<li><a href="#orgd7d5082">1. <span class="todo TODO">TODO</span> 概述</a></li>
 <li><a href="#us">2. 用户态内存管理技术</a>
 <ul>
 <li><a href="#us-process-layout">2.1. 从程序地址空间布局谈起</a></li>
@@ -81,33 +80,33 @@ for the JavaScript code in this tag.
 <li><a href="#us-alsr">2.3. ASLR(地址空间布局随机化)策略</a></li>
 <li><a href="#us-stack">2.4. 栈空间管理</a></li>
 <li><a href="#us-heap">2.5. <span class="todo TODO">TODO</span> 堆内存管理</a></li>
-<li><a href="#org7b0e835">2.6. 典型分配器分析</a>
+<li><a href="#orgfc4ee21">2.6. 典型分配器分析</a>
 <ul>
-<li><a href="#org66fed57">2.6.1. tcmalloc</a></li>
+<li><a href="#orgfd3f8e4">2.6.1. tcmalloc</a></li>
 </ul>
 </li>
 <li><a href="#us-mempool">2.7. <span class="todo TODO">TODO</span> 内存池的实现</a></li>
 </ul>
 </li>
-<li><a href="#orgf7cf67a">3. 内核态内存管理</a>
+<li><a href="#orgf2ce7c4">3. 内核态内存管理</a>
 <ul>
-<li><a href="#org53d7dc7">3.1. dummy</a>
+<li><a href="#orgb4db2c1">3.1. dummy</a>
 <ul>
-<li><a href="#org3d6f425">3.1.1. brk</a></li>
+<li><a href="#org8625380">3.1.1. brk</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org04baa48">4. 读书笔记</a>
+<li><a href="#org2547047">4. 读书笔记</a>
 <ul>
-<li><a href="#org51853ad">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
+<li><a href="#org8b97445">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
 <ul>
-<li><a href="#orgaf00a1b">4.1.1. Chapter</a></li>
+<li><a href="#orga580f73">4.1.1. Chapter</a></li>
 </ul>
 </li>
-<li><a href="#org62b0845">4.2. Professional Linux Kernel Architecture CN</a>
+<li><a href="#orgaea6db7">4.2. Professional Linux Kernel Architecture CN</a>
 <ul>
-<li><a href="#org4761cf9">4.2.1. 概述</a></li>
+<li><a href="#org175238b">4.2.1. 概述</a></li>
 </ul>
 </li>
 </ul>
@@ -116,21 +115,22 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org4f2acc6" class="outline-2">
-<h2 id="org4f2acc6"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
+<div id="outline-container-orgd7d5082" class="outline-2">
+<h2 id="orgd7d5082"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-待定内容：介绍用户态内存使用于管理、内核态内存使用与管理、内存池、伙伴系统、虚拟内存管理等。
+待定内容：
+介绍用户态内存使用于管理、内核态内存使用与管理、内存池、伙伴系统、虚拟内存管理等。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org187692a" class="outline-2">
-<h2 id="us"><a id="org187692a"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
+<div id="outline-container-orge739e24" class="outline-2">
+<h2 id="us"><a id="orge739e24"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
 <div class="outline-text-2" id="text-us">
 </div>
-<div id="outline-container-org1e00318" class="outline-3">
-<h3 id="us-process-layout"><a id="org1e00318"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
+<div id="outline-container-orgb67b145" class="outline-3">
+<h3 id="us-process-layout"><a id="orgb67b145"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
 <div class="outline-text-3" id="text-us-process-layout">
 <p>
 二进制可执行文件是由特定格式的二进制代码和数据组成。常见的格式有如下三种：
@@ -140,8 +140,8 @@ for the JavaScript code in this tag.
 <dt>PE</dt><dd>PE是Portable Execuable，Windows系统基本都是此类格式。mingw查看ls类别：</dd>
 </dl>
 <div class="org-src-container">
-<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>/bin/ls
-/bin/ls:<span class="org-whitespace-space"> </span>PE32+<span class="org-whitespace-space"> </span>executable<span class="org-whitespace-space"> </span>(console)<span class="org-whitespace-space"> </span>x86-64<span class="org-whitespace-space"> </span>(stripped<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>external<span class="org-whitespace-space"> </span>PDB),<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>MS<span class="org-whitespace-space"> </span>Wi<span class="org-whitespace-line">ndows</span>
+<pre class="src src-sh">~$ file /bin/ls
+/bin/ls: PE32+ executable (console) x86-64 (stripped to external PDB), for MS Windows
 </pre>
 </div>
 <dl class="org-dl">
@@ -156,56 +156,93 @@ for the JavaScript code in this tag.
 </p>
 
 <p>
-可执行文件加载到内存中时，分为代码段和数据段。数据段又进一步分为初始化数据段、未初始化数据段、栈和堆。关于进程的内存布局细节参考<a href="kernel.html#process-address-space">进程地址空间</a>，本文主要介绍数据段内存管理。
+可执行文件加载到内存中时，分为代码段和数据段。数据段又进一步分为初始化数据段、
+未初始化数据段、栈和堆。关于进程的内存布局细节参考<a href="kernel.html#process-address-space">进程地址空间</a>，本文主要介绍
+数据段内存管理。
 </p>
 
 <p>
 初始化数据段(initialized data)位于可执行文件data段，占用存储空间。未初始化数据段
-(uninitialized data)位于BSS(Block Storage Start, 来自IBM 704机器的汇编指令。也有记作Block Start of Symbol)。未初始化或初始化为0的全局变量都在BSS段。这两种数据结构都是静态确定的，无法在运行时分配或释放。
+(uninitialized data)位于BSS(Block Storage Start, 来自IBM 704机器的汇编指令。也有
+记作Block Start of Symbol)。未初始化或初始化为0的全局变量都在BSS段。这两种数据
+结构都是静态确定的，无法在运行时分配或释放。
 </p>
 
 <p>
-栈(start)用于保存所有的局部变量，比如函数参数、返回地址、非整型的返回值、函数内部局部变量都保存在栈中。栈后进先出特点非常适合保存/恢复现场。因为函数的返回地址保存在栈中，修改返回地址数值，可以改变程序的预期行为，这是栈溢出攻击。为了阻止栈溢出攻击，LINUX内核添加了栈随机变量，通过修改 <code>/proc/sys/kernel/randomize_va_space</code> 为
+栈(start)用于保存所有的局部变量，比如函数参数、返回地址、非整型的返回值、函数内部
+局部变量都保存在栈中。栈后进先出特点非常适合保存/恢复现场。因为函数的返回地址保存
+在栈中，修改返回地址数值，可以改变程序的预期行为，这是栈溢出攻击。为了阻止栈溢出
+攻击，LINUX内核添加了栈随机变量，通过修改 <code>/proc/sys/kernel/randomize_va_space</code> 为
 0关闭栈随机化，为2打开栈随机化。
 </p>
 
 <p>
-堆(heap)用于存放动态分配的内存。典型分配器函数 <code>malloc</code> 分配堆内存，目前比较好的分配器包括glibc的 <code>ptmalloc</code> 、google的 <code>tcmalloc</code> 、facebook的 <code>jemalloc</code> 。
-LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存。堆内存使用不当可导致内存泄漏。通用的分配器函数（比如glibc的malloc）要考虑多种场景下的内存占用和性能的平衡问题，在某种特定场景下性能往往不是最优的，因此可以通过定制（特化）分配器函数的方式，优化堆内存的分配性能，提高其使用率、减少碎片化。这种定制的分配器称为内存池。C++
-标准库STL allocator、Boost pool、memcached都是典型的内存池。2017年底整理内存技术时，翻出了2008年实现的内存池，放到了GitHub上mempool.c和mempool.h。通用内存分配器经过这么多年发展已经非常成熟，一般而言，所有的优化都是特化优化，比如，程序非常频繁的分配释放特定大小的结构体。
+堆(heap)用于存放动态分配的内存。典型分配器函数 <code>malloc</code> 分配堆内存，目前比较好的
+分配器包括glibc的 <code>ptmalloc</code> 、google的 <code>tcmalloc</code> 、facebook的 <code>jemalloc</code> 。
+LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存。堆内存使用不当可导致内存泄漏。
+通用的分配器函数（比如glibc的malloc）要考虑多种场景下的内存占用和性能的平衡问题，
+在某种特定场景下性能往往不是最优的，因此可以通过定制（特化）分配器函数的方式，
+优化堆内存的分配性能，提高其使用率、减少碎片化。这种定制的分配器称为内存池。C++
+标准库STL allocator、Boost pool、memcached都是典型的内存池。2017年底整理内存技术
+时，翻出了2008年实现的内存池，放到了GitHub上mempool.c和mempool.h。通用内存分配器
+经过这么多年发展已经非常成熟，一般而言，所有的优化都是特化优化，比如，程序非常
+频繁的分配释放特定大小的结构体。
 </p>
 
 <p>
 下图是一个典型的进程地址空间布局概要图：
 </p>
-
-<div class="figure">
-<p><img src="img/memory.process-layout.png" alt="memory.process-layout.png" />
-</p>
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>进程地址空间布局</label><pre class="src src-ditaa">+-----------------+ &lt;-:-:-:Task Size
+|      GAPS cAAA  |
++-----------------+ &lt;-:-:-:STACK TOP randomized variable
+|      cBLU       |
+|                 |
+|      Stack      | &lt;-:-:-:Already Used
+|        |        |
+|        |        |
++-----------------+
+|        |        |
+|        V        |
+|                 |
+|      cPNK       |
+|        ^ MMAP   |
+|        |        |
+|        |        |
++-----------------+ &lt;-:-:-:mm.mmap_base (TASK_UNMAPPED_SIZE)
+|                 |
+|      cGRE       |
+|        ^ HEAP   |
+|        |        |
++-----------------+
+|      c96E       |
+|      TEXT       |
++-----------------+
+</pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org046f4e6" class="outline-3">
-<h3 id="us-exe-size-analysis"><a id="org046f4e6"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
+<div id="outline-container-org22ed065" class="outline-3">
+<h3 id="us-exe-size-analysis"><a id="org22ed065"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
 <div class="outline-text-3" id="text-us-exe-size-analysis">
 <p>
 先参考如下示例代码：
 </p>
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>数据段示例代码</label><pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;malloc.h&gt;</span>
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;2&nbsp; </span>数据段示例代码</label><pre class="src src-C"><span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;malloc.h&gt;</span>
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">initialized_data</span>[1024*1024]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{1};
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">uninitialized_data</span>[1024*1024];
-<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">global_heap_data</span>;
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">initialized_data</span>[1024*1024] = {1};
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">uninitialized_data</span>[1024*1024];
+<span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">global_heap_data</span>;
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">main</span>()
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stack_data</span>[1024*1024];
-<span class="org-whitespace-space">        </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">heap_data</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(1024*1024);
-<span class="org-whitespace-space">        </span>global_heap_data<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(1024*1024);
+        <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">stack_data</span>[1024*1024];
+        <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">heap_data</span> = malloc(1024*1024);
+        global_heap_data = malloc(1024*1024);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span style="font-weight: bold;">return</span> 0;
 }
 </pre>
 </div>
@@ -214,23 +251,24 @@ LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存�
 保存为data.c编译，观察结果，大小为4.1MB左右。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>data<span class="org-whitespace-space"> </span>data.c
-~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>data
--rwxrwxr-x.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.1M<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>22:22<span class="org-whitespace-space"> </span>data
-ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>data
--rwxrwxr-x.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4202981<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>22:26<span class="org-whitespace-space"> </span>data
+<pre class="src src-sh">~$ gcc -o data data.c
+~$ ls -lh data
+-rwxrwxr-x. 1 yanyg yanyg 4.1M Dec  5 22:22 data
+ls -l data
+-rwxrwxr-x. 1 yanyg yanyg 4202981 Dec  5 22:26 data
 </pre>
 </div>
 
 <p>
-将代码第三行initialized_data初始化为0： <code>int initialized_data[1024*1024]= {0}</code> 。再次编译观察，大小为8.5KB左右。
+将代码第三行initialized_data初始化为0： <code>int initialized_data[1024*1024]= {0}</code> 。
+再次编译观察，大小为8.5KB左右。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>data<span class="org-whitespace-space"> </span>data.c
-~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>data
--rwxrwxr-x.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>8.5K<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>22:25<span class="org-whitespace-space"> </span>data
-~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>data
--rwxrwxr-x.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>8629<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>22:25<span class="org-whitespace-space"> </span>data
+<pre class="src src-sh">~$ gcc -o data data.c
+~$ ls -lh data
+-rwxrwxr-x. 1 yanyg yanyg 8.5K Dec  5 22:25 data
+~$ ls -l data
+-rwxrwxr-x. 1 yanyg yanyg 8629 Dec  5 22:25 data
 </pre>
 </div>
 
@@ -249,11 +287,12 @@ main(400530)为main函数入口地址。
 </div>
 </div>
 
-<div id="outline-container-org1dcbd62" class="outline-3">
-<h3 id="us-alsr"><a id="org1dcbd62"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
+<div id="outline-container-org9509ad9" class="outline-3">
+<h3 id="us-alsr"><a id="org9509ad9"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
 <div class="outline-text-3" id="text-us-alsr">
 <p>
-上一小节分析中，通过reaelf并未看到stack和heap起始地址与长度限制，因为这是在运行时确定的。系统调用exec用load_elf_binary函数加载ELF文件，该函数检测
+上一小节分析中，通过reaelf并未看到stack和heap起始地址与长度限制，因为这是在
+运行时确定的。系统调用exec用load_elf_binary函数加载ELF文件，该函数检测
 randomize_va_space确定是否进行堆栈随机化(fs/binfmt_elf.c)：
 </p>
 <dl class="org-dl">
@@ -266,76 +305,78 @@ randomize_va_space确定是否进行堆栈随机化(fs/binfmt_elf.c)：
 或/proc/sys/kernel/randomize_va_space配置：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">value</span><span class="org-whitespace-space"> </span><span class="org-comment">need</span><span class="org-whitespace-space"> </span><span class="org-comment">superuser(root)</span><span class="org-whitespace-space"> </span><span class="org-comment">privilege</span>
-~#<span class="org-whitespace-space"> </span>echo<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/proc/sys/kernel/randomize_va_space
-~#<span class="org-whitespace-space"> </span>sysctl<span class="org-whitespace-space"> </span>-n<span class="org-whitespace-space"> </span>kernel.randomize_va_space
+<pre class="src src-sh"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">set the value need superuser(root) privilege</span>
+~# echo 0 &gt; /proc/sys/kernel/randomize_va_space
+~# sysctl -n kernel.randomize_va_space
 2
-~$<span class="org-whitespace-space"> </span>sysctl<span class="org-whitespace-space"> </span>-w<span class="org-whitespace-space"> </span>kernel.randomize_va_space=0
-kernel.randomize_va_space<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0
-~$<span class="org-whitespace-space">  </span>sysctl<span class="org-whitespace-space"> </span>-n<span class="org-whitespace-space"> </span>kernel.randomize_va_space
+~$ sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+~$  sysctl -n kernel.randomize_va_space
 0
 </pre>
 </div>
 <p>
-设置不同的ALSR策略，多次运行cat /proc/self/maps或ls -l /proc/self/map_files/，观察每次地址是否相同：
+设置不同的ALSR策略，多次运行cat /proc/self/maps或ls -l /proc/self/map_files/，
+观察每次地址是否相同：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~#<span class="org-whitespace-space"> </span>sysctl<span class="org-whitespace-space"> </span>-w<span class="org-whitespace-space"> </span>kernel.randomize_va_space=0
-kernel.randomize_va_space<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0
-~#<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>/proc/self/map_files/<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>ld-2
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:48<span class="org-whitespace-space"> </span>7ffff7ddb000-7ffff7dfc000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:48<span class="org-whitespace-space"> </span>7ffff7ffc000-7ffff7ffd000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:48<span class="org-whitespace-space"> </span>7ffff7ffd000-7ffff7ffe000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-~#<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>/proc/self/map_files/<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>ld-2
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7ffff7ddb000-7ffff7dfc000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7ffff7ffc000-7ffff7ffd000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7ffff7ffd000-7ffff7ffe000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
+<pre class="src src-sh">~# sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ddb000-7ffff7dfc000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ffc000-7ffff7ffd000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:48 7ffff7ffd000-7ffff7ffe000 -&gt; /usr/lib64/ld-2.17.so
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ddb000-7ffff7dfc000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ffc000-7ffff7ffd000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7ffff7ffd000-7ffff7ffe000 -&gt; /usr/lib64/ld-2.17.so
 
-~#<span class="org-whitespace-space"> </span>sysctl<span class="org-whitespace-space"> </span>-w<span class="org-whitespace-space"> </span>kernel.randomize_va_space=2
-kernel.randomize_va_space<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2
-~#<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>/proc/self/map_files/<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>ld-2
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f12a95e5000-7f12a9606000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f12a9806000-7f12a9807000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f12a9807000-7f12a9808000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-~#<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>/proc/self/map_files/<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>ld-2
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f80c2ef5000-7f80c2f16000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f80c3116000-7f80c3117000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
-lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>64<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>23:49<span class="org-whitespace-space"> </span>7f80c3117000-7f80c3118000<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>/usr/lib64/<span class="org-whitespace-line">ld-2.17.so</span>
+~# sysctl -w kernel.randomize_va_space=2
+kernel.randomize_va_space = 2
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7f12a95e5000-7f12a9606000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f12a9806000-7f12a9807000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f12a9807000-7f12a9808000 -&gt; /usr/lib64/ld-2.17.so
+~# ls -l /proc/self/map_files/ | grep ld-2
+lr--------. 1 root root 64 Dec  5 23:49 7f80c2ef5000-7f80c2f16000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f80c3116000-7f80c3117000 -&gt; /usr/lib64/ld-2.17.so
+lr--------. 1 root root 64 Dec  5 23:49 7f80c3117000-7f80c3118000 -&gt; /usr/lib64/ld-2.17.so
 </pre>
 </div>
 
 <p>
 64位体系下，地址空间比较充足，可以设置较大随机化范围提高安全性。brk的随机范围是
-32MB(参见函数arch_randomize_brk)，stack在1GB范围内随机，vdso在随机栈(stack)之上一个PMD(Page Middle Directory, 16MB)范围再次随机，mmap随机范围受变量
+32MB(参见函数arch_randomize_brk)，stack在1GB范围内随机，vdso在随机栈(stack)之上
+一个PMD(Page Middle Directory, 16MB)范围再次随机，mmap随机范围受变量
 /proc/sys/vm/mmap_rnd_bits控制，但会控制在2^16~2^24之间。相关代码包括
 <a href="https://elixir.free-electrons.com/linux/latest/source/arch/x86/entry/vdso/vma.c">arch/x86/vdso/vma.c</a>(function vdso_addr)、<a href="https://elixir.free-electrons.com/linux/latest/source/fs/binfmt_elf.c">fs/binfmt_elf.c</a>、<a href="https://elixir.free-electrons.com/linux/latest/source/mm/mmap.c">mm/mmap.c</a>。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3d907b1" class="outline-3">
-<h3 id="us-stack"><a id="org3d907b1"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
+<div id="outline-container-org09d9096" class="outline-3">
+<h3 id="us-stack"><a id="org09d9096"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
 <div class="outline-text-3" id="text-us-stack">
 <p>
 用户态进程栈大小通过 <code>ulimit -s</code> 查看，通过 <code>ulimit -s new_size</code> 修改。默认大小
 8192KB(8MB)。如下程序可确认此特性：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;stdio.h&gt;</span>
+<span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;string.h&gt;</span>
 
-<span class="org-preprocessor">#if</span><span class="org-negation-char"><span class="org-preprocessor">n</span></span><span class="org-preprocessor">def</span><span class="org-whitespace-space"> </span>TEST_STACK_SIZE
-<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">TEST_STACK_SIZE</span><span class="org-whitespace-space">         </span>(1024*1024)
-<span class="org-preprocessor">#endif</span>
+<span style="font-weight: bold;">#if</span><span style="font-weight: bold;">n</span><span style="font-weight: bold;">def</span> TEST_STACK_SIZE
+<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">TEST_STACK_SIZE</span>         (1024*1024)
+<span style="font-weight: bold;">#endif</span>
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">main</span>()
 {
-<span class="org-whitespace-space">        </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>[TEST_STACK_SIZE];
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"TEST_STACK_SIZE={%u</span><span class="org-whitespace-space"> </span><span class="org-string">bytes</span><span class="org-whitespace-space"> </span><span class="org-string">(%u</span><span class="org-whitespace-space"> </span><span class="org-string">KBytes)}\n"</span>,
-<span class="org-whitespace-space">               </span>(<span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span>)TEST_STACK_SIZE,
-<span class="org-whitespace-space">               </span>(<span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span>)TEST_STACK_SIZE/1024);
-<span class="org-whitespace-space">        </span>memset(s,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>TEST_STACK_SIZE);
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span style="font-weight: bold; text-decoration: underline;">char</span> <span style="font-weight: bold; font-style: italic;">s</span>[TEST_STACK_SIZE];
+        printf(<span style="font-style: italic;">"TEST_STACK_SIZE={%u bytes (%u KBytes)}\n"</span>,
+               (<span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">int</span>)TEST_STACK_SIZE,
+               (<span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">int</span>)TEST_STACK_SIZE/1024);
+        memset(s, 0, TEST_STACK_SIZE);
+        <span style="font-weight: bold;">return</span> 0;
 }
 </pre>
 </div>
@@ -344,86 +385,88 @@ lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespa
 用 <code>ulimit -s</code> 设置栈大小，添加GCC编译参数 <code>-DTEST_STACK_SIZE=&lt;size&gt;</code> 构建测试：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>ulimit<span class="org-whitespace-space"> </span>-s
+<pre class="src src-sh">~$ ulimit -s
 8192
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c
-~$<span class="org-whitespace-space"> </span>./stack
-<span class="org-variable-name">TEST_STACK_SIZE</span>={1048576<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(1024<span class="org-whitespace-space"> </span>KBytes)}
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c<span class="org-whitespace-space"> </span>-DTEST_STACK_SIZE=$((1024*1024*7))
-~$<span class="org-whitespace-space"> </span>./stack
-<span class="org-variable-name">TEST_STACK_SIZE</span>={7340032<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(7168<span class="org-whitespace-space"> </span>KBytes)}
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c<span class="org-whitespace-space"> </span>-DTEST_STACK_SIZE=$((1024*1024*8))
-~$<span class="org-whitespace-space"> </span>./stack
-Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whitespace-space"> </span>(core<span class="org-whitespace-space"> </span>dumped)
-~$<span class="org-whitespace-space"> </span>ulimit<span class="org-whitespace-space"> </span>-s<span class="org-whitespace-space"> </span>10240
-~$<span class="org-whitespace-space"> </span>ulimit<span class="org-whitespace-space"> </span>-s
+~$ gcc -o stack stack.c
+~$ ./stack
+<span style="font-weight: bold; font-style: italic;">TEST_STACK_SIZE</span>={1048576 bytes (1024 KBytes)}
+~$ gcc -o stack stack.c -DTEST_STACK_SIZE=$((1024*1024*7))
+~$ ./stack
+<span style="font-weight: bold; font-style: italic;">TEST_STACK_SIZE</span>={7340032 bytes (7168 KBytes)}
+~$ gcc -o stack stack.c -DTEST_STACK_SIZE=$((1024*1024*8))
+~$ ./stack
+Segmentation fault (core dumped)
+~$ ulimit -s 10240
+~$ ulimit -s
 10240
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c<span class="org-whitespace-space"> </span>-DTEST_STACK_SIZE=$((1024*1024*8))
-~$<span class="org-whitespace-space"> </span>./stack
-<span class="org-variable-name">TEST_STACK_SIZE</span>={8388608<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(8192<span class="org-whitespace-space"> </span>KBytes)}
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c<span class="org-whitespace-space"> </span>-DTEST_STACK_SIZE=$((1024*1024*9))
-~$<span class="org-whitespace-space"> </span>./stack
-<span class="org-variable-name">TEST_STACK_SIZE</span>={9437184<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(9216<span class="org-whitespace-space"> </span>KBytes)}
-~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>stack.c<span class="org-whitespace-space"> </span>-DTEST_STACK_SIZE=$((1024*1024*10))
-~$<span class="org-whitespace-space"> </span>./stack
-Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whitespace-space"> </span>(core<span class="org-whitespace-space"> </span>dumped)
+~$ gcc -o stack stack.c -DTEST_STACK_SIZE=$((1024*1024*8))
+~$ ./stack
+<span style="font-weight: bold; font-style: italic;">TEST_STACK_SIZE</span>={8388608 bytes (8192 KBytes)}
+~$ gcc -o stack stack.c -DTEST_STACK_SIZE=$((1024*1024*9))
+~$ ./stack
+<span style="font-weight: bold; font-style: italic;">TEST_STACK_SIZE</span>={9437184 bytes (9216 KBytes)}
+~$ gcc -o stack stack.c -DTEST_STACK_SIZE=$((1024*1024*10))
+~$ ./stack
+Segmentation fault (core dumped)
 </pre>
 </div>
 <p>
-栈上定义变量大于等于栈大小时，运行出现段错误，这是栈溢出导致的问题。程序启动、调用已经占用一部分栈空间，因此当栈上局部变量空间略小于栈大小时，也会溢出，具体数据与平台、系统、函数调用深度相关。上述测试程序，只有TEST_STACK_SIZE小于栈大小
+栈上定义变量大于等于栈大小时，运行出现段错误，这是栈溢出导致的问题。程序启动、
+调用已经占用一部分栈空间，因此当栈上局部变量空间略小于栈大小时，也会溢出，具体
+数据与平台、系统、函数调用深度相关。上述测试程序，只有TEST_STACK_SIZE小于栈大小
 10KB及以上时才能避免段错误。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org45f1e8c" class="outline-3">
-<h3 id="us-heap"><a id="org45f1e8c"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
+<div id="outline-container-orgf21a886" class="outline-3">
+<h3 id="us-heap"><a id="orgf21a886"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
 <div class="outline-text-3" id="text-us-heap">
 <ul class="org-ul">
 <li>内存泄漏、进程退出时全部回收、brk与mmap</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;malloc.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;malloc.h&gt;</span>
+<span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;stdio.h&gt;</span>
+<span style="font-weight: bold;">#include</span> <span style="font-style: italic;">&lt;string.h&gt;</span>
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
+<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">main</span>()
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">p</span>[10000];
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"Test</span><span class="org-whitespace-space"> </span><span class="org-string">memory</span><span class="org-whitespace-space"> </span><span class="org-string">usage\n"</span>);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>10000;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>p[i]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(1024*512);
-<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>p[i])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span>fprintf(stderr,<span class="org-whitespace-space"> </span><span class="org-string">"alloc</span><span class="org-whitespace-space"> </span><span class="org-string">%d</span><span class="org-whitespace-space"> </span><span class="org-string">failed\n"</span>,<span class="org-whitespace-space"> </span>i);
-<span class="org-whitespace-space">                </span>}
-<span class="org-whitespace-space">                </span>memset(p[i],<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>1024*512);
-<span class="org-whitespace-space">        </span>}
+        <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">i</span>;
+        <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">p</span>[10000];
+        printf(<span style="font-style: italic;">"Test memory usage\n"</span>);
+        <span style="font-weight: bold;">for</span> (i = 0; i &lt; 10000; ++i) {
+                p[i] = malloc(1024*512);
+                <span style="font-weight: bold;">if</span> (!p[i]) {
+                        fprintf(stderr, <span style="font-style: italic;">"alloc %d failed\n"</span>, i);
+                }
+                memset(p[i], 0, 1024*512);
+        }
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"Watch</span><span class="org-whitespace-space"> </span><span class="org-string">your</span><span class="org-whitespace-space"> </span><span class="org-string">memory</span><span class="org-whitespace-space"> </span><span class="org-string">usage,</span><span class="org-whitespace-space"> </span><span class="org-string">then</span><span class="org-whitespace-space"> </span><span class="org-string">press</span><span class="org-whitespace-space"> </span><span class="org-string">any</span><span class="org-whitespace-space"> </span><span class="org-string">key</span><span class="org-whitespace-space"> </span><span class="org-string">continue</span><span class="org-whitespace-space"> </span><span class="org-string">...\n"</span>);
-<span class="org-whitespace-space">        </span>getchar();
+        printf(<span style="font-style: italic;">"Watch your memory usage, then press any key continue ...\n"</span>);
+        getchar();
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"Do</span><span class="org-whitespace-space"> </span><span class="org-string">free</span><span class="org-whitespace-space"> </span><span class="org-string">...\n"</span>);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>10000;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>free(p[i]);
-<span class="org-whitespace-space">        </span>}
+        printf(<span style="font-style: italic;">"Do free ...\n"</span>);
+        <span style="font-weight: bold;">for</span> (i = 0; i &lt; 10000; ++i) {
+                free(p[i]);
+        }
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"Watch</span><span class="org-whitespace-space"> </span><span class="org-string">your</span><span class="org-whitespace-space"> </span><span class="org-string">memory</span><span class="org-whitespace-space"> </span><span class="org-string">usage,</span><span class="org-whitespace-space"> </span><span class="org-string">then</span><span class="org-whitespace-space"> </span><span class="org-string">press</span><span class="org-whitespace-space"> </span><span class="org-string">any</span><span class="org-whitespace-space"> </span><span class="org-string">key</span><span class="org-whitespace-space"> </span><span class="org-string">exit</span><span class="org-whitespace-space"> </span><span class="org-string">...\n"</span>);
-<span class="org-whitespace-space">        </span>getchar();
+        printf(<span style="font-style: italic;">"Watch your memory usage, then press any key exit ...\n"</span>);
+        getchar();
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span style="font-weight: bold;">return</span> 0;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7b0e835" class="outline-3">
-<h3 id="org7b0e835"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
+<div id="outline-container-orgfc4ee21" class="outline-3">
+<h3 id="orgfc4ee21"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-org66fed57" class="outline-4">
-<h4 id="org66fed57"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
+<div id="outline-container-orgfd3f8e4" class="outline-4">
+<h4 id="orgfd3f8e4"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a>
@@ -433,8 +476,8 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 
 
-<div id="outline-container-orgbff4355" class="outline-3">
-<h3 id="us-mempool"><a id="orgbff4355"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
+<div id="outline-container-org22dcc2a" class="outline-3">
+<h3 id="us-mempool"><a id="org22dcc2a"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
 <div class="outline-text-3" id="text-us-mempool">
 <ul class="org-ul">
 <li>特化实现、均衡技术、缓存对齐与性能</li>
@@ -443,52 +486,52 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-orgf7cf67a" class="outline-2">
-<h2 id="orgf7cf67a"><span class="section-number-2">3</span> 内核态内存管理</h2>
+<div id="outline-container-orgf2ce7c4" class="outline-2">
+<h2 id="orgf2ce7c4"><span class="section-number-2">3</span> 内核态内存管理</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org53d7dc7" class="outline-3">
-<h3 id="org53d7dc7"><span class="section-number-3">3.1</span> dummy</h3>
+<div id="outline-container-orgb4db2c1" class="outline-3">
+<h3 id="orgb4db2c1"><span class="section-number-3">3.1</span> dummy</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org3d6f425" class="outline-4">
-<h4 id="org3d6f425"><span class="section-number-4">3.1.1</span> brk</h4>
+<div id="outline-container-org8625380" class="outline-4">
+<h4 id="org8625380"><span class="section-number-4">3.1.1</span> brk</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 brk stands for break. means program break
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">mm/mmap.c</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-function-name">SYSCALL_DEFINE1</span>(brk,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span>,<span class="org-whitespace-space"> </span>brk)
+<pre class="src src-C"><span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">mm/mmap.c </span><span style="font-weight: bold; font-style: italic;">*/</span>
+<span style="font-weight: bold;">SYSCALL_DEFINE1</span>(brk, <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>, brk)
 {
-<span class="org-whitespace-space">    </span>...
+    ...
 }
-sched.<span class="org-constant">h</span>:<span class="org-whitespace-space"> </span><span class="org-constant">task_struct</span>:<span class="org-whitespace-space"> </span><span class="org-type">brk_randomized</span>
-<span class="org-variable-name">CONFIG_COMPAT_BRK</span>:<span class="org-whitespace-space"> </span>disable<span class="org-whitespace-space"> </span>heap<span class="org-whitespace-space"> </span>randomization
+sched.<span style="font-weight: bold; text-decoration: underline;">h</span>: <span style="font-weight: bold; text-decoration: underline;">task_struct</span>: <span style="font-weight: bold; text-decoration: underline;">brk_randomized</span>
+<span style="font-weight: bold; font-style: italic;">CONFIG_COMPAT_BRK</span>: disable heap randomization
 /proc/sys/kernel/randomize_va_space
-sysctl<span class="org-whitespace-space"> </span>-n<span class="org-whitespace-space"> </span>kernel.randomize_va_space
-Generate<span class="org-whitespace-space"> </span>two:
+sysctl -n kernel.randomize_va_space
+Generate two:
 Same:
-echo<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/proc/sys/kernel/randomize_va_space;<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/self/maps<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>cat.maps.1;<span class="org-whitespace-space"> </span><span class="org-whitespace-line">cat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/proc/self/maps</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cat.maps.2;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-type"><span class="org-whitespace-line">diff</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">cat</span></span><span class="org-whitespace-line">.maps.[12]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;/dev/null;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">echo</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">$?</span>
+echo 0 &gt; /proc/sys/kernel/randomize_va_space; cat /proc/self/maps &gt; cat.maps.1; cat /proc/self/maps &gt; cat.maps.2; <span style="font-weight: bold; text-decoration: underline;">diff</span> <span style="font-weight: bold; font-style: italic;">cat</span>.maps.[12] &gt;/dev/null; echo $?
 
 Diff:
-echo<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/proc/sys/kernel/randomize_va_space;<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/self/maps<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>cat.maps.1;<span class="org-whitespace-space"> </span><span class="org-whitespace-line">cat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/proc/self/maps</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cat.maps.2;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-type"><span class="org-whitespace-line">diff</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">cat</span></span><span class="org-whitespace-line">.maps.[12]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;/dev/null;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">echo</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">$?</span>
+echo 2 &gt; /proc/sys/kernel/randomize_va_space; cat /proc/self/maps &gt; cat.maps.1; cat /proc/self/maps &gt; cat.maps.2; <span style="font-weight: bold; text-decoration: underline;">diff</span> <span style="font-weight: bold; font-style: italic;">cat</span>.maps.[12] &gt;/dev/null; echo $?
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org04baa48" class="outline-2">
-<h2 id="org04baa48"><span class="section-number-2">4</span> 读书笔记</h2>
+<div id="outline-container-org2547047" class="outline-2">
+<h2 id="org2547047"><span class="section-number-2">4</span> 读书笔记</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org51853ad" class="outline-3">
-<h3 id="org51853ad"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
+<div id="outline-container-org8b97445" class="outline-3">
+<h3 id="org8b97445"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-orgaf00a1b" class="outline-4">
-<h4 id="orgaf00a1b"><span class="section-number-4">4.1.1</span> Chapter</h4>
+<div id="outline-container-orga580f73" class="outline-4">
+<h4 id="orga580f73"><span class="section-number-4">4.1.1</span> Chapter</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 1
@@ -496,12 +539,12 @@ echo<span class="org-whitespace-space"> </span>2<span class="org-whitespace-spac
 </div>
 </div>
 </div>
-<div id="outline-container-org62b0845" class="outline-3">
-<h3 id="org62b0845"><span class="section-number-3">4.2</span> Professional Linux Kernel Architecture CN</h3>
+<div id="outline-container-orgaea6db7" class="outline-3">
+<h3 id="orgaea6db7"><span class="section-number-3">4.2</span> Professional Linux Kernel Architecture CN</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-org4761cf9" class="outline-4">
-<h4 id="org4761cf9"><span class="section-number-4">4.2.1</span> 概述</h4>
+<div id="outline-container-org175238b" class="outline-4">
+<h4 id="org175238b"><span class="section-number-4">4.2.1</span> 概述</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 领域：

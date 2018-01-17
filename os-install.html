@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-01 Mon 21:12 -->
+<!-- 2018-01-18 Thu 02:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OS安装与基本配置</title>
@@ -96,14 +96,16 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#win">1. Windows</a>
 <ul>
-<li><a href="#org4de59ef">1.1. 安装</a></li>
+<li><a href="#org516c386">1.1. 安装</a></li>
 <li><a href="#orgad3121f">1.2. 配置</a>
 <ul>
 <li><a href="#org3dda194">1.2.1. 输入法</a></li>
 <li><a href="#org7954215">1.2.2. Shell环境</a></li>
 <li><a href="#org67574ca">1.2.3. 快捷键(热键)</a></li>
 <li><a href="#org830f572">1.2.4. 文件搜索</a></li>
-<li><a href="#orgeaf1a15">1.2.5. 其他</a></li>
+<li><a href="#orgecf5ec0">1.2.5. Win7鼠标设置自然滚动（反方向滚动）</a></li>
+<li><a href="#org8857e1a">1.2.6. C盘空间管理（使用一段时间后空间占用变大）</a></li>
+<li><a href="#orgeaf1a15">1.2.7. 其他</a></li>
 </ul>
 </li>
 </ul>
@@ -143,8 +145,8 @@ for the JavaScript code in this tag.
 <h2 id="win"><a id="org31ee92c"></a><span class="section-number-2">1</span> Windows</h2>
 <div class="outline-text-2" id="text-win">
 </div>
-<div id="outline-container-org4de59ef" class="outline-3">
-<h3 id="org4de59ef"><span class="section-number-3">1.1</span> 安装</h3>
+<div id="outline-container-org516c386" class="outline-3">
+<h3 id="org516c386"><span class="section-number-3">1.1</span> 安装</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 新的设备一般不再提供CD/DVD驱动器，而只有USB接口。<a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是
@@ -248,10 +250,58 @@ AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.htm
 </p>
 </div>
 </div>
+<div id="outline-container-orgecf5ec0" class="outline-4">
+<h4 id="orgecf5ec0"><span class="section-number-4">1.2.5</span> Win7鼠标设置自然滚动（反方向滚动）</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<ul class="org-ul">
+<li><a href="http://www.vvse.com/blog/blog/2012/02/27/reverse-scrolling-on-windows-7/">http://www.vvse.com/blog/blog/2012/02/27/reverse-scrolling-on-windows-7/</a></li>
+</ul>
+<p>
+Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
+</p>
+<ul class="org-ul">
+<li>控制面板查找鼠标（控制面板-&gt;硬件和声音-&gt;设备和打印机-&gt;鼠标）</li>
+<li>选择"硬件"页，点击需要更改的鼠标，一般是触控板</li>
+<li>查看详细信息页中的硬件ID，触控板可能是ACPI\LEN0036类似数值，鼠标是VID_*数值</li>
+<li>打开注册表编辑器，进入HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum</li>
+<li>ACPI设备不提供FlipFlopWheel项，无法配置
+<ul class="org-ul">
+<li>在ACPI\LEN0036-&gt;DeviceParameters下添加FlipFlopWheel DWORD，设置1，结果无效</li>
+<li>Thinkpad在控制面板下打开鼠标，在Thinkpad标签页选择高级-&gt;滚动，选中“切换方向”即可</li>
+</ul></li>
+<li>VID设备在HID\VID_xxxx\设备下修改DeviceParameters为1</li>
+<li>注销重新登录，或者插拔鼠标</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8857e1a" class="outline-4">
+<h4 id="org8857e1a"><span class="section-number-4">1.2.6</span> C盘空间管理（使用一段时间后空间占用变大）</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<ul class="org-ul">
+<li>Windows.ecb
+<ul class="org-ul">
+<li>文件位置 C:\ProgramData\Microsoft\Search\Data\Applications\Windows</li>
+<li>Windows搜索索引文件，用以加速搜索。此文件可以安全删除，但之后随着搜索使用</li>
+</ul></li>
+</ul>
+<p>
+再次变大。
+</p>
+<ul class="org-ul">
+<li>在“控制面板-&gt;索引选项-&gt;高级”中，可设置目标文件夹到其他分区</li>
+<li>我使用<a href="software.html#everything">everything</a>搜索，效率更高。用此方法停止此服务：</li>
+</ul>
+<p>
+开始-&gt;设置-&gt;组件服务（或开始-&gt;cmd, 运行services.msc），设置Windows Search
+启动类型为禁止，并手动停止服务。
+</p>
+</div>
+</div>
 
 <div id="outline-container-orgeaf1a15" class="outline-4">
-<h4 id="orgeaf1a15"><span class="section-number-4">1.2.5</span> 其他</h4>
-<div class="outline-text-4" id="text-1-2-5">
+<h4 id="orgeaf1a15"><span class="section-number-4">1.2.7</span> 其他</h4>
+<div class="outline-text-4" id="text-1-2-7">
 <p>
 请参考<a href="software.html">我的软件</a>。
 </p>
@@ -268,8 +318,8 @@ AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.htm
 <h3 id="linux-debian"><a id="org13c9686"></a><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-linux-debian">
 </div>
-<div id="outline-container-org516c386" class="outline-4">
-<h4 id="debian-install"><a id="org516c386"></a><span class="section-number-4">2.1.1</span> 安装</h4>
+<div id="outline-container-org32ab93e" class="outline-4">
+<h4 id="debian-install"><a id="org32ab93e"></a><span class="section-number-4">2.1.1</span> 安装</h4>
 <div class="outline-text-4" id="text-debian-install">
 <p>
 使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘，U盘引导安装。当前unetbootin支持FAT32，不支持NTFS。
@@ -302,7 +352,7 @@ GRUB图形配置和Windows图形配置在部分平台上有缺陷，会导致Win
 <div class="outline-text-4" id="text-2-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="orgae85d4f"></a>APT源(apt source)<br />
+<li><a id="org77da03a"></a>APT源(apt source)<br />
 <div class="outline-text-5" id="text-2-1-2-1">
 <p>
 打开终端，使用su升级为root用户，执行本节操作。
@@ -551,7 +601,7 @@ Debian APT有提供更多字体，使用如下方式查找安装：
 <div class="outline-text-4" id="text-2-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org77da03a"></a>APT源(apt source)<br />
+<li><a id="orgba0ac86"></a>APT源(apt source)<br />
 <div class="outline-text-5" id="text-2-1-3-1">
 <p>
 配置 <code>/etc/apt/sources.list</code>

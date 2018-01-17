@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-18 Thu 02:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>硬盘技术</title>
@@ -68,22 +68,44 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5c08447">1. 问题</a>
+<li><a href="#org1277295">1. SCSI</a></li>
+<li><a href="#orgc7489bb">2. HDD硬盘分类</a>
 <ul>
-<li><a href="#org460f8f3">1.1. 硬盘原子写问题</a></li>
+<li><a href="#org5bb4e2f">2.1. SMR(叠瓦式)硬盘</a></li>
+</ul>
+</li>
+<li><a href="#org5c08447">3. 问题</a>
+<ul>
+<li><a href="#org460f8f3">3.1. 硬盘原子写问题</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
+<div id="outline-container-org1277295" class="outline-2">
+<h2 id="org1277295"><span class="section-number-2">1</span> SCSI</h2>
+</div>
+
+<div id="outline-container-orgc7489bb" class="outline-2">
+<h2 id="orgc7489bb"><span class="section-number-2">2</span> HDD硬盘分类</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+从IBM制造第一块硬盘起，
+</p>
+</div>
+<div id="outline-container-org5bb4e2f" class="outline-3">
+<h3 id="org5bb4e2f"><span class="section-number-3">2.1</span> SMR(叠瓦式)硬盘</h3>
+</div>
+</div>
+
 <div id="outline-container-org5c08447" class="outline-2">
-<h2 id="org5c08447"><span class="section-number-2">1</span> 问题</h2>
-<div class="outline-text-2" id="text-1">
+<h2 id="org5c08447"><span class="section-number-2">3</span> 问题</h2>
+<div class="outline-text-2" id="text-3">
 </div>
 <div id="outline-container-org460f8f3" class="outline-3">
-<h3 id="org460f8f3"><span class="section-number-3">1.1</span> 硬盘原子写问题</h3>
-<div class="outline-text-3" id="text-1-1">
+<h3 id="org460f8f3"><span class="section-number-3">3.1</span> 硬盘原子写问题</h3>
+<div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>硬盘原子写单位是扇区. 在掉电瞬间, 部分厂家通过旋转盘片发电方式, 保障扇区完整写入.
 如果扇区写入不完整, 则在再次读取时, 因为校验错误, 给调用者返回介质错误.</li>

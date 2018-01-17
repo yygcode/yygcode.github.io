@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-01 Mon 22:50 -->
+<!-- 2018-01-18 Thu 02:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs笔记</title>
@@ -120,7 +120,7 @@ for the JavaScript code in this tag.
 </ul>
 </li>
 <li><a href="#orgc69cf51">5. 基本配置</a></li>
-<li><a href="#org22be940">6. Org mode</a>
+<li><a href="#org7625cd9">6. Org mode</a>
 <ul>
 <li><a href="#orgbb8ed2f">6.1. 静态页面发布</a></li>
 <li><a href="#orgca7a728">6.2. 博客</a></li>
@@ -135,6 +135,7 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#org832f570">7.1. 功能</a></li>
 <li><a href="#orgc6e5849">7.2. tools</a></li>
+<li><a href="#org4474eee">7.3. cedet</a></li>
 </ul>
 </li>
 <li><a href="#orgc842045">8. Packages</a>
@@ -165,26 +166,27 @@ for the JavaScript code in this tag.
 </li>
 <li><a href="#orgc1650d4">11. FAQ</a>
 <ul>
-<li><a href="#orgcbd846a">11.1. C-m defaults bind to RET</a></li>
-<li><a href="#org27c59e4">11.2. 安装时提示Select coding system (default utf-8):</a></li>
-<li><a href="#orgab9fe7d">11.3. mingw下gtags遇到aux.h/aux.c时报错退出</a></li>
-<li><a href="#org6268709">11.4. win下使能M-w拷贝选定字符串</a></li>
-<li><a href="#orgb7b3c5a">11.5. win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</a></li>
-<li><a href="#org59d1584">11.6. win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</a></li>
-<li><a href="#orgc00e95e">11.7. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#org82dc984">11.8. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
-<li><a href="#org5fe9ac8">11.9. 无法加载一个package, 但无法正常安装 20171114</a></li>
-<li><a href="#org653d271">11.10. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
-<li><a href="#orgcee9eff">11.11. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
-<li><a href="#orge3ce136">11.12. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
-<li><a href="#orgd517fbe">11.13. <span class="done DONE">DONE</span> Windows</a></li>
-<li><a href="#org5f66b67">11.14. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
+<li><a href="#orgdaa6021">11.1. whitespace-space, whitespace-newline, whitespace-tab face设置无效</a></li>
+<li><a href="#orgcbd846a">11.2. C-m defaults bind to RET</a></li>
+<li><a href="#org27c59e4">11.3. 安装时提示Select coding system (default utf-8):</a></li>
+<li><a href="#orgab9fe7d">11.4. mingw下gtags遇到aux.h/aux.c时报错退出</a></li>
+<li><a href="#org6268709">11.5. win下使能M-w拷贝选定字符串</a></li>
+<li><a href="#orgb7b3c5a">11.6. win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</a></li>
+<li><a href="#org59d1584">11.7. win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</a></li>
+<li><a href="#orgc00e95e">11.8. ido-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org82dc984">11.9. counsel-find-file打开文件时, 文件名是已有文件的前缀</a></li>
+<li><a href="#org5fe9ac8">11.10. 无法加载一个package, 但无法正常安装 20171114</a></li>
+<li><a href="#org653d271">11.11. EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</a></li>
+<li><a href="#orgcee9eff">11.12. Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</a></li>
+<li><a href="#orge3ce136">11.13. <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</a></li>
+<li><a href="#orgd517fbe">11.14. <span class="done DONE">DONE</span> Windows</a></li>
+<li><a href="#org5f66b67">11.15. <span class="done DONE">DONE</span> Windows下动态库加载路径设置</a></li>
 </ul>
 </li>
 <li><a href="#org6a9cf56">12. 常用快捷键</a>
 <ul>
 <li><a href="#orgcf52cfa">12.1. Global</a></li>
-<li><a href="#org7625cd9">12.2. Org mode</a>
+<li><a href="#org1b5b450">12.2. Org mode</a>
 <ul>
 <li><a href="#org942d81c">12.2.1. insert literal hot key</a></li>
 </ul>
@@ -329,7 +331,7 @@ GNU Emacs不做配置启动界面是这个样子：
 我的配置启动时是这样的：
 </p>
 
-<div id="org3bd5ad6" class="figure">
+<div id="org7f29d0c" class="figure">
 <p><img src="./img/emacs-customized.png" alt="emacs-customized.png" />
 </p>
 <p><span class="figure-number">&#22270;2&nbsp; </span>emacs配置后启动界面</p>
@@ -339,7 +341,7 @@ GNU Emacs不做配置启动界面是这个样子：
 浏览代码时是这样：
 </p>
 
-<div id="org7f29d0c" class="figure">
+<div id="org27450db" class="figure">
 <p><img src="./img/emacs-code.png" alt="emacs-code.png" />
 </p>
 <p><span class="figure-number">&#22270;3&nbsp; </span>emacs浏览代码</p>
@@ -668,8 +670,8 @@ Double click the runemacs.exe in C:\emacs\bin. If no errors occur, you have succ
 </div>
 </div>
 
-<div id="outline-container-org22be940" class="outline-2">
-<h2 id="org22be940"><span class="section-number-2">6</span> Org mode</h2>
+<div id="outline-container-org7625cd9" class="outline-2">
+<h2 id="org7625cd9"><span class="section-number-2">6</span> Org mode</h2>
 <div class="outline-text-2" id="text-6">
 </div>
 <div id="outline-container-orgbb8ed2f" class="outline-3">
@@ -743,8 +745,16 @@ Org mode每个代码块类似于程序，运行会有风险。Org在代码块求
 </ul>
 </div>
 </div>
-</div>
 
+<div id="outline-container-org4474eee" class="outline-3">
+<h3 id="org4474eee"><span class="section-number-3">7.3</span> cedet</h3>
+<div class="outline-text-3" id="text-7-3">
+<ul class="org-ul">
+<li><a href="https://www.gnu.org/software/emacs/manual/html_mono/semantic.html">https://www.gnu.org/software/emacs/manual/html_mono/semantic.html</a></li>
+</ul>
+</div>
+</div>
+</div>
 <div id="outline-container-orgc842045" class="outline-2">
 <h2 id="orgc842045"><span class="section-number-2">8</span> Packages</h2>
 <div class="outline-text-2" id="text-8">
@@ -1158,12 +1168,21 @@ strip text properties from the return value.
 <h2 id="orgc1650d4"><span class="section-number-2">11</span> FAQ</h2>
 <div class="outline-text-2" id="text-11">
 </div>
+<div id="outline-container-orgdaa6021" class="outline-3">
+<h3 id="orgdaa6021"><span class="section-number-3">11.1</span> whitespace-space, whitespace-newline, whitespace-tab face设置无效</h3>
+<div class="outline-text-3" id="text-11-1">
+<ul class="org-ul">
+<li>需要在whitespace-style设置中添加spaces, tabs, newline后，face设置才有效</li>
+</ul>
+</div>
+</div>
+
 <div id="outline-container-orgcbd846a" class="outline-3">
-<h3 id="orgcbd846a"><span class="section-number-3">11.1</span> C-m defaults bind to RET</h3>
+<h3 id="orgcbd846a"><span class="section-number-3">11.2</span> C-m defaults bind to RET</h3>
 </div>
 <div id="outline-container-org27c59e4" class="outline-3">
-<h3 id="org27c59e4"><span class="section-number-3">11.2</span> 安装时提示Select coding system (default utf-8):</h3>
-<div class="outline-text-3" id="text-11-2">
+<h3 id="org27c59e4"><span class="section-number-3">11.3</span> 安装时提示Select coding system (default utf-8):</h3>
+<div class="outline-text-3" id="text-11-3">
 <ul class="org-ul">
 <li>中文系统安装出现，目前环境的编码不能解析部分字符</li>
 <li>在配置开始init</li>
@@ -1172,8 +1191,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-orgab9fe7d" class="outline-3">
-<h3 id="orgab9fe7d"><span class="section-number-3">11.3</span> mingw下gtags遇到aux.h/aux.c时报错退出</h3>
-<div class="outline-text-3" id="text-11-3">
+<h3 id="orgab9fe7d"><span class="section-number-3">11.4</span> mingw下gtags遇到aux.h/aux.c时报错退出</h3>
+<div class="outline-text-3" id="text-11-4">
 <ul class="org-ul">
 <li>mingw下遇到aux目录，或者aux.h/aux.h，则报错：
 <ul class="org-ul">
@@ -1186,16 +1205,16 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-org6268709" class="outline-3">
-<h3 id="org6268709"><span class="section-number-3">11.4</span> win下使能M-w拷贝选定字符串</h3>
-<div class="outline-text-3" id="text-11-4">
+<h3 id="org6268709"><span class="section-number-3">11.5</span> win下使能M-w拷贝选定字符串</h3>
+<div class="outline-text-3" id="text-11-5">
 <ul class="org-ul">
 <li>注册M-w：(w32-register-hot-key [M-w])</li>
 </ul>
 </div>
 </div>
 <div id="outline-container-orgb7b3c5a" class="outline-3">
-<h3 id="orgb7b3c5a"><span class="section-number-3">11.5</span> win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</h3>
-<div class="outline-text-3" id="text-11-5">
+<h3 id="orgb7b3c5a"><span class="section-number-3">11.6</span> win7 Chinese下ggtags工作异常，提示 Error running timer ‘ggtags-highlight-tag-at-point’: (file-error "Setting current directory" "No error" "e:/t/")</h3>
+<div class="outline-text-3" id="text-11-6">
 <ul class="org-ul">
 <li>default-process-coding-system设置问题。当设置为(setq default-process-coding-system '(utf-8 . chinese-gbk)或者(setq default-process-coding-system '(utf-8-dos . chinese-gbk-dos)</li>
 </ul>
@@ -1209,8 +1228,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-org59d1584" class="outline-3">
-<h3 id="org59d1584"><span class="section-number-3">11.6</span> win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</h3>
-<div class="outline-text-3" id="text-11-6">
+<h3 id="org59d1584"><span class="section-number-3">11.7</span> win7 org-bullets三级以下目录乱码,通过C-u C-x=可以看到显示"no font"</h3>
+<div class="outline-text-3" id="text-11-7">
 <ul class="org-ul">
 <li>win10下看到显示正常, 字体为Lucida San, 拷贝字体覆盖依然无效. 显示为蓝色长方块</li>
 </ul>
@@ -1218,8 +1237,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-orgc00e95e" class="outline-3">
-<h3 id="orgc00e95e"><span class="section-number-3">11.7</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
-<div class="outline-text-3" id="text-11-7">
+<h3 id="orgc00e95e"><span class="section-number-3">11.8</span> ido-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-11-8">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-j\)立即打开文件, 对应函数\(ivy-alt-done\).</li>
 </ul>
@@ -1227,8 +1246,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-org82dc984" class="outline-3">
-<h3 id="org82dc984"><span class="section-number-3">11.8</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
-<div class="outline-text-3" id="text-11-8">
+<h3 id="org82dc984"><span class="section-number-3">11.9</span> counsel-find-file打开文件时, 文件名是已有文件的前缀</h3>
+<div class="outline-text-3" id="text-11-9">
 <ul class="org-ul">
 <li>输入文件名后, 键入\(C-M-j\)立即打开文件, 对应函数\(ivy-immediate-done\).</li>
 </ul>
@@ -1236,8 +1255,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-org5fe9ac8" class="outline-3">
-<h3 id="org5fe9ac8"><span class="section-number-3">11.9</span> 无法加载一个package, 但无法正常安装 20171114</h3>
-<div class="outline-text-3" id="text-11-9">
+<h3 id="org5fe9ac8"><span class="section-number-3">11.10</span> 无法加载一个package, 但无法正常安装 20171114</h3>
+<div class="outline-text-3" id="text-11-10">
 <ul class="org-ul">
 <li>错误码提示如下: Error (use-package): monokai-theme :init: Undefined Custom theme monokai</li>
 <li>根因: 目前还不明确根因</li>
@@ -1248,8 +1267,8 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-org653d271" class="outline-3">
-<h3 id="org653d271"><span class="section-number-3">11.10</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
-<div class="outline-text-3" id="text-11-10">
+<h3 id="org653d271"><span class="section-number-3">11.11</span> EMMS在Windows中文操作系统下无法播放中文名称多媒体 20171119</h3>
+<div class="outline-text-3" id="text-11-11">
 <ul class="org-ul">
 <li>错误提示: No next track in playlist</li>
 <li>根因: Windows中文默认编码为GBK, Emacs配置设置默认为Emacs导致</li>
@@ -1272,8 +1291,8 @@ strip text properties from the return value.
 </div>
 </div>
 <div id="outline-container-orgcee9eff" class="outline-3">
-<h3 id="orgcee9eff"><span class="section-number-3">11.11</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
-<div class="outline-text-3" id="text-11-11">
+<h3 id="orgcee9eff"><span class="section-number-3">11.12</span> Emacs退出时提示"Active process exist; kill them and exit anyway" 20171119</h3>
+<div class="outline-text-3" id="text-11-12">
 <ul class="org-ul">
 <li>根因: 默认配置打开了确认, 调整配置即可</li>
 <li>解决措施: 修改不再提示process未退出(Emacs退出时自动退出)</li>
@@ -1286,11 +1305,11 @@ strip text properties from the return value.
 </div>
 
 <div id="outline-container-orge3ce136" class="outline-3">
-<h3 id="orge3ce136"><span class="section-number-3">11.12</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
+<h3 id="orge3ce136"><span class="section-number-3">11.13</span> <span class="todo TODO">TODO</span> EMMS在Windows下无法调整音量, amixer找不到</h3>
 </div>
 <div id="outline-container-orgd517fbe" class="outline-3">
-<h3 id="orgd517fbe"><span class="section-number-3">11.13</span> <span class="done DONE">DONE</span> Windows</h3>
-<div class="outline-text-3" id="text-11-13">
+<h3 id="orgd517fbe"><span class="section-number-3">11.14</span> <span class="done DONE">DONE</span> Windows</h3>
+<div class="outline-text-3" id="text-11-14">
 <ul class="org-ul">
 <li>错误提示1:</li>
 </ul>
@@ -1332,8 +1351,8 @@ the ‘&#x2013;debug-init’ option to view a complete error backtrace.
 </div>
 
 <div id="outline-container-org5f66b67" class="outline-3">
-<h3 id="org5f66b67"><span class="section-number-3">11.14</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
-<div class="outline-text-3" id="text-11-14">
+<h3 id="org5f66b67"><span class="section-number-3">11.15</span> <span class="done DONE">DONE</span> Windows下动态库加载路径设置</h3>
+<div class="outline-text-3" id="text-11-15">
 <p>
 <del>- 部分库(比如gnutls)在启动时需要设置正确, 因此不能在配置文件中(或者最早位置可否?尝试下.)</del>
 </p>
@@ -1439,8 +1458,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-org7625cd9" class="outline-3">
-<h3 id="org7625cd9"><span class="section-number-3">12.2</span> Org mode</h3>
+<div id="outline-container-org1b5b450" class="outline-3">
+<h3 id="org1b5b450"><span class="section-number-3">12.2</span> Org mode</h3>
 <div class="outline-text-3" id="text-12-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2189,6 +2208,7 @@ along with GNU Emacs.  If not, see <a href="http://www.gnu.org/licenses/">http:/
 <dt>一年成为Emacs高手(像神一样使用编辑器)</dt><dd><a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org">https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/guide-zh.org</a></dd>
 <dt>21天掌握Emacs</dt><dd><a href="https://github.com/emacs-china/Spacemacs-rocks">https://github.com/emacs-china/Spacemacs-rocks</a><br />
 <a href="http://book.emacs-china.org/">http://book.emacs-china.org/</a></dd>
+<dt>(no term)</dt><dd>Maximize startup: <a href="http://emacsblog.org/2007/02/22/maximize-on-startup-part-2/">http://emacsblog.org/2007/02/22/maximize-on-startup-part-2/</a></dd>
 </dl>
 </div>
 </div>
