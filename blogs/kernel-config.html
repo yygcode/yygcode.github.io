@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-01-31 Wed 00:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux Kernel Config Notes</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Linux Kernel Config Notes</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org30df944">1. CONFIG_KASAN - Kernel Address Sanitizer(防毒)</a></li>
+<li><a href="#org395ac77">2. CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</a></li>
+</ul>
+</div>
+</div>
+<p>
+#+DATE <span class="timestamp-wrapper"><span class="timestamp">2018-01-27</span></span>
+</p>
+
+<p>
+本文持续更新
+</p>
+
+<div id="outline-container-org30df944" class="outline-2">
+<h2 id="org30df944"><span class="section-number-2">1</span> CONFIG_KASAN - Kernel Address Sanitizer(防毒)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+KASAN是动态内存错误检测器，为查找use-after-free(释放后使用)和out-of-bounds(越界使用)提供快速全面的方案。
+</p>
+
+<p>
+Ref: <a href="https://www.kernel.org/doc/html/v4.12/dev-tools/kasan.html">https://www.kernel.org/doc/html/v4.12/dev-tools/kasan.html</a>
+</p>
+<blockquote>
+<p>
+KernelAddressSANitizer (KASAN) is a dynamic memory error detector. It provides
+a fast and comprehensive solution for finding use-after-free and out-of-bounds
+bugs.
+</p>
+
+<p>
+KASAN uses compile-time instrumentation for checking every memory access,
+therefore you will need a GCC version 4.9.2 or later. GCC 5.0 or later is
+required for detection of out-of-bounds accesses to stack or global variables.
+</p>
+
+<p>
+Currently KASAN is supported only for the x86_64 and arm64 architectures.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org395ac77" class="outline-2">
+<h2 id="org395ac77"><span class="section-number-2">2</span> CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+打开此选项调试内存泄漏和访问溢出。
+</p>
+
+<p>
+Ref:
+</p>
+<dl class="org-dl">
+<dt>Fork Optimize</dt><dd><a href="https://lkml.org/lkml/2016/9/16/178">https://lkml.org/lkml/2016/9/16/178</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>
