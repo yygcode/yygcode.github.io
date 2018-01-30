@@ -5,26 +5,56 @@ html {
     -ms-text-size-adjust:100%;
 }
 
+body{
+    margin:0;
+    font-size:14px;
+    line-height:18px;
+    color:#272822;
+    background-color:#F8F8F2;
+    overflow-x: hidden;
+    text-align: justify;
+    margin-bottom: 3em;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+}
+
 .underline {
     text-decoration: underline;
 }
 
-.todo {
+a {
+    color:#30557c;
+    text-decoration: none;
+    border-bottom: 1px dashed red;
+    padding: 1px;
+}
+a:hover {
+    color:#395b7c;
+    background-color: grey;
+}
+
+.todo, .done, .priority {
     font-family: monospace;
     font-size: 80%;
+}
+
+.todo {
     color: red;
 }
 
 .done {
-    font-family: monospace;
-    font-size: 80%;
     color: green;
 }
 
 .priority {
-    font-family: monospace;
-    font-size: 70%;
-    color: orange;
+    color: olive;
+}
+
+.src {
+    color: #F8F8F2;
+    background: #272822;
+    font-family: "Source Code Pro";
 }
 
 .tag {
@@ -32,11 +62,13 @@ html {
     font-family: monospace;
     padding: 2px;
     font-size: 80%;
-    font-weight: normal;
+    font-weight: light;
 }
 
 .timestamp {
-    color: #bebebe;
+    color: olive;
+    font-family: monospace;
+    font-size: 80%;
 }
 
 .timestamp-kwd {
@@ -102,19 +134,8 @@ ol {
 }
 
 #preamble a:hover {
-    border-bottom: 1px dashed Orange;
-}
-
-a {
-    color:#30557c;
+    border-bottom: 1px dashed orange;
     text-decoration: none;
-    border-bottom: 1px dashed Red;
-    padding: 1px;
-}
-
-a:hover {
-    color:#395b7c;
-    background-color: grey;
 }
 
 #content {
@@ -126,15 +147,16 @@ a:hover {
 }
 
 #postamble {
-    position: bottom;
-    bottom: auto;
-    max-width: 800px;
-    margin: auto;
-    margin-top: 3em;
-    margin-bottom: 3em;
-    color: #333;
-    background-color: lightblue;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: solid 2px transparent;
+    border-bottom-color: #aaa;
     text-align: center;
+    color: #272822;
+    background-color: #999;
+    padding: 0em;
 }
 
 #postamble a{
@@ -151,7 +173,7 @@ a:hover {
 }
 
 #disqus_thread {
-    margin-top: 1em;
+    margin-top: 2em;
 }
 
 .date {
@@ -177,31 +199,9 @@ a:hover {
     margin-top: 1em;
     font-size: 100%;
 }
+
 .footpara {
     display: inline;
-}
-
-audio, canvas, video{
-    display:inline-block;
-    *display:inline;
-    *zoom:1;
-}
-
-audio:not([controls]){display:none;}
-
-sub,sup{
-    position:relative;
-    font-size:75%;
-    line-height:0;
-    vertical-align:baseline;
-}
-
-sup{
-    top:-0.5em;
-}
-
-sub{
-    bottom:-0.25em;
 }
 
 img{
@@ -212,21 +212,8 @@ img{
 }
 
 textarea {
-    overflow:auto;
-    vertical-align:top;
-}
-
-body{
-    margin:0;
-    font-size:14px;
-    line-height:18px;
-    color:#272822;
-    background-color:#F8F8F2;
-    overflow-x: hidden;
-    text-align: justify;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -webkit-hyphens: auto;
+    overflow: scroll;
+    vertical-align: top;
 }
 
 a.article-title{
@@ -237,6 +224,7 @@ a.article-title{
     font-size:30px;
     line-height:36px;
 }
+
 .row{
     margin-left:-20px;
     *zoom:1;
@@ -402,18 +390,6 @@ blockquote.pull-right p,blockquote.pull-right small{
 q:before,q:after,blockquote:before,blockquote:after{
     content:"";
 }
-address{
-    display:block;
-    margin-bottom:18px;
-    line-height:18px;
-    font-style:normal;
-}
-small{
-    font-size:100%;
-}
-cite{
-    font-style:normal;
-}
 
 code {
     background: #F8F8F2;
@@ -432,28 +408,8 @@ pre {
     padding-left: 6px;
     overflow: auto;
 }
-/* .code { */
-/*     color: #586e75; */
-/* } */
-/* .comment { */
-/*     color: #93a1a1; */
-/*     font-style: italic; */
-/* } */
-/* .symbol { */
-/*     color: #859900; */
-/* } */
-/* .string { */
-/*     color: #2aa198; */
-/* } */
-/* .paren1 { */
-/*     color: #aaaa00; */
-/* } */
-/* .paren2 { */
-/*     color: #888800; */
-/* } */
-/* .paren3 { */
-/*     color: #555500; */
-/* } */
-/* .underline { */
-/*     text-decoration: underline; */
-/* } */
+
+.comment {
+    color: #93a1a1;
+    font-style: italic;
+}

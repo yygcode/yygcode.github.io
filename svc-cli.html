@@ -1,86 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MCS Command execute results</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">MCS Command execute results</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org936bac5">1. 集群时间设置: time/zone</a></li>
-<li><a href="#org569a5cf">2. 查看和更新: lslicense &amp; chlicense</a></li>
-<li><a href="#org57a80c7">3. 显示集群属性: lssystem</a></li>
-<li><a href="#org0aad160">4. 密码维护: setpwdreset</a></li>
-<li><a href="#orgd5a8d40">5. 查看dumps</a></li>
-<li><a href="#org94ffbe8">6. 重新扫瞄发现MDisks</a></li>
-<li><a href="#org9a63e0d">7. 存储池</a></li>
+<li><a href="#org73c8062">1. 集群时间设置: time/zone</a></li>
+<li><a href="#orgeb1de5a">2. 查看和更新: lslicense &amp; chlicense</a></li>
+<li><a href="#orgc166782">3. 显示集群属性: lssystem</a></li>
+<li><a href="#org1a29d00">4. 密码维护: setpwdreset</a></li>
+<li><a href="#org5bacf47">5. 查看dumps</a></li>
+<li><a href="#orgddbb0f0">6. 重新扫瞄发现MDisks</a></li>
+<li><a href="#orga63e020">7. 存储池</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org936bac5" class="outline-2">
-<h2 id="org936bac5"><span class="section-number-2">1</span> 集群时间设置: time/zone</h2>
+<div id="outline-container-org73c8062" class="outline-2">
+<h2 id="org73c8062"><span class="section-number-2">1</span> 集群时间设置: time/zone</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>显示当前时区</li>
@@ -136,15 +84,15 @@ Mon Sep  4 16:46:37 HKT 2017
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">setsystemtime -time MMDDHHmmYYYY
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">comment: month day hour minutes year</span>
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">other: MMDDHHmmYYYY.ss(seconds)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">comment: month day hour minutes year</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">other: MMDDHHmmYYYY.ss(seconds)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org569a5cf" class="outline-2">
-<h2 id="org569a5cf"><span class="section-number-2">2</span> 查看和更新: lslicense &amp; chlicense</h2>
+<div id="outline-container-orgeb1de5a" class="outline-2">
+<h2 id="orgeb1de5a"><span class="section-number-2">2</span> 查看和更新: lslicense &amp; chlicense</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>lslicense查看当前License(许可证)设置</li>
@@ -175,14 +123,14 @@ scu_ratio_nearline 4.00
 <li>chlicense设置系统License(许可证)</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">HOW TO?</span>
+<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">HOW TO?</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org57a80c7" class="outline-2">
-<h2 id="org57a80c7"><span class="section-number-2">3</span> 显示集群属性: lssystem</h2>
+<div id="outline-container-orgc166782" class="outline-2">
+<h2 id="orgc166782"><span class="section-number-2">3</span> 显示集群属性: lssystem</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lssystem -delim :
@@ -286,8 +234,8 @@ tier_nearline_compressed_data_used:0.00MB
 </div>
 </div>
 
-<div id="outline-container-org0aad160" class="outline-2">
-<h2 id="org0aad160"><span class="section-number-2">4</span> 密码维护: setpwdreset</h2>
+<div id="outline-container-org1a29d00" class="outline-2">
+<h2 id="org1a29d00"><span class="section-number-2">4</span> 密码维护: setpwdreset</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;setpwdreset -show
@@ -297,8 +245,8 @@ Password status: [1]
 </div>
 </div>
 
-<div id="outline-container-orgd5a8d40" class="outline-2">
-<h2 id="orgd5a8d40"><span class="section-number-2">5</span> 查看dumps</h2>
+<div id="outline-container-org5bacf47" class="outline-2">
+<h2 id="org5bacf47"><span class="section-number-2">5</span> 查看dumps</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>lsdumps</li>
@@ -479,10 +427,10 @@ organization 1 -primary 111111 -reply 1@1.com -state XX -zip 11111
 5            170904085120 superuser                                        10.72.221.160  0                 mcsop chsystem -easysetup no
 6            170904085120 superuser                                        10.72.221.160  0      0          mcsop mkdnsserver -ip 10.150.1.11 -name DNS0
 7            170904085139 superuser                                        10.72.221.160  0      0          mcsop mkcloudaccountaliyunoss -name zreal -bucket new-storage-cs-shan
-ghai -accesskeyid LTAILyUd5jmlvMzf -secretaccesskey <span style="font-weight: bold; font-style: italic;">#### </span><span style="font-weight: bold; font-style: italic;">-region oss-cn-shanghai -encrypt no</span>
+ghai -accesskeyid LTAILyUd5jmlvMzf -secretaccesskey <span class="org-comment-delimiter">#### </span><span class="org-comment">-region oss-cn-shanghai -encrypt no</span>
 8            170904085258 superuser                                        10.72.221.160  0                 mcsop rmcloudaccount 0
 9            170904093334 superuser                                        10.165.21.185  0      0          mcsop mkcloudaccountswift -container jia -encrypt no -endpoint http:/
-/10.151.12.38:5000/v2.0 -gui -keystone -password <span style="font-weight: bold; font-style: italic;">#### </span><span style="font-weight: bold; font-style: italic;">-tenantname demo -username admin</span>
+/10.151.12.38:5000/v2.0 -gui -keystone -password <span class="org-comment-delimiter">#### </span><span class="org-comment">-tenantname demo -username admin</span>
 10           170904093456 superuser                                        10.165.21.185  0      0          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name
 Pool0 -warning 80%
 11           170904093504 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 0
@@ -530,8 +478,8 @@ id:name:UPS_serial_number:WWNN:status:IO_group_id:IO_group_name:config_node:UPS_
 </div>
 </div>
 
-<div id="outline-container-org94ffbe8" class="outline-2">
-<h2 id="org94ffbe8"><span class="section-number-2">6</span> 重新扫瞄发现MDisks</h2>
+<div id="outline-container-orgddbb0f0" class="outline-2">
+<h2 id="orgddbb0f0"><span class="section-number-2">6</span> 重新扫瞄发现MDisks</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>detectmdisk, lsmdiskcandidate, lsdiscoverystatus</li>
@@ -546,9 +494,12 @@ id scope     IO_group_id IO_group_name status
 </div>
 </div>
 
-<div id="outline-container-org9a63e0d" class="outline-2">
-<h2 id="org9a63e0d"><span class="section-number-2">7</span> 存储池</h2>
+<div id="outline-container-orga63e020" class="outline-2">
+<h2 id="orga63e020"><span class="section-number-2">7</span> 存储池</h2>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

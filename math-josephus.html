@@ -1,61 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>约瑟夫问题</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -80,23 +32,19 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">约瑟夫问题</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9f5950d">1. 问题描述</a></li>
-<li><a href="#orga50fb38">2. 问题分析</a>
+<li><a href="#org575c2c2">1. 问题描述</a></li>
+<li><a href="#org77c3bf6">2. 问题分析</a>
 <ul>
-<li><a href="#org523620d">2.1. \(k=2, m=1\)的情况分析</a>
+<li><a href="#orge223454">2.1. \(k=2, m=1\)的情况分析</a>
 <ul>
 <li><a href="#21-Violent-Traversal">2.1.1. 暴力遍历</a></li>
-<li><a href="#org17d482e">2.1.2. 非封闭优化解</a></li>
+<li><a href="#org4d7eb06">2.1.2. 非封闭优化解</a></li>
 </ul>
 </li>
 </ul>
@@ -105,15 +53,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org9f5950d" class="outline-2">
-<h2 id="org9f5950d"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-org575c2c2" class="outline-2">
+<h2 id="org575c2c2"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 夫拉维.约瑟夫(Flavius Josephus)是一世纪著名的历史学家. 在犹太罗马战争期间, 他们
-41名犹太反抗者被罗马人困在了洞穴中. 这些反抗者宁愿自杀也不愿被活捉, 他们决定围成
-一个圆圈, 并沿着圆圈每三个人杀死一个人, 直到没有人剩下. 但是, 约瑟夫和他的一名朋友
-不希望无谓地自杀, 于是他迅速地计算出他和朋友在这个险恶圆圈中的应该站的位置, 最后
-生存了下来.
+41名犹太反抗者被罗马人困在了洞穴中. 这些反抗者宁愿自杀也不愿被活捉, 他们决定围成一个圆圈, 并沿着圆圈每三个人杀死一个人, 直到没有人剩下. 但是, 约瑟夫和他的一名朋友不希望无谓地自杀, 于是他迅速地计算出他和朋友在这个险恶圆圈中的应该站的位置, 最后生存了下来.
 </p>
 
 <p>
@@ -123,16 +68,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orga50fb38" class="outline-2">
-<h2 id="orga50fb38"><span class="section-number-2">2</span> 问题分析</h2>
+<div id="outline-container-org77c3bf6" class="outline-2">
+<h2 id="org77c3bf6"><span class="section-number-2">2</span> 问题分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org523620d" class="outline-3">
-<h3 id="org523620d"><span class="section-number-3">2.1</span> \(k=2, m=1\)的情况分析</h3>
+<div id="outline-container-orge223454" class="outline-3">
+<h3 id="orge223454"><span class="section-number-3">2.1</span> \(k=2, m=1\)的情况分析</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org1157ff2" class="outline-4">
-<h4 id="21-Violent-Traversal"><a id="org1157ff2"></a><span class="section-number-4">2.1.1</span> 暴力遍历</h4>
+<div id="outline-container-orgfb0aa4f" class="outline-4">
+<h4 id="21-Violent-Traversal"><a id="orgfb0aa4f"></a><span class="section-number-4">2.1.1</span> 暴力遍历</h4>
 <div class="outline-text-4" id="text-21-Violent-Traversal">
 <p>
 此问题的暴力遍厉十分简单:
@@ -144,12 +89,11 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org17d482e" class="outline-4">
-<h4 id="org17d482e"><span class="section-number-4">2.1.2</span> 非封闭优化解</h4>
+<div id="outline-container-org4d7eb06" class="outline-4">
+<h4 id="org4d7eb06"><span class="section-number-4">2.1.2</span> 非封闭优化解</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
-假设开始时有\(2n\)个人, 第一轮后剩下的是\(1, 3, 5, ..., 2n-3, 2n-1\). 同时3号是
-下一个要离开的人. 对比分析\(n\)个人开始时的情况, 是每个人的号码加倍并减1:
+假设开始时有\(2n\)个人, 第一轮后剩下的是\(1, 3, 5, ..., 2n-3, 2n-1\). 同时3号是下一个要离开的人. 对比分析\(n\)个人开始时的情况, 是每个人的号码加倍并减1:
 </p>
 
 <p>
@@ -157,9 +101,7 @@ for the JavaScript code in this tag.
 </p>
 
 <p>
-再分析\(2n+1\)个人的情形, 第一轮后剩下的是\(1, 3, 5, ..., 2n-1, 2n+1\), 标号为1的
-人是下一轮第一个离开人选. 1号离去后剩余\(n\)个人\(3, 5, ..., 2n-1, 2n+1\), 离去人
-合计\(n+1\)个:
+再分析\(2n+1\)个人的情形, 第一轮后剩下的是\(1, 3, 5, ..., 2n-1, 2n+1\), 标号为1的人是下一轮第一个离开人选. 1号离去后剩余\(n\)个人\(3, 5, ..., 2n-1, 2n+1\), 离去人合计\(n+1\)个:
 </p>
 
 <p>
@@ -235,6 +177,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

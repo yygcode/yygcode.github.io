@@ -1,87 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-18 Thu 02:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs Orgmode 学习笔记</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">Emacs Orgmode 学习笔记</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga5d5d00">1. 参考资料</a></li>
+<li><a href="#org-list">1. Org特性清单</a>
+<ul>
+<li><a href="#header-options-list">1.1. OPTIONS</a></li>
+</ul>
+</li>
+<li><a href="#org135eca6">2. 参考资料</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga5d5d00" class="outline-2">
-<h2 id="orga5d5d00"><span class="section-number-2">1</span> 参考资料</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgb476bcb" class="outline-2">
+<h2 id="org-list"><a id="orgb476bcb"></a><span class="section-number-2">1</span> Org特性清单</h2>
+<div class="outline-text-2" id="text-org-list">
+</div>
+<div id="outline-container-org0e9ff3c" class="outline-3">
+<h3 id="header-options-list"><a id="org0e9ff3c"></a><span class="section-number-3">1.1</span> OPTIONS</h3>
+<div class="outline-text-3" id="text-header-options-list">
+<p>
+输入 <code>#+</code> ，按下 <code>M-TAB</code> 查看所有候选项。 <code>M-TAB</code> 一般设定为切换到其他窗口，使用 <code>Esc TAB</code> 查看：
+</p>
+<p class="verse">
+ARCHIVE:                  archive:                  AUTHOR:<br />
+author:                   BIND:                     bind:<br />
+CATEGORY:                 category:                 COLUMNS:<br />
+columns:                  CREATOR:                  creator:<br />
+DATE:                     date:                     DESCRIPTION:<br />
+description:              DRAWERS:                  drawers:<br />
+EMAIL:                    email:                    EXCLUDE_TAGS:<br />
+exclude_tags:             FILETAGS:                 filetags:<br />
+INCLUDE:                  include:                  INDEX:<br />
+index:                    KEYWORDS:                 keywords:<br />
+LANGUAGE:                 language:                 MACRO:<br />
+macro:                    OPTIONS:                  options:<br />
+PROPERTY:                 property:                 PRIORITIES:<br />
+priorities:               SELECT_TAGS:              select_tags:<br />
+SEQ_TODO:                 seq_todo:                 SETUPFILE:<br />
+setupfile:                STARTUP:                  startup:<br />
+TAGS:                     tags:                     TITLE:<br />
+title:                    TODO:                     todo:<br />
+TYP_TODO:                 typ_todo:                 SELECT_TAGS:<br />
+select_tags:              EXCLUDE_TAGS:             exclude_tags:<br />
+CAPTION:                  caption:                  DATA:<br />
+data:                     HEADER:                   header:<br />
+HEADERS:                  headers:                  LABEL:<br />
+label:                    NAME:                     name:<br />
+PLOT:                     plot:                     RESNAME:<br />
+resname:                  RESULT:                   result:<br />
+RESULTS:                  results:                  SOURCE:<br />
+source:                   SRCNAME:                  srcname:<br />
+TBLNAME:                  tblname:                  ATTR_VERSE:<br />
+attr_verse:               BEGIN_VERSE               begin_verse<br />
+END_VERSE                 end_verse                 ATTR_SRC:<br />
+attr_src:                 BEGIN_SRC                 begin_src<br />
+END_SRC                   end_src                   ATTR_QUOTE:<br />
+attr_quote:               BEGIN_QUOTE               begin_quote<br />
+END_QUOTE                 end_quote                 ATTR_EXPORT:<br />
+attr_export:              BEGIN_EXPORT              begin_export<br />
+END_EXPORT                end_export                ATTR_EXAMPLE:<br />
+attr_example:             BEGIN_EXAMPLE             begin_example<br />
+END_EXAMPLE               end_example               ATTR_COMMENT:<br />
+attr_comment:             BEGIN_COMMENT             begin_comment<br />
+END_COMMENT               end_comment               ATTR_CENTER:<br />
+attr_center:              BEGIN_CENTER              begin_center<br />
+END_CENTER                end_center                SUBTITLE:<br />
+subtitle:                 ASCII:                    ascii:<br />
+LATEX_HEADER:             latex_header:             CREATOR:<br />
+creator:                  INFOJS_OPT:               infojs_opt:<br />
+SUBTITLE:                 subtitle:                 HTML_HEAD_EXTRA:<br />
+html_head_extra:          HTML_HEAD:                html_head:<br />
+HTML_MATHJAX:             html_mathjax:             HTML_LINK_UP:<br />
+html_link_up:             HTML_LINK_HOME:           html_link_home:<br />
+KEYWORDS:                 keywords:                 DESCRIPTION:<br />
+description:              HTML_CONTAINER:           html_container:<br />
+HTML_DOCTYPE:             html_doctype:             HTML:<br />
+html:                     ICALENDAR_EXCLUDE_TAGS:   icalendar_exclude_tags:<br />
+ICALENDAR:                icalendar:                DATE:<br />
+date:                     LATEX_COMPILER:           latex_compiler:<br />
+SUBTITLE:                 subtitle:                 KEYWORDS:<br />
+keywords:                 DESCRIPTION:              description:<br />
+LATEX_HEADER_EXTRA:       latex_header_extra:       LATEX_HEADER:<br />
+latex_header:             LATEX_CLASS_OPTIONS:      latex_class_options:<br />
+LATEX_CLASS:              latex_class:              LATEX:<br />
+latex:                    LATEX_HEADER:             latex_header:<br />
+SUBTITLE:                 subtitle:                 KEYWORDS:<br />
+keywords:                 DESCRIPTION:              description:<br />
+ODT_STYLES_FILE:          odt_styles_file:          ODT:<br />
+odt:<br />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org135eca6" class="outline-2">
+<h2 id="org135eca6"><span class="section-number-2">2</span> 参考资料</h2>
+<div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li><a href="https://orgmode.org/worg/org-configs/org-customization-guide.html">https://orgmode.org/worg/org-configs/org-customization-guide.html</a></li>
 <li><a href="http://www.i3s.unice.fr/~malapert/org/tips/emacs_orgmode.html">http://www.i3s.unice.fr/~malapert/org/tips/emacs_orgmode.html</a></li>
 </ul>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

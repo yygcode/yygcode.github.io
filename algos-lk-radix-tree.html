@@ -3,131 +3,68 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>算法 - LINUX内核 - RADIX树实现分析</title>
 <meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">算法 - LINUX内核 - RADIX树实现分析</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8d8982c">1. 介绍</a></li>
-<li><a href="#org0999a8b">2. 结构体描述</a>
+<li><a href="#org945a86c">1. 介绍</a></li>
+<li><a href="#org143f8d0">2. 结构体描述</a>
 <ul>
-<li><a href="#orgee456f2">2.1. radix_tree_node</a></li>
-<li><a href="#org643f1e8">2.2. radix_tree_root</a></li>
+<li><a href="#org663a992">2.1. radix_tree_node</a></li>
+<li><a href="#orgc97584f">2.2. radix_tree_root</a></li>
 </ul>
 </li>
-<li><a href="#org19ff812">3. 插入操作</a></li>
-<li><a href="#org227cc2a">4. API</a>
+<li><a href="#org537995f">3. 插入操作</a></li>
+<li><a href="#org5a25812">4. API</a>
 <ul>
-<li><a href="#org26605e7">4.1. radix_tree_lookup</a></li>
+<li><a href="#orgbd58fc2">4.1. radix_tree_lookup</a></li>
 </ul>
 </li>
-<li><a href="#orga2b07e4">5. Data Structures</a></li>
-<li><a href="#orgc5acdda">6. Reference</a></li>
+<li><a href="#org80749b8">5. Data Structures</a></li>
+<li><a href="#orgafe3683">6. Reference</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8d8982c" class="outline-2">
-<h2 id="org8d8982c"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org945a86c" class="outline-2">
+<h2 id="org945a86c"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a href="https://en.wikipedia.org/wiki/Radix_tree">RADIX-TREE</a>，也称为Radix Trie或Compact Prefix Tree，中文翻译基数树，是一种空间
-优化的字典树，其每一个节点都是由子节点和它的父节点合并而成。其结果是，每个内部
-节点的子节点数目至少是基数数的基数r，其中r是一个正数，且为 2^{x}，其中x&ge;1。
-有别于其他的字典树，RADIX树的边可以标记为元素序列或单个元素，这使得小集合场景下
-基数树更加有效，由于对于比较长的字符串，以及有比较长前缀的字符串。
+<a href="https://en.wikipedia.org/wiki/Radix_tree">RADIX-TREE</a>，也称为Radix Trie或Compact Prefix Tree，中文翻译基数树，是一种空间优化的字典树，其每一个节点都是由子节点和它的父节点合并而成。其结果是，每个内部节点的子节点数目至少是基数数的基数r，其中r是一个正数，且为 2<sup>x</sup>，其中x&ge;1。有别于其他的字典树，RADIX树的边可以标记为元素序列或单个元素，这使得小集合场景下基数树更加有效，由于对于比较长的字符串，以及有比较长前缀的字符串。
 </p>
 
 <p>
-普通的树在对比时，总是进行完整的键值比对（比如红黑树、AVL树都是这样）。RADIX树在
-进行比对时，键值在给定节点上进行位组比对，位组中位的数量是基数树的基数r。当r=2
-时为二进制RADIX树，此时最小化稀疏度，有最大的字典深度，最大化到不可分割的键值
-位串长度。当r为2到4的整数幂时，基数树是r-进制字典树，它牺牲潜在的稀疏程度，获取
-更小的RADIX树深度。RADIX树在构造键值可表示为字符串的关联数组时非常有用。比如IP
+普通的树在对比时，总是进行完整的键值比对（比如红黑树、AVL树都是这样）。RADIX树在进行比对时，键值在给定节点上进行位组比对，位组中位的数量是基数树的基数r。当r=2
+时为二进制RADIX树，此时最小化稀疏度，有最大的字典深度，最大化到不可分割的键值位串长度。当r为2到4的整数幂时，基数树是r-进制字典树，它牺牲潜在的稀疏程度，获取更小的RADIX树深度。RADIX树在构造键值可表示为字符串的关联数组时非常有用。比如IP
 Routing领域、文本文档的倒排索引。
 </p>
 
 <p>
-RADIX树支持插入、删除、查找三种操作。插入操作添加一个新字符串，同时尝试最小化
-内存占用。删除操作从树中删除一个字符串。查找操作包括精准查找、前任查找、后继
-查找，以及相同字符串前缀所有字符串查找。这些操作的时间复杂度是O(<i>k</i>)，k是集合
-中所有字符串的最大长度，此长度用RADIX树基数r决定的位组数量决定的。
+RADIX树支持插入、删除、查找三种操作。插入操作添加一个新字符串，同时尝试最小化内存占用。删除操作从树中删除一个字符串。查找操作包括精准查找、前任查找、后继查找，以及相同字符串前缀所有字符串查找。这些操作的时间复杂度是O(<i>k</i>)，k是集合中所有字符串的最大长度，此长度用RADIX树基数r决定的位组数量决定的。
 </p>
 
 <p>
 上述所用词汇字符串只是为描述方便，实际上可以用任何给定长度的数值作为键值，比如
-Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调，RADIX树不同于
-其他树的最大特点是，它不在每个分支上比较整个键值，在进行搜索操作时，只需将键值的
-一部分与节点中存储的键值进行比较。
+Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调，RADIX树不同于其他树的最大特点是，它不在每个分支上比较整个键值，在进行搜索操作时，只需将键值的一部分与节点中存储的键值进行比较。
 </p>
 
 <p>
-在LINUX内核中，块设备/文件系统页缓存、VMALLOC内存映射、BRD(Block RamDisk，块内存
-盘)、<a href="algos-lk-idr.html">IDR</a>基于RADIX树算法实现。
+在LINUX内核中，块设备/文件系统页缓存、VMALLOC内存映射、BRD(Block RamDisk，块内存盘)、<a href="algos-lk-idr.html">IDR</a>基于RADIX树算法实现。
 </p>
 
 <p>
@@ -136,19 +73,17 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 </div>
 </div>
 
-<div id="outline-container-org0999a8b" class="outline-2">
-<h2 id="org0999a8b"><span class="section-number-2">2</span> 结构体描述</h2>
+<div id="outline-container-org143f8d0" class="outline-2">
+<h2 id="org143f8d0"><span class="section-number-2">2</span> 结构体描述</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgee456f2" class="outline-3">
-<h3 id="orgee456f2"><span class="section-number-3">2.1</span> radix_tree_node</h3>
+<div id="outline-container-org663a992" class="outline-3">
+<h3 id="org663a992"><span class="section-number-3">2.1</span> radix_tree_node</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li><code>RADIX_TREE_MAP_SHIFT</code> 定义基数r，内核通过CONFIG选项，可设置为4或6，默认为6；</li>
-<li><code>RADIX_TREE_MAP_SIZE</code> 定义为2^{RADIX_TREE_MAP_SHIFT}，等于64。该数值定义指针
-数组 <code>slot</code> 数量；</li>
-<li><code>RADIX_TREE_MAP_MASK</code> 在提取特定位时使用，C语言通常使用移位与掩码操作实现位组
-提取；</li>
+<li><code>RADIX_TREE_MAP_SIZE</code> 定义为2<sup>RADIX_TREE_MAP_SHIFT</sup>，等于64。该数值定义指针数组 <code>slot</code> 数量；</li>
+<li><code>RADIX_TREE_MAP_MASK</code> 在提取特定位时使用，C语言通常使用移位与掩码操作实现位组提取；</li>
 <li><code>RADIX_TREE_MAX_TAGS</code> 定义为3，每个节点有3个tag。比如IDR使用了1个位IDR_FREE；</li>
 <li><code>RADIX_TREE_TAG_LONGS</code> 与基数r、unsigned long型别位数目相关相关，r等于6时，32</li>
 </ul>
@@ -163,39 +98,38 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 <li>结构体定义中，offset记录自己在parent中的偏移，count表示slots已占用数，slots保存</li>
 </ul>
 <p>
-子节点地址或元素值，tags用于保存标记，每个slots元素有3个tag；其他后续函数操作中
-再分析。
+子节点地址或元素值，tags用于保存标记，每个slots元素有3个tag；其他后续函数操作中再分析。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_MAX_TAGS</span> 3
+<pre class="src src-C"><span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_MAX_TAGS</span> 3
 
-<span style="font-weight: bold;">#if</span><span style="font-weight: bold;">n</span><span style="font-weight: bold;">def</span> RADIX_TREE_MAP_SHIFT
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_MAP_SHIFT</span>    (CONFIG_BASE_SMALL ? 4 : 6)
-<span style="font-weight: bold;">#endif</span>
+<span class="org-preprocessor">#if</span><span class="org-negation-char"><span class="org-preprocessor">n</span></span><span class="org-preprocessor">def</span> RADIX_TREE_MAP_SHIFT
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_MAP_SHIFT</span>    (CONFIG_BASE_SMALL ? 4 : 6)
+<span class="org-preprocessor">#endif</span>
 
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_MAP_SIZE</span>     (1UL &lt;&lt; RADIX_TREE_MAP_SHIFT)
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_MAP_MASK</span>     (RADIX_TREE_MAP_SIZE-1)
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_MAP_SIZE</span>     (1UL &lt;&lt; RADIX_TREE_MAP_SHIFT)
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_MAP_MASK</span>     (RADIX_TREE_MAP_SIZE-1)
 
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_TAG_LONGS</span>    \
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_TAG_LONGS</span>    \
         ((RADIX_TREE_MAP_SIZE + BITS_PER_LONG - 1) / BITS_PER_LONG)
 
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_INDEX_BITS</span>  (8 <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">CHAR_BIT </span><span style="font-weight: bold; font-style: italic;">*/</span> * <span style="font-weight: bold;">sizeof</span>(<span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>))
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_MAX_PATH</span> (DIV_ROUND_UP(RADIX_TREE_INDEX_BITS, \
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_INDEX_BITS</span>  (8 <span class="org-comment-delimiter">/* </span><span class="org-comment">CHAR_BIT </span><span class="org-comment-delimiter">*/</span> * <span class="org-keyword">sizeof</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span>))
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_MAX_PATH</span> (DIV_ROUND_UP(RADIX_TREE_INDEX_BITS, \
                                           RADIX_TREE_MAP_SHIFT))
-<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span> {
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">char</span>   <span style="font-weight: bold; font-style: italic;">shift</span>;          <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Bits remaining in each slot </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">char</span>   <span style="font-weight: bold; font-style: italic;">offset</span>;         <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Slot offset in parent </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">char</span>   <span style="font-weight: bold; font-style: italic;">count</span>;          <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Total entry count </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">char</span>   <span style="font-weight: bold; font-style: italic;">exceptional</span>;    <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Exceptional entry count </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span> *<span style="font-weight: bold; font-style: italic;">parent</span>;         <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Used when ascending tree </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> *<span style="font-weight: bold; font-style: italic;">root</span>;           <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">The tree we belong to </span><span style="font-weight: bold; font-style: italic;">*/</span>
-        <span style="font-weight: bold;">union</span> {
-                <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">list_head</span> <span style="font-weight: bold; font-style: italic;">private_list</span>;  <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">For tree user </span><span style="font-weight: bold; font-style: italic;">*/</span>
-                <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">rcu_head</span> <span style="font-weight: bold; font-style: italic;">rcu_head</span>;       <span style="font-weight: bold; font-style: italic;">/* </span><span style="font-weight: bold; font-style: italic;">Used when freeing node </span><span style="font-weight: bold; font-style: italic;">*/</span>
+<span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> {
+        <span class="org-type">unsigned</span> <span class="org-type">char</span>   <span class="org-variable-name">shift</span>;          <span class="org-comment-delimiter">/* </span><span class="org-comment">Bits remaining in each slot </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-type">unsigned</span> <span class="org-type">char</span>   <span class="org-variable-name">offset</span>;         <span class="org-comment-delimiter">/* </span><span class="org-comment">Slot offset in parent </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-type">unsigned</span> <span class="org-type">char</span>   <span class="org-variable-name">count</span>;          <span class="org-comment-delimiter">/* </span><span class="org-comment">Total entry count </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-type">unsigned</span> <span class="org-type">char</span>   <span class="org-variable-name">exceptional</span>;    <span class="org-comment-delimiter">/* </span><span class="org-comment">Exceptional entry count </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> *<span class="org-variable-name">parent</span>;         <span class="org-comment-delimiter">/* </span><span class="org-comment">Used when ascending tree </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> *<span class="org-variable-name">root</span>;           <span class="org-comment-delimiter">/* </span><span class="org-comment">The tree we belong to </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">union</span> {
+                <span class="org-keyword">struct</span> <span class="org-type">list_head</span> <span class="org-variable-name">private_list</span>;  <span class="org-comment-delimiter">/* </span><span class="org-comment">For tree user </span><span class="org-comment-delimiter">*/</span>
+                <span class="org-keyword">struct</span> <span class="org-type">rcu_head</span> <span class="org-variable-name">rcu_head</span>;       <span class="org-comment-delimiter">/* </span><span class="org-comment">Used when freeing node </span><span class="org-comment-delimiter">*/</span>
         };
-        <span style="font-weight: bold; text-decoration: underline;">void</span> <span style="font-weight: bold; font-style: italic;">__rcu</span>      *slots[RADIX_TREE_MAP_SIZE];
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>   <span style="font-weight: bold; font-style: italic;">tags</span>[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
+        <span class="org-type">void</span> <span class="org-variable-name">__rcu</span>      *slots[RADIX_TREE_MAP_SIZE];
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">tags</span>[RADIX_TREE_MAX_TAGS][RADIX_TREE_TAG_LONGS];
 };
 </pre>
 </div>
@@ -203,40 +137,40 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 **
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold; font-style: italic;">/*</span>
-<span style="font-weight: bold; font-style: italic;"> * The bottom two bits of the slot determine how the remaining bits in the</span>
-<span style="font-weight: bold; font-style: italic;"> * slot are interpreted:</span>
-<span style="font-weight: bold; font-style: italic;"> *</span>
-<span style="font-weight: bold; font-style: italic;"> * 00 - data pointer</span>
-<span style="font-weight: bold; font-style: italic;"> * 01 - internal entry</span>
-<span style="font-weight: bold; font-style: italic;"> * 10 - exceptional entry</span>
-<span style="font-weight: bold; font-style: italic;"> * 11 - this bit combination is currently unused/reserved</span>
-<span style="font-weight: bold; font-style: italic;"> *</span>
-<span style="font-weight: bold; font-style: italic;"> * The internal entry may be a pointer to the next level in the tree, a</span>
-<span style="font-weight: bold; font-style: italic;"> * sibling entry, or an indicator that the entry in this slot has been moved</span>
-<span style="font-weight: bold; font-style: italic;"> * to another location in the tree and the lookup should be restarted.  While</span>
-<span style="font-weight: bold; font-style: italic;"> * NULL fits the 'data pointer' pattern, it means that there is no entry in</span>
-<span style="font-weight: bold; font-style: italic;"> * the tree for this index (no matter what level of the tree it is found at).</span>
-<span style="font-weight: bold; font-style: italic;"> * This means that you cannot store NULL in the tree as a value for the index.</span>
-<span style="font-weight: bold; font-style: italic;"> </span><span style="font-weight: bold; font-style: italic;">*/</span>
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_ENTRY_MASK</span>           3UL
-<span style="font-weight: bold;">#define</span> <span style="font-weight: bold; font-style: italic;">RADIX_TREE_INTERNAL_NODE</span>        1UL
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * The bottom two bits of the slot determine how the remaining bits in the</span>
+<span class="org-comment"> * slot are interpreted:</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * 00 - data pointer</span>
+<span class="org-comment"> * 01 - internal entry</span>
+<span class="org-comment"> * 10 - exceptional entry</span>
+<span class="org-comment"> * 11 - this bit combination is currently unused/reserved</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * The internal entry may be a pointer to the next level in the tree, a</span>
+<span class="org-comment"> * sibling entry, or an indicator that the entry in this slot has been moved</span>
+<span class="org-comment"> * to another location in the tree and the lookup should be restarted.  While</span>
+<span class="org-comment"> * NULL fits the 'data pointer' pattern, it means that there is no entry in</span>
+<span class="org-comment"> * the tree for this index (no matter what level of the tree it is found at).</span>
+<span class="org-comment"> * This means that you cannot store NULL in the tree as a value for the index.</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_ENTRY_MASK</span>           3UL
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">RADIX_TREE_INTERNAL_NODE</span>        1UL
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org643f1e8" class="outline-3">
-<h3 id="org643f1e8"><span class="section-number-3">2.2</span> radix_tree_root</h3>
+<div id="outline-container-orgc97584f" class="outline-3">
+<h3 id="orgc97584f"><span class="section-number-3">2.2</span> radix_tree_root</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向第一个节点；
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> {
-        <span style="font-weight: bold; text-decoration: underline;">gfp_t</span>                   <span style="font-weight: bold; font-style: italic;">gfp_mask</span>;
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span>  <span style="font-weight: bold; text-decoration: underline;">__rcu</span> *<span style="font-weight: bold; font-style: italic;">rnode</span>;
+<pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> {
+        <span class="org-type">gfp_t</span>                   <span class="org-variable-name">gfp_mask</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span>  <span class="org-type">__rcu</span> *<span class="org-variable-name">rnode</span>;
 };
 </pre>
 </div>
@@ -244,17 +178,17 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-org19ff812" class="outline-2">
-<h2 id="org19ff812"><span class="section-number-2">3</span> 插入操作</h2>
+<div id="outline-container-org537995f" class="outline-2">
+<h2 id="org537995f"><span class="section-number-2">3</span> 插入操作</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <code>radix_tree_insert</code> 是一个包装函数，将任务派发给 <code>__radix_tree_insert</code> 。
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold;">static</span> <span style="font-weight: bold;">inline</span> <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">radix_tree_insert</span>(<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> *<span style="font-weight: bold; font-style: italic;">root</span>,
-                        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span> <span style="font-weight: bold; font-style: italic;">index</span>, <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">entry</span>)
+<pre class="src src-C"><span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">int</span> <span class="org-function-name">radix_tree_insert</span>(<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> *<span class="org-variable-name">root</span>,
+                        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">index</span>, <span class="org-type">void</span> *<span class="org-variable-name">entry</span>)
 {
-        <span style="font-weight: bold;">return</span> __radix_tree_insert(root, index, 0, entry);
+        <span class="org-keyword">return</span> __radix_tree_insert(root, index, 0, entry);
 }
 </pre>
 </div>
@@ -263,59 +197,58 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 <code>__radix_tree_insert</code> 插入键值为index的元素item。
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-style: italic;">/**</span>
-<span style="font-style: italic;"> *      __radix_tree_insert    -    insert into a radix tree</span>
-<span style="font-style: italic;"> *      </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@root</span><span style="font-style: italic;">:          radix tree root</span>
-<span style="font-style: italic;"> *      </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@index</span><span style="font-style: italic;">:         index key</span>
-<span style="font-style: italic;"> *      </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@order</span><span style="font-style: italic;">:         key covers the 2^order indices around index</span>
-<span style="font-style: italic;"> *      </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@item</span><span style="font-style: italic;">:          item to insert</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> *      Insert an item into the radix tree at position </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@index</span><span style="font-style: italic;">.</span>
-<span style="font-style: italic;"> */</span>
-<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">__radix_tree_insert</span>(<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> *<span style="font-weight: bold; font-style: italic;">root</span>, <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span> <span style="font-weight: bold; font-style: italic;">index</span>,
-                        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; font-style: italic;">order</span>, <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">item</span>);
+<pre class="src src-C"><span class="org-doc">/**</span>
+<span class="org-doc"> *      __radix_tree_insert    -    insert into a radix tree</span>
+<span class="org-doc"> *      </span><span class="org-doc"><span class="org-constant">@root</span></span><span class="org-doc">:          radix tree root</span>
+<span class="org-doc"> *      </span><span class="org-doc"><span class="org-constant">@index</span></span><span class="org-doc">:         index key</span>
+<span class="org-doc"> *      </span><span class="org-doc"><span class="org-constant">@order</span></span><span class="org-doc">:         key covers the 2^order indices around index</span>
+<span class="org-doc"> *      </span><span class="org-doc"><span class="org-constant">@item</span></span><span class="org-doc">:          item to insert</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> *      Insert an item into the radix tree at position </span><span class="org-doc"><span class="org-constant">@index</span></span><span class="org-doc">.</span>
+<span class="org-doc"> */</span>
+<span class="org-type">int</span> <span class="org-function-name">__radix_tree_insert</span>(<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> *<span class="org-variable-name">root</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">index</span>,
+                        <span class="org-type">unsigned</span> <span class="org-variable-name">order</span>, <span class="org-type">void</span> *<span class="org-variable-name">item</span>);
 </pre>
 </div>
 
 <p>
-首先检查节点是否为内部节点。RADIX树用指针的低两位保存额外的信息。item低两位用于
-标识内部节点，或EXCEPTIONAL(用于tmpfs)。
+首先检查节点是否为内部节点。RADIX树用指针的低两位保存额外的信息。item低两位用于标识内部节点，或EXCEPTIONAL(用于tmpfs)。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">__radix_tree_insert</span>(<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> *<span style="font-weight: bold; font-style: italic;">root</span>, <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span> <span style="font-weight: bold; font-style: italic;">index</span>,
-                        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; font-style: italic;">order</span>, <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">item</span>)
+<pre class="src src-C"><span class="org-type">int</span> <span class="org-function-name">__radix_tree_insert</span>(<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> *<span class="org-variable-name">root</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">index</span>,
+                        <span class="org-type">unsigned</span> <span class="org-variable-name">order</span>, <span class="org-type">void</span> *<span class="org-variable-name">item</span>)
 {
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span> *<span style="font-weight: bold; font-style: italic;">node</span>;
-        <span style="font-weight: bold; text-decoration: underline;">void</span> <span style="font-weight: bold; font-style: italic;">__rcu</span> **slot;
-        <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">error</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> *<span class="org-variable-name">node</span>;
+        <span class="org-type">void</span> <span class="org-variable-name">__rcu</span> **slot;
+        <span class="org-type">int</span> <span class="org-variable-name">error</span>;
 
         BUG_ON(radix_tree_is_internal_node(item));
 
         error = __radix_tree_create(root, index, order, &amp;node, &amp;slot);
-        <span style="font-weight: bold;">if</span> (error)
-                <span style="font-weight: bold;">return</span> error;
+        <span class="org-keyword">if</span> (error)
+                <span class="org-keyword">return</span> error;
 
-        error = insert_entries(node, slot, item, order, <span style="font-weight: bold; text-decoration: underline;">false</span>);
-        <span style="font-weight: bold;">if</span> (error &lt; 0)
-                <span style="font-weight: bold;">return</span> error;
+        error = insert_entries(node, slot, item, order, <span class="org-constant">false</span>);
+        <span class="org-keyword">if</span> (error &lt; 0)
+                <span class="org-keyword">return</span> error;
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org227cc2a" class="outline-2">
-<h2 id="org227cc2a"><span class="section-number-2">4</span> API</h2>
+<div id="outline-container-org5a25812" class="outline-2">
+<h2 id="org5a25812"><span class="section-number-2">4</span> API</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org26605e7" class="outline-3">
-<h3 id="org26605e7"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
+<div id="outline-container-orgbd58fc2" class="outline-3">
+<h3 id="orgbd58fc2"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
 </div>
 </div>
 
-<div id="outline-container-orga2b07e4" class="outline-2">
-<h2 id="orga2b07e4"><span class="section-number-2">5</span> Data Structures</h2>
+<div id="outline-container-org80749b8" class="outline-2">
+<h2 id="org80749b8"><span class="section-number-2">5</span> Data Structures</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 **
@@ -327,8 +260,8 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-orgc5acdda" class="outline-2">
-<h2 id="orgc5acdda"><span class="section-number-2">6</span> Reference</h2>
+<div id="outline-container-orgafe3683" class="outline-2">
+<h2 id="orgafe3683"><span class="section-number-2">6</span> Reference</h2>
 <div class="outline-text-2" id="text-6">
 <dl class="org-dl">
 <dt>LWN Trees I: Radix Tree</dt><dd><a href="https://lwn.net/Articles/175432/">https://lwn.net/Articles/175432/</a></dd>
@@ -336,6 +269,9 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </dl>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

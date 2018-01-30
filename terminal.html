@@ -1,76 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-01 Mon 21:12 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Terminal Technology</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">Terminal Technology</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org792f787">1. terminfo</a></li>
-<li><a href="#org49f7cba">2. LINUX boot init</a></li>
-<li><a href="#orgb562f53">3. fb</a></li>
+<li><a href="#org9aaf8ec">1. terminfo</a></li>
+<li><a href="#org99651bf">2. LINUX boot init</a></li>
+<li><a href="#orgd3a75e9">3. fb</a></li>
 </ul>
 </div>
 </div>
@@ -90,8 +38,7 @@ shell = command line interpreter
 </p>
 
 <p>
-Linux内核给虚拟终端分配的字形(glyph)数组只有512个，因此无法显示完整的UTF字符。
-限制512的原因是这些信息保存在内核内存中。
+Linux内核给虚拟终端分配的字形(glyph)数组只有512个，因此无法显示完整的UTF字符。限制512的原因是这些信息保存在内核内存中。
 </p>
 
 <p>
@@ -102,12 +49,12 @@ vt/consolemap.c
 glyph
 </p>
 
-<div id="outline-container-org792f787" class="outline-2">
-<h2 id="org792f787"><span class="section-number-2">1</span> terminfo</h2>
+<div id="outline-container-org9aaf8ec" class="outline-2">
+<h2 id="org9aaf8ec"><span class="section-number-2">1</span> terminfo</h2>
 </div>
 
-<div id="outline-container-org49f7cba" class="outline-2">
-<h2 id="org49f7cba"><span class="section-number-2">2</span> LINUX boot init</h2>
+<div id="outline-container-org99651bf" class="outline-2">
+<h2 id="org99651bf"><span class="section-number-2">2</span> LINUX boot init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 early_serial_base: 3f8; TXR:0, LSR:5
@@ -119,9 +66,12 @@ vidport 3b4
 </div>
 
 
-<div id="outline-container-orgb562f53" class="outline-2">
-<h2 id="orgb562f53"><span class="section-number-2">3</span> fb</h2>
+<div id="outline-container-orgd3a75e9" class="outline-2">
+<h2 id="orgd3a75e9"><span class="section-number-2">3</span> fb</h2>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

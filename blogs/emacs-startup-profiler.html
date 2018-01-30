@@ -1,317 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-01-18 Thu 02:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs启动时间分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
-<!-- <link rel="stylesheet" type="text/css" href="css/htmlize.css" /> -->
-<link rel="stylesheet" type="text/css" href="../css/org-code.css" />
-<!-- <link rel="stylesheet" type="text/css" href="css/jquery-fancybox-2.1.5.css" /> -->
-<link rel="stylesheet" type="text/css" href="../css/blog-bluetopbar.css" />
-<link rel="msapplication-TitleColor" href="#0141ff">
-<!-- <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script> -->
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"> </script>
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
-<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="../js/readtheorg.js"></script>
-
-<!-- https://getbootstrap.com/ -->
-<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" -->
-<!--         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" -->
-<!--         crossorigin="anonymous"> -->
-<!-- </script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" -->
-<!--         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" -->
-<!--         crossorigin="anonymous"> -->
-<!-- </script> -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" -->
-<!--         integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" -->
-<!--         crossorigin="anonymous"> -->
-<!-- </script> -->
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<!-- <div id="preamble" class="status"> -->
-<!-- <header id="banner"> -->
-<!--   <h1><a href="/">Yanyg's Blog</a></h1> -->
-<!--   <hr /> -->
-<!--   <nav><ul> -->
-<!--     <li><a href="/contact.html">Contact</a></li> -->
-<!--     <li><a href="/blog.html">Blog</a></li> -->
-<!--     <li><a href="/teaching.html">Teaching</a></li> -->
-<!--     <li><a href="/research.html">Research</a></li> -->
-<!--     <li><a href="/">About Me</a></li> -->
-<!--   </ul></nav> -->
-<!-- </header> -->
-<!-- </div> -->
-
-<div id="preamble" class="status"><div class="header">
-  <a href="http://bastibe.de">Yanyg - SAN Software Engineer</a>
-  <div class="sitelinks">
-    <a href="archives.html">Archives</a> |
-    <a href="tags.html">TAGS</a> |
-    <a href="sources.html">Sources</a> |
-    <a href="https://github.com/yygcode">Github</a> |
-    <a href="../about.html">About Me</a>
-  </div>
-</div></div>
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
 </div>
 <div id="content">
 <h1 class="title">Emacs启动时间分析</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0a9a33f">1. 介绍</a></li>
-<li><a href="#orga98a86c">2. benchmark-init</a></li>
-<li><a href="#org0708307">3. esup</a></li>
+<li><a href="#orgf2d172d">1. 介绍</a></li>
+<li><a href="#org35b14de">2. benchmark-init</a></li>
+<li><a href="#org8712676">3. esup</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0a9a33f" class="outline-2">
-<h2 id="org0a9a33f"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgf2d172d" class="outline-2">
+<h2 id="orgf2d172d"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Emacs启动调优需要先分析时间分布。<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>和<a href="https://github.com/jschaf/esup/">esup</a>是两个优秀的候选package。
-benchmark-init有更好的分析粒度，修改配置文件时调用esup函数可即刻查看启动时间
-花费。
+benchmark-init有更好的分析粒度，修改配置文件时调用esup函数可即刻查看启动时间花费。
 </p>
 
 <p>
-我的配置]]使用init.el进行最小基本配置，org文学编程维护绝大多数配置项。init.el仅
-进行proxy、package-archives、use-package配置，其他都位于config.org中，通过
+我的配置]]使用init.el进行最小基本配置，org文学编程维护绝大多数配置项。init.el仅进行proxy、package-archives、use-package配置，其他都位于config.org中，通过
 <code>org-babel-load-file</code> 加载。我将benchmark-init和esup都在config.org起始处，忽略
 init.el本身启动时间分析。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga98a86c" class="outline-2">
-<h2 id="orga98a86c"><span class="section-number-2">2</span> benchmark-init</h2>
+<div id="outline-container-org35b14de" class="outline-2">
+<h2 id="org35b14de"><span class="section-number-2">2</span> benchmark-init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>是require和load函数的基准测试工具：
@@ -349,7 +93,7 @@ benchmark-init配置如下：
 别名。如下是一次启动部分内容截取：
 </p>
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 1: </span>benchmark-init/show-durations-tree</label><pre class="src src-text">Benchmark results
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>benchmark-init/show-durations-tree</label><pre class="src src-text">Benchmark results
 
 &#9596;&#9658;[benchmark-init/root nil 619ms]
   &#9500;&#9472;[company-dabbrev require 1ms]
@@ -374,7 +118,7 @@ benchmark-init配置如下：
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 2: </span>benchmark-init/show-durations-tabulated</label><pre class="src src-text">  Module                                                            Type      ms ^   total ms
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;2&nbsp; </span>benchmark-init/show-durations-tabulated</label><pre class="src src-text">  Module                                                            Type      ms ^   total ms
   pdf-view                                                          require      78     126
   ffap                                                              require      45      45
   semantic/loaddefs                                                 load         41      41
@@ -393,8 +137,8 @@ benchmark-init配置如下：
 </div>
 </div>
 
-<div id="outline-container-org0708307" class="outline-2">
-<h2 id="org0708307"><span class="section-number-2">3</span> esup</h2>
+<div id="outline-container-org8712676" class="outline-2">
+<h2 id="org8712676"><span class="section-number-2">3</span> esup</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <a href="https://github.com/jschaf/esup/">esup</a>对emacs启动时间进行基准分析。esup-0.6版本在emacs-26.0.90版本下有
@@ -470,8 +214,7 @@ config.el:122  0.088sec   4%
 </div>
 
 <p>
-也可调用 <code>esup</code> 分析，但只能显示config.org总时间。如果配置全部在init.el文件
-中，调用esup也可达成分析目的：
+也可调用 <code>esup</code> 分析，但只能显示config.org总时间。如果配置全部在init.el文件中，调用esup也可达成分析目的：
 </p>
 <div class="org-src-container">
 <pre class="src src-text">init.el:142  1.427sec   73%
@@ -487,19 +230,7 @@ esup默认分析 <code>user-init-file</code> 文件，执行 <code>C-u M-x esup<
 </div>
 </div>
 <div id="postamble" class="status">
-<div class="ui basic center aligned segment no-print">
-  Copyright(C) <a href="mailto:yygcode@gmail.com">yanyg gmail</a> -
-  Powered by <a href="orgmode.org" rel="nofollow">Orgmode</a>
-</div>
-
-<!-- <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation"> -->
-
-    <!--     <a href="versions.html" class="btn btn-neutral float-right" title="Versions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a> -->
-
-
-    <!--     <a href="index.html" class="btn btn-neutral" title="Welcome to Read The Docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a> -->
-
-    <!-- </div> -->
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

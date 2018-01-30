@@ -1,103 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>存储特性清单</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">存储特性清单</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgefd86aa">1. 增值服务 - 数据保护</a>
+<li><a href="#org1b1afbc">1. 增值服务 - 数据保护</a>
 <ul>
-<li><a href="#org93a917d">1.1. 快照</a>
+<li><a href="#org59a4cec">1.1. 快照</a>
 <ul>
-<li><a href="#org024a205">1.1.1. 介绍</a></li>
-<li><a href="#orgbba905a">1.1.2. 功能清单</a></li>
-<li><a href="#org8f5f259">1.1.3. 系统影响</a></li>
-<li><a href="#orga3047d8">1.1.4. 用户场景</a></li>
-<li><a href="#org88a0e77">1.1.5. 原理及实现</a></li>
+<li><a href="#org02fb54d">1.1.1. 介绍</a></li>
+<li><a href="#orgcfd7595">1.1.2. 功能清单</a></li>
+<li><a href="#org48e0122">1.1.3. 系统影响</a></li>
+<li><a href="#orgac6043e">1.1.4. 用户场景</a></li>
+<li><a href="#org6059f88">1.1.5. 原理及实现</a></li>
 </ul>
 </li>
-<li><a href="#orgad9835f">1.2. 镜像</a>
+<li><a href="#orgaf581c8">1.2. 镜像</a>
 <ul>
-<li><a href="#orgb128169">1.2.1. 介绍</a></li>
+<li><a href="#orge07dbeb">1.2.1. 介绍</a></li>
 </ul>
 </li>
-<li><a href="#org95ca103">1.3. 克隆</a></li>
-<li><a href="#orga783863">1.4. 远程复制</a></li>
-<li><a href="#orgec57ce1">1.5. 双活</a></li>
-<li><a href="#orgea081bd">1.6. 异构虚拟化</a></li>
+<li><a href="#orgb5bd788">1.3. 克隆</a></li>
+<li><a href="#orgc4d4a78">1.4. 远程复制</a></li>
+<li><a href="#org1fb3ecb">1.5. 双活</a></li>
+<li><a href="#org89a8f6e">1.6. 异构虚拟化</a></li>
 </ul>
 </li>
-<li><a href="#org2af8b15">2. 主机适配 - Target基本功能</a></li>
-<li><a href="#org519aa73">3. 主机适配 - 虚拟化应用VAAI</a></li>
-<li><a href="#org6a00fe5">4. 主机适配 - Targe</a></li>
-<li><a href="#orgb1608ec">5. 性能加速 - 缓存技术</a>
+<li><a href="#orgce2817b">2. 主机适配 - Target基本功能</a></li>
+<li><a href="#org52c1e77">3. 主机适配 - 虚拟化应用VAAI</a></li>
+<li><a href="#orge9babdc">4. 主机适配 - Targe</a></li>
+<li><a href="#org41bdf90">5. 性能加速 - 缓存技术</a>
 <ul>
-<li><a href="#orge3fec9e">5.1. 总体介绍</a></li>
-<li><a href="#org661b667">5.2. 缓存分区</a></li>
-<li><a href="#org9e15748">5.3. 缓存保护</a></li>
+<li><a href="#org631c146">5.1. 总体介绍</a></li>
+<li><a href="#orga1a1728">5.2. 缓存分区</a></li>
+<li><a href="#org32cf323">5.3. 缓存保护</a></li>
 </ul>
 </li>
 </ul>
@@ -107,22 +55,21 @@ for the JavaScript code in this tag.
 本文基于IO栈从上往下顺序, 介绍SAN存储特性.
 </p>
 
-<div id="outline-container-orgefd86aa" class="outline-2">
-<h2 id="orgefd86aa"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
+<div id="outline-container-org1b1afbc" class="outline-2">
+<h2 id="org1b1afbc"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org93a917d" class="outline-3">
-<h3 id="org93a917d"><span class="section-number-3">1.1</span> 快照</h3>
+<div id="outline-container-org59a4cec" class="outline-3">
+<h3 id="org59a4cec"><span class="section-number-3">1.1</span> 快照</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org024a205" class="outline-4">
-<h4 id="org024a205"><span class="section-number-4">1.1.1</span> 介绍</h4>
+<div id="outline-container-org02fb54d" class="outline-4">
+<h4 id="org02fb54d"><span class="section-number-4">1.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 在不中断正常业务前提下, 生成源卷某一时间点的副本. 一般在秒级时间内可生成.
 快照实现分为写时拷贝(COW, Copy On Write)和写时重定(Redirect On Write)向两种.
-在HDD介质存储系统中, 随机顺序特性严重影响读写性能, 在顺序读写场景下,写时拷贝
-有更好的读性能, 写时重定向有更好的写性能. 在SSD介质存储系统中, 为延长SSD寿命,
+在HDD介质存储系统中, 随机顺序特性严重影响读写性能, 在顺序读写场景下,写时拷贝有更好的读性能, 写时重定向有更好的写性能. 在SSD介质存储系统中, 为延长SSD寿命,
 一般都有压缩/重删/磨损均衡特性, 底层数据已经打散, 一般采用写时重定向方案.
 </p>
 
@@ -136,8 +83,8 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-orgbba905a" class="outline-4">
-<h4 id="orgbba905a"><span class="section-number-4">1.1.2</span> 功能清单</h4>
+<div id="outline-container-orgcfd7595" class="outline-4">
+<h4 id="orgcfd7595"><span class="section-number-4">1.1.2</span> 功能清单</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>创建</li>
@@ -149,62 +96,65 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-org8f5f259" class="outline-4">
-<h4 id="org8f5f259"><span class="section-number-4">1.1.3</span> 系统影响</h4>
+<div id="outline-container-org48e0122" class="outline-4">
+<h4 id="org48e0122"><span class="section-number-4">1.1.3</span> 系统影响</h4>
 </div>
 
-<div id="outline-container-orga3047d8" class="outline-4">
-<h4 id="orga3047d8"><span class="section-number-4">1.1.4</span> 用户场景</h4>
+<div id="outline-container-orgac6043e" class="outline-4">
+<h4 id="orgac6043e"><span class="section-number-4">1.1.4</span> 用户场景</h4>
 </div>
 
-<div id="outline-container-org88a0e77" class="outline-4">
-<h4 id="org88a0e77"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
+<div id="outline-container-org6059f88" class="outline-4">
+<h4 id="org6059f88"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
 </div>
 </div>
-<div id="outline-container-orgad9835f" class="outline-3">
-<h3 id="orgad9835f"><span class="section-number-3">1.2</span> 镜像</h3>
+<div id="outline-container-orgaf581c8" class="outline-3">
+<h3 id="orgaf581c8"><span class="section-number-3">1.2</span> 镜像</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgb128169" class="outline-4">
-<h4 id="orgb128169"><span class="section-number-4">1.2.1</span> 介绍</h4>
+<div id="outline-container-orge07dbeb" class="outline-4">
+<h4 id="orge07dbeb"><span class="section-number-4">1.2.1</span> 介绍</h4>
 </div>
 </div>
-<div id="outline-container-org95ca103" class="outline-3">
-<h3 id="org95ca103"><span class="section-number-3">1.3</span> 克隆</h3>
+<div id="outline-container-orgb5bd788" class="outline-3">
+<h3 id="orgb5bd788"><span class="section-number-3">1.3</span> 克隆</h3>
 </div>
-<div id="outline-container-orga783863" class="outline-3">
-<h3 id="orga783863"><span class="section-number-3">1.4</span> 远程复制</h3>
+<div id="outline-container-orgc4d4a78" class="outline-3">
+<h3 id="orgc4d4a78"><span class="section-number-3">1.4</span> 远程复制</h3>
 </div>
-<div id="outline-container-orgec57ce1" class="outline-3">
-<h3 id="orgec57ce1"><span class="section-number-3">1.5</span> 双活</h3>
+<div id="outline-container-org1fb3ecb" class="outline-3">
+<h3 id="org1fb3ecb"><span class="section-number-3">1.5</span> 双活</h3>
 </div>
-<div id="outline-container-orgea081bd" class="outline-3">
-<h3 id="orgea081bd"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
+<div id="outline-container-org89a8f6e" class="outline-3">
+<h3 id="org89a8f6e"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
 </div>
 </div>
-<div id="outline-container-org2af8b15" class="outline-2">
-<h2 id="org2af8b15"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
+<div id="outline-container-orgce2817b" class="outline-2">
+<h2 id="orgce2817b"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
 </div>
-<div id="outline-container-org519aa73" class="outline-2">
-<h2 id="org519aa73"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
+<div id="outline-container-org52c1e77" class="outline-2">
+<h2 id="org52c1e77"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
 </div>
-<div id="outline-container-org6a00fe5" class="outline-2">
-<h2 id="org6a00fe5"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
+<div id="outline-container-orge9babdc" class="outline-2">
+<h2 id="orge9babdc"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
 </div>
-<div id="outline-container-orgb1608ec" class="outline-2">
-<h2 id="orgb1608ec"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
+<div id="outline-container-org41bdf90" class="outline-2">
+<h2 id="org41bdf90"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orge3fec9e" class="outline-3">
-<h3 id="orge3fec9e"><span class="section-number-3">5.1</span> 总体介绍</h3>
+<div id="outline-container-org631c146" class="outline-3">
+<h3 id="org631c146"><span class="section-number-3">5.1</span> 总体介绍</h3>
 </div>
-<div id="outline-container-org661b667" class="outline-3">
-<h3 id="org661b667"><span class="section-number-3">5.2</span> 缓存分区</h3>
+<div id="outline-container-orga1a1728" class="outline-3">
+<h3 id="orga1a1728"><span class="section-number-3">5.2</span> 缓存分区</h3>
 </div>
-<div id="outline-container-org9e15748" class="outline-3">
-<h3 id="org9e15748"><span class="section-number-3">5.3</span> 缓存保护</h3>
+<div id="outline-container-org32cf323" class="outline-3">
+<h3 id="org32cf323"><span class="section-number-3">5.3</span> 缓存保护</h3>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

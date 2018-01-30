@@ -1,87 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">算法 - LINUX内核 - IDR实现分析</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org95ad882">1. 介绍</a></li>
-<li><a href="#org82afa12">2. 代码分析</a>
+<li><a href="#org9ccdde2">1. 介绍</a></li>
+<li><a href="#orgca48f9f">2. 代码分析</a>
 <ul>
-<li><a href="#org00c0de8">2.1. 数据结构</a></li>
-<li><a href="#org01ceca4">2.2. idr_alloc分析</a></li>
+<li><a href="#orgad56e94">2.1. 数据结构</a></li>
+<li><a href="#orgba8e5b6">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#org87ef654">3. Reference Material</a></li>
+<li><a href="#org0b797a1">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org95ad882" class="outline-2">
-<h2 id="org95ad882"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org9ccdde2" class="outline-2">
+<h2 id="org9ccdde2"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -89,82 +37,82 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org82afa12" class="outline-2">
-<h2 id="org82afa12"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-orgca48f9f" class="outline-2">
+<h2 id="orgca48f9f"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org00c0de8" class="outline-3">
-<h3 id="org00c0de8"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-orgad56e94" class="outline-3">
+<h3 id="orgad56e94"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">idr</span> {
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span>  <span style="font-weight: bold; font-style: italic;">idr_rt</span>;
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">int</span>            <span style="font-weight: bold; font-style: italic;">idr_next</span>;
+<pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span>  <span class="org-variable-name">idr_rt</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">int</span>            <span class="org-variable-name">idr_next</span>;
 };
 
-<span style="font-weight: bold; font-style: italic;">// </span><span style="font-weight: bold; font-style: italic;">from radix-tree.h</span>
-<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_root</span> {
-        <span style="font-weight: bold; text-decoration: underline;">gfp_t</span>                   <span style="font-weight: bold; font-style: italic;">gfp_mask</span>;
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span>  <span style="font-weight: bold; text-decoration: underline;">__rcu</span> *<span style="font-weight: bold; font-style: italic;">rnode</span>;
+<span class="org-comment-delimiter">// </span><span class="org-comment">from radix-tree.h</span>
+<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> {
+        <span class="org-type">gfp_t</span>                   <span class="org-variable-name">gfp_mask</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span>  <span class="org-type">__rcu</span> *<span class="org-variable-name">rnode</span>;
 };
 
-<span style="font-style: italic;">/**</span>
-<span style="font-style: italic;"> * struct radix_tree_iter - radix tree iterator state</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@index</span><span style="font-style: italic;">:      index of current slot</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@next_index</span><span style="font-style: italic;">: one beyond the last index for this chunk</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@tags</span><span style="font-style: italic;">:       bit-mask for tag-iterating</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@node</span><span style="font-style: italic;">:       node that contains current slot</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@shift</span><span style="font-style: italic;">:      shift for the node that holds our slots</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a</span>
-<span style="font-style: italic;"> * subinterval of slots contained within one radix tree leaf node.  It is</span>
-<span style="font-style: italic;"> * described by a pointer to its first slot and a struct radix_tree_iter</span>
-<span style="font-style: italic;"> * which holds the chunk's position in the tree and its size.  For tagged</span>
-<span style="font-style: italic;"> * iteration radix_tree_iter also holds the slots' bit-mask for one chosen</span>
-<span style="font-style: italic;"> * radix tree tag.</span>
-<span style="font-style: italic;"> */</span>
-<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_iter</span> {
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>   <span style="font-weight: bold; font-style: italic;">index</span>;
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>   <span style="font-weight: bold; font-style: italic;">next_index</span>;
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">long</span>   <span style="font-weight: bold; font-style: italic;">tags</span>;
-        <span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">radix_tree_node</span> *<span style="font-weight: bold; font-style: italic;">node</span>;
-<span style="font-weight: bold;">#ifdef</span> CONFIG_RADIX_TREE_MULTIORDER
-        <span style="font-weight: bold; text-decoration: underline;">unsigned</span> <span style="font-weight: bold; text-decoration: underline;">int</span>    <span style="font-weight: bold; font-style: italic;">shift</span>;
-<span style="font-weight: bold;">#endif</span>
+<span class="org-doc">/**</span>
+<span class="org-doc"> * struct radix_tree_iter - radix tree iterator state</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@index</span></span></span><span class="org-doc">:      index of current slot</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@next_index</span></span></span><span class="org-doc">: one beyond the last index for this chunk</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@tags</span></span></span><span class="org-doc">:       bit-mask for tag-iterating</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@node</span></span></span><span class="org-doc">:       node that contains current slot</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@shift</span></span></span><span class="org-doc">:      shift for the node that holds our slots</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a</span>
+<span class="org-doc"> * subinterval of slots contained within one radix tree leaf node.  It is</span>
+<span class="org-doc"> * described by a pointer to its first slot and a struct radix_tree_iter</span>
+<span class="org-doc"> * which holds the chunk's position in the tree and its size.  For tagged</span>
+<span class="org-doc"> * iteration radix_tree_iter also holds the slots' bit-mask for one chosen</span>
+<span class="org-doc"> * radix tree tag.</span>
+<span class="org-doc"> */</span>
+<span class="org-keyword">struct</span> <span class="org-type">radix_tree_iter</span> {
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">index</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">next_index</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">tags</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> *<span class="org-variable-name">node</span>;
+<span class="org-preprocessor">#ifdef</span> CONFIG_RADIX_TREE_MULTIORDER
+        <span class="org-type">unsigned</span> <span class="org-type">int</span>    <span class="org-variable-name">shift</span>;
+<span class="org-preprocessor">#endif</span>
 };
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org01ceca4" class="outline-3">
-<h3 id="org01ceca4"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-orgba8e5b6" class="outline-3">
+<h3 id="orgba8e5b6"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span style="font-style: italic;">/**</span>
-<span style="font-style: italic;"> * idr_alloc - allocate an id</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@idr</span><span style="font-style: italic;">: idr handle</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@ptr</span><span style="font-style: italic;">: pointer to be associated with the new id</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@start</span><span style="font-style: italic;">: the minimum id (inclusive)</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@end</span><span style="font-style: italic;">: the maximum id (exclusive)</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@gfp</span><span style="font-style: italic;">: memory allocation flags</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> * Allocates an unused ID in the range [start, end).  Returns -ENOSPC</span>
-<span style="font-style: italic;"> * if there are no unused IDs in that range.</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> * Note that </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@end</span><span style="font-style: italic;"> is treated as max when &lt;= 0.  This is to always allow</span>
-<span style="font-style: italic;"> * using </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@start</span><span style="font-style: italic;"> + N as </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@end</span><span style="font-style: italic;"> as long as N is inside integer range.</span>
-<span style="font-style: italic;"> *</span>
-<span style="font-style: italic;"> * Simultaneous modifications to the </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@idr</span><span style="font-style: italic;"> are not allowed and should be</span>
-<span style="font-style: italic;"> * prevented by the user, usually with a lock.  </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">idr_alloc()</span><span style="font-style: italic;"> may be called</span>
-<span style="font-style: italic;"> * concurrently with read-only accesses to the </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">@idr</span><span style="font-style: italic;">, such as </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">idr_find()</span><span style="font-style: italic;"> and</span>
-<span style="font-style: italic;"> * </span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">idr_for_each_entry()</span><span style="font-style: italic;">.</span>
-<span style="font-style: italic;"> */</span>
-<span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold;">idr_alloc</span>(<span style="font-weight: bold;">struct</span> <span style="font-weight: bold; text-decoration: underline;">idr</span> *<span style="font-weight: bold; font-style: italic;">idr</span>, <span style="font-weight: bold; text-decoration: underline;">void</span> *<span style="font-weight: bold; font-style: italic;">ptr</span>, <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">start</span>, <span style="font-weight: bold; text-decoration: underline;">int</span> <span style="font-weight: bold; font-style: italic;">end</span>, <span style="font-weight: bold; text-decoration: underline;">gfp_t</span> <span style="font-weight: bold; font-style: italic;">gfp</span>);
+<pre class="src src-C"><span class="org-doc">/**</span>
+<span class="org-doc"> * idr_alloc - allocate an id</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@idr</span></span></span><span class="org-doc">: idr handle</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@ptr</span></span></span><span class="org-doc">: pointer to be associated with the new id</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@start</span></span></span><span class="org-doc">: the minimum id (inclusive)</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@end</span></span></span><span class="org-doc">: the maximum id (exclusive)</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@gfp</span></span></span><span class="org-doc">: memory allocation flags</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Allocates an unused ID in the range [start, end).  Returns -ENOSPC</span>
+<span class="org-doc"> * if there are no unused IDs in that range.</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Note that </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> is treated as max when &lt;= 0.  This is to always allow</span>
+<span class="org-doc"> * using </span><span class="org-doc"><span class="org-constant">@start</span></span><span class="org-doc"> + N as </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> as long as N is inside integer range.</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Simultaneous modifications to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc"> are not allowed and should be</span>
+<span class="org-doc"> * prevented by the user, usually with a lock.  </span><span class="org-doc"><span class="org-constant">idr_alloc()</span></span><span class="org-doc"> may be called</span>
+<span class="org-doc"> * concurrently with read-only accesses to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc">, such as </span><span class="org-doc"><span class="org-constant">idr_find()</span></span><span class="org-doc"> and</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant">idr_for_each_entry()</span></span><span class="org-doc">.</span>
+<span class="org-doc"> */</span>
+<span class="org-type">int</span> <span class="org-function-name">idr_alloc</span>(<span class="org-keyword">struct</span> <span class="org-type">idr</span> *<span class="org-variable-name">idr</span>, <span class="org-type">void</span> *<span class="org-variable-name">ptr</span>, <span class="org-type">int</span> <span class="org-variable-name">start</span>, <span class="org-type">int</span> <span class="org-variable-name">end</span>, <span class="org-type">gfp_t</span> <span class="org-variable-name">gfp</span>);
 </pre>
 </div>
 </div>
@@ -172,8 +120,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org87ef654" class="outline-2">
-<h2 id="org87ef654"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org0b797a1" class="outline-2">
+<h2 id="org0b797a1"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
@@ -181,6 +129,9 @@ for the JavaScript code in this tag.
 </dl>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>

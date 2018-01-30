@@ -1,117 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-23 Sat 09:42 -->
+<!-- 2018-01-31 Wed 00:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Disk Testing Data</title>
 <meta name="generator" content="Org mode" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">Disk Testing Data</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org91e12c9">1. Test tools</a>
+<li><a href="#org87b7f63">1. Test tools</a>
 <ul>
-<li><a href="#org3a03d18">1.1. dd</a></li>
-<li><a href="#org654dcd5">1.2. fio</a></li>
-<li><a href="#org59d6d5e">1.3. iometer</a></li>
+<li><a href="#org83e1ae0">1.1. dd</a></li>
+<li><a href="#orgae0bc77">1.2. fio</a></li>
+<li><a href="#org03eb3a8">1.3. iometer</a></li>
 </ul>
 </li>
-<li><a href="#org57c3e01">2. Basic Rules</a></li>
-<li><a href="#org9610156">3. SATA HDD</a>
+<li><a href="#org96a1e82">2. Basic Rules</a></li>
+<li><a href="#orgff6862f">3. SATA HDD</a>
 <ul>
-<li><a href="#org8a80535">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
+<li><a href="#orgf9e17bd">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
 <ul>
-<li><a href="#orgf4897c6">3.1.1. Disk infomation</a></li>
-<li><a href="#org9128db0">3.1.2. dd test</a></li>
-<li><a href="#orgbf6afb9">3.1.3. FIO</a></li>
+<li><a href="#org9ce82c6">3.1.1. Disk infomation</a></li>
+<li><a href="#orgb525cc4">3.1.2. dd test</a></li>
+<li><a href="#org3fc629b">3.1.3. FIO</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org521eccf">4. SAS HDD</a></li>
-<li><a href="#org2faa346">5. SATA SSD</a></li>
-<li><a href="#org8d7d055">6. SAS SSD</a></li>
-<li><a href="#orgcd398b8">7. NVMe SSD</a></li>
+<li><a href="#org8e16875">4. SAS HDD</a></li>
+<li><a href="#orgfc7af1c">5. SATA SSD</a></li>
+<li><a href="#org3af54b7">6. SAS SSD</a></li>
+<li><a href="#org1f0c76b">7. NVMe SSD</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org91e12c9" class="outline-2">
-<h2 id="org91e12c9"><span class="section-number-2">1</span> Test tools</h2>
+<div id="outline-container-org87b7f63" class="outline-2">
+<h2 id="org87b7f63"><span class="section-number-2">1</span> Test tools</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org3a03d18" class="outline-3">
-<h3 id="org3a03d18"><span class="section-number-3">1.1</span> dd</h3>
+<div id="outline-container-org83e1ae0" class="outline-3">
+<h3 id="org83e1ae0"><span class="section-number-3">1.1</span> dd</h3>
 </div>
-<div id="outline-container-org654dcd5" class="outline-3">
-<h3 id="org654dcd5"><span class="section-number-3">1.2</span> fio</h3>
+<div id="outline-container-orgae0bc77" class="outline-3">
+<h3 id="orgae0bc77"><span class="section-number-3">1.2</span> fio</h3>
 </div>
-<div id="outline-container-org59d6d5e" class="outline-3">
-<h3 id="org59d6d5e"><span class="section-number-3">1.3</span> iometer</h3>
+<div id="outline-container-org03eb3a8" class="outline-3">
+<h3 id="org03eb3a8"><span class="section-number-3">1.3</span> iometer</h3>
 </div>
 </div>
 
-<div id="outline-container-org57c3e01" class="outline-2">
-<h2 id="org57c3e01"><span class="section-number-2">2</span> Basic Rules</h2>
+<div id="outline-container-org96a1e82" class="outline-2">
+<h2 id="org96a1e82"><span class="section-number-2">2</span> Basic Rules</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 访问硬盘时, LBA数值越小(靠近外圈), 块越大, 顺序特征越好, 读写性能越好.
@@ -119,16 +67,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org9610156" class="outline-2">
-<h2 id="org9610156"><span class="section-number-2">3</span> SATA HDD</h2>
+<div id="outline-container-orgff6862f" class="outline-2">
+<h2 id="orgff6862f"><span class="section-number-2">3</span> SATA HDD</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org8a80535" class="outline-3">
-<h3 id="org8a80535"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
+<div id="outline-container-orgf9e17bd" class="outline-3">
+<h3 id="orgf9e17bd"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orgf4897c6" class="outline-4">
-<h4 id="orgf4897c6"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
+<div id="outline-container-org9ce82c6" class="outline-4">
+<h4 id="org9ce82c6"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-conf">Model Family:     HGST Travelstar 7K1000
@@ -150,40 +98,40 @@ SMART support is: Enabled
 </div>
 </div>
 </div>
-<div id="outline-container-org9128db0" class="outline-4">
-<h4 id="org9128db0"><span class="section-number-4">3.1.2</span> dd test</h4>
+<div id="outline-container-orgb525cc4" class="outline-4">
+<h4 id="orgb525cc4"><span class="section-number-4">3.1.2</span> dd test</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 简单查看结果可知, 64K性能是512B性能的15倍.
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">bs=512 offset 0</span>
-~$ sudo dd <span style="font-weight: bold; font-style: italic;">if</span>=/dev/sdb <span style="font-weight: bold; font-style: italic;">of</span>=/dev/null <span style="font-weight: bold; font-style: italic;">bs</span>=512 <span style="font-weight: bold; font-style: italic;">count</span>=100K <span style="font-weight: bold; font-style: italic;">iflag</span>=direct
-102400+0 records<span style="font-weight: bold;"> in</span>
+<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">bs=512 offset 0</span>
+~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=512 <span class="org-variable-name">count</span>=100K <span class="org-variable-name">iflag</span>=direct
+102400+0 records<span class="org-keyword"> in</span>
 102400+0 records out
 52428800 bytes (52 MB) copied, 6.28613 s, 8.3 MB/s
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">bs=512 offset 500GB</span>
-~$ sudo dd <span style="font-weight: bold; font-style: italic;">if</span>=/dev/sdb <span style="font-weight: bold; font-style: italic;">of</span>=/dev/null <span style="font-weight: bold; font-style: italic;">bs</span>=512 <span style="font-weight: bold; font-style: italic;">count</span>=100K <span style="font-weight: bold; font-style: italic;">skip</span>=1G <span style="font-weight: bold; font-style: italic;">iflag</span>=direct
-102400+0 records<span style="font-weight: bold;"> in</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">bs=512 offset 500GB</span>
+~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=512 <span class="org-variable-name">count</span>=100K <span class="org-variable-name">skip</span>=1G <span class="org-variable-name">iflag</span>=direct
+102400+0 records<span class="org-keyword"> in</span>
 102400+0 records out
 52428800 bytes (52 MB) copied, 6.80958 s, 7.7 MB/s
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">bs=64K offset 0</span>
-~$ sudo dd <span style="font-weight: bold; font-style: italic;">if</span>=/dev/sdb <span style="font-weight: bold; font-style: italic;">of</span>=/dev/null <span style="font-weight: bold; font-style: italic;">bs</span>=64K <span style="font-weight: bold; font-style: italic;">count</span>=10K <span style="font-weight: bold; font-style: italic;">iflag</span>=direct
-10240+0 records<span style="font-weight: bold;"> in</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 0</span>
+~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">iflag</span>=direct
+10240+0 records<span class="org-keyword"> in</span>
 10240+0 records out
 671088640 bytes (671 MB) copied, 5.20339 s, 129 MB/s
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">bs=64K offset 500GB</span>
-~$ sudo dd <span style="font-weight: bold; font-style: italic;">if</span>=/dev/sdb <span style="font-weight: bold; font-style: italic;">of</span>=/dev/null <span style="font-weight: bold; font-style: italic;">bs</span>=64K <span style="font-weight: bold; font-style: italic;">count</span>=10K <span style="font-weight: bold; font-style: italic;">skip</span>=8M <span style="font-weight: bold; font-style: italic;">iflag</span>=direct
-10240+0 records<span style="font-weight: bold;"> in</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 500GB</span>
+~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">skip</span>=8M <span class="org-variable-name">iflag</span>=direct
+10240+0 records<span class="org-keyword"> in</span>
 10240+0 records out
 671088640 bytes (671 MB) copied, 6.36875 s, 105 MB/s
 
-<span style="font-weight: bold; font-style: italic;"># </span><span style="font-weight: bold; font-style: italic;">bs=64K offset 896GB</span>
-~$ sudo dd <span style="font-weight: bold; font-style: italic;">if</span>=/dev/sdb <span style="font-weight: bold; font-style: italic;">of</span>=/dev/null <span style="font-weight: bold; font-style: italic;">bs</span>=64K <span style="font-weight: bold; font-style: italic;">count</span>=10K <span style="font-weight: bold; font-style: italic;">skip</span>=14M <span style="font-weight: bold; font-style: italic;">iflag</span>=direct
-10240+0 records<span style="font-weight: bold;"> in</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 896GB</span>
+~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">skip</span>=14M <span class="org-variable-name">iflag</span>=direct
+10240+0 records<span class="org-keyword"> in</span>
 10240+0 records out
 671088640 bytes (671 MB) copied, 9.24369 s, 72.6 MB/s
 </pre>
@@ -191,27 +139,30 @@ SMART support is: Enabled
 </div>
 </div>
 
-<div id="outline-container-orgbf6afb9" class="outline-4">
-<h4 id="orgbf6afb9"><span class="section-number-4">3.1.3</span> FIO</h4>
+<div id="outline-container-org3fc629b" class="outline-4">
+<h4 id="org3fc629b"><span class="section-number-4">3.1.3</span> FIO</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org521eccf" class="outline-2">
-<h2 id="org521eccf"><span class="section-number-2">4</span> SAS HDD</h2>
+<div id="outline-container-org8e16875" class="outline-2">
+<h2 id="org8e16875"><span class="section-number-2">4</span> SAS HDD</h2>
 </div>
 
-<div id="outline-container-org2faa346" class="outline-2">
-<h2 id="org2faa346"><span class="section-number-2">5</span> SATA SSD</h2>
+<div id="outline-container-orgfc7af1c" class="outline-2">
+<h2 id="orgfc7af1c"><span class="section-number-2">5</span> SATA SSD</h2>
 </div>
 
-<div id="outline-container-org8d7d055" class="outline-2">
-<h2 id="org8d7d055"><span class="section-number-2">6</span> SAS SSD</h2>
+<div id="outline-container-org3af54b7" class="outline-2">
+<h2 id="org3af54b7"><span class="section-number-2">6</span> SAS SSD</h2>
 </div>
 
-<div id="outline-container-orgcd398b8" class="outline-2">
-<h2 id="orgcd398b8"><span class="section-number-2">7</span> NVMe SSD</h2>
+<div id="outline-container-org1f0c76b" class="outline-2">
+<h2 id="org1f0c76b"><span class="section-number-2">7</span> NVMe SSD</h2>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>
