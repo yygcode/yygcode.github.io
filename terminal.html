@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-01-31 Wed 18:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Terminal Technology</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">Terminal Technology</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc119744">1. terminfo</a></li>
+<li><a href="#org1fe4140">2. LINUX boot init</a></li>
+<li><a href="#org25ffdc1">3. fb</a></li>
+</ul>
+</div>
+</div>
+<p>
+tty, console, virtual console, terminal emulator. Linus 1991 implemented.
+Two main implementations: framebuffer and text mode.
+</p>
+
+<p>
+terminal = tty = text input/output environment
+console = physical terminal
+shell = command line interpreter
+</p>
+
+<p>
+本文从终端配置、原理、畅想三个方面介绍终端
+</p>
+
+<p>
+Linux内核给虚拟终端分配的字形(glyph)数组只有512个，因此无法显示完整的UTF字符。限制512的原因是这些信息保存在内核内存中。
+</p>
+
+<p>
+vt/consolemap.c
+</p>
+
+<p>
+glyph
+</p>
+
+<div id="outline-container-orgc119744" class="outline-2">
+<h2 id="orgc119744"><span class="section-number-2">1</span> terminfo</h2>
+</div>
+
+<div id="outline-container-org1fe4140" class="outline-2">
+<h2 id="org1fe4140"><span class="section-number-2">2</span> LINUX boot init</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+early_serial_base: 3f8; TXR:0, LSR:5
+boot/commpressed/misc.c: __putstr() BIOS call initialized video mem and
+erarly_serial_base
+vidport 3b4
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org25ffdc1" class="outline-2">
+<h2 id="org25ffdc1"><span class="section-number-2">3</span> fb</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>

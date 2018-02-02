@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-01-31 Wed 18:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>GCC使用手记</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">GCC使用手记</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8349d6c">1. Attributes</a>
+<ul>
+<li><a href="#org9f80a7d">1.1. 别名/alias</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8349d6c" class="outline-2">
+<h2 id="org8349d6c"><span class="section-number-2">1</span> Attributes</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org9f80a7d" class="outline-3">
+<h3 id="org9f80a7d"><span class="section-number-3">1.1</span> 别名/alias</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+GCC手册<a href="https://gcc.gnu.org/onlinedocs/gcc-7.2.0/gcc/Common-Function-Attributes.html#Common-Function-Attributes">Common Function Attribute</a>介绍，该特性导入一个符号的别名。如下示例：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">__f</span>()
+{
+        printf(<span class="org-string">"I am __f()\n"</span>);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">f</span>() <span class="org-keyword">__attribute__</span> ((alias (<span class="org-string">"__f"</span>)));
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[])
+{
+        f();
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+定义函数 <code>__f()</code> ，并定义别名 <code>f()</code> 。另一种相关特性是 <code>weak</code> 属性，与别名组合定义弱别名，该符号可以被同名符号替代，主要用于可被用户代码替换的库函数。弱符号和强符号不能定义在同一个源代码文件中，否则会报重复定义错误。示例：保存如下代码分别为a.c和b.c，并编译： <code>gcc -o test-weak a.c b.c</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">save as a.c </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-keyword">extern</span> <span class="org-type">void</span> (<span class="org-function-name">f</span>)();
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[])
+{
+        f();
+        <span class="org-keyword">return</span> 0;
+}
+
+<span class="org-type">void</span> <span class="org-function-name">f</span>()
+{
+        printf(<span class="org-string">"another function definition f()\n"</span>);
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">save follow as b.c </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">__f</span>()
+{
+        printf(<span class="org-string">"I am __f()\n"</span>);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">f</span>() <span class="org-keyword">__attribute__</span> ((weak, alias (<span class="org-string">"__f"</span>)));
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>
