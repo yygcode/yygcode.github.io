@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-01-31 Wed 19:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>LINUX内核进程创建分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LINUX内核进程创建分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org449f7c9">1. 函数跟踪</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org449f7c9" class="outline-2">
+<h2 id="org449f7c9"><span class="section-number-2">1</span> 函数跟踪</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+几乎所有的工作都由 <code>copy_process</code> 完成。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C">kernel/fork.c:
+
+SYSCALL_DEFINE0(fork)
+{
+        <span class="org-keyword">return</span> _do_fork(SIGCHLD, 0, 0, <span class="org-constant">NULL</span>, <span class="org-constant">NULL</span>, 0);
+}
+<span class="org-function-name">SYSCALL_DEFINE0</span>(vfork)
+{
+        <span class="org-keyword">return</span> _do_fork(CLONE_VFORK | CLONE_VM | SIGCHLD, 0,
+                        0, <span class="org-constant">NULL</span>, <span class="org-constant">NULL</span>, 0);
+}
+<span class="org-function-name">SYSCALL_DEFINE5</span>(clone, <span class="org-type">unsigned</span> <span class="org-type">long</span>, clone_flags, <span class="org-type">unsigned</span> <span class="org-type">long</span>, newsp,
+                 <span class="org-type">int</span> <span class="org-variable-name">__user</span> *, parent_tidptr,
+                 <span class="org-type">int</span> <span class="org-variable-name">__user</span> *, child_tidptr,
+                 <span class="org-type">unsigned</span> <span class="org-type">long</span>, tls)
+{
+        <span class="org-keyword">return</span> _do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr, tls);
+}
+
+clone/fork
+&#9492;&#9472; do_fork
+    &#9500; copy_process
+    &#9500; dd_latent_entropy(<span class="org-type">void</span>) <span class="org-comment-delimiter">// </span><span class="org-comment">Randomize Entrypy</span>
+    &#9500; init_completion depends on flags
+    &#9500; wake_up_new_task(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>)
+    &#9492; wait_for_vfork_done
+
+copy_process
+&#9500;&#9472; flags check
+&#9500;&#9472; dup_task_struct(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">orig</span>, <span class="org-type">int</span> <span class="org-variable-name">node</span>)
+&#9474;   &#9500;&#9472; alloc_thread_stack_node(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">tsk</span>, <span class="org-type">int</span> <span class="org-variable-name">node</span>)
+&#9474;   &#9500;&#9472; setup_thread_stack(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>, <span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">org</span>)
+&#9474;   &#9500;&#9472; clear_user_return_notifier(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>)
+&#9474;   &#9500;&#9472; clear_tsk_need_resched(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">tsk</span>)
+&#9474;   &#9500;&#9472; setup_thread_stack(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>, <span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">org</span>)
+&#9474;   &#9474;  <span class="org-comment-delimiter">// </span><span class="org-comment">Notes: set stack end to 0x57AC6E9D for overflow detection</span>
+&#9474;   &#9500;&#9472; tsk-&gt;stack_canary = get_random_canary(); <span class="org-comment-delimiter">// </span><span class="org-comment">randomize 0-255 bytes</span>
+&#9474;   &#9500;&#9472; account_kernel_stack(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">tsk</span>, <span class="org-type">int</span> <span class="org-variable-name">account</span>)
+&#9474;   &#9474;  <span class="org-comment-delimiter">// </span><span class="org-comment">Notes: Update page statistics</span>
+&#9474;   &#9492;&#9472; kcov_task_init(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">t</span>) <span class="org-comment-delimiter">// </span><span class="org-comment">coverage</span>
+&#9500;&#9472; ftrace_graph_init_task(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">t</span>) <span class="org-comment-delimiter">// </span><span class="org-comment">Function Tracer</span>
+&#9500;&#9472; rt_mutex_init_task(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>)
+&#9500;&#9472; copy_creds(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">clone_flags</span>)
+&#9500;&#9472; delayacct_tsk_init(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">tsk</span>)
+&#9500;&#9472; rcu_copy_process(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>)
+&#9500;&#9472; init_sigpending(<span class="org-keyword">struct</span> <span class="org-type">sigpending</span> *<span class="org-variable-name">sig</span>)
+&#9500;&#9472; misc accounts init ...
+&#9500;&#9472; sched_fork(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">clone_flags</span>, <span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">p</span>)
+&#9500;&#9472; copy files, fs, sighand, signal, mm, ns, io, tls, <span class="org-type">init</span> <span class="org-function-name">tracer</span>
+&#9492;&#9472; uprobe_copy_process(<span class="org-keyword">struct</span> <span class="org-type">task_struct</span> *<span class="org-variable-name">t</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">flags</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>

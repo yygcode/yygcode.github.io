@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2017-12-03 Sun 01:18 -->
+<!-- 2018-01-31 Wed 18:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>B Tree</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="shortcut icon" href="http://ycode.org/css/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/site.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -81,33 +32,29 @@ for the JavaScript code in this tag.
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">B Tree</h1>
 <div id="table-of-contents">
-<h2>Table of Contents</h2>
+<h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc4d7336">1. 概述</a></li>
-<li><a href="#org07b843b">2. 应用</a></li>
-<li><a href="#org633051c">3. 分析</a>
+<li><a href="#orga4f2bbd">1. 概述</a></li>
+<li><a href="#org473aad6">2. 应用</a></li>
+<li><a href="#org1988679">3. 分析</a>
 <ul>
-<li><a href="#org739aa05">3.1. 定义</a></li>
-<li><a href="#org9e648c1">3.2. 运行时间上限</a></li>
-<li><a href="#org93e4f34">3.3. 改进与变形</a></li>
+<li><a href="#org74e53bd">3.1. 定义</a></li>
+<li><a href="#orga29c318">3.2. 运行时间上限</a></li>
+<li><a href="#orge80cb8b">3.3. 改进与变形</a></li>
 </ul>
 </li>
-<li><a href="#org8ac49c2">4. B树实现</a></li>
-<li><a href="#org5be7165">5. 外部链接</a></li>
+<li><a href="#orge3cec75">4. B树实现</a></li>
+<li><a href="#orga608fe0">5. 外部链接</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc4d7336" class="outline-2">
-<h2 id="orgc4d7336"><span class="section-number-2">1</span> 概述</h2>
+<div id="outline-container-orga4f2bbd" class="outline-2">
+<h2 id="orga4f2bbd"><span class="section-number-2">1</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 相比于内存, 访问磁盘/磁带等块设备时, 大块数据读写有更好的性能. 为高效使用这类设备, 应组织数据结构, 将多份数据放入一个块中. B树是解决此问题的算法统称, 具体实现时, 会基于应用场景进行优化, <a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>)是典型代表.
@@ -119,8 +66,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org07b843b" class="outline-2">
-<h2 id="org07b843b"><span class="section-number-2">2</span> 应用</h2>
+<div id="outline-container-org473aad6" class="outline-2">
+<h2 id="org473aad6"><span class="section-number-2">2</span> 应用</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 B树(或其变形)广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如文件系统, 数据库, 以及存储自精简/压缩/重删等特性中.
@@ -128,12 +75,12 @@ B树(或其变形)广泛应用于有大量元数据需要保存到外部存储�
 </div>
 </div>
 
-<div id="outline-container-org633051c" class="outline-2">
-<h2 id="org633051c"><span class="section-number-2">3</span> 分析</h2>
+<div id="outline-container-org1988679" class="outline-2">
+<h2 id="org1988679"><span class="section-number-2">3</span> 分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org739aa05" class="outline-3">
-<h3 id="org739aa05"><span class="section-number-3">3.1</span> 定义</h3>
+<div id="outline-container-org74e53bd" class="outline-3">
+<h3 id="org74e53bd"><span class="section-number-3">3.1</span> 定义</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 读过资料中, B树最完整清晰定义来自<a href="http://www-cs-faculty.stanford.edu/~uno/taocp.html">TAOCP</a>:
@@ -169,8 +116,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org9e648c1" class="outline-3">
-<h3 id="org9e648c1"><span class="section-number-3">3.2</span> 运行时间上限</h3>
+<div id="outline-container-orga29c318" class="outline-3">
+<h3 id="orga29c318"><span class="section-number-3">3.2</span> 运行时间上限</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 给定\(m\)阶B树, 假定存在\(N\)个键, \(N+1\)个叶子出现在\(l\)级, 则
@@ -189,8 +136,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org93e4f34" class="outline-3">
-<h3 id="org93e4f34"><span class="section-number-3">3.3</span> 改进与变形</h3>
+<div id="outline-container-orge80cb8b" class="outline-3">
+<h3 id="orge80cb8b"><span class="section-number-3">3.3</span> 改进与变形</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 参考<a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>).
@@ -199,8 +146,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org8ac49c2" class="outline-2">
-<h2 id="org8ac49c2"><span class="section-number-2">4</span> B树实现</h2>
+<div id="outline-container-orge3cec75" class="outline-2">
+<h2 id="orge3cec75"><span class="section-number-2">4</span> B树实现</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;uncompleted&gt;
@@ -208,8 +155,8 @@ B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;un
 </div>
 </div>
 
-<div id="outline-container-org5be7165" class="outline-2">
-<h2 id="org5be7165"><span class="section-number-2">5</span> 外部链接</h2>
+<div id="outline-container-orga608fe0" class="outline-2">
+<h2 id="orga608fe0"><span class="section-number-2">5</span> 外部链接</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>B Tree: <a href="https://en.wikipedia.org/wiki/B-tree">https://en.wikipedia.org/wiki/B-tree</a></li>
@@ -218,6 +165,9 @@ B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;un
 </ul>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </body>
 </html>
