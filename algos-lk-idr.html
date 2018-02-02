@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-01-31 Wed 18:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>算法 - LINUX内核 - IDR实现分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">算法 - LINUX内核 - IDR实现分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org334786e">1. 介绍</a></li>
+<li><a href="#org65ea1c5">2. 代码分析</a>
+<ul>
+<li><a href="#org8a13931">2.1. 数据结构</a></li>
+<li><a href="#orgcd5a499">2.2. idr_alloc分析</a></li>
+</ul>
+</li>
+<li><a href="#org829d4e1">3. Reference Material</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org334786e" class="outline-2">
+<h2 id="org334786e"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org65ea1c5" class="outline-2">
+<h2 id="org65ea1c5"><span class="section-number-2">2</span> 代码分析</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org8a13931" class="outline-3">
+<h3 id="org8a13931"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span>  <span class="org-variable-name">idr_rt</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">int</span>            <span class="org-variable-name">idr_next</span>;
+};
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">from radix-tree.h</span>
+<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> {
+        <span class="org-type">gfp_t</span>                   <span class="org-variable-name">gfp_mask</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span>  <span class="org-type">__rcu</span> *<span class="org-variable-name">rnode</span>;
+};
+
+<span class="org-doc">/**</span>
+<span class="org-doc"> * struct radix_tree_iter - radix tree iterator state</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@index</span></span></span><span class="org-doc">:      index of current slot</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@next_index</span></span></span><span class="org-doc">: one beyond the last index for this chunk</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@tags</span></span></span><span class="org-doc">:       bit-mask for tag-iterating</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@node</span></span></span><span class="org-doc">:       node that contains current slot</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@shift</span></span></span><span class="org-doc">:      shift for the node that holds our slots</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a</span>
+<span class="org-doc"> * subinterval of slots contained within one radix tree leaf node.  It is</span>
+<span class="org-doc"> * described by a pointer to its first slot and a struct radix_tree_iter</span>
+<span class="org-doc"> * which holds the chunk's position in the tree and its size.  For tagged</span>
+<span class="org-doc"> * iteration radix_tree_iter also holds the slots' bit-mask for one chosen</span>
+<span class="org-doc"> * radix tree tag.</span>
+<span class="org-doc"> */</span>
+<span class="org-keyword">struct</span> <span class="org-type">radix_tree_iter</span> {
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">index</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">next_index</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">tags</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> *<span class="org-variable-name">node</span>;
+<span class="org-preprocessor">#ifdef</span> CONFIG_RADIX_TREE_MULTIORDER
+        <span class="org-type">unsigned</span> <span class="org-type">int</span>    <span class="org-variable-name">shift</span>;
+<span class="org-preprocessor">#endif</span>
+};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcd5a499" class="outline-3">
+<h3 id="orgcd5a499"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<code>idr_alloc</code> 函数原型如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-doc">/**</span>
+<span class="org-doc"> * idr_alloc - allocate an id</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@idr</span></span></span><span class="org-doc">: idr handle</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@ptr</span></span></span><span class="org-doc">: pointer to be associated with the new id</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@start</span></span></span><span class="org-doc">: the minimum id (inclusive)</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@end</span></span></span><span class="org-doc">: the maximum id (exclusive)</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@gfp</span></span></span><span class="org-doc">: memory allocation flags</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Allocates an unused ID in the range [start, end).  Returns -ENOSPC</span>
+<span class="org-doc"> * if there are no unused IDs in that range.</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Note that </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> is treated as max when &lt;= 0.  This is to always allow</span>
+<span class="org-doc"> * using </span><span class="org-doc"><span class="org-constant">@start</span></span><span class="org-doc"> + N as </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> as long as N is inside integer range.</span>
+<span class="org-doc"> *</span>
+<span class="org-doc"> * Simultaneous modifications to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc"> are not allowed and should be</span>
+<span class="org-doc"> * prevented by the user, usually with a lock.  </span><span class="org-doc"><span class="org-constant">idr_alloc()</span></span><span class="org-doc"> may be called</span>
+<span class="org-doc"> * concurrently with read-only accesses to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc">, such as </span><span class="org-doc"><span class="org-constant">idr_find()</span></span><span class="org-doc"> and</span>
+<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant">idr_for_each_entry()</span></span><span class="org-doc">.</span>
+<span class="org-doc"> */</span>
+<span class="org-type">int</span> <span class="org-function-name">idr_alloc</span>(<span class="org-keyword">struct</span> <span class="org-type">idr</span> *<span class="org-variable-name">idr</span>, <span class="org-type">void</span> *<span class="org-variable-name">ptr</span>, <span class="org-type">int</span> <span class="org-variable-name">start</span>, <span class="org-type">int</span> <span class="org-variable-name">end</span>, <span class="org-type">gfp_t</span> <span class="org-variable-name">gfp</span>);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org829d4e1" class="outline-2">
+<h2 id="org829d4e1"><span class="section-number-2">3</span> Reference Material</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
+<dt>A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+MainPages 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>
