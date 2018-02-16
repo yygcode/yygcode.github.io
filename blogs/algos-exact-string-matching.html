@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-02-02 Fri 23:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>字符串搜索算法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">字符串搜索算法</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcb33237">1. 问题定义</a></li>
+<li><a href="#org879dcfe">2. 测试结果</a></li>
+<li><a href="#orgab0b52a">3. glibc C库字符串算法</a>
+<ul>
+<li><a href="#org6be00b6">3.1. 概要介绍</a></li>
+<li><a href="#org0f13cc9">3.2. 参考资料</a></li>
+</ul>
+</li>
+<li><a href="#org21e606f">4. Boyer-Moore[BM 77]</a>
+<ul>
+<li><a href="#org4d3d494">4.1. 概要介绍</a></li>
+<li><a href="#org69407a8">4.2. 参考资料</a></li>
+<li><a href="#orgd717978">4.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#orge8a59e6">5. Boyer-Moore-Horspool[Hor 80]</a>
+<ul>
+<li><a href="#org6095c20">5.1. 概要介绍</a></li>
+<li><a href="#org72268ab">5.2. 参考资料</a></li>
+<li><a href="#org988f258">5.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#orgac44ed2">6. Boyer-Moore-Sunday [Sun 90]</a></li>
+<li><a href="#org8d27ccf">7. Knuth-Morris-Pratt[KMP 77]</a>
+<ul>
+<li><a href="#org0b73a73">7.1. 概要介绍</a></li>
+<li><a href="#orgdf5ee74">7.2. 参考资料</a></li>
+<li><a href="#org84d3181">7.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#org3a6468e">8. References</a></li>
+</ul>
+</div>
+</div>
+<div class="PREVIEW">
+<p>
+字符串搜索是指在一个字符串中查找另一个字符串（子串）是常用的基本编程操作。协议解析、文本编辑都会用到大量字符串搜索操作。从1977年至今，人们对此进行了大量研究，本文介绍本领域典型算法：暴力搜索、two-way、KMP、BM、BMH、BMS，以及x86 CPU SSE2
+硬件加速实现。
+</p>
+
+</div>
+
+<div id="outline-container-orgcb33237" class="outline-2">
+<h2 id="orgcb33237"><span class="section-number-2">1</span> 问题定义</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+字符串搜索问题，又称为文本匹配问题。其定义如下：
+</p>
+<ol class="org-ol">
+<li>定义长度为\(n\)的字符数组\(text\)；</li>
+<li>定义长度为\(m\)的字符数组\(pattern\)，且\(m\le{}n\)；</li>
+<li>定义有限字符集\(\Sigma\)，\(text\)和\(pattern\)由\(\Sigma\)元素组成；</li>
+<li>在\(text\)中查找\(pattern\)出现的位置。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org879dcfe" class="outline-2">
+<h2 id="org879dcfe"><span class="section-number-2">2</span> 测试结果</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+测试Linux系统glibc strstr，native, KMP, BM, BMH算法。使用大量随机字符串测试，其性能排名是：strstr、BMH、BM、native、KMP。KMP的实现应该是有问题，后期分析更正。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgab0b52a" class="outline-2">
+<h2 id="orgab0b52a"><span class="section-number-2">3</span> glibc C库字符串算法</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org6be00b6" class="outline-3">
+<h3 id="org6be00b6"><span class="section-number-3">3.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+GLIBC库提供two-way搜索算法，以及针对各平台的硬件优化实现(X86平台是SSE2)。TWO WAY
+算法由<a href="http://www-igm.univ-mlv.fr/~mac/">Maxime Crochemore</a>和<a href="http://www-igm.univ-mlv.fr/~perrin/">Dominique Perrin</a>发表于<a href="https://dl.acm.org/citation.cfm?doid=116825.116845">1991年ACM</a>。主要包括一个关键分解理论(<a href="http://www.lifl.fr/SEQUOIA/Sequences/Talks/talk_perrin.pdf">critical factorization theorem pdf</a>)。
+</p>
+
+<p>
+代码实现参考Github <a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/string/strstr.c">string/strstr.c</a>、x86_64/multiarch <a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/sysdeps/x86_64/multiarch/strstr.c">strstr.c</a>和
+<a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/sysdeps/x86_64/multiarch/strstr-sse2-unaligned.S">strstr-sse2-unaligned.S</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0f13cc9" class="outline-3">
+<h3 id="org0f13cc9"><span class="section-number-3">3.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-3-2">
+<dl class="org-dl">
+<dt>TWO WAY ALGORITHM</dt><dd><a href="http://www-igm.univ-mlv.fr/~lecroq/string/node26.html">http://www-igm.univ-mlv.fr/~lecroq/string/node26.html</a></dd>
+<dt>TWO WAY STRING MATCHING (Maxime Crochemore, Dominique Perrin)</dt><dd><a href="https://dl.acm.org/citation.cfm?id=116845">https://dl.acm.org/citation.cfm?id=116845</a></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org21e606f" class="outline-2">
+<h2 id="org21e606f"><span class="section-number-2">4</span> Boyer-Moore[BM 77]</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org4d3d494" class="outline-3">
+<h3 id="org4d3d494"><span class="section-number-3">4.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>和<a href="https://www.cs.utexas.edu/users/moore/">J Strother Moore</a>于1977年发表。BM算法使用坏字符和好后缀规则，在失配后一次跳动多个字符，进行匹配加速。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org69407a8" class="outline-3">
+<h3 id="org69407a8"><span class="section-number-3">4.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-4-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm">https://en.wikipedia.org/wiki/Boyer–Moore_string_search_algorithm</a></dd>
+<dt>ACM</dt><dd><a href="http://dl.acm.org/citation.cfm?doid=359842.359859">http://dl.acm.org/citation.cfm?doid=359842.359859</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgd717978" class="outline-3">
+<h3 id="orgd717978"><span class="section-number-3">4.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+2012/2/29实现此算法，发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbm.c">GitHub</a>：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * [BM 77] A fast string search algorithm,</span>
+<span class="org-comment"> *         R. S. Boyer and J. S. Moore,</span>
+<span class="org-comment"> *         Comm. ACM, 20, 1977, pp. 762&#8211;772.</span>
+<span class="org-comment"> * [Smit 1982] A Comparison of Three String Matching Algorithms,</span>
+<span class="org-comment"> *             Smit G. De V.,</span>
+<span class="org-comment"> *             Software-Practice and Experience, 12(1), 57-66, 1982</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;config-os.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;ycc/common/debug.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">strbm_init</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">needle</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>,
+                <span class="org-type">size_t</span> *<span class="org-variable-name">table_sgs</span>, <span class="org-type">size_t</span> *<span class="org-variable-name">table_ebc</span>)
+{
+        <span class="org-comment-delimiter">/*</span>
+<span class="org-comment">         * table_sgs: strong good suffix</span>
+<span class="org-comment">         * ebc: extended bad character</span>
+<span class="org-comment">         </span><span class="org-comment-delimiter">*/</span>
+
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">k</span>;
+        <span class="org-type">size_t</span> *<span class="org-variable-name">backup</span> = table_sgs + n;
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">init </span><span class="org-comment-delimiter">*/</span>
+        memset(table_sgs, 0, <span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*table_sgs));
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">suffix </span><span class="org-comment-delimiter">*/</span>
+        i = n - 1;
+        j = n;
+        <span class="org-keyword">while</span> ((<span class="org-type">size_t</span>)-1 != i) {
+                backup[i] = j;
+
+                <span class="org-keyword">while</span> (j &lt; n &amp;&amp; needle[i] != needle[j]) {
+                        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>table_sgs[j])
+                                table_sgs[j] = j - i;
+
+                        j = backup[j];
+                }
+
+                --i;
+                --j;
+        }
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">prefix </span><span class="org-comment-delimiter">*/</span>
+        k = j + 1;
+        <span class="org-keyword">for</span> (i = 0; i &lt; k; ++i) {
+                <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>table_sgs[i])
+                        table_sgs[i] = k;
+        }
+
+        i = backup[j];
+        <span class="org-keyword">while</span> (j &lt; n) {
+                <span class="org-keyword">while</span> (j &lt; i) {
+                        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>table_sgs[j])
+                                table_sgs[j] = i;
+                        ++j;
+                }
+                i = backup[i];
+        }
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">ebc ... </span><span class="org-comment-delimiter">*/</span>
+        strbmh_init(needle, n, table_ebc);
+}
+
+<span class="org-type">char</span> *<span class="org-function-name">strbm_find</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">haystack</span>, <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">needle</span>,
+                 <span class="org-type">size_t</span> <span class="org-variable-name">h</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>,
+                 <span class="org-keyword">const</span> <span class="org-type">size_t</span> *<span class="org-variable-name">table_sgs</span>, <span class="org-keyword">const</span> <span class="org-type">size_t</span> *<span class="org-variable-name">table_ebc</span>)
+{
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">n1</span> = n - 1;
+
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>n)
+                <span class="org-keyword">return</span> (<span class="org-type">char</span>*)haystack;
+
+        <span class="org-keyword">while</span> (h &gt; n1) {
+                <span class="org-keyword">for</span> (i = n1; i != (<span class="org-type">size_t</span>)-1 &amp;&amp; haystack[i] == needle[i]; --i);
+
+                <span class="org-keyword">if</span> (i == (<span class="org-type">size_t</span>)-1)    <span class="org-comment-delimiter">/* </span><span class="org-comment">[0, n1] are equal. </span><span class="org-comment-delimiter">*/</span>
+                        <span class="org-keyword">return</span> (<span class="org-type">char</span>*)haystack;
+
+                <span class="org-keyword">if</span> (table_sgs[i] &gt; table_ebc[(<span class="org-type">u_char</span>)haystack[n1]])
+                        j = table_sgs[i];
+                <span class="org-keyword">else</span>
+                        j = table_ebc[(<span class="org-type">u_char</span>)haystack[n1]];
+                DBG_PR(<span class="org-string">"jump offset = %zu, h,n = %zu, %zu"</span>, j, h, n);
+                h -= j;
+                haystack += j;
+        }
+
+        <span class="org-keyword">return</span> <span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge8a59e6" class="outline-2">
+<h2 id="orge8a59e6"><span class="section-number-2">5</span> Boyer-Moore-Horspool[Hor 80]</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org6095c20" class="outline-3">
+<h3 id="org6095c20"><span class="section-number-3">5.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1980年。在随机测试结果中，比BM有更好的表现，性能提升10%左右。BMH是BM算法的简化。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org72268ab" class="outline-3">
+<h3 id="org72268ab"><span class="section-number-3">5.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-5-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm">https://en.wikipedia.org/wiki/Boyer–Moore–Horspool_algorithm</a></dd>
+<dt>Horsen</dt><dd><a href="http://www.iti.fh-flensburg.de/lang/algorithmen/pattern/horsen.htm">http://www.iti.fh-flensburg.de/lang/algorithmen/pattern/horsen.htm</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org988f258" class="outline-3">
+<h3 id="org988f258"><span class="section-number-3">5.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+2012/2/29发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbmh.c">GitHub</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * [Hor 80] Practical Fast Searching in Strings,</span>
+<span class="org-comment"> *          R. Nigel Horspool,</span>
+<span class="org-comment"> *          Softw. Pratt. Exp., 10, 501&#8211;506 (1980).</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;assert.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;limits.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stddef.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/types.h&gt;</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;config-os.h&gt;</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">strbmh_init</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">needle</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>, <span class="org-type">size_t</span> *<span class="org-variable-name">table</span>)
+{
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt;= UCHAR_MAX; ++i)
+                table[i] = n;
+
+        --needle;
+        <span class="org-keyword">for</span> (i = 1; i &lt; n; ++i)
+                table[(<span class="org-type">u_char</span>)needle[i]] = n - i;
+}
+
+<span class="org-type">char</span> *<span class="org-function-name">strbmh_find</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">haystack</span>, <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">needle</span>,
+                  <span class="org-type">size_t</span> <span class="org-variable-name">h</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>,
+                  <span class="org-keyword">const</span> <span class="org-type">size_t</span> *<span class="org-variable-name">table</span>)
+{
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">n1</span> = n - 1;
+
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>n)
+                <span class="org-keyword">return</span> (<span class="org-type">char</span>*)haystack;
+
+        <span class="org-keyword">while</span> (h &gt; n1) {
+                <span class="org-keyword">for</span> (i = n1; i != (<span class="org-type">size_t</span>)-1 &amp;&amp; haystack[i] == needle[i]; --i);
+
+                <span class="org-keyword">if</span> (i == (<span class="org-type">size_t</span>)-1)    <span class="org-comment-delimiter">/* </span><span class="org-comment">[0, n1] are equal. </span><span class="org-comment-delimiter">*/</span>
+                        <span class="org-keyword">return</span> (<span class="org-type">char</span>*)haystack;
+
+                h -= table[(<span class="org-type">u_char</span>)haystack[n1]];
+                haystack += table[(<span class="org-type">u_char</span>)haystack[n1]];
+        }
+
+        <span class="org-keyword">return</span> <span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgac44ed2" class="outline-2">
+<h2 id="orgac44ed2"><span class="section-number-2">6</span> Boyer-Moore-Sunday [Sun 90]</h2>
+</div>
+
+<div id="outline-container-org8d27ccf" class="outline-2">
+<h2 id="org8d27ccf"><span class="section-number-2">7</span> Knuth-Morris-Pratt[KMP 77]</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org0b73a73" class="outline-3">
+<h3 id="org0b73a73"><span class="section-number-3">7.1</span> 概要介绍</h3>
+</div>
+<div id="outline-container-orgdf5ee74" class="outline-3">
+<h3 id="orgdf5ee74"><span class="section-number-3">7.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-7-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">https://en.wikipedia.org/wiki/Knuth–Morris–Pratt_algorithm</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org84d3181" class="outline-3">
+<h3 id="org84d3181"><span class="section-number-3">7.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+此算法测试结果十分糟糕，怀疑实现有问题。以后更正分析。
+2012/2/29发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strkmp.c">GitHub</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * [KMP 77] Fast pattern matching in strings,</span>
+<span class="org-comment"> *          D. E. Knuth, J. H. Morris, Jr and V. B. Pratt, SIAM J.</span>
+<span class="org-comment"> *          Computing, 6, 1977, pp. 323&#8211;350.</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;assert.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stddef.h&gt;</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;config-os.h&gt;</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">strkmp_init</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">patn</span>, <span class="org-type">size_t</span> *<span class="org-variable-name">table</span>)
+{
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, *<span class="org-variable-name">t</span> = table;
+        <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">s</span> = patn + 1;
+
+        assert(patn &amp;&amp; table);
+
+        *t++ = 0;
+        <span class="org-keyword">for</span>(i = 0; *s; ++s) {
+                <span class="org-keyword">while</span> (i &amp;&amp; patn[i] != *s)
+                        i = table[i-1];
+
+                <span class="org-keyword">if</span> (patn[i] == *s)
+                        ++i;
+
+                *t++ = i;
+        }
+}
+
+<span class="org-type">char</span> *<span class="org-function-name">strkmp_find</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">text</span>, <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">patn</span>, <span class="org-keyword">const</span> <span class="org-type">size_t</span> *<span class="org-variable-name">table</span>)
+{
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
+        <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">s</span>;
+
+        assert(text &amp;&amp; patn &amp;&amp; table);
+
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>*patn)
+                <span class="org-keyword">return</span> (<span class="org-type">char</span>*)text;
+
+        <span class="org-keyword">for</span> (i = 0, s = text; *s; ++s) {
+                <span class="org-keyword">while</span> (i &amp;&amp; *s != patn[i])
+                        i = table[i-1];
+
+                <span class="org-keyword">if</span> (*s == patn[i]) {
+                        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>patn[i+1])
+                                <span class="org-keyword">return</span> (<span class="org-type">char</span>*)s - i;
+                        ++i;
+                }
+        }
+
+        <span class="org-keyword">return</span> <span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3a6468e" class="outline-2">
+<h2 id="org3a6468e"><span class="section-number-2">8</span> References</h2>
+<div class="outline-text-2" id="text-8">
+<dl class="org-dl">
+<dt>why grep so fast</dt><dd><a href="https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html">https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html</a></dd>
+<dt>grep code</dt><dd><a href="https://savannah.gnu.org/git/?group=grep">https://savannah.gnu.org/git/?group=grep</a></dd>
+<dt>grep git url</dt><dd><code>git clone https://git.savannah.gnu.org/git/grep.git</code></dd>
+<dt>(no term)</dt><dd><a href="http://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html">http://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html</a></dd>
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/String_searching_algorithm">https://en.wikipedia.org/wiki/String_searching_algorithm</a></dd>
+<dt>Stackoverflow Discuss</dt><dd><a href="https://stackoverflow.com/questions/7586990/strstr-faster-than-algorithms">https://stackoverflow.com/questions/7586990/strstr-faster-than-algorithms</a></dd>
+<dt>EXACT STRING MATCHING ALGORITHMS</dt><dd><a href="http://www-igm.univ-mlv.fr/~lecroq/string/index.html">http://www-igm.univ-mlv.fr/~lecroq/string/index.html</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</body>
+</html>

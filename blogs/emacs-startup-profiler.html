@@ -3,7 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
+<<<<<<< HEAD
 <!-- 2018-02-16 Fri 10:15 -->
+=======
+<!-- 2018-02-02 Fri 23:34 -->
+>>>>>>> 8f6c03b58494f2b945d66ffdef5e66692d6ac025
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Emacs启动时间分析</title>
 <meta name="generator" content="Org mode" />
@@ -31,15 +35,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf2d172d">1. 介绍</a></li>
-<li><a href="#org35b14de">2. benchmark-init</a></li>
-<li><a href="#org8712676">3. esup</a></li>
+<li><a href="#org47e5039">1. 介绍</a></li>
+<li><a href="#org06cddd0">2. benchmark-init</a></li>
+<li><a href="#org07c1307">3. esup</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf2d172d" class="outline-2">
-<h2 id="orgf2d172d"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org47e5039" class="outline-2">
+<h2 id="org47e5039"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Emacs启动调优需要先分析时间分布。<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>和<a href="https://github.com/jschaf/esup/">esup</a>是两个优秀的候选package。
@@ -54,8 +58,8 @@ init.el本身启动时间分析。
 </div>
 </div>
 
-<div id="outline-container-org35b14de" class="outline-2">
-<h2 id="org35b14de"><span class="section-number-2">2</span> benchmark-init</h2>
+<div id="outline-container-org06cddd0" class="outline-2">
+<h2 id="org06cddd0"><span class="section-number-2">2</span> benchmark-init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>是require和load函数的基准测试工具：
@@ -137,8 +141,8 @@ benchmark-init配置如下：
 </div>
 </div>
 
-<div id="outline-container-org8712676" class="outline-2">
-<h2 id="org8712676"><span class="section-number-2">3</span> esup</h2>
+<div id="outline-container-org07c1307" class="outline-2">
+<h2 id="org07c1307"><span class="section-number-2">3</span> esup</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <a href="https://github.com/jschaf/esup/">esup</a>对emacs启动时间进行基准分析。esup-0.6版本在emacs-26.0.90版本下有
