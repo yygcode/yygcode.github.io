@@ -1,8 +1,14 @@
+#content {
+    background: #F8F8F2;
+    position: relative;
+    margin: auto;
+}
+
 body {
     font-family: 'Fira Sans', sans-serif;
     font-size: 12pt;
-    background-color: #fafafa;
-    color: #23373b;
+    background-color: #F8F8F2;
+    color: #272822;
 }
 
 .title {
@@ -18,7 +24,8 @@ hr {
     border: 0;
     margin: 1em 0;
     padding: 0;
-    border-top: 2px dashed skyblue;
+    width: 50%;
+    border-top: 1pt solid gray;
 }
 
 hr.full {
@@ -27,12 +34,17 @@ hr.full {
     border: 0;
     margin: 1em 0;
     padding: 0;
-    border-top: 1px solid #eb811b;
+    width: 100%;
+    border-top: 2px solid orange;
 }
 
-.conference {
-    font-family: monospace, 'Courier New';
-    font-size: 90%;
-    vertical-align: text-top;
-    color: #c46103;
+.vcenter {
+    display: inline-block;
+    height: 100%;
+    vertical-align: center;
+    width: 0px;
+}
+
+.outline-2 {
+    @include .container;
 }
