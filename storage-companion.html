@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-02 Fri 23:34 -->
+<!-- 2018-02-16 Fri 16:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
@@ -22,39 +22,39 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgaed3d2a">1. 介绍</a>
+<li><a href="#org459a484">1. 介绍</a>
 <ul>
-<li><a href="#orga03e0c4">1.1. 发展历史</a></li>
-<li><a href="#org91684a7">1.2. 衡量评测</a></li>
+<li><a href="#org922cbe3">1.1. 发展历史</a></li>
+<li><a href="#orgfdeea95">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org6dde559">2. 存储产品分析</a>
+<li><a href="#org41f3dc6">2. 存储产品分析</a>
 <ul>
-<li><a href="#orgf652de6">2.1. IBM V7000</a></li>
+<li><a href="#orgf2450e9">2.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#org06f28fc">3. 软件架构</a></li>
-<li><a href="#org457f6e5">4. 机箱管理</a></li>
-<li><a href="#org14b9595">5. 驱动</a>
+<li><a href="#org9b237ee">3. 软件架构</a></li>
+<li><a href="#orgebef12c">4. 机箱管理</a></li>
+<li><a href="#org3cd2c99">5. 驱动</a>
 <ul>
-<li><a href="#org71dc039">5.1. 双控互联NTB</a></li>
-<li><a href="#org580098c">5.2. FC卡</a></li>
-<li><a href="#orgf4a043e">5.3. SAS卡</a></li>
-<li><a href="#org24a739b">5.4. 网卡</a></li>
-<li><a href="#orgd25e3d5">5.5. IB卡</a></li>
+<li><a href="#orge3d7cff">5.1. 双控互联NTB</a></li>
+<li><a href="#orgbb9ceb9">5.2. FC卡</a></li>
+<li><a href="#orgca57e19">5.3. SAS卡</a></li>
+<li><a href="#orge77297c">5.4. 网卡</a></li>
+<li><a href="#org827783f">5.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#orge5e9d4e">6. SCSI协议</a></li>
-<li><a href="#org7a786aa">7. BACKUP</a></li>
-<li><a href="#org987fe82">8. 方案</a>
+<li><a href="#orgcf965a3">6. SCSI协议</a></li>
+<li><a href="#org85f443b">7. BACKUP</a></li>
+<li><a href="#org09c376d">8. 方案</a>
 <ul>
-<li><a href="#org9e39a55">8.1. 容灾</a>
+<li><a href="#org39593df">8.1. 容灾</a>
 <ul>
-<li><a href="#orgb35292b">8.1.1. 介绍</a></li>
-<li><a href="#orga0f565f">8.1.2. 技术点</a></li>
-<li><a href="#orgd147b25">8.1.3. 两地三中心</a></li>
-<li><a href="#orge4e5bae">8.1.4. 双活</a></li>
-<li><a href="#org1537862">8.1.5. 关键词</a></li>
+<li><a href="#org45db0be">8.1.1. 介绍</a></li>
+<li><a href="#orgbb7af46">8.1.2. 技术点</a></li>
+<li><a href="#org997416a">8.1.3. 两地三中心</a></li>
+<li><a href="#org94cd33c">8.1.4. 双活</a></li>
+<li><a href="#orgbc831bd">8.1.5. 关键词</a></li>
 </ul>
 </li>
 </ul>
@@ -66,20 +66,20 @@
 本文尚未完成。
 </p>
 
-<div id="outline-container-orgaed3d2a" class="outline-2">
-<h2 id="orgaed3d2a"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org459a484" class="outline-2">
+<h2 id="org459a484"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 统一存储分数据面与管里面。机箱管理使用exp实现。
 </p>
 </div>
 
-<div id="outline-container-orga03e0c4" class="outline-3">
-<h3 id="orga03e0c4"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-org922cbe3" class="outline-3">
+<h3 id="org922cbe3"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-org91684a7" class="outline-3">
-<h3 id="org91684a7"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-orgfdeea95" class="outline-3">
+<h3 id="orgfdeea95"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注如下几个方面:
@@ -97,12 +97,12 @@ SAN存储需要关注如下几个方面:
 </div>
 </div>
 
-<div id="outline-container-org6dde559" class="outline-2">
-<h2 id="org6dde559"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-org41f3dc6" class="outline-2">
+<h2 id="org41f3dc6"><span class="section-number-2">2</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgf652de6" class="outline-3">
-<h3 id="orgf652de6"><span class="section-number-3">2.1</span> IBM V7000</h3>
+<div id="outline-container-orgf2450e9" class="outline-3">
+<h3 id="orgf2450e9"><span class="section-number-3">2.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -112,11 +112,11 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-org06f28fc" class="outline-2">
-<h2 id="org06f28fc"><span class="section-number-2">3</span> 软件架构</h2>
+<div id="outline-container-org9b237ee" class="outline-2">
+<h2 id="org9b237ee"><span class="section-number-2">3</span> 软件架构</h2>
 </div>
-<div id="outline-container-org457f6e5" class="outline-2">
-<h2 id="org457f6e5"><span class="section-number-2">4</span> 机箱管理</h2>
+<div id="outline-container-orgebef12c" class="outline-2">
+<h2 id="orgebef12c"><span class="section-number-2">4</span> 机箱管理</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic)设备，控制器向Expander sg设备发送SES命令管理机箱。NVMe管理芯片方案中，PSX支持SES封装进NVMe
@@ -130,37 +130,37 @@ SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic
 </div>
 </div>
 
-<div id="outline-container-org14b9595" class="outline-2">
-<h2 id="org14b9595"><span class="section-number-2">5</span> 驱动</h2>
+<div id="outline-container-org3cd2c99" class="outline-2">
+<h2 id="org3cd2c99"><span class="section-number-2">5</span> 驱动</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org71dc039" class="outline-3">
-<h3 id="org71dc039"><span class="section-number-3">5.1</span> 双控互联NTB</h3>
+<div id="outline-container-orge3d7cff" class="outline-3">
+<h3 id="orge3d7cff"><span class="section-number-3">5.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-org580098c" class="outline-3">
-<h3 id="org580098c"><span class="section-number-3">5.2</span> FC卡</h3>
+<div id="outline-container-orgbb9ceb9" class="outline-3">
+<h3 id="orgbb9ceb9"><span class="section-number-3">5.2</span> FC卡</h3>
 </div>
-<div id="outline-container-orgf4a043e" class="outline-3">
-<h3 id="orgf4a043e"><span class="section-number-3">5.3</span> SAS卡</h3>
+<div id="outline-container-orgca57e19" class="outline-3">
+<h3 id="orgca57e19"><span class="section-number-3">5.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-org24a739b" class="outline-3">
-<h3 id="org24a739b"><span class="section-number-3">5.4</span> 网卡</h3>
+<div id="outline-container-orge77297c" class="outline-3">
+<h3 id="orge77297c"><span class="section-number-3">5.4</span> 网卡</h3>
 </div>
-<div id="outline-container-orgd25e3d5" class="outline-3">
-<h3 id="orgd25e3d5"><span class="section-number-3">5.5</span> IB卡</h3>
+<div id="outline-container-org827783f" class="outline-3">
+<h3 id="org827783f"><span class="section-number-3">5.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-orge5e9d4e" class="outline-2">
-<h2 id="orge5e9d4e"><span class="section-number-2">6</span> SCSI协议</h2>
+<div id="outline-container-orgcf965a3" class="outline-2">
+<h2 id="orgcf965a3"><span class="section-number-2">6</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org7a786aa" class="outline-2">
-<h2 id="org7a786aa"><span class="section-number-2">7</span> BACKUP</h2>
+<div id="outline-container-org85f443b" class="outline-2">
+<h2 id="org85f443b"><span class="section-number-2">7</span> BACKUP</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
@@ -177,16 +177,16 @@ hello world
 </ul>
 </div>
 </div>
-<div id="outline-container-org987fe82" class="outline-2">
-<h2 id="org987fe82"><span class="section-number-2">8</span> 方案</h2>
+<div id="outline-container-org09c376d" class="outline-2">
+<h2 id="org09c376d"><span class="section-number-2">8</span> 方案</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org9e39a55" class="outline-3">
-<h3 id="org9e39a55"><span class="section-number-3">8.1</span> 容灾</h3>
+<div id="outline-container-org39593df" class="outline-3">
+<h3 id="org39593df"><span class="section-number-3">8.1</span> 容灾</h3>
 <div class="outline-text-3" id="text-8-1">
 </div>
-<div id="outline-container-orgb35292b" class="outline-4">
-<h4 id="orgb35292b"><span class="section-number-4">8.1.1</span> 介绍</h4>
+<div id="outline-container-org45db0be" class="outline-4">
+<h4 id="org45db0be"><span class="section-number-4">8.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-8-1-1">
 <p>
 随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
@@ -262,8 +262,8 @@ hello world
 </div>
 </div>
 
-<div id="outline-container-orga0f565f" class="outline-4">
-<h4 id="orga0f565f"><span class="section-number-4">8.1.2</span> 技术点</h4>
+<div id="outline-container-orgbb7af46" class="outline-4">
+<h4 id="orgbb7af46"><span class="section-number-4">8.1.2</span> 技术点</h4>
 <div class="outline-text-4" id="text-8-1-2">
 <p>
 容灾技术用以解决这类异常将导致严重的后果。不同行业对业务连续性和数据可靠性有不同的要求，
@@ -286,19 +286,19 @@ hello world
 </p>
 </div>
 </div>
-<div id="outline-container-orgd147b25" class="outline-4">
-<h4 id="orgd147b25"><span class="section-number-4">8.1.3</span> 两地三中心</h4>
+<div id="outline-container-org997416a" class="outline-4">
+<h4 id="org997416a"><span class="section-number-4">8.1.3</span> 两地三中心</h4>
 <div class="outline-text-4" id="text-8-1-3">
 <p>
 “两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
 </p>
 </div>
 </div>
-<div id="outline-container-orge4e5bae" class="outline-4">
-<h4 id="orge4e5bae"><span class="section-number-4">8.1.4</span> 双活</h4>
+<div id="outline-container-org94cd33c" class="outline-4">
+<h4 id="org94cd33c"><span class="section-number-4">8.1.4</span> 双活</h4>
 </div>
-<div id="outline-container-org1537862" class="outline-4">
-<h4 id="org1537862"><span class="section-number-4">8.1.5</span> 关键词</h4>
+<div id="outline-container-orgbc831bd" class="outline-4">
+<h4 id="orgbc831bd"><span class="section-number-4">8.1.5</span> 关键词</h4>
 <div class="outline-text-4" id="text-8-1-5">
 <ul class="org-ul">
 <li>CAP</li>
