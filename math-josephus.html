@@ -3,11 +3,17 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:07 -->
+<!-- 2018-02-21 Wed 19:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>约瑟夫问题</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -38,13 +44,13 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7c5096d">1. 问题描述</a></li>
-<li><a href="#orgb8fee58">2. 问题分析</a>
+<li><a href="#orgcb14f21">1. 问题描述</a></li>
+<li><a href="#org843f272">2. 问题分析</a>
 <ul>
-<li><a href="#org79145fb">2.1. \(k=2, m=1\)的情况分析</a>
+<li><a href="#orga722f14">2.1. \(k=2, m=1\)的情况分析</a>
 <ul>
 <li><a href="#21-Violent-Traversal">2.1.1. 暴力遍历</a></li>
-<li><a href="#org9addce7">2.1.2. 非封闭优化解</a></li>
+<li><a href="#org3610413">2.1.2. 非封闭优化解</a></li>
 </ul>
 </li>
 </ul>
@@ -53,8 +59,8 @@
 </div>
 </div>
 
-<div id="outline-container-org7c5096d" class="outline-2">
-<h2 id="org7c5096d"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-orgcb14f21" class="outline-2">
+<h2 id="orgcb14f21"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 夫拉维.约瑟夫(Flavius Josephus)是一世纪著名的历史学家. 在犹太罗马战争期间, 他们
@@ -68,16 +74,16 @@
 </div>
 </div>
 
-<div id="outline-container-orgb8fee58" class="outline-2">
-<h2 id="orgb8fee58"><span class="section-number-2">2</span> 问题分析</h2>
+<div id="outline-container-org843f272" class="outline-2">
+<h2 id="org843f272"><span class="section-number-2">2</span> 问题分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org79145fb" class="outline-3">
-<h3 id="org79145fb"><span class="section-number-3">2.1</span> \(k=2, m=1\)的情况分析</h3>
+<div id="outline-container-orga722f14" class="outline-3">
+<h3 id="orga722f14"><span class="section-number-3">2.1</span> \(k=2, m=1\)的情况分析</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org9617234" class="outline-4">
-<h4 id="21-Violent-Traversal"><a id="org9617234"></a><span class="section-number-4">2.1.1</span> 暴力遍历</h4>
+<div id="outline-container-org4dbfbaa" class="outline-4">
+<h4 id="21-Violent-Traversal"><a id="org4dbfbaa"></a><span class="section-number-4">2.1.1</span> 暴力遍历</h4>
 <div class="outline-text-4" id="text-21-Violent-Traversal">
 <p>
 此问题的暴力遍厉十分简单:
@@ -89,8 +95,8 @@
 </div>
 </div>
 
-<div id="outline-container-org9addce7" class="outline-4">
-<h4 id="org9addce7"><span class="section-number-4">2.1.2</span> 非封闭优化解</h4>
+<div id="outline-container-org3610413" class="outline-4">
+<h4 id="org3610413"><span class="section-number-4">2.1.2</span> 非封闭优化解</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 假设开始时有\(2n\)个人, 第一轮后剩下的是\(1, 3, 5, ..., 2n-3, 2n-1\). 同时3号是下一个要离开的人. 对比分析\(n\)个人开始时的情况, 是每个人的号码加倍并减1:
@@ -183,6 +189,7 @@
 
 <div id="disqus_thread"></div>
 <script>
+  var disqus_developer = 1;
     /**
      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables

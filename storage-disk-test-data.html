@@ -3,11 +3,17 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:07 -->
+<!-- 2018-02-21 Wed 19:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Disk Testing Data</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
 <div id="content">
@@ -16,50 +22,50 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1c09ae2">1. Test tools</a>
+<li><a href="#org3ee3010">1. Test tools</a>
 <ul>
-<li><a href="#orgd90bb81">1.1. dd</a></li>
-<li><a href="#org4b13e80">1.2. fio</a></li>
-<li><a href="#org1422f25">1.3. iometer</a></li>
+<li><a href="#org85028e2">1.1. dd</a></li>
+<li><a href="#orgd0a98a7">1.2. fio</a></li>
+<li><a href="#orge824259">1.3. iometer</a></li>
 </ul>
 </li>
-<li><a href="#orgcf3fc55">2. Basic Rules</a></li>
-<li><a href="#org0ef0040">3. SATA HDD</a>
+<li><a href="#org66f0168">2. Basic Rules</a></li>
+<li><a href="#orgf8de6fc">3. SATA HDD</a>
 <ul>
-<li><a href="#org821e90d">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
+<li><a href="#org66cce25">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
 <ul>
-<li><a href="#org580d1fe">3.1.1. Disk infomation</a></li>
-<li><a href="#org0f13df1">3.1.2. dd test</a></li>
-<li><a href="#org91197e4">3.1.3. FIO</a></li>
+<li><a href="#org20f0603">3.1.1. Disk infomation</a></li>
+<li><a href="#org6011875">3.1.2. dd test</a></li>
+<li><a href="#org6bcef49">3.1.3. FIO</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org6b5e25e">4. SAS HDD</a></li>
-<li><a href="#orgcfde076">5. SATA SSD</a></li>
-<li><a href="#orgf9006e9">6. SAS SSD</a></li>
-<li><a href="#org02b860d">7. NVMe SSD</a></li>
+<li><a href="#org88f1a9a">4. SAS HDD</a></li>
+<li><a href="#orgb22e814">5. SATA SSD</a></li>
+<li><a href="#orgde4c651">6. SAS SSD</a></li>
+<li><a href="#org8006af8">7. NVMe SSD</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1c09ae2" class="outline-2">
-<h2 id="org1c09ae2"><span class="section-number-2">1</span> Test tools</h2>
+<div id="outline-container-org3ee3010" class="outline-2">
+<h2 id="org3ee3010"><span class="section-number-2">1</span> Test tools</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgd90bb81" class="outline-3">
-<h3 id="orgd90bb81"><span class="section-number-3">1.1</span> dd</h3>
+<div id="outline-container-org85028e2" class="outline-3">
+<h3 id="org85028e2"><span class="section-number-3">1.1</span> dd</h3>
 </div>
-<div id="outline-container-org4b13e80" class="outline-3">
-<h3 id="org4b13e80"><span class="section-number-3">1.2</span> fio</h3>
+<div id="outline-container-orgd0a98a7" class="outline-3">
+<h3 id="orgd0a98a7"><span class="section-number-3">1.2</span> fio</h3>
 </div>
-<div id="outline-container-org1422f25" class="outline-3">
-<h3 id="org1422f25"><span class="section-number-3">1.3</span> iometer</h3>
+<div id="outline-container-orge824259" class="outline-3">
+<h3 id="orge824259"><span class="section-number-3">1.3</span> iometer</h3>
 </div>
 </div>
 
-<div id="outline-container-orgcf3fc55" class="outline-2">
-<h2 id="orgcf3fc55"><span class="section-number-2">2</span> Basic Rules</h2>
+<div id="outline-container-org66f0168" class="outline-2">
+<h2 id="org66f0168"><span class="section-number-2">2</span> Basic Rules</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 访问硬盘时, LBA数值越小(靠近外圈), 块越大, 顺序特征越好, 读写性能越好.
@@ -67,16 +73,16 @@
 </div>
 </div>
 
-<div id="outline-container-org0ef0040" class="outline-2">
-<h2 id="org0ef0040"><span class="section-number-2">3</span> SATA HDD</h2>
+<div id="outline-container-orgf8de6fc" class="outline-2">
+<h2 id="orgf8de6fc"><span class="section-number-2">3</span> SATA HDD</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org821e90d" class="outline-3">
-<h3 id="org821e90d"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
+<div id="outline-container-org66cce25" class="outline-3">
+<h3 id="org66cce25"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org580d1fe" class="outline-4">
-<h4 id="org580d1fe"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
+<div id="outline-container-org20f0603" class="outline-4">
+<h4 id="org20f0603"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-conf">Model Family:     HGST Travelstar 7K1000
@@ -98,8 +104,8 @@ SMART support is: Enabled
 </div>
 </div>
 </div>
-<div id="outline-container-org0f13df1" class="outline-4">
-<h4 id="org0f13df1"><span class="section-number-4">3.1.2</span> dd test</h4>
+<div id="outline-container-org6011875" class="outline-4">
+<h4 id="org6011875"><span class="section-number-4">3.1.2</span> dd test</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 简单查看结果可知, 64K性能是512B性能的15倍.
@@ -139,26 +145,26 @@ SMART support is: Enabled
 </div>
 </div>
 
-<div id="outline-container-org91197e4" class="outline-4">
-<h4 id="org91197e4"><span class="section-number-4">3.1.3</span> FIO</h4>
+<div id="outline-container-org6bcef49" class="outline-4">
+<h4 id="org6bcef49"><span class="section-number-4">3.1.3</span> FIO</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6b5e25e" class="outline-2">
-<h2 id="org6b5e25e"><span class="section-number-2">4</span> SAS HDD</h2>
+<div id="outline-container-org88f1a9a" class="outline-2">
+<h2 id="org88f1a9a"><span class="section-number-2">4</span> SAS HDD</h2>
 </div>
 
-<div id="outline-container-orgcfde076" class="outline-2">
-<h2 id="orgcfde076"><span class="section-number-2">5</span> SATA SSD</h2>
+<div id="outline-container-orgb22e814" class="outline-2">
+<h2 id="orgb22e814"><span class="section-number-2">5</span> SATA SSD</h2>
 </div>
 
-<div id="outline-container-orgf9006e9" class="outline-2">
-<h2 id="orgf9006e9"><span class="section-number-2">6</span> SAS SSD</h2>
+<div id="outline-container-orgde4c651" class="outline-2">
+<h2 id="orgde4c651"><span class="section-number-2">6</span> SAS SSD</h2>
 </div>
 
-<div id="outline-container-org02b860d" class="outline-2">
-<h2 id="org02b860d"><span class="section-number-2">7</span> NVMe SSD</h2>
+<div id="outline-container-org8006af8" class="outline-2">
+<h2 id="org8006af8"><span class="section-number-2">7</span> NVMe SSD</h2>
 </div>
 </div>
 <div id="postamble" class="status">
@@ -166,6 +172,7 @@ SMART support is: Enabled
 
 <div id="disqus_thread"></div>
 <script>
+  var disqus_developer = 1;
     /**
      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables

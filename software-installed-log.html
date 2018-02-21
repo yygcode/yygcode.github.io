@@ -3,11 +3,17 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:07 -->
+<!-- 2018-02-21 Wed 19:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Software Installed Log</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -39,20 +45,20 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#autohotkey">1. AutoHotkey</a></li>
-<li><a href="#org4eb6844">2. msys2</a>
+<li><a href="#orgb93eb0a">2. msys2</a>
 <ul>
 <li><a href="#msys2-mingw64">2.1. <span class="done DONE">DONE</span> mingw64</a></li>
 </ul>
 </li>
-<li><a href="#org580e378">3. Emacs</a>
+<li><a href="#orga180694">3. Emacs</a>
 <ul>
-<li><a href="#org3a3f66f">3.1. <span class="done DONE">DONE</span> Windows</a>
+<li><a href="#org2f6a57b">3.1. <span class="done DONE">DONE</span> Windows</a>
 <ul>
-<li><a href="#org2ec72cd">3.1.1. binary install</a></li>
-<li><a href="#orgbe532c9">3.1.2. Msys2 compile</a></li>
+<li><a href="#org4f64488">3.1.1. binary install</a></li>
+<li><a href="#org9475c2a">3.1.2. Msys2 compile</a></li>
 </ul>
 </li>
-<li><a href="#org76b21f2">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
+<li><a href="#org43bbe85">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
 <li><a href="#emacs-config">3.3. <span class="done DONE">DONE</span> emacs configuration</a></li>
 </ul>
 </li>
@@ -60,8 +66,8 @@
 </div>
 </div>
 
-<div id="outline-container-org7ab2225" class="outline-2">
-<h2 id="autohotkey"><a id="org7ab2225"></a><span class="section-number-2">1</span> AutoHotkey</h2>
+<div id="outline-container-org443f562" class="outline-2">
+<h2 id="autohotkey"><a id="org443f562"></a><span class="section-number-2">1</span> AutoHotkey</h2>
 <div class="outline-text-2" id="text-autohotkey">
 <ul class="org-ul">
 <li>Useful with favorite quickshot</li>
@@ -96,12 +102,12 @@ Ctrl::Capslock
 </div>
 </div>
 
-<div id="outline-container-org4eb6844" class="outline-2">
-<h2 id="org4eb6844"><span class="section-number-2">2</span> msys2</h2>
+<div id="outline-container-orgb93eb0a" class="outline-2">
+<h2 id="orgb93eb0a"><span class="section-number-2">2</span> msys2</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org2fa0f6e" class="outline-3">
-<h3 id="msys2-mingw64"><a id="org2fa0f6e"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
+<div id="outline-container-org4735be7" class="outline-3">
+<h3 id="msys2-mingw64"><a id="org4735be7"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
 <div class="outline-text-3" id="text-msys2-mingw64">
 <div class="org-src-container">
 <pre class="src src-sh">~$ pacman -Syuu
@@ -186,16 +192,16 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-org580e378" class="outline-2">
-<h2 id="org580e378"><span class="section-number-2">3</span> Emacs</h2>
+<div id="outline-container-orga180694" class="outline-2">
+<h2 id="orga180694"><span class="section-number-2">3</span> Emacs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org3a3f66f" class="outline-3">
-<h3 id="org3a3f66f"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
+<div id="outline-container-org2f6a57b" class="outline-3">
+<h3 id="org2f6a57b"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org2ec72cd" class="outline-4">
-<h4 id="org2ec72cd"><span class="section-number-4">3.1.1</span> binary install</h4>
+<div id="outline-container-org4f64488" class="outline-4">
+<h4 id="org4f64488"><span class="section-number-4">3.1.1</span> binary install</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <ul class="org-ul">
 <li>Download from <a href="https://ftp.gnu.org/gnu/emacs/windows/">stable</a> or <a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">pretest</a> version(201711 stable 25.3, pretest 26.0.90)</li>
@@ -205,8 +211,8 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-orgbe532c9" class="outline-4">
-<h4 id="orgbe532c9"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
+<div id="outline-container-org9475c2a" class="outline-4">
+<h4 id="org9475c2a"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <ul class="org-ul">
 <li>install <a href="#msys2-mingw64">mingw64</a> first.</li>
@@ -238,11 +244,11 @@ cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
 </div>
 </div>
 
-<div id="outline-container-org76b21f2" class="outline-3">
-<h3 id="org76b21f2"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
+<div id="outline-container-org43bbe85" class="outline-3">
+<h3 id="org43bbe85"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
 </div>
-<div id="outline-container-org5ecb76f" class="outline-3">
-<h3 id="emacs-config"><a id="org5ecb76f"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
+<div id="outline-container-org22a96a1" class="outline-3">
+<h3 id="emacs-config"><a id="org22a96a1"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
 <div class="outline-text-3" id="text-emacs-config">
 <ul class="org-ul">
 <li>clone/update config</li>
@@ -268,6 +274,7 @@ cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
 
 <div id="disqus_thread"></div>
 <script>
+  var disqus_developer = 1;
     /**
      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables

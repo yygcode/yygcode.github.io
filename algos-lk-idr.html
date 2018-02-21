@@ -3,11 +3,17 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:07 -->
+<!-- 2018-02-21 Wed 19:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
 <div id="content">
@@ -16,20 +22,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org86da4cf">1. 介绍</a></li>
-<li><a href="#orgbd2dd88">2. 代码分析</a>
+<li><a href="#orgbe6025b">1. 介绍</a></li>
+<li><a href="#org8ea70c0">2. 代码分析</a>
 <ul>
-<li><a href="#org34b1399">2.1. 数据结构</a></li>
-<li><a href="#org3b3e5fd">2.2. idr_alloc分析</a></li>
+<li><a href="#orgacee331">2.1. 数据结构</a></li>
+<li><a href="#orgb438af1">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#orge7d7a10">3. Reference Material</a></li>
+<li><a href="#orgb84bc63">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org86da4cf" class="outline-2">
-<h2 id="org86da4cf"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgbe6025b" class="outline-2">
+<h2 id="orgbe6025b"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -37,12 +43,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgbd2dd88" class="outline-2">
-<h2 id="orgbd2dd88"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-org8ea70c0" class="outline-2">
+<h2 id="org8ea70c0"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org34b1399" class="outline-3">
-<h3 id="org34b1399"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-orgacee331" class="outline-3">
+<h3 id="orgacee331"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
@@ -86,8 +92,8 @@
 </div>
 </div>
 
-<div id="outline-container-org3b3e5fd" class="outline-3">
-<h3 id="org3b3e5fd"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-orgb438af1" class="outline-3">
+<h3 id="orgb438af1"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -120,8 +126,8 @@
 </div>
 
 
-<div id="outline-container-orge7d7a10" class="outline-2">
-<h2 id="orge7d7a10"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-orgb84bc63" class="outline-2">
+<h2 id="orgb84bc63"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
@@ -135,6 +141,7 @@
 
 <div id="disqus_thread"></div>
 <script>
+  var disqus_developer = 1;
     /**
      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
