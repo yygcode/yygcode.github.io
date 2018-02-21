@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-16 Fri 16:11 -->
+<!-- 2018-02-21 Wed 19:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>B Tree</title>
 <meta name="generator" content="Org mode" />
@@ -38,23 +38,23 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge958d5e">1. 概述</a></li>
-<li><a href="#orgd1a2908">2. 应用</a></li>
-<li><a href="#org0c07424">3. 分析</a>
+<li><a href="#orgd120a7d">1. 概述</a></li>
+<li><a href="#org2236303">2. 应用</a></li>
+<li><a href="#org318dcfb">3. 分析</a>
 <ul>
-<li><a href="#orgc3d6b93">3.1. 定义</a></li>
-<li><a href="#orgde52d9b">3.2. 运行时间上限</a></li>
-<li><a href="#orgd3d2116">3.3. 改进与变形</a></li>
+<li><a href="#org9e22310">3.1. 定义</a></li>
+<li><a href="#orgc1cac73">3.2. 运行时间上限</a></li>
+<li><a href="#orgc51119d">3.3. 改进与变形</a></li>
 </ul>
 </li>
-<li><a href="#org3a203e3">4. B树实现</a></li>
-<li><a href="#org5d89680">5. 外部链接</a></li>
+<li><a href="#org85c4066">4. B树实现</a></li>
+<li><a href="#org6819e2a">5. 外部链接</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge958d5e" class="outline-2">
-<h2 id="orge958d5e"><span class="section-number-2">1</span> 概述</h2>
+<div id="outline-container-orgd120a7d" class="outline-2">
+<h2 id="orgd120a7d"><span class="section-number-2">1</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 相比于内存, 访问磁盘/磁带等块设备时, 大块数据读写有更好的性能. 为高效使用这类设备, 应组织数据结构, 将多份数据放入一个块中. B树是解决此问题的算法统称, 具体实现时, 会基于应用场景进行优化, <a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>)是典型代表.
@@ -66,8 +66,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgd1a2908" class="outline-2">
-<h2 id="orgd1a2908"><span class="section-number-2">2</span> 应用</h2>
+<div id="outline-container-org2236303" class="outline-2">
+<h2 id="org2236303"><span class="section-number-2">2</span> 应用</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 B树(或其变形)广泛应用于有大量元数据需要保存到外部存储介质的应用场景, 例如文件系统, 数据库, 以及存储自精简/压缩/重删等特性中.
@@ -75,12 +75,12 @@ B树(或其变形)广泛应用于有大量元数据需要保存到外部存储�
 </div>
 </div>
 
-<div id="outline-container-org0c07424" class="outline-2">
-<h2 id="org0c07424"><span class="section-number-2">3</span> 分析</h2>
+<div id="outline-container-org318dcfb" class="outline-2">
+<h2 id="org318dcfb"><span class="section-number-2">3</span> 分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgc3d6b93" class="outline-3">
-<h3 id="orgc3d6b93"><span class="section-number-3">3.1</span> 定义</h3>
+<div id="outline-container-org9e22310" class="outline-3">
+<h3 id="org9e22310"><span class="section-number-3">3.1</span> 定义</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 读过资料中, B树最完整清晰定义来自<a href="http://www-cs-faculty.stanford.edu/~uno/taocp.html">TAOCP</a>:
@@ -116,8 +116,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-orgde52d9b" class="outline-3">
-<h3 id="orgde52d9b"><span class="section-number-3">3.2</span> 运行时间上限</h3>
+<div id="outline-container-orgc1cac73" class="outline-3">
+<h3 id="orgc1cac73"><span class="section-number-3">3.2</span> 运行时间上限</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 给定\(m\)阶B树, 假定存在\(N\)个键, \(N+1\)个叶子出现在\(l\)级, 则
@@ -136,8 +136,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-orgd3d2116" class="outline-3">
-<h3 id="orgd3d2116"><span class="section-number-3">3.3</span> 改进与变形</h3>
+<div id="outline-container-orgc51119d" class="outline-3">
+<h3 id="orgc51119d"><span class="section-number-3">3.3</span> 改进与变形</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 参考<a href="algos-bplustree.html">B+ Tree</a>(<a href="https://en.wikipedia.org/wiki/B%2B_tree">WIKI</a>)和<a href="algos-bstar-tree.html">\(B^*\) Tree</a>(<a href="https://en.wikipedia.org/wiki/B*">WIKI</a>).
@@ -146,8 +146,8 @@ B树仅在分割根节点时才增高. 这正是此思想的美妙之处.
 </div>
 </div>
 
-<div id="outline-container-org3a203e3" class="outline-2">
-<h2 id="org3a203e3"><span class="section-number-2">4</span> B树实现</h2>
+<div id="outline-container-org85c4066" class="outline-2">
+<h2 id="org85c4066"><span class="section-number-2">4</span> B树实现</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;uncompleted&gt;
@@ -155,8 +155,8 @@ B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;un
 </div>
 </div>
 
-<div id="outline-container-org5d89680" class="outline-2">
-<h2 id="org5d89680"><span class="section-number-2">5</span> 外部链接</h2>
+<div id="outline-container-org6819e2a" class="outline-2">
+<h2 id="org6819e2a"><span class="section-number-2">5</span> 外部链接</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>B Tree: <a href="https://en.wikipedia.org/wiki/B-tree">https://en.wikipedia.org/wiki/B-tree</a></li>
@@ -167,8 +167,30 @@ B树需要实现创建, 插入, 删除, 搜索, 销毁操作. 参考代码&lt;un
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 Copyright&copy; <i>yanyg</i><br/>
-<i>Powered by Emacs Orgmode</i>
+2012-2020 (&copy;) <i>yanyg</i>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://yanyg.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 </body>
 </html>

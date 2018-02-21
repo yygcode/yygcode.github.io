@@ -3,9 +3,9 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-16 Fri 16:10 -->
+<!-- 2018-02-21 Wed 19:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>LINUX PROC Filesystem</title>
+<title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
@@ -17,36 +17,43 @@
 </head>
 <body>
 <div id="content">
-<h1 class="title">LINUX PROC Filesystem</h1>
+<h1 class="title">Linux Proc Filesystem/Linux Proc文件系统</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9775f11">1. 介绍</a></li>
-<li><a href="#orgbf4ceb1">2. proc/&lt;pid&gt;</a>
+<li><a href="#org598fa2c">1. 介绍</a></li>
+<li><a href="#orge1d2b36">2. proc/&lt;pid&gt;</a>
 <ul>
-<li><a href="#org3fc1483">2.1. proc/self</a></li>
-<li><a href="#org7678ef8">2.2. oom_score</a></li>
+<li><a href="#orgd2385fb">2.1. proc/self</a></li>
+<li><a href="#orga62af3e">2.2. oom_score</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9775f11" class="outline-2">
-<h2 id="org9775f11"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org598fa2c" class="outline-2">
+<h2 id="org598fa2c"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+proc虚拟文件系统
+pseudo
+</p>
+</div>
 </div>
 
-<div id="outline-container-orgbf4ceb1" class="outline-2">
-<h2 id="orgbf4ceb1"><span class="section-number-2">2</span> proc/&lt;pid&gt;</h2>
+<div id="outline-container-orge1d2b36" class="outline-2">
+<h2 id="orge1d2b36"><span class="section-number-2">2</span> proc/&lt;pid&gt;</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3fc1483" class="outline-3">
-<h3 id="org3fc1483"><span class="section-number-3">2.1</span> proc/self</h3>
+<div id="outline-container-orgd2385fb" class="outline-3">
+<h3 id="orgd2385fb"><span class="section-number-3">2.1</span> proc/self</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 proc/self是一个符号链接，总是指向执行进程本身。
 </p>
+
 <div class="org-src-container">
 <pre class="src src-sh">~$ ls -ld /proc/self
 lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
@@ -55,8 +62,8 @@ lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
 </div>
 </div>
 
-<div id="outline-container-org7678ef8" class="outline-3">
-<h3 id="org7678ef8"><span class="section-number-3">2.2</span> oom_score</h3>
+<div id="outline-container-orga62af3e" class="outline-3">
+<h3 id="orga62af3e"><span class="section-number-3">2.2</span> oom_score</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-C">
@@ -67,8 +74,30 @@ lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 Copyright&copy; <i>yanyg</i><br/>
-<i>Powered by Emacs Orgmode</i>
+2012-2020 (&copy;) <i>yanyg</i>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://yanyg.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-16 Fri 16:11 -->
+<!-- 2018-02-21 Wed 19:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - RADIX树实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -22,27 +22,27 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2242a1d">1. 介绍</a></li>
-<li><a href="#org3b5fc3c">2. 结构体描述</a>
+<li><a href="#orgea085aa">1. 介绍</a></li>
+<li><a href="#orge820bd8">2. 结构体描述</a>
 <ul>
-<li><a href="#orgd37aa07">2.1. radix_tree_node</a></li>
-<li><a href="#org33bcb54">2.2. radix_tree_root</a></li>
+<li><a href="#orgd71a2c1">2.1. radix_tree_node</a></li>
+<li><a href="#orgf2b2521">2.2. radix_tree_root</a></li>
 </ul>
 </li>
-<li><a href="#orge2a1ff3">3. 插入操作</a></li>
-<li><a href="#orgee5bb12">4. API</a>
+<li><a href="#org3be40f8">3. 插入操作</a></li>
+<li><a href="#orgc586868">4. API</a>
 <ul>
-<li><a href="#org88a7d19">4.1. radix_tree_lookup</a></li>
+<li><a href="#org2343c70">4.1. radix_tree_lookup</a></li>
 </ul>
 </li>
-<li><a href="#orgc6d4d7f">5. Data Structures</a></li>
-<li><a href="#org0e2b32b">6. Reference</a></li>
+<li><a href="#org59b9473">5. Data Structures</a></li>
+<li><a href="#orge86d306">6. Reference</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2242a1d" class="outline-2">
-<h2 id="org2242a1d"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgea085aa" class="outline-2">
+<h2 id="orgea085aa"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://en.wikipedia.org/wiki/Radix_tree">RADIX-TREE</a>，也称为Radix Trie或Compact Prefix Tree，中文翻译基数树，是一种空间优化的字典树，其每一个节点都是由子节点和它的父节点合并而成。其结果是，每个内部节点的子节点数目至少是基数数的基数r，其中r是一个正数，且为 2<sup>x</sup>，其中x&ge;1。有别于其他的字典树，RADIX树的边可以标记为元素序列或单个元素，这使得小集合场景下基数树更加有效，由于对于比较长的字符串，以及有比较长前缀的字符串。
@@ -73,12 +73,12 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 </div>
 </div>
 
-<div id="outline-container-org3b5fc3c" class="outline-2">
-<h2 id="org3b5fc3c"><span class="section-number-2">2</span> 结构体描述</h2>
+<div id="outline-container-orge820bd8" class="outline-2">
+<h2 id="orge820bd8"><span class="section-number-2">2</span> 结构体描述</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd37aa07" class="outline-3">
-<h3 id="orgd37aa07"><span class="section-number-3">2.1</span> radix_tree_node</h3>
+<div id="outline-container-orgd71a2c1" class="outline-3">
+<h3 id="orgd71a2c1"><span class="section-number-3">2.1</span> radix_tree_node</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li><code>RADIX_TREE_MAP_SHIFT</code> 定义基数r，内核通过CONFIG选项，可设置为4或6，默认为6；</li>
@@ -161,8 +161,8 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 </div>
 </div>
 
-<div id="outline-container-org33bcb54" class="outline-3">
-<h3 id="org33bcb54"><span class="section-number-3">2.2</span> radix_tree_root</h3>
+<div id="outline-container-orgf2b2521" class="outline-3">
+<h3 id="orgf2b2521"><span class="section-number-3">2.2</span> radix_tree_root</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向第一个节点；
@@ -178,8 +178,8 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-orge2a1ff3" class="outline-2">
-<h2 id="orge2a1ff3"><span class="section-number-2">3</span> 插入操作</h2>
+<div id="outline-container-org3be40f8" class="outline-2">
+<h2 id="org3be40f8"><span class="section-number-2">3</span> 插入操作</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <code>radix_tree_insert</code> 是一个包装函数，将任务派发给 <code>__radix_tree_insert</code> 。
@@ -238,17 +238,17 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-orgee5bb12" class="outline-2">
-<h2 id="orgee5bb12"><span class="section-number-2">4</span> API</h2>
+<div id="outline-container-orgc586868" class="outline-2">
+<h2 id="orgc586868"><span class="section-number-2">4</span> API</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org88a7d19" class="outline-3">
-<h3 id="org88a7d19"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
+<div id="outline-container-org2343c70" class="outline-3">
+<h3 id="org2343c70"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
 </div>
 </div>
 
-<div id="outline-container-orgc6d4d7f" class="outline-2">
-<h2 id="orgc6d4d7f"><span class="section-number-2">5</span> Data Structures</h2>
+<div id="outline-container-org59b9473" class="outline-2">
+<h2 id="org59b9473"><span class="section-number-2">5</span> Data Structures</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 **
@@ -260,8 +260,8 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-org0e2b32b" class="outline-2">
-<h2 id="org0e2b32b"><span class="section-number-2">6</span> Reference</h2>
+<div id="outline-container-orge86d306" class="outline-2">
+<h2 id="orge86d306"><span class="section-number-2">6</span> Reference</h2>
 <div class="outline-text-2" id="text-6">
 <dl class="org-dl">
 <dt>LWN Trees I: Radix Tree</dt><dd><a href="https://lwn.net/Articles/175432/">https://lwn.net/Articles/175432/</a></dd>
@@ -271,8 +271,30 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 Copyright&copy; <i>yanyg</i><br/>
-<i>Powered by Emacs Orgmode</i>
+2012-2020 (&copy;) <i>yanyg</i>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://yanyg.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 </body>
 </html>

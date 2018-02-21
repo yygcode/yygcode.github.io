@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-16 Fri 16:11 -->
+<!-- 2018-02-21 Wed 19:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -16,20 +16,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga236a99">1. 介绍</a></li>
-<li><a href="#orgf7a0c60">2. 代码分析</a>
+<li><a href="#orgc911c92">1. 介绍</a></li>
+<li><a href="#orgf8c0914">2. 代码分析</a>
 <ul>
-<li><a href="#org486f46b">2.1. 数据结构</a></li>
-<li><a href="#org19e234b">2.2. idr_alloc分析</a></li>
+<li><a href="#org63d0129">2.1. 数据结构</a></li>
+<li><a href="#orge2373bf">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#orge4389fc">3. Reference Material</a></li>
+<li><a href="#org83a00c2">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga236a99" class="outline-2">
-<h2 id="orga236a99"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgc911c92" class="outline-2">
+<h2 id="orgc911c92"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -37,12 +37,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgf7a0c60" class="outline-2">
-<h2 id="orgf7a0c60"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-orgf8c0914" class="outline-2">
+<h2 id="orgf8c0914"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org486f46b" class="outline-3">
-<h3 id="org486f46b"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-org63d0129" class="outline-3">
+<h3 id="org63d0129"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
@@ -86,8 +86,8 @@
 </div>
 </div>
 
-<div id="outline-container-org19e234b" class="outline-3">
-<h3 id="org19e234b"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-orge2373bf" class="outline-3">
+<h3 id="orge2373bf"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -120,8 +120,8 @@
 </div>
 
 
-<div id="outline-container-orge4389fc" class="outline-2">
-<h2 id="orge4389fc"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org83a00c2" class="outline-2">
+<h2 id="org83a00c2"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
@@ -131,8 +131,30 @@
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 Copyright&copy; <i>yanyg</i><br/>
-<i>Powered by Emacs Orgmode</i>
+2012-2020 (&copy;) <i>yanyg</i>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://yanyg.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 </body>
 </html>
