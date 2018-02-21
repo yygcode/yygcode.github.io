@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:00 -->
+<!-- 2018-02-21 Wed 19:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Emacs启动时间分析</title>
 <meta name="generator" content="Org mode" />
@@ -31,15 +31,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc7d3348">1. 介绍</a></li>
-<li><a href="#org67004f1">2. benchmark-init</a></li>
-<li><a href="#orgff992ae">3. esup</a></li>
+<li><a href="#orgfa6aac0">1. 介绍</a></li>
+<li><a href="#orgd37621d">2. benchmark-init</a></li>
+<li><a href="#org72574ef">3. esup</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc7d3348" class="outline-2">
-<h2 id="orgc7d3348"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgfa6aac0" class="outline-2">
+<h2 id="orgfa6aac0"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Emacs启动调优需要先分析时间分布。<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>和<a href="https://github.com/jschaf/esup/">esup</a>是两个优秀的候选package。
@@ -54,8 +54,8 @@ init.el本身启动时间分析。
 </div>
 </div>
 
-<div id="outline-container-org67004f1" class="outline-2">
-<h2 id="org67004f1"><span class="section-number-2">2</span> benchmark-init</h2>
+<div id="outline-container-orgd37621d" class="outline-2">
+<h2 id="orgd37621d"><span class="section-number-2">2</span> benchmark-init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>是require和load函数的基准测试工具：
@@ -137,8 +137,8 @@ benchmark-init配置如下：
 </div>
 </div>
 
-<div id="outline-container-orgff992ae" class="outline-2">
-<h2 id="orgff992ae"><span class="section-number-2">3</span> esup</h2>
+<div id="outline-container-org72574ef" class="outline-2">
+<h2 id="org72574ef"><span class="section-number-2">3</span> esup</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <a href="https://github.com/jschaf/esup/">esup</a>对emacs启动时间进行基准分析。esup-0.6版本在emacs-26.0.90版本下有
@@ -254,6 +254,8 @@ esup默认分析 <code>user-init-file</code> 文件，执行 <code>C-u M-x esup<
     })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<script id="dsq-count-scr" src="//yanyg.disqus.com/count.js" async></script>
 </div>
 </body>
 </html>

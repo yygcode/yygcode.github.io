@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:00 -->
+<!-- 2018-02-21 Wed 19:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
@@ -22,19 +22,19 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org598fa2c">1. 介绍</a></li>
-<li><a href="#orge1d2b36">2. proc/&lt;pid&gt;</a>
+<li><a href="#org3afc079">1. 介绍</a></li>
+<li><a href="#org6e6e432">2. proc/&lt;pid&gt;</a>
 <ul>
-<li><a href="#orgd2385fb">2.1. proc/self</a></li>
-<li><a href="#orga62af3e">2.2. oom_score</a></li>
+<li><a href="#orga63961d">2.1. proc/self</a></li>
+<li><a href="#orgfef9dbb">2.2. oom_score</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org598fa2c" class="outline-2">
-<h2 id="org598fa2c"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org3afc079" class="outline-2">
+<h2 id="org3afc079"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 proc虚拟文件系统
@@ -43,12 +43,12 @@ pseudo
 </div>
 </div>
 
-<div id="outline-container-orge1d2b36" class="outline-2">
-<h2 id="orge1d2b36"><span class="section-number-2">2</span> proc/&lt;pid&gt;</h2>
+<div id="outline-container-org6e6e432" class="outline-2">
+<h2 id="org6e6e432"><span class="section-number-2">2</span> proc/&lt;pid&gt;</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd2385fb" class="outline-3">
-<h3 id="orgd2385fb"><span class="section-number-3">2.1</span> proc/self</h3>
+<div id="outline-container-orga63961d" class="outline-3">
+<h3 id="orga63961d"><span class="section-number-3">2.1</span> proc/self</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 proc/self是一个符号链接，总是指向执行进程本身。
@@ -62,8 +62,8 @@ lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
 </div>
 </div>
 
-<div id="outline-container-orga62af3e" class="outline-3">
-<h3 id="orga62af3e"><span class="section-number-3">2.2</span> oom_score</h3>
+<div id="outline-container-orgfef9dbb" class="outline-3">
+<h3 id="orgfef9dbb"><span class="section-number-3">2.2</span> oom_score</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-C">

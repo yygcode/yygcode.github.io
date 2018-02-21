@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:00 -->
+<!-- 2018-02-21 Wed 19:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>存储特性清单</title>
 <meta name="generator" content="Org mode" />
@@ -16,36 +16,36 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0f2a43b">1. 增值服务 - 数据保护</a>
+<li><a href="#org547f438">1. 增值服务 - 数据保护</a>
 <ul>
-<li><a href="#org6100342">1.1. 快照</a>
+<li><a href="#orgb5ab059">1.1. 快照</a>
 <ul>
-<li><a href="#org04c0356">1.1.1. 介绍</a></li>
-<li><a href="#orgfdf783e">1.1.2. 功能清单</a></li>
-<li><a href="#orged87936">1.1.3. 系统影响</a></li>
-<li><a href="#org482f87e">1.1.4. 用户场景</a></li>
-<li><a href="#org1720d61">1.1.5. 原理及实现</a></li>
+<li><a href="#orgaf7e7dd">1.1.1. 介绍</a></li>
+<li><a href="#org51ea5d3">1.1.2. 功能清单</a></li>
+<li><a href="#org9ae7317">1.1.3. 系统影响</a></li>
+<li><a href="#org59bf10d">1.1.4. 用户场景</a></li>
+<li><a href="#orgdd6514f">1.1.5. 原理及实现</a></li>
 </ul>
 </li>
-<li><a href="#orgba9ea85">1.2. 镜像</a>
+<li><a href="#orgd20ba63">1.2. 镜像</a>
 <ul>
-<li><a href="#org86b9b77">1.2.1. 介绍</a></li>
+<li><a href="#orgc0624ad">1.2.1. 介绍</a></li>
 </ul>
 </li>
-<li><a href="#org675b5a9">1.3. 克隆</a></li>
-<li><a href="#orgad9942d">1.4. 远程复制</a></li>
-<li><a href="#orgfa8a2ee">1.5. 双活</a></li>
-<li><a href="#org0bf0643">1.6. 异构虚拟化</a></li>
+<li><a href="#orge58dbf9">1.3. 克隆</a></li>
+<li><a href="#org1f65cb4">1.4. 远程复制</a></li>
+<li><a href="#org43858cb">1.5. 双活</a></li>
+<li><a href="#orgbfbc325">1.6. 异构虚拟化</a></li>
 </ul>
 </li>
-<li><a href="#org916d298">2. 主机适配 - Target基本功能</a></li>
-<li><a href="#org51ba679">3. 主机适配 - 虚拟化应用VAAI</a></li>
-<li><a href="#org5daeb6a">4. 主机适配 - Targe</a></li>
-<li><a href="#orge8ae729">5. 性能加速 - 缓存技术</a>
+<li><a href="#orgd3ecb22">2. 主机适配 - Target基本功能</a></li>
+<li><a href="#org9613db4">3. 主机适配 - 虚拟化应用VAAI</a></li>
+<li><a href="#org3ee316a">4. 主机适配 - Targe</a></li>
+<li><a href="#orga88c878">5. 性能加速 - 缓存技术</a>
 <ul>
-<li><a href="#org4093ea7">5.1. 总体介绍</a></li>
-<li><a href="#org8286d49">5.2. 缓存分区</a></li>
-<li><a href="#org6a819bf">5.3. 缓存保护</a></li>
+<li><a href="#org8ccf6fc">5.1. 总体介绍</a></li>
+<li><a href="#org187e8c6">5.2. 缓存分区</a></li>
+<li><a href="#org3fbdadc">5.3. 缓存保护</a></li>
 </ul>
 </li>
 </ul>
@@ -55,16 +55,16 @@
 本文基于IO栈从上往下顺序, 介绍SAN存储特性.
 </p>
 
-<div id="outline-container-org0f2a43b" class="outline-2">
-<h2 id="org0f2a43b"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
+<div id="outline-container-org547f438" class="outline-2">
+<h2 id="org547f438"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org6100342" class="outline-3">
-<h3 id="org6100342"><span class="section-number-3">1.1</span> 快照</h3>
+<div id="outline-container-orgb5ab059" class="outline-3">
+<h3 id="orgb5ab059"><span class="section-number-3">1.1</span> 快照</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org04c0356" class="outline-4">
-<h4 id="org04c0356"><span class="section-number-4">1.1.1</span> 介绍</h4>
+<div id="outline-container-orgaf7e7dd" class="outline-4">
+<h4 id="orgaf7e7dd"><span class="section-number-4">1.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 在不中断正常业务前提下, 生成源卷某一时间点的副本. 一般在秒级时间内可生成.
@@ -83,8 +83,8 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-orgfdf783e" class="outline-4">
-<h4 id="orgfdf783e"><span class="section-number-4">1.1.2</span> 功能清单</h4>
+<div id="outline-container-org51ea5d3" class="outline-4">
+<h4 id="org51ea5d3"><span class="section-number-4">1.1.2</span> 功能清单</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>创建</li>
@@ -96,60 +96,60 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-orged87936" class="outline-4">
-<h4 id="orged87936"><span class="section-number-4">1.1.3</span> 系统影响</h4>
+<div id="outline-container-org9ae7317" class="outline-4">
+<h4 id="org9ae7317"><span class="section-number-4">1.1.3</span> 系统影响</h4>
 </div>
 
-<div id="outline-container-org482f87e" class="outline-4">
-<h4 id="org482f87e"><span class="section-number-4">1.1.4</span> 用户场景</h4>
+<div id="outline-container-org59bf10d" class="outline-4">
+<h4 id="org59bf10d"><span class="section-number-4">1.1.4</span> 用户场景</h4>
 </div>
 
-<div id="outline-container-org1720d61" class="outline-4">
-<h4 id="org1720d61"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
+<div id="outline-container-orgdd6514f" class="outline-4">
+<h4 id="orgdd6514f"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
 </div>
 </div>
-<div id="outline-container-orgba9ea85" class="outline-3">
-<h3 id="orgba9ea85"><span class="section-number-3">1.2</span> 镜像</h3>
+<div id="outline-container-orgd20ba63" class="outline-3">
+<h3 id="orgd20ba63"><span class="section-number-3">1.2</span> 镜像</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-org86b9b77" class="outline-4">
-<h4 id="org86b9b77"><span class="section-number-4">1.2.1</span> 介绍</h4>
+<div id="outline-container-orgc0624ad" class="outline-4">
+<h4 id="orgc0624ad"><span class="section-number-4">1.2.1</span> 介绍</h4>
 </div>
 </div>
-<div id="outline-container-org675b5a9" class="outline-3">
-<h3 id="org675b5a9"><span class="section-number-3">1.3</span> 克隆</h3>
+<div id="outline-container-orge58dbf9" class="outline-3">
+<h3 id="orge58dbf9"><span class="section-number-3">1.3</span> 克隆</h3>
 </div>
-<div id="outline-container-orgad9942d" class="outline-3">
-<h3 id="orgad9942d"><span class="section-number-3">1.4</span> 远程复制</h3>
+<div id="outline-container-org1f65cb4" class="outline-3">
+<h3 id="org1f65cb4"><span class="section-number-3">1.4</span> 远程复制</h3>
 </div>
-<div id="outline-container-orgfa8a2ee" class="outline-3">
-<h3 id="orgfa8a2ee"><span class="section-number-3">1.5</span> 双活</h3>
+<div id="outline-container-org43858cb" class="outline-3">
+<h3 id="org43858cb"><span class="section-number-3">1.5</span> 双活</h3>
 </div>
-<div id="outline-container-org0bf0643" class="outline-3">
-<h3 id="org0bf0643"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
+<div id="outline-container-orgbfbc325" class="outline-3">
+<h3 id="orgbfbc325"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
 </div>
 </div>
-<div id="outline-container-org916d298" class="outline-2">
-<h2 id="org916d298"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
+<div id="outline-container-orgd3ecb22" class="outline-2">
+<h2 id="orgd3ecb22"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
 </div>
-<div id="outline-container-org51ba679" class="outline-2">
-<h2 id="org51ba679"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
+<div id="outline-container-org9613db4" class="outline-2">
+<h2 id="org9613db4"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
 </div>
-<div id="outline-container-org5daeb6a" class="outline-2">
-<h2 id="org5daeb6a"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
+<div id="outline-container-org3ee316a" class="outline-2">
+<h2 id="org3ee316a"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
 </div>
-<div id="outline-container-orge8ae729" class="outline-2">
-<h2 id="orge8ae729"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
+<div id="outline-container-orga88c878" class="outline-2">
+<h2 id="orga88c878"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org4093ea7" class="outline-3">
-<h3 id="org4093ea7"><span class="section-number-3">5.1</span> 总体介绍</h3>
+<div id="outline-container-org8ccf6fc" class="outline-3">
+<h3 id="org8ccf6fc"><span class="section-number-3">5.1</span> 总体介绍</h3>
 </div>
-<div id="outline-container-org8286d49" class="outline-3">
-<h3 id="org8286d49"><span class="section-number-3">5.2</span> 缓存分区</h3>
+<div id="outline-container-org187e8c6" class="outline-3">
+<h3 id="org187e8c6"><span class="section-number-3">5.2</span> 缓存分区</h3>
 </div>
-<div id="outline-container-org6a819bf" class="outline-3">
-<h3 id="org6a819bf"><span class="section-number-3">5.3</span> 缓存保护</h3>
+<div id="outline-container-org3fbdadc" class="outline-3">
+<h3 id="org3fbdadc"><span class="section-number-3">5.3</span> 缓存保护</h3>
 </div>
 </div>
 </div>
