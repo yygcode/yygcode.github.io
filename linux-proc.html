@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:59 -->
+<!-- 2018-02-22 Thu 22:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
@@ -14,12 +14,28 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -29,12 +45,33 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#org60a62fc">1. 介绍</a></li>
-<li><a href="#org02c1665">2. proc/&lt;pid&gt;</a>
+<li><a href="#org7a72f80">2. 分类描述</a>
 <ul>
-<li><a href="#orgf15ff34">2.1. proc/self</a></li>
-<li><a href="#orgb41b3c9">2.2. oom_score</a></li>
+<li><a href="#orge4f3222">2.1. 内存相关</a></li>
 </ul>
 </li>
+<li><a href="#org0dd1684">3. 清单化呈现(字母顺序排序)</a>
+<ul>
+<li><a href="#buddyinfo">3.1. proc/buddyinfo</a></li>
+<li><a href="#org033f30e">3.2. proc/cgroups</a></li>
+<li><a href="#org6a2ec0a">3.3. proc/consoles</a></li>
+<li><a href="#org65ae0a4">3.4. proc/cpuinfo</a></li>
+<li><a href="#orgfb8af2d">3.5. proc/crypto</a></li>
+<li><a href="#org5f2a29e">3.6. proc/devices</a></li>
+<li><a href="#orgdd40a79">3.7. proc/diskstats</a></li>
+<li><a href="#orgc6e1a88">3.8. proc/dma</a></li>
+<li><a href="#orgbcc79e6">3.9. proc/execdomains</a></li>
+<li><a href="#orgd27aa7b">3.10. proc/fb</a></li>
+<li><a href="#org710d364">3.11. proc/filesystems</a></li>
+<li><a href="#org8919840">3.12. proc/fs</a></li>
+<li><a href="#orgf93e173">3.13. proc/interrups</a></li>
+<li><a href="#org02c1665">3.14. proc/&lt;pid&gt;</a></li>
+<li><a href="#orgf15ff34">3.15. proc/self</a></li>
+<li><a href="#orgb41b3c9">3.16. oom_score</a></li>
+</ul>
+</li>
+<li><a href="#orgdb0b0ff">4. 内核实现</a></li>
+<li><a href="#org4128f36">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
@@ -43,39 +80,1153 @@
 <h2 id="org60a62fc"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-proc虚拟文件系统
-pseudo
+proc虚拟文件系统提供用户态与内核态数据交互的方式，一般挂载在/proc，由initrd启动初始化时挂载。proc下绝大多数文件用以导出内核信息，但也有部分允许修改，这些改变一般用于控制内核模块的功能或行为。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org02c1665" class="outline-2">
-<h2 id="org02c1665"><span class="section-number-2">2</span> proc/&lt;pid&gt;</h2>
+<div id="outline-container-org7a72f80" class="outline-2">
+<h2 id="org7a72f80"><span class="section-number-2">2</span> 分类描述</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgf15ff34" class="outline-3">
-<h3 id="orgf15ff34"><span class="section-number-3">2.1</span> proc/self</h3>
+<div id="outline-container-orge4f3222" class="outline-3">
+<h3 id="orge4f3222"><span class="section-number-3">2.1</span> 内存相关</h3>
 <div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li><a href="#buddyinfo">proc/buddyinfo</a></li>
+<li>/proc/slabinfo</li>
+<li>/proc/meminfo</li>
+<li>/proc/iomem</li>
+<li>/proc/ioports</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0dd1684" class="outline-2">
+<h2 id="org0dd1684"><span class="section-number-2">3</span> 清单化呈现(字母顺序排序)</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orge46d8d2" class="outline-3">
+<h3 id="buddyinfo"><a id="orge46d8d2"></a><span class="section-number-3">3.1</span> proc/buddyinfo</h3>
+<div class="outline-text-3" id="text-buddyinfo">
+<p>
+buddyinfo的内容是Linux系统伙伴管理系统的内存呈现，10列分别表示2<sup>nil</sup>0至2^10{} PAGE
+内存数量。如下是某系统读取到的内容示例：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/buddyinfo
+Node<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>zone<span class="org-whitespace-space">      </span>DMA<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>0<span class="org-whitespace-space">      </span>2<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>0<span class="org-whitespace-space">   </span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">3</span>
+Node<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>zone<span class="org-whitespace-space">    </span>DMA32<span class="org-whitespace-space">    </span>645<span class="org-whitespace-space">    </span>775<span class="org-whitespace-space">    </span>517<span class="org-whitespace-space">    </span>199<span class="org-whitespace-space">     </span>83<span class="org-whitespace-space">      </span>7<span class="org-whitespace-space">     </span>20<span class="org-whitespace-space">     </span>93<span class="org-whitespace-space">   </span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">50</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">8</span><span class="org-whitespace-space"><span class="org-whitespace-line">    </span></span><span class="org-whitespace-line">294</span>
+Node<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>zone<span class="org-whitespace-space">   </span>Normal<span class="org-whitespace-space">    </span>143<span class="org-whitespace-space">    </span>100<span class="org-whitespace-space">     </span>14<span class="org-whitespace-space">     </span>14<span class="org-whitespace-space">      </span>5<span class="org-whitespace-space">      </span>1<span class="org-whitespace-space">      </span>3<span class="org-whitespace-space">      </span>2<span class="org-whitespace-space">   </span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">2</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span>
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/mm/vmstat.c#L1539">linux/mm/vmstat.c</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">buddyinfo_file_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>fragmentation_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org033f30e" class="outline-3">
+<h3 id="org033f30e"><span class="section-number-3">3.2</span> proc/cgroups</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行资源限制和监控。通过伪文件系统cgroupfs提供交互接口。\(man 7 cgroups\)获取详细信息。
+</p>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/cmdline.c">fs/proc/cmdline.c</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">cmdline_proc_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span>seq_printf(m,<span class="org-whitespace-space"> </span><span class="org-string">"%s\n"</span>,<span class="org-whitespace-space"> </span>saved_command_line);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">cmdline_proc_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>single_open(file,<span class="org-whitespace-space"> </span>cmdline_proc_show,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">cmdline_proc_fops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>cmdline_proc_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>single_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_cmdline_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"cmdline"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;cmdline_proc_fops);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_cmdline_init);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6a2ec0a" class="outline-3">
+<h3 id="org6a2ec0a"><span class="section-number-3">3.3</span> proc/consoles</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+consoles显示系统中所有可见的console信息。
+</p>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/consoles.c">fs/proc/consoles.c</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">consoles_op</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-tab">  </span>=<span class="org-whitespace-space"> </span>c_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>c_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>c_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>show_console_dev
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">consoles_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(file,<span class="org-whitespace-space"> </span>&amp;consoles_op);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_consoles_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>consoles_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_consoles_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"consoles"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_consoles_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_consoles_init);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org65ae0a4" class="outline-3">
+<h3 id="org65ae0a4"><span class="section-number-3">3.4</span> proc/cpuinfo</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+cpuinfo显示CPU相关信息：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/cpuinfo
+processor<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>0
+vendor_id<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>GenuineIntel
+cpu<span class="org-whitespace-space"> </span>family<span class="org-whitespace-space">      </span>:<span class="org-whitespace-space"> </span>6
+model<span class="org-whitespace-space">           </span>:<span class="org-whitespace-space"> </span>60
+model<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space">      </span>:<span class="org-whitespace-space"> </span>Intel(R)<span class="org-whitespace-space"> </span>Core(TM)<span class="org-whitespace-space"> </span>i5-4570<span class="org-whitespace-space"> </span>CPU<span class="org-whitespace-space"> </span>@<span class="org-whitespace-space"> </span>3.20GHz
+stepping<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>3
+microcode<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>0x1c
+cpu<span class="org-whitespace-space"> </span>MHz<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>3200.390
+cache<span class="org-whitespace-space"> </span>size<span class="org-whitespace-space">      </span>:<span class="org-whitespace-space"> </span>6144<span class="org-whitespace-space"> </span>KB
+physical<span class="org-whitespace-space"> </span>id<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>0
+siblings<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>4
+core<span class="org-whitespace-space"> </span>id<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>0
+cpu<span class="org-whitespace-space"> </span>cores<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>4
+apicid<span class="org-whitespace-space">          </span>:<span class="org-whitespace-space"> </span>0
+initial<span class="org-whitespace-space"> </span>apicid<span class="org-whitespace-space">  </span>:<span class="org-whitespace-space"> </span>0
+fpu<span class="org-whitespace-space">             </span>:<span class="org-whitespace-space"> </span>yes
+fpu_exception<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span>yes
+cpuid<span class="org-whitespace-space"> </span>level<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>13
+wp<span class="org-whitespace-space">              </span>:<span class="org-whitespace-space"> </span>yes
+flags<span class="org-whitespace-space">           </span>:<span class="org-whitespace-space"> </span>fpu<span class="org-whitespace-space"> </span>vme<span class="org-whitespace-space"> </span>de<span class="org-whitespace-space"> </span>pse<span class="org-whitespace-space"> </span>tsc<span class="org-whitespace-space"> </span>msr<span class="org-whitespace-space"> </span>pae<span class="org-whitespace-space"> </span>mce<span class="org-whitespace-space"> </span>cx8<span class="org-whitespace-space"> </span>apic<span class="org-whitespace-space"> </span>sep<span class="org-whitespace-space"> </span>mtrr<span class="org-whitespace-space"> </span>pge<span class="org-whitespace-space"> </span>mca<span class="org-whitespace-space"> </span>cmov<span class="org-whitespace-space"> </span><span class="org-whitespace-line">pat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pse36</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">clflush</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dts</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">acpi</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mmx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fxsr</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse2</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ss</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ht</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pbe</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">syscall</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">n</span>
+x<span class="org-whitespace-space"> </span>pdpe1gb<span class="org-whitespace-space"> </span>rdtscp<span class="org-whitespace-space"> </span>lm<span class="org-whitespace-space"> </span>constant_tsc<span class="org-whitespace-space"> </span>arch_perfmon<span class="org-whitespace-space"> </span>pebs<span class="org-whitespace-space"> </span>bts<span class="org-whitespace-space"> </span>rep_good<span class="org-whitespace-space"> </span>nopl<span class="org-whitespace-space"> </span>xtopology<span class="org-whitespace-space"> </span>n<span class="org-whitespace-line">onstop_tsc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">aperfmperf</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">eagerfpu</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pni</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pclmulqdq</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dtes64</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">monitor</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ds_cpl</span>
+vmx<span class="org-whitespace-space"> </span>smx<span class="org-whitespace-space"> </span>est<span class="org-whitespace-space"> </span>tm2<span class="org-whitespace-space"> </span>ssse3<span class="org-whitespace-space"> </span>sdbg<span class="org-whitespace-space"> </span>fma<span class="org-whitespace-space"> </span>cx16<span class="org-whitespace-space"> </span>xtpr<span class="org-whitespace-space"> </span>pdcm<span class="org-whitespace-space"> </span>pcid<span class="org-whitespace-space"> </span>sse4_1<span class="org-whitespace-space"> </span>sse4_2<span class="org-whitespace-space"> </span>x2apic<span class="org-whitespace-space"> </span>movbe<span class="org-whitespace-space"> </span>po<span class="org-whitespace-line">pcnt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tsc_deadline_timer</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">aes</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsave</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">avx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">f16c</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rdrand</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">lahf_lm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">abm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">epb</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">t</span>
+pr_shadow<span class="org-whitespace-space"> </span>vnmi<span class="org-whitespace-space"> </span>flexpriority<span class="org-whitespace-space"> </span>ept<span class="org-whitespace-space"> </span>vpid<span class="org-whitespace-space"> </span>fsgsbase<span class="org-whitespace-space"> </span>tsc_adjust<span class="org-whitespace-space"> </span>bmi1<span class="org-whitespace-space"> </span>avx2<span class="org-whitespace-space"> </span>smep<span class="org-whitespace-space"> </span>bmi2<span class="org-whitespace-space"> </span>erm<span class="org-whitespace-line">s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">invpcid</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsaveopt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dtherm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ida</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">arat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pln</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pts</span>
+bugs<span class="org-whitespace-space">            </span>:
+bogomips<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>6384.87
+clflush<span class="org-whitespace-space"> </span>size<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span>64
+cache_alignment<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>64
+address<span class="org-whitespace-space"> </span>sizes<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span>39<span class="org-whitespace-space"> </span>bits<span class="org-whitespace-space"> </span>physical,<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>bits<span class="org-whitespace-space"> </span>virtual
+power<span class="org-whitespace-space"> </span>management:
+
+processor<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>1
+vendor_id<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>GenuineIntel
+cpu<span class="org-whitespace-space"> </span>family<span class="org-whitespace-space">      </span>:<span class="org-whitespace-space"> </span>6
+model<span class="org-whitespace-space">           </span>:<span class="org-whitespace-space"> </span>60
+model<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space">      </span>:<span class="org-whitespace-space"> </span>Intel(R)<span class="org-whitespace-space"> </span>Core(TM)<span class="org-whitespace-space"> </span>i5-4570<span class="org-whitespace-space"> </span>CPU<span class="org-whitespace-space"> </span>@<span class="org-whitespace-space"> </span>3.20GHz
+stepping<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>3
+...
+</pre>
+</div>
+
+<p>
+内核代码由平台无关<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/cpuinfo.c">fs/proc/cpuinfo.c</a>和平台相关(<a href="https://elixir.bootlin.com/linux/v4.15.4/source/arch/x86/kernel/cpu/proc.c#L162">arch/x86/kernel/cpu/proc.c</a>)组成：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">cpuinfo_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span>arch_freq_prepare_all();
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(file,<span class="org-whitespace-space"> </span>&amp;cpuinfo_op);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_cpuinfo_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>cpuinfo_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_cpuinfo_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"cpuinfo"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_cpuinfo_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_cpuinfo_init);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfb8af2d" class="outline-3">
+<h3 id="orgfb8af2d"><span class="section-number-3">3.5</span> proc/crypto</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+crypto显示系统支持的密码算法。部分内容示例如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/crypto
+name<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>crct10dif
+driver<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>crct10dif-pclmul
+module<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>crct10dif_pclmul
+priority<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>200
+refcnt<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>1
+selftest<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>passed
+internal<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>no
+<span class="org-builtin">type</span><span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>shash
+blocksize<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span>1
+digestsize<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span>2
+...
+name<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>sha1
+driver<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>sha1-generic
+module<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>kernel
+priority<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>0
+refcnt<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>1
+selftest<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>passed
+internal<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>no
+<span class="org-builtin">type</span><span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span>shash
+blocksize<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span>64
+digestsize<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span>20
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/crypto/proc.c#L103">crypto/proc.c</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">crypto_seq_ops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-tab">          </span>=<span class="org-whitespace-space"> </span>c_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>c_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>c_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>c_show
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">crypto_info_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(file,<span class="org-whitespace-space"> </span>&amp;crypto_seq_ops);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_crypto_ops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>crypto_info_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release
+};
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>crypto_init_proc(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"crypto"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_crypto_ops);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__exit</span><span class="org-whitespace-space"> </span>crypto_exit_proc(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>remove_proc_entry(<span class="org-string">"crypto"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5f2a29e" class="outline-3">
+<h3 id="org5f2a29e"><span class="section-number-3">3.6</span> proc/devices</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+devices显示字符设备和块设备主设备号。如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/devices
+Character<span class="org-whitespace-space"> </span>devices:
+<span class="org-whitespace-space">  </span>1<span class="org-whitespace-space"> </span>mem
+<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space"> </span>/dev/vc/0
+<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space"> </span>tty
+<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space"> </span>ttyS
+<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>/dev/tty
+<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>/dev/console
+<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space"> </span>/dev/ptmx
+<span class="org-whitespace-space">  </span>6<span class="org-whitespace-space"> </span>lp
+<span class="org-whitespace-space">  </span>7<span class="org-whitespace-space"> </span>vcs
+<span class="org-whitespace-space"> </span>10<span class="org-whitespace-space"> </span>misc
+<span class="org-whitespace-space"> </span>13<span class="org-whitespace-space"> </span>input
+<span class="org-whitespace-space"> </span>21<span class="org-whitespace-space"> </span>sg
+<span class="org-whitespace-space"> </span>29<span class="org-whitespace-space"> </span>fb
+<span class="org-whitespace-space"> </span>81<span class="org-whitespace-space"> </span>video4linux
+<span class="org-whitespace-space"> </span>99<span class="org-whitespace-space"> </span>ppdev
+116<span class="org-whitespace-space"> </span>alsa
+128<span class="org-whitespace-space"> </span>ptm
+136<span class="org-whitespace-space"> </span>pts
+180<span class="org-whitespace-space"> </span>usb
+189<span class="org-whitespace-space"> </span>usb_device
+216<span class="org-whitespace-space"> </span>rfcomm
+
+...
+
+253<span class="org-whitespace-space"> </span>tpm
+254<span class="org-whitespace-space"> </span>gpiochip
+
+Block<span class="org-whitespace-space"> </span>devices:
+259<span class="org-whitespace-space"> </span>blkext
+<span class="org-whitespace-space">  </span>8<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>65<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>66<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>67<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>68<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>69<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>70<span class="org-whitespace-space"> </span>sd
+<span class="org-whitespace-space"> </span>71<span class="org-whitespace-space"> </span>sd
+128<span class="org-whitespace-space"> </span>sd
+129<span class="org-whitespace-space"> </span>sd
+130<span class="org-whitespace-space"> </span>sd
+131<span class="org-whitespace-space"> </span>sd
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/devices.c">fs/proc/devices.c</a>:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">devinfo_ops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>devinfo_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>devinfo_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>devinfo_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>devinfo_show
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">devinfo_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">filp</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(filp,<span class="org-whitespace-space"> </span>&amp;devinfo_ops);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_devinfo_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>devinfo_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_devices_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"devices"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_devinfo_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_devices_init);
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">devinfo_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">f</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*(<span class="org-type">loff_t</span><span class="org-whitespace-space"> </span>*)<span class="org-whitespace-space"> </span>v;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>CHRDEV_MAJOR_MAX)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>0)
+<span class="org-whitespace-space">                        </span>seq_puts(f,<span class="org-whitespace-space"> </span><span class="org-string">"Character</span><span class="org-whitespace-space"> </span><span class="org-string">devices:\n"</span>);
+<span class="org-whitespace-space">                </span>chrdev_show(f,<span class="org-whitespace-space"> </span>i);
+<span class="org-whitespace-space">        </span>}
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>CONFIG_BLOCK
+<span class="org-whitespace-space">        </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>i<span class="org-whitespace-space"> </span>-=<span class="org-whitespace-space"> </span>CHRDEV_MAJOR_MAX;
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>0)
+<span class="org-whitespace-space">                        </span>seq_puts(f,<span class="org-whitespace-space"> </span><span class="org-string">"\nBlock</span><span class="org-whitespace-space"> </span><span class="org-string">devices:\n"</span>);
+<span class="org-whitespace-space">                </span>blkdev_show(f,<span class="org-whitespace-space"> </span>i);
+<span class="org-whitespace-space">        </span>}
+<span class="org-preprocessor">#endif</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">chrdev_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">f</span>,<span class="org-whitespace-space"> </span><span class="org-type">off_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">offset</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">char_device_struct</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">cd</span>;
+
+<span class="org-whitespace-space">        </span>mutex_lock(&amp;chrdevs_lock);
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(cd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>chrdevs[major_to_index(offset)];<span class="org-whitespace-space"> </span>cd;<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>cd-&gt;next)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(cd-&gt;major<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>offset)
+<span class="org-whitespace-space">                        </span>seq_printf(f,<span class="org-whitespace-space"> </span><span class="org-string">"%3d</span><span class="org-whitespace-space"> </span><span class="org-string">%s\n"</span>,<span class="org-whitespace-space"> </span>cd-&gt;major,<span class="org-whitespace-space"> </span>cd-&gt;name);
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span>mutex_unlock(&amp;chrdevs_lock);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">blkdev_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">seqf</span>,<span class="org-whitespace-space"> </span><span class="org-type">off_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">offset</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">blk_major_name</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">dp</span>;
+
+<span class="org-whitespace-space">        </span>mutex_lock(&amp;block_class_lock);
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(dp<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>major_names[major_to_index(offset)];<span class="org-whitespace-space"> </span>dp;<span class="org-whitespace-space"> </span>dp<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dp-&gt;next)
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(dp-&gt;major<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>offset)
+<span class="org-whitespace-space">                        </span>seq_printf(seqf,<span class="org-whitespace-space"> </span><span class="org-string">"%3d</span><span class="org-whitespace-space"> </span><span class="org-string">%s\n"</span>,<span class="org-whitespace-space"> </span>dp-&gt;major,<span class="org-whitespace-space"> </span>dp-&gt;name);
+<span class="org-whitespace-space">        </span>mutex_unlock(&amp;block_class_lock);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdd40a79" class="outline-3">
+<h3 id="orgdd40a79"><span class="section-number-3">3.7</span> proc/diskstats</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+diskstats显示disk统计信息。如下是示例，输出内容解析参考<a href="https://elixir.bootlin.com/linux/v4.15.4/source/Documentation/iostats.txt">Documentation/iostats.txt</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">cat<span class="org-whitespace-space"> </span>/proc/diskstats
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>16<span class="org-whitespace-space"> </span>sdb<span class="org-whitespace-space"> </span>476<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>37508<span class="org-whitespace-space"> </span>15096<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>2608<span class="org-whitespace-space"> </span>15096
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>17<span class="org-whitespace-space"> </span>sdb1<span class="org-whitespace-space"> </span>50<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4160<span class="org-whitespace-space"> </span>1780<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1780<span class="org-whitespace-space"> </span>1780
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>18<span class="org-whitespace-space"> </span>sdb2<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4144<span class="org-whitespace-space"> </span>1400<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1380<span class="org-whitespace-space"> </span>1400
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>19<span class="org-whitespace-space"> </span>sdb3<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4144<span class="org-whitespace-space"> </span>1952<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1884<span class="org-whitespace-space"> </span>1952
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>20<span class="org-whitespace-space"> </span>sdb4<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4<span class="org-whitespace-space"> </span>176<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>176<span class="org-whitespace-space"> </span>176
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>21<span class="org-whitespace-space"> </span>sdb5<span class="org-whitespace-space"> </span>46<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4128<span class="org-whitespace-space"> </span>2588<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1640<span class="org-whitespace-space"> </span>2588
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>22<span class="org-whitespace-space"> </span>sdb6<span class="org-whitespace-space"> </span>46<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4128<span class="org-whitespace-space"> </span>1052<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1004<span class="org-whitespace-space"> </span>1052
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>23<span class="org-whitespace-space"> </span>sdb7<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4144<span class="org-whitespace-space"> </span>984<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>980<span class="org-whitespace-space"> </span>984
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>24<span class="org-whitespace-space"> </span>sdb8<span class="org-whitespace-space"> </span>50<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4160<span class="org-whitespace-space"> </span>2536<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>2016<span class="org-whitespace-space"> </span>2536
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">      </span>25<span class="org-whitespace-space"> </span>sdb9<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4144<span class="org-whitespace-space"> </span>1188<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>1188<span class="org-whitespace-space"> </span>1188
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">       </span>0<span class="org-whitespace-space"> </span>sda<span class="org-whitespace-space"> </span>28874<span class="org-whitespace-space"> </span>1231<span class="org-whitespace-space"> </span>1655786<span class="org-whitespace-space"> </span>10164<span class="org-whitespace-space"> </span>6376<span class="org-whitespace-space"> </span>11927<span class="org-whitespace-space"> </span>340456<span class="org-whitespace-space"> </span>6204<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>5348<span class="org-whitespace-space"> </span>16352
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">       </span>1<span class="org-whitespace-space"> </span>sda1<span class="org-whitespace-space"> </span>52<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>4176<span class="org-whitespace-space"> </span>24<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>16<span class="org-whitespace-space"> </span>24
+<span class="org-whitespace-space">   </span>8<span class="org-whitespace-space">       </span>2<span class="org-whitespace-space"> </span>sda2<span class="org-whitespace-space"> </span>28795<span class="org-whitespace-space"> </span>1231<span class="org-whitespace-space"> </span>1649538<span class="org-whitespace-space"> </span>10136<span class="org-whitespace-space"> </span>6225<span class="org-whitespace-space"> </span>11927<span class="org-whitespace-space"> </span>340456<span class="org-whitespace-space"> </span>6068<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>5216<span class="org-whitespace-space"> </span>16188
+</pre>
+</div>
+
+<p>
+各列概要如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text"><span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>major<span class="org-whitespace-space"> </span>number
+<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>minor<span class="org-whitespace-space"> </span>mumber
+<span class="org-whitespace-space"> </span>3<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>device<span class="org-whitespace-space"> </span>name
+<span class="org-whitespace-space"> </span>4<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>reads<span class="org-whitespace-space"> </span>completed<span class="org-whitespace-space"> </span>successfully
+<span class="org-whitespace-space"> </span>5<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>reads<span class="org-whitespace-space"> </span>merged
+<span class="org-whitespace-space"> </span>6<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>sectors<span class="org-whitespace-space"> </span>read
+<span class="org-whitespace-space"> </span>7<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>spent<span class="org-whitespace-space"> </span>reading<span class="org-whitespace-space"> </span>(ms)
+<span class="org-whitespace-space"> </span>8<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>writes<span class="org-whitespace-space"> </span>completed
+<span class="org-whitespace-space"> </span>9<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>writes<span class="org-whitespace-space"> </span>merged
+10<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>sectors<span class="org-whitespace-space"> </span>written
+11<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>spent<span class="org-whitespace-space"> </span>writing<span class="org-whitespace-space"> </span>(ms)
+12<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>I/Os<span class="org-whitespace-space"> </span>currently<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>progress
+13<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>spent<span class="org-whitespace-space"> </span>doing<span class="org-whitespace-space"> </span>I/Os<span class="org-whitespace-space"> </span>(ms)
+14<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>weighted<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>spent<span class="org-whitespace-space"> </span>doing<span class="org-whitespace-space"> </span>I/Os<span class="org-whitespace-space"> </span>(ms)
+</pre>
+</div>
+
+<p>
+第4-14列说明如下：
+</p>
+<p class="verse">
+Field  1 &#x2013; # of reads completed<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of reads completed successfully.<br />
+<br />
+Field  2 &#x2013; # of reads merged, field 6 &#x2013; # of writes merged<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Reads and writes which are adjacent to each other may be merged for<br />
+&#xa0;&#xa0;&#xa0;&#xa0;efficiency.  Thus two 4K reads may become one 8K read before it is<br />
+&#xa0;&#xa0;&#xa0;&#xa0;ultimately handed to the disk, and so it will be counted (and queued)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;as only one I/O.  This field lets you know how often this was done.<br />
+<br />
+Field  3 &#x2013; # of sectors read<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of sectors read successfully.<br />
+<br />
+Field  4 &#x2013; # of milliseconds spent reading<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of milliseconds spent by all reads (as<br />
+&#xa0;&#xa0;&#xa0;&#xa0;measured from __make_request() to end_that_request_last()).<br />
+<br />
+Field  5 &#x2013; # of writes completed<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of writes completed successfully.<br />
+<br />
+Field  6 &#x2013; # of writes merged<br />
+&#xa0;&#xa0;&#xa0;&#xa0;See the description of field 2.<br />
+<br />
+Field  7 &#x2013; # of sectors written<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of sectors written successfully.<br />
+<br />
+Field  8 &#x2013; # of milliseconds spent writing<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This is the total number of milliseconds spent by all writes (as<br />
+&#xa0;&#xa0;&#xa0;&#xa0;measured from __make_request() to end_that_request_last()).<br />
+<br />
+Field  9 &#x2013; # of I/Os currently in progress<br />
+&#xa0;&#xa0;&#xa0;&#xa0;The only field that should go to zero. Incremented as requests are<br />
+&#xa0;&#xa0;&#xa0;&#xa0;given to appropriate struct request_queue and decremented as they finish.<br />
+<br />
+Field 10 &#x2013; # of milliseconds spent doing I/Os<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This field increases so long as field 9 is nonzero.<br />
+<br />
+Field 11 &#x2013; weighted # of milliseconds spent doing I/Os<br />
+&#xa0;&#xa0;&#xa0;&#xa0;This field is incremented at each I/O start, I/O completion, I/O<br />
+&#xa0;&#xa0;&#xa0;&#xa0;merge, or read of these stats by the number of I/Os in progress<br />
+&#xa0;&#xa0;&#xa0;&#xa0;(field 9) times the number of milliseconds spent doing I/O since the<br />
+&#xa0;&#xa0;&#xa0;&#xa0;last update of this field.  This can provide an easy measure of both<br />
+&#xa0;&#xa0;&#xa0;&#xa0;I/O completion time and the backlog that may be accumulating.<br />
+</p>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/block/genhd.c#L1341">block/genhd.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C">
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">diskstats_op</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-tab">  </span>=<span class="org-whitespace-space"> </span>disk_seqf_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>disk_seqf_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>disk_seqf_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>diskstats_show
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">diskstats_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(file,<span class="org-whitespace-space"> </span>&amp;diskstats_op);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_diskstats_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>diskstats_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_genhd_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"diskstats"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_diskstats_operations);
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"partitions"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_partitions_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">module_init</span>(proc_genhd_init);
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">diskstats_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">seqf</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">gendisk</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">gp</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>v;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">disk_part_iter</span><span class="org-whitespace-space"> </span><span class="org-variable-name">piter</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">hd_struct</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">hd</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-variable-name">buf</span>[BDEVNAME_SIZE];
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">inflight</span>[2];
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">cpu</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space">        </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">(&amp;disk_to_dev(gp)-&gt;kobj.entry</span><span class="org-whitespace-space"> </span><span class="org-comment">==</span><span class="org-whitespace-space"> </span><span class="org-comment">block_class.devices.next)</span>
+<span class="org-whitespace-space">                </span><span class="org-comment">seq_puts(seqf,</span><span class="org-whitespace-tab">  </span><span class="org-comment">"major</span><span class="org-whitespace-space"> </span><span class="org-comment">minor</span><span class="org-whitespace-space"> </span><span class="org-comment">name"</span>
+<span class="org-whitespace-space">                                </span><span class="org-comment">"</span><span class="org-whitespace-space">     </span><span class="org-comment">rio</span><span class="org-whitespace-space"> </span><span class="org-comment">rmerge</span><span class="org-whitespace-space"> </span><span class="org-comment">rsect</span><span class="org-whitespace-space"> </span><span class="org-comment">ruse</span><span class="org-whitespace-space"> </span><span class="org-comment">wio</span><span class="org-whitespace-space"> </span><span class="org-comment">wmerge</span><span class="org-whitespace-space"> </span><span class="org-comment">"</span>
+<span class="org-whitespace-space">                                </span><span class="org-comment">"wsect</span><span class="org-whitespace-space"> </span><span class="org-comment">wuse</span><span class="org-whitespace-space"> </span><span class="org-comment">running</span><span class="org-whitespace-space"> </span><span class="org-comment">use</span><span class="org-whitespace-space"> </span><span class="org-comment">aveq"</span>
+<span class="org-whitespace-space">                                </span><span class="org-comment">"\n\n");</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-whitespace-space">        </span>disk_part_iter_init(&amp;piter,<span class="org-whitespace-space"> </span>gp,<span class="org-whitespace-space"> </span>DISK_PITER_INCL_EMPTY_PART0);
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>((hd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>disk_part_iter_next(&amp;piter)))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>cpu<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>part_stat_lock();
+<span class="org-whitespace-space">                </span>part_round_stats(gp-&gt;queue,<span class="org-whitespace-space"> </span>cpu,<span class="org-whitespace-space"> </span>hd);
+<span class="org-whitespace-space">                </span>part_stat_unlock();
+<span class="org-whitespace-space">                </span>part_in_flight(gp-&gt;queue,<span class="org-whitespace-space"> </span>hd,<span class="org-whitespace-space"> </span>inflight);
+<span class="org-whitespace-space">                </span>seq_printf(seqf,<span class="org-whitespace-space"> </span><span class="org-string">"%4d</span><span class="org-whitespace-space"> </span><span class="org-string">%7d</span><span class="org-whitespace-space"> </span><span class="org-string">%s</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>
+<span class="org-whitespace-space">                           </span><span class="org-string">"%u</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">%lu</span><span class="org-whitespace-space"> </span><span class="org-string">%u</span><span class="org-whitespace-space"> </span><span class="org-string">%u</span><span class="org-whitespace-space"> </span><span class="org-string">%u</span><span class="org-whitespace-space"> </span><span class="org-string">%u\n"</span>,
+<span class="org-whitespace-space">                           </span>MAJOR(part_devt(hd)),<span class="org-whitespace-space"> </span>MINOR(part_devt(hd)),
+<span class="org-whitespace-space">                           </span>disk_name(gp,<span class="org-whitespace-space"> </span>hd-&gt;partno,<span class="org-whitespace-space"> </span>buf),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>ios[READ]),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>merges[READ]),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>sectors[READ]),
+<span class="org-whitespace-space">                           </span>jiffies_to_msecs(part_stat_read(hd,<span class="org-whitespace-space"> </span>ticks[READ])),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>ios[WRITE]),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>merges[WRITE]),
+<span class="org-whitespace-space">                           </span>part_stat_read(hd,<span class="org-whitespace-space"> </span>sectors[WRITE]),
+<span class="org-whitespace-space">                           </span>jiffies_to_msecs(part_stat_read(hd,<span class="org-whitespace-space"> </span>ticks[WRITE])),
+<span class="org-whitespace-space">                           </span>inflight[0],
+<span class="org-whitespace-space">                           </span>jiffies_to_msecs(part_stat_read(hd,<span class="org-whitespace-space"> </span>io_ticks)),
+<span class="org-whitespace-space">                           </span>jiffies_to_msecs(part_stat_read(hd,<span class="org-whitespace-space"> </span>time_in_queue))
+<span class="org-whitespace-space">                        </span>);
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span>disk_part_iter_exit(&amp;piter);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc6e1a88" class="outline-3">
+<h3 id="orgc6e1a88"><span class="section-number-3">3.8</span> proc/dma</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+This is a list of the registered ISA DMA (direct memory access) channels in use.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/dma
+<span class="org-whitespace-space"> </span>4:<span class="org-whitespace-space"> </span>cascade
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/kernel/dma.c">kernel/dma.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">proc_dma_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>single_open(file,<span class="org-whitespace-space"> </span>proc_dma_show,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_dma_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>proc_dma_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>single_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_dma_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"dma"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_dma_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-function-name">__initcall</span>(proc_dma_init);
+
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>MAX_DMA_CHANNELS
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">proc_dma_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>MAX_DMA_CHANNELS<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>i++)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(dma_chan_busy[i].lock)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                        </span>seq_printf(m,<span class="org-whitespace-space"> </span><span class="org-string">"%2d:</span><span class="org-whitespace-space"> </span><span class="org-string">%s\n"</span>,<span class="org-whitespace-space"> </span>i,
+<span class="org-whitespace-space">                                   </span>dma_chan_busy[i].device_id);
+<span class="org-whitespace-space">                </span>}
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-preprocessor">#else</span>
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">proc_dma_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span>seq_puts(m,<span class="org-whitespace-space"> </span><span class="org-string">"No</span><span class="org-whitespace-space"> </span><span class="org-string">DMA\n"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-preprocessor">#endif</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">MAX_DMA_CHANNELS</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbcc79e6" class="outline-3">
+<h3 id="orgbcc79e6"><span class="section-number-3">3.9</span> proc/execdomains</h3>
+<div class="outline-text-3" id="text-3-9">
+<p>
+execdomains显示当前支持的可执行文件domains(ABI)。当前总是显示Linux [kernel]：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">cat<span class="org-whitespace-space"> </span>/proc/execdomains
+0-0<span class="org-whitespace-space">     </span>Linux<span class="org-whitespace-space">                   </span>[kernel]
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/kernel/exec_domain.c">kernel/exec_domain.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>CONFIG_PROC_FS
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">execdomains_proc_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span>seq_puts(m,<span class="org-whitespace-space"> </span><span class="org-string">"0-0\tLinux</span><span class="org-whitespace-space">           </span><span class="org-string">\t[kernel]\n"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">execdomains_proc_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>single_open(file,<span class="org-whitespace-space"> </span>execdomains_proc_show,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">execdomains_proc_fops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>execdomains_proc_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>single_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_execdomains_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"execdomains"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;execdomains_proc_fops);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">module_init</span>(proc_execdomains_init);
+<span class="org-preprocessor">#endif</span>
+
+<span class="org-function-name">SYSCALL_DEFINE1</span>(personality,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span>,<span class="org-whitespace-space"> </span>personality)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">old</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>current-&gt;personality;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(personality<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>0xffffffff)
+<span class="org-whitespace-space">                </span>set_personality(personality);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>old;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd27aa7b" class="outline-3">
+<h3 id="orgd27aa7b"><span class="section-number-3">3.10</span> proc/fb</h3>
+<div class="outline-text-3" id="text-3-10">
+<p>
+fb(frame buffer)显示当前系统fb信息：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/fb
+0<span class="org-whitespace-space"> </span>inteldrmfb
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/drivers/video/fbdev/core/fbmem.c">drivers/video/fbdev/core/fbmem.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">fb_seq_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*(<span class="org-type">loff_t</span><span class="org-whitespace-space"> </span>*)v;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">fb_info</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">fi</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>registered_fb[i];
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(fi)
+<span class="org-whitespace-space">                </span>seq_printf(m,<span class="org-whitespace-space"> </span><span class="org-string">"%d</span><span class="org-whitespace-space"> </span><span class="org-string">%s\n"</span>,<span class="org-whitespace-space"> </span>fi-&gt;node,<span class="org-whitespace-space"> </span>fi-&gt;fix.id);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_fb_seq_ops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-tab">  </span>=<span class="org-whitespace-space"> </span>fb_seq_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>fb_seq_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>fb_seq_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-tab">   </span>=<span class="org-whitespace-space"> </span>fb_seq_show,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">proc_fb_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(file,<span class="org-whitespace-space"> </span>&amp;proc_fb_seq_ops);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fb_proc_fops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.owner<span class="org-whitespace-tab">          </span>=<span class="org-whitespace-space"> </span>THIS_MODULE,
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>proc_fb_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org710d364" class="outline-3">
+<h3 id="org710d364"><span class="section-number-3">3.11</span> proc/filesystems</h3>
+<div class="outline-text-3" id="text-3-11">
+<p>
+filesystems列举当前支持的文件系统类型：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/filesystems
+nodev<span class="org-whitespace-space">   </span>sysfs
+nodev<span class="org-whitespace-space">   </span>rootfs
+nodev<span class="org-whitespace-space">   </span>ramfs
+nodev<span class="org-whitespace-space">   </span>bdev
+nodev<span class="org-whitespace-space">   </span>proc
+nodev<span class="org-whitespace-space">   </span>cpuset
+nodev<span class="org-whitespace-space">   </span>cgroup
+nodev<span class="org-whitespace-space">   </span>cgroup2
+nodev<span class="org-whitespace-space">   </span>tmpfs
+nodev<span class="org-whitespace-space">   </span>devtmpfs
+nodev<span class="org-whitespace-space">   </span>debugfs
+nodev<span class="org-whitespace-space">   </span>tracefs
+nodev<span class="org-whitespace-space">   </span>securityfs
+nodev<span class="org-whitespace-space">   </span>sockfs
+nodev<span class="org-whitespace-space">   </span>bpf
+nodev<span class="org-whitespace-space">   </span>pipefs
+nodev<span class="org-whitespace-space">   </span>hugetlbfs
+nodev<span class="org-whitespace-space">   </span>devpts
+nodev<span class="org-whitespace-space">   </span>pstore
+nodev<span class="org-whitespace-space">   </span>mqueue
+<span class="org-whitespace-space">        </span>ext3
+<span class="org-whitespace-space">        </span>ext2
+<span class="org-whitespace-space">        </span>ext4
+nodev<span class="org-whitespace-space">   </span>autofs
+nodev<span class="org-whitespace-space">   </span>binfmt_misc
+<span class="org-whitespace-space">        </span>fuseblk
+nodev<span class="org-whitespace-space">   </span>fuse
+nodev<span class="org-whitespace-space">   </span>fusectl
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/filesystems.c">fs/filesystems.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">filesystems_proc_show</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">m</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_system_type</span><span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">tmp</span>;
+
+<span class="org-whitespace-space">        </span>read_lock(&amp;file_systems_lock);
+<span class="org-whitespace-space">        </span>tmp<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>file_systems;
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(tmp)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>seq_printf(m,<span class="org-whitespace-space"> </span><span class="org-string">"%s\t%s\n"</span>,
+<span class="org-whitespace-space">                        </span>(tmp-&gt;fs_flags<span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span>FS_REQUIRES_DEV)<span class="org-whitespace-space"> </span>?<span class="org-whitespace-space"> </span><span class="org-string">""</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"nodev"</span>,
+<span class="org-whitespace-space">                        </span>tmp-&gt;name);
+<span class="org-whitespace-space">                </span>tmp<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>tmp-&gt;next;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span>read_unlock(&amp;file_systems_lock);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">filesystems_proc_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>single_open(file,<span class="org-whitespace-space"> </span>filesystems_proc_show,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">filesystems_proc_fops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>filesystems_proc_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>single_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_filesystems_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"filesystems"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;filesystems_proc_fops);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">module_init</span>(proc_filesystems_init);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8919840" class="outline-3">
+<h3 id="org8919840"><span class="section-number-3">3.12</span> proc/fs</h3>
+<div class="outline-text-3" id="text-3-12">
+<p>
+fs目录下包含子目录，每个子目录是一种当前正在使用的文件系统名称（比如ext4），每个文件系统子目录下二级子目录是每个挂载的块设备（比如sda2），其下文件是其属性。
+</p>
+
+<p>
+proc/fs是由<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/root.c#L144">fs/proc/root.c</a>创建的：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_root_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">err</span>;
+
+<span class="org-whitespace-space">        </span>proc_init_inodecache();
+<span class="org-whitespace-space">        </span>set_proc_pid_nlink();
+<span class="org-whitespace-space">        </span>err<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>register_filesystem(&amp;proc_fs_type);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(err)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span>;
+
+<span class="org-whitespace-space">        </span>proc_self_init();
+<span class="org-whitespace-space">        </span>proc_thread_self_init();
+<span class="org-whitespace-space">        </span>proc_symlink(<span class="org-string">"mounts"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-string">"self/mounts"</span>);
+
+<span class="org-whitespace-space">        </span>proc_net_init();
+
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>CONFIG_SYSVIPC
+<span class="org-whitespace-space">        </span>proc_mkdir(<span class="org-string">"sysvipc"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-preprocessor">#endif</span>
+<span class="org-whitespace-space">        </span>proc_mkdir(<span class="org-string">"fs"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span>proc_mkdir(<span class="org-string">"driver"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span>proc_create_mount_point(<span class="org-string">"fs/nfsd"</span>);<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">somewhere</span><span class="org-whitespace-space"> </span><span class="org-comment">for</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">nfsd</span><span class="org-whitespace-space"> </span><span class="org-comment">filesystem</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">to</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">be</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">mounted</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment-delimiter"><span class="org-whitespace-line">*/</span></span>
+<span class="org-preprocessor">#if</span><span class="org-whitespace-space"> </span><span class="org-preprocessor">defined</span>(CONFIG_SUN_OPENPROMFS)<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span><span class="org-preprocessor">defined</span>(CONFIG_SUN_OPENPROMFS_MODULE)
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">just</span><span class="org-whitespace-space"> </span><span class="org-comment">give</span><span class="org-whitespace-space"> </span><span class="org-comment">it</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">mountpoint</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>proc_create_mount_point(<span class="org-string">"openprom"</span>);
+<span class="org-preprocessor">#endif</span>
+<span class="org-whitespace-space">        </span>proc_tty_init();
+<span class="org-whitespace-space">        </span>proc_mkdir(<span class="org-string">"bus"</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span>proc_sys_init();
+}
+</pre>
+</div>
+
+<p>
+每个子目录是由不同的文件系统创建的，比如ext4：
+<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/ext4/sysfs.c">fs/ext4/sysfs.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_dirname</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">"fs/ext4"</span>;
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">proc_dir_entry</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ext4_proc_root</span>;
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>ext4_init_sysfs(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span>;
+
+<span class="org-whitespace-space">        </span>kobject_set_name(&amp;ext4_kset.kobj,<span class="org-whitespace-space"> </span><span class="org-string">"ext4"</span>);
+<span class="org-whitespace-space">        </span>ext4_kset.kobj.parent<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>fs_kobj;
+<span class="org-whitespace-space">        </span>ret<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>kset_register(&amp;ext4_kset);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ret)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
+
+<span class="org-whitespace-space">        </span>ret<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>kobject_init_and_add(&amp;ext4_feat,<span class="org-whitespace-space"> </span>&amp;ext4_feat_ktype,
+<span class="org-whitespace-space">                                   </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-string">"features"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ret)
+<span class="org-whitespace-space">                </span>kset_unregister(&amp;ext4_kset);
+<span class="org-whitespace-space">        </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">                </span>ext4_proc_root<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>proc_mkdir(proc_dirname,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">ext4_proc_files</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">name</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">fops</span>;
+}<span class="org-whitespace-space"> </span><span class="org-variable-name">proc_files</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>PROC_FILE_LIST(options),
+<span class="org-whitespace-space">        </span>PROC_FILE_LIST(es_shrinker_info),
+<span class="org-whitespace-space">        </span>PROC_FILE_LIST(mb_groups),
+<span class="org-whitespace-space">        </span>{<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span><span class="org-whitespace-space"> </span>},
+};
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">ext4_register_sysfs</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">super_block</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">sb</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">ext4_sb_info</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">sbi</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>EXT4_SB(sb);
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">ext4_proc_files</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">p</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">err</span>;
+
+<span class="org-whitespace-space">        </span>sbi-&gt;s_kobj.kset<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;ext4_kset;
+<span class="org-whitespace-space">        </span>init_completion(&amp;sbi-&gt;s_kobj_unregister);
+<span class="org-whitespace-space">        </span>err<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>kobject_init_and_add(&amp;sbi-&gt;s_kobj,<span class="org-whitespace-space"> </span>&amp;ext4_sb_ktype,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,
+<span class="org-whitespace-space">                                   </span><span class="org-string">"%s"</span>,<span class="org-whitespace-space"> </span>sb-&gt;s_id);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(err)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>err;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ext4_proc_root)
+<span class="org-whitespace-space">                </span>sbi-&gt;s_proc<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>proc_mkdir(sb-&gt;s_id,<span class="org-whitespace-space"> </span>ext4_proc_root);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(sbi-&gt;s_proc)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(p<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>proc_files;<span class="org-whitespace-space"> </span>p-&gt;name;<span class="org-whitespace-space"> </span>p++)
+<span class="org-whitespace-space">                        </span>proc_create_data(p-&gt;name,<span class="org-whitespace-space"> </span>S_IRUGO,<span class="org-whitespace-space"> </span>sbi-&gt;s_proc,
+<span class="org-whitespace-space">                                         </span>p-&gt;fops,<span class="org-whitespace-space"> </span>sb);
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf93e173" class="outline-3">
+<h3 id="orgf93e173"><span class="section-number-3">3.13</span> proc/interrups</h3>
+<div class="outline-text-3" id="text-3-13">
+<p>
+interrupts显示每CPU每设备的中断数，此文件信息可用来分析中断是否均衡：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/interrupts
+<span class="org-whitespace-space">           </span>CPU0<span class="org-whitespace-space">       </span>CPU1<span class="org-whitespace-space">       </span>CPU2<span class="org-whitespace-space">       </span>CPU3
+<span class="org-whitespace-space">  </span>0:<span class="org-whitespace-space">         </span>18<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">   </span>2-edge<span class="org-whitespace-space">      </span>timer
+<span class="org-whitespace-space">  </span>1:<span class="org-whitespace-space">          </span>3<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">          </span>8<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">   </span>1-edge<span class="org-whitespace-space">      </span>i8042
+<span class="org-whitespace-space">  </span>8:<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">   </span>8-edge<span class="org-whitespace-space">      </span>rtc0
+<span class="org-whitespace-space">  </span>9:<span class="org-whitespace-space">       </span>1076<span class="org-whitespace-space">       </span>2273<span class="org-whitespace-space">        </span>812<span class="org-whitespace-space">        </span>836<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">   </span>9-fasteoi<span class="org-whitespace-space">   </span>acpi
+<span class="org-whitespace-space"> </span>12:<span class="org-whitespace-space">         </span>42<span class="org-whitespace-space">        </span>475<span class="org-whitespace-space">         </span>34<span class="org-whitespace-space">         </span>51<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">  </span>12-edge<span class="org-whitespace-space">      </span>i8042
+<span class="org-whitespace-space"> </span>16:<span class="org-whitespace-space">          </span>2<span class="org-whitespace-space">         </span>23<span class="org-whitespace-space">          </span>2<span class="org-whitespace-space">          </span>2<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">  </span>16-fasteoi<span class="org-whitespace-space">   </span>ehci_<span class="org-whitespace-line">hcd:usb1</span>
+<span class="org-whitespace-space"> </span>18:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">  </span>18-fasteoi<span class="org-whitespace-space">   </span>i801_<span class="org-whitespace-line">smbus</span>
+<span class="org-whitespace-space"> </span>23:<span class="org-whitespace-space">          </span>3<span class="org-whitespace-space">         </span>28<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>2<span class="org-whitespace-space">  </span>IR-IO-APIC<span class="org-whitespace-space">  </span>23-fasteoi<span class="org-whitespace-space">   </span>ehci_<span class="org-whitespace-line">hcd:usb2</span>
+<span class="org-whitespace-space"> </span>24:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>DMAR-MSI<span class="org-whitespace-space">   </span>0-edge<span class="org-whitespace-space">      </span>dmar0
+<span class="org-whitespace-space"> </span>25:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>DMAR-MSI<span class="org-whitespace-space">   </span>1-edge<span class="org-whitespace-space">      </span>dmar1
+<span class="org-whitespace-space"> </span>28:<span class="org-whitespace-space">         </span>17<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">          </span>3<span class="org-whitespace-space">          </span>1<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>1572864-edge<span class="org-whitespace-space">      </span>r<span class="org-whitespace-line">tsx_pci</span>
+<span class="org-whitespace-space"> </span>29:<span class="org-whitespace-space">        </span>160<span class="org-whitespace-space">       </span>1281<span class="org-whitespace-space">        </span>141<span class="org-whitespace-space">        </span>110<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>409600-edge<span class="org-whitespace-space">      </span>en<span class="org-whitespace-line">p0s25</span>
+<span class="org-whitespace-space"> </span>30:<span class="org-whitespace-space">       </span>7815<span class="org-whitespace-space">      </span>43472<span class="org-whitespace-space">       </span>5581<span class="org-whitespace-space">       </span>5237<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>327680-edge<span class="org-whitespace-space">      </span>xh<span class="org-whitespace-line">ci_hcd</span>
+<span class="org-whitespace-space"> </span>31:<span class="org-whitespace-space">      </span>29423<span class="org-whitespace-space">      </span>41453<span class="org-whitespace-space">      </span>16894<span class="org-whitespace-space">      </span>16308<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>512000-edge<span class="org-whitespace-space">      </span>ah<span class="org-whitespace-line">ci[0000:00:1f.2]</span>
+<span class="org-whitespace-space"> </span>32:<span class="org-whitespace-space">         </span>21<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>360448-edge<span class="org-whitespace-space">      </span>me<span class="org-whitespace-line">i_me</span>
+<span class="org-whitespace-space"> </span>33:<span class="org-whitespace-space">        </span>234<span class="org-whitespace-space">        </span>129<span class="org-whitespace-space">         </span>18<span class="org-whitespace-space">          </span>5<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>442368-edge<span class="org-whitespace-space">      </span>sn<span class="org-whitespace-line">d_hda_intel:card1</span>
+<span class="org-whitespace-space"> </span>34:<span class="org-whitespace-space">         </span>17<span class="org-whitespace-space">         </span>25<span class="org-whitespace-space">          </span>9<span class="org-whitespace-space">          </span>6<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>1048576-edge
+<span class="org-whitespace-space"> </span>35:<span class="org-whitespace-space">      </span>21776<span class="org-whitespace-space">      </span>66376<span class="org-whitespace-space">      </span>16760<span class="org-whitespace-space">      </span>12078<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>32768-edge<span class="org-whitespace-space">      </span>i91<span class="org-whitespace-line">5</span>
+<span class="org-whitespace-space"> </span>36:<span class="org-whitespace-space">       </span>7089<span class="org-whitespace-space">      </span>20303<span class="org-whitespace-space">       </span>4455<span class="org-whitespace-space">       </span>3968<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>2097152-edge<span class="org-whitespace-space">      </span>i<span class="org-whitespace-line">wlwifi</span>
+<span class="org-whitespace-space"> </span>37:<span class="org-whitespace-space">        </span>116<span class="org-whitespace-space">        </span>855<span class="org-whitespace-space">        </span>136<span class="org-whitespace-space">        </span>140<span class="org-whitespace-space">  </span>IR-PCI-MSI<span class="org-whitespace-space"> </span>49152-edge<span class="org-whitespace-space">      </span>snd<span class="org-whitespace-line">_hda_intel:card0</span>
+NMI:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Non-maskable<span class="org-whitespace-space"> </span>interrupts
+LOC:<span class="org-whitespace-space">     </span>310517<span class="org-whitespace-space">     </span>250892<span class="org-whitespace-space">     </span>326730<span class="org-whitespace-space">     </span>272651<span class="org-whitespace-space">   </span>Local<span class="org-whitespace-space"> </span>timer<span class="org-whitespace-space"> </span>interrupts
+SPU:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Spurious<span class="org-whitespace-space"> </span>interrupts
+PMI:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Performance<span class="org-whitespace-space"> </span>monitoring<span class="org-whitespace-space"> </span>interr<span class="org-whitespace-line">upts</span>
+IWI:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>2<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>IRQ<span class="org-whitespace-space"> </span>work<span class="org-whitespace-space"> </span>interrupts
+RTR:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>APIC<span class="org-whitespace-space"> </span>ICR<span class="org-whitespace-space"> </span>read<span class="org-whitespace-space"> </span>retries
+RES:<span class="org-whitespace-space">      </span>32446<span class="org-whitespace-space">      </span>33569<span class="org-whitespace-space">      </span>28799<span class="org-whitespace-space">      </span>18822<span class="org-whitespace-space">   </span>Rescheduling<span class="org-whitespace-space"> </span>interrupts
+CAL:<span class="org-whitespace-space">      </span>50777<span class="org-whitespace-space">      </span>60493<span class="org-whitespace-space">      </span>62390<span class="org-whitespace-space">      </span>53925<span class="org-whitespace-space">   </span>Function<span class="org-whitespace-space"> </span>call<span class="org-whitespace-space"> </span>interrupts
+TLB:<span class="org-whitespace-space">      </span>48661<span class="org-whitespace-space">      </span>58330<span class="org-whitespace-space">      </span>60778<span class="org-whitespace-space">      </span>51797<span class="org-whitespace-space">   </span>TLB<span class="org-whitespace-space"> </span>shootdowns
+TRM:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Thermal<span class="org-whitespace-space"> </span>event<span class="org-whitespace-space"> </span>interrupts
+THR:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Threshold<span class="org-whitespace-space"> </span>APIC<span class="org-whitespace-space"> </span>interrupts
+DFR:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Deferred<span class="org-whitespace-space"> </span>Error<span class="org-whitespace-space"> </span>APIC<span class="org-whitespace-space"> </span>interrupt<span class="org-whitespace-line">s</span>
+MCE:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Machine<span class="org-whitespace-space"> </span>check<span class="org-whitespace-space"> </span>exceptions
+MCP:<span class="org-whitespace-space">         </span>12<span class="org-whitespace-space">         </span>12<span class="org-whitespace-space">         </span>12<span class="org-whitespace-space">         </span>12<span class="org-whitespace-space">   </span>Machine<span class="org-whitespace-space"> </span>check<span class="org-whitespace-space"> </span>polls
+ERR:<span class="org-whitespace-space">          </span>0
+MIS:<span class="org-whitespace-space">          </span>0
+PIN:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Posted-interrupt<span class="org-whitespace-space"> </span>notification<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">event</span>
+PIW:<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">   </span>Posted-interrupt<span class="org-whitespace-space"> </span>wakeup<span class="org-whitespace-space"> </span>event
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/interrupts.c">fs/proc/interrupts.c</a>和<a href="https://elixir.bootlin.com/linux/v4.15.4/source/kernel/irq/proc.c">kernel/irq/proc.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">int_seq_ops</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.start<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>int_seq_start,
+<span class="org-whitespace-space">        </span>.next<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>int_seq_next,
+<span class="org-whitespace-space">        </span>.stop<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>int_seq_stop,
+<span class="org-whitespace-space">        </span>.show<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>show_interrupts
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">interrupts_open</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">inode</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">inode</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">filp</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>seq_open(filp,<span class="org-whitespace-space"> </span>&amp;int_seq_ops);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">file_operations</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proc_interrupts_operations</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>.open<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>interrupts_open,
+<span class="org-whitespace-space">        </span>.read<span class="org-whitespace-tab">           </span>=<span class="org-whitespace-space"> </span>seq_read,
+<span class="org-whitespace-space">        </span>.llseek<span class="org-whitespace-tab">         </span>=<span class="org-whitespace-space"> </span>seq_lseek,
+<span class="org-whitespace-space">        </span>.release<span class="org-whitespace-tab">        </span>=<span class="org-whitespace-space"> </span>seq_release,
+};
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">__init</span><span class="org-whitespace-space"> </span>proc_interrupts_init(<span class="org-type">void</span>)
+{
+<span class="org-whitespace-space">        </span>proc_create(<span class="org-string">"interrupts"</span>,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>&amp;proc_interrupts_operations);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_interrupts_init);
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">show_interrupts</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">seq_file</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">p</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">prec</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">flags</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">any_count</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*(<span class="org-type">loff_t</span><span class="org-whitespace-space"> </span>*)<span class="org-whitespace-space"> </span>v,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">irqaction</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">action</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">irq_desc</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">desc</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>ACTUAL_NR_IRQS)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ACTUAL_NR_IRQS)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>arch_show_interrupts(p,<span class="org-whitespace-space"> </span>prec);
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">print</span><span class="org-whitespace-space"> </span><span class="org-comment">header</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">calculate</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">width</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">first</span><span class="org-whitespace-space"> </span><span class="org-comment">column</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(prec<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1000;<span class="org-whitespace-space"> </span>prec<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>10<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>nr_irqs;<span class="org-whitespace-space"> </span>++prec)
+<span class="org-whitespace-space">                        </span>j<span class="org-whitespace-space"> </span>*=<span class="org-whitespace-space"> </span>10;
+
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"%*s"</span>,<span class="org-whitespace-space"> </span>prec<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>8,<span class="org-whitespace-space"> </span><span class="org-string">""</span>);
+<span class="org-whitespace-space">                </span>for_each_online_cpu(j)
+<span class="org-whitespace-space">                        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"CPU%-8d"</span>,<span class="org-whitespace-space"> </span>j);
+<span class="org-whitespace-space">                </span>seq_putc(p,<span class="org-whitespace-space"> </span><span class="org-string">'\n'</span>);
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>irq_lock_sparse();
+<span class="org-whitespace-space">        </span>desc<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>irq_to_desc(i);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>desc)
+<span class="org-whitespace-space">                </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span><span class="org-constant">outsparse</span>;
+
+<span class="org-whitespace-space">        </span>raw_spin_lock_irqsave(&amp;desc-&gt;lock,<span class="org-whitespace-space"> </span>flags);
+<span class="org-whitespace-space">        </span>for_each_online_cpu(j)
+<span class="org-whitespace-space">                </span>any_count<span class="org-whitespace-space"> </span>|=<span class="org-whitespace-space"> </span>kstat_irqs_cpu(i,<span class="org-whitespace-space"> </span>j);
+<span class="org-whitespace-space">        </span>action<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>desc-&gt;action;
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>((<span class="org-negation-char">!</span>action<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span>irq_desc_is_chained(desc))<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span><span class="org-negation-char">!</span>any_count)
+<span class="org-whitespace-space">                </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span><span class="org-constant">out</span>;
+
+<span class="org-whitespace-space">        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"%*d:</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>prec,<span class="org-whitespace-space"> </span>i);
+<span class="org-whitespace-space">        </span>for_each_online_cpu(j)
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"%10u</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>kstat_irqs_cpu(i,<span class="org-whitespace-space"> </span>j));
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(desc-&gt;irq_data.chip)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(desc-&gt;irq_data.chip-&gt;irq_print_chip)
+<span class="org-whitespace-space">                        </span>desc-&gt;irq_data.chip-&gt;irq_print_chip(&amp;desc-&gt;irq_data,<span class="org-whitespace-space"> </span>p);
+<span class="org-whitespace-space">                </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(desc-&gt;irq_data.chip-&gt;name)
+<span class="org-whitespace-space">                        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%8s"</span>,<span class="org-whitespace-space"> </span>desc-&gt;irq_data.chip-&gt;name);
+<span class="org-whitespace-space">                </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">                        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%8s"</span>,<span class="org-whitespace-space"> </span><span class="org-string">"-"</span>);
+<span class="org-whitespace-space">        </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%8s"</span>,<span class="org-whitespace-space"> </span><span class="org-string">"None"</span>);
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(desc-&gt;irq_data.domain)
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%*d"</span>,<span class="org-whitespace-space"> </span>prec,<span class="org-whitespace-space"> </span>(<span class="org-type">int</span>)<span class="org-whitespace-space"> </span>desc-&gt;irq_data.hwirq);
+<span class="org-whitespace-space">        </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%*s"</span>,<span class="org-whitespace-space"> </span>prec,<span class="org-whitespace-space"> </span><span class="org-string">""</span>);
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>CONFIG_GENERIC_IRQ_SHOW_LEVEL
+<span class="org-whitespace-space">        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%-8s"</span>,<span class="org-whitespace-space"> </span>irqd_is_level_type(&amp;desc-&gt;irq_data)<span class="org-whitespace-space"> </span>?<span class="org-whitespace-space"> </span><span class="org-string">"Level"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-string"><span class="org-whitespace-line">Edge"</span></span><span class="org-whitespace-line">);</span>
+<span class="org-preprocessor">#endif</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(desc-&gt;name)
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"-%-8s"</span>,<span class="org-whitespace-space"> </span>desc-&gt;name);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(action)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space">  </span><span class="org-string">%s"</span>,<span class="org-whitespace-space"> </span>action-&gt;name);
+<span class="org-whitespace-space">                </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>((action<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>action-&gt;next)<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>)
+<span class="org-whitespace-space">                        </span>seq_printf(p,<span class="org-whitespace-space"> </span><span class="org-string">",</span><span class="org-whitespace-space"> </span><span class="org-string">%s"</span>,<span class="org-whitespace-space"> </span>action-&gt;name);
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>seq_putc(p,<span class="org-whitespace-space"> </span><span class="org-string">'\n'</span>);
+<span class="org-constant">out</span>:
+<span class="org-whitespace-space">        </span>raw_spin_unlock_irqrestore(&amp;desc-&gt;lock,<span class="org-whitespace-space"> </span>flags);
+<span class="org-constant">outsparse</span>:
+<span class="org-whitespace-space">        </span>irq_unlock_sparse();
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org02c1665" class="outline-3">
+<h3 id="org02c1665"><span class="section-number-3">3.14</span> proc/&lt;pid&gt;</h3>
+</div>
+
+<div id="outline-container-orgf15ff34" class="outline-3">
+<h3 id="orgf15ff34"><span class="section-number-3">3.15</span> proc/self</h3>
+<div class="outline-text-3" id="text-3-15">
 <p>
 proc/self是一个符号链接，总是指向执行进程本身。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">~$ ls -ld /proc/self
-lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-ld<span class="org-whitespace-space"> </span>/proc/self
+lrwxrwxrwx<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space"> </span>20<span class="org-whitespace-space"> </span>18:47<span class="org-whitespace-space"> </span>/proc/self<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>2289
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-orgb41b3c9" class="outline-3">
-<h3 id="orgb41b3c9"><span class="section-number-3">2.2</span> oom_score</h3>
-<div class="outline-text-3" id="text-2-2">
+<h3 id="orgb41b3c9"><span class="section-number-3">3.16</span> oom_score</h3>
+<div class="outline-text-3" id="text-3-16">
 <div class="org-src-container">
 <pre class="src src-C">
 </pre>
 </div>
 </div>
+</div>
+</div>
+
+<div id="outline-container-orgdb0b0ff" class="outline-2">
+<h2 id="orgdb0b0ff"><span class="section-number-2">4</span> 内核实现</h2>
+</div>
+
+<div id="outline-container-org4128f36" class="outline-2">
+<h2 id="org4128f36"><span class="section-number-2">5</span> 参考资料</h2>
+<div class="outline-text-2" id="text-5">
+<dl class="org-dl">
+<dt>IBM developer procfs、seq_file、debugfs and relayfs</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-kerns-usrs2/">https://www.ibm.com/developerworks/cn/linux/l-kerns-usrs2/</a></dd>
+<dt>LWN Driver porting: The seq_file interface</dt><dd><a href="https://lwn.net/Articles/22355/">https://lwn.net/Articles/22355/</a></dd>
+</dl>
 </div>
 </div>
 </div>
