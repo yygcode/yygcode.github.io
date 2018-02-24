@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 20:00 -->
+<!-- 2018-02-25 Sun 00:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Emacs启动时间分析</title>
 <meta name="generator" content="Org mode" />
@@ -31,15 +31,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1a3d7c5">1. 介绍</a></li>
-<li><a href="#org670bbbe">2. benchmark-init</a></li>
-<li><a href="#org7aba8de">3. esup</a></li>
+<li><a href="#orgda79523">1. 介绍</a></li>
+<li><a href="#org6c1a924">2. benchmark-init</a></li>
+<li><a href="#org47bd222">3. esup</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1a3d7c5" class="outline-2">
-<h2 id="org1a3d7c5"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgda79523" class="outline-2">
+<h2 id="orgda79523"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Emacs启动调优需要先分析时间分布。<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>和<a href="https://github.com/jschaf/esup/">esup</a>是两个优秀的候选package。
@@ -54,8 +54,8 @@ init.el本身启动时间分析。
 </div>
 </div>
 
-<div id="outline-container-org670bbbe" class="outline-2">
-<h2 id="org670bbbe"><span class="section-number-2">2</span> benchmark-init</h2>
+<div id="outline-container-org6c1a924" class="outline-2">
+<h2 id="org6c1a924"><span class="section-number-2">2</span> benchmark-init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>是require和load函数的基准测试工具：
@@ -137,8 +137,8 @@ benchmark-init配置如下：
 </div>
 </div>
 
-<div id="outline-container-org7aba8de" class="outline-2">
-<h2 id="org7aba8de"><span class="section-number-2">3</span> esup</h2>
+<div id="outline-container-org47bd222" class="outline-2">
+<h2 id="org47bd222"><span class="section-number-2">3</span> esup</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <a href="https://github.com/jschaf/esup/">esup</a>对emacs启动时间进行基准分析。esup-0.6版本在emacs-26.0.90版本下有
@@ -230,33 +230,25 @@ esup默认分析 <code>user-init-file</code> 文件，执行 <code>C-u M-x esup<
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
-
-<div id="disqus_thread"></div>
+<div id="disqus_thread" class="disqus"></div>
 <script>
-  var disqus_developer = 1;
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
+  var disqus_config = function () {
+    this.page.url = http://ycdeo.org/blogs/emacs-startup-profiler.html;
+    this.page.identifier = emacs-startup-profiler.html;
+  };
 
-        s.src = 'https://yanyg.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yanyg.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+  })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
-<script id="dsq-count-scr" src="//yanyg.disqus.com/count.js" async></script>
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

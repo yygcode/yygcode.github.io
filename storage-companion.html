@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:59 -->
+<!-- 2018-02-25 Sun 00:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
@@ -28,39 +28,39 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgca57d5a">1. 介绍</a>
+<li><a href="#org0f1d8c1">1. 介绍</a>
 <ul>
-<li><a href="#org3577e23">1.1. 发展历史</a></li>
-<li><a href="#orgc7a7286">1.2. 衡量评测</a></li>
+<li><a href="#org3b7bf4d">1.1. 发展历史</a></li>
+<li><a href="#org3a12a83">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org407174d">2. 存储产品分析</a>
+<li><a href="#org8446fd1">2. 存储产品分析</a>
 <ul>
-<li><a href="#org4fc18d3">2.1. IBM V7000</a></li>
+<li><a href="#org40809e9">2.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#orgb1c7803">3. 软件架构</a></li>
-<li><a href="#orgd0a954c">4. 机箱管理</a></li>
-<li><a href="#org2e2ea52">5. 驱动</a>
+<li><a href="#org08b0df3">3. 软件架构</a></li>
+<li><a href="#org873479c">4. 机箱管理</a></li>
+<li><a href="#org3f9c915">5. 驱动</a>
 <ul>
-<li><a href="#org7d86343">5.1. 双控互联NTB</a></li>
-<li><a href="#org8c688ff">5.2. FC卡</a></li>
-<li><a href="#org5304f50">5.3. SAS卡</a></li>
-<li><a href="#org78765a1">5.4. 网卡</a></li>
-<li><a href="#orgc7e1bac">5.5. IB卡</a></li>
+<li><a href="#orgcca8991">5.1. 双控互联NTB</a></li>
+<li><a href="#org0788722">5.2. FC卡</a></li>
+<li><a href="#orgaebd656">5.3. SAS卡</a></li>
+<li><a href="#org330ca17">5.4. 网卡</a></li>
+<li><a href="#org51e4674">5.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#org87ad3db">6. SCSI协议</a></li>
-<li><a href="#org154fce4">7. BACKUP</a></li>
-<li><a href="#org8d0bce1">8. 方案</a>
+<li><a href="#orgbcf6ca2">6. SCSI协议</a></li>
+<li><a href="#org05dfa27">7. BACKUP</a></li>
+<li><a href="#orgd13c6f4">8. 方案</a>
 <ul>
-<li><a href="#orge3a5046">8.1. 容灾</a>
+<li><a href="#orge665a85">8.1. 容灾</a>
 <ul>
-<li><a href="#orgfa80add">8.1.1. 介绍</a></li>
-<li><a href="#org1e0df3e">8.1.2. 技术点</a></li>
-<li><a href="#org0ee6c8c">8.1.3. 两地三中心</a></li>
-<li><a href="#org6a72dc1">8.1.4. 双活</a></li>
-<li><a href="#org83a274a">8.1.5. 关键词</a></li>
+<li><a href="#orgb36e21b">8.1.1. 介绍</a></li>
+<li><a href="#org4627bb5">8.1.2. 技术点</a></li>
+<li><a href="#org7214927">8.1.3. 两地三中心</a></li>
+<li><a href="#orgfbe1e1a">8.1.4. 双活</a></li>
+<li><a href="#org7f6878a">8.1.5. 关键词</a></li>
 </ul>
 </li>
 </ul>
@@ -72,20 +72,20 @@
 本文尚未完成。
 </p>
 
-<div id="outline-container-orgca57d5a" class="outline-2">
-<h2 id="orgca57d5a"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org0f1d8c1" class="outline-2">
+<h2 id="org0f1d8c1"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 统一存储分数据面与管里面。机箱管理使用exp实现。
 </p>
 </div>
 
-<div id="outline-container-org3577e23" class="outline-3">
-<h3 id="org3577e23"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-org3b7bf4d" class="outline-3">
+<h3 id="org3b7bf4d"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-orgc7a7286" class="outline-3">
-<h3 id="orgc7a7286"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-org3a12a83" class="outline-3">
+<h3 id="org3a12a83"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注如下几个方面:
@@ -103,12 +103,12 @@ SAN存储需要关注如下几个方面:
 </div>
 </div>
 
-<div id="outline-container-org407174d" class="outline-2">
-<h2 id="org407174d"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-org8446fd1" class="outline-2">
+<h2 id="org8446fd1"><span class="section-number-2">2</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org4fc18d3" class="outline-3">
-<h3 id="org4fc18d3"><span class="section-number-3">2.1</span> IBM V7000</h3>
+<div id="outline-container-org40809e9" class="outline-3">
+<h3 id="org40809e9"><span class="section-number-3">2.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -118,11 +118,11 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-orgb1c7803" class="outline-2">
-<h2 id="orgb1c7803"><span class="section-number-2">3</span> 软件架构</h2>
+<div id="outline-container-org08b0df3" class="outline-2">
+<h2 id="org08b0df3"><span class="section-number-2">3</span> 软件架构</h2>
 </div>
-<div id="outline-container-orgd0a954c" class="outline-2">
-<h2 id="orgd0a954c"><span class="section-number-2">4</span> 机箱管理</h2>
+<div id="outline-container-org873479c" class="outline-2">
+<h2 id="org873479c"><span class="section-number-2">4</span> 机箱管理</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic)设备，控制器向Expander sg设备发送SES命令管理机箱。NVMe管理芯片方案中，PSX支持SES封装进NVMe
@@ -136,37 +136,37 @@ SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic
 </div>
 </div>
 
-<div id="outline-container-org2e2ea52" class="outline-2">
-<h2 id="org2e2ea52"><span class="section-number-2">5</span> 驱动</h2>
+<div id="outline-container-org3f9c915" class="outline-2">
+<h2 id="org3f9c915"><span class="section-number-2">5</span> 驱动</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org7d86343" class="outline-3">
-<h3 id="org7d86343"><span class="section-number-3">5.1</span> 双控互联NTB</h3>
+<div id="outline-container-orgcca8991" class="outline-3">
+<h3 id="orgcca8991"><span class="section-number-3">5.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-org8c688ff" class="outline-3">
-<h3 id="org8c688ff"><span class="section-number-3">5.2</span> FC卡</h3>
+<div id="outline-container-org0788722" class="outline-3">
+<h3 id="org0788722"><span class="section-number-3">5.2</span> FC卡</h3>
 </div>
-<div id="outline-container-org5304f50" class="outline-3">
-<h3 id="org5304f50"><span class="section-number-3">5.3</span> SAS卡</h3>
+<div id="outline-container-orgaebd656" class="outline-3">
+<h3 id="orgaebd656"><span class="section-number-3">5.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-org78765a1" class="outline-3">
-<h3 id="org78765a1"><span class="section-number-3">5.4</span> 网卡</h3>
+<div id="outline-container-org330ca17" class="outline-3">
+<h3 id="org330ca17"><span class="section-number-3">5.4</span> 网卡</h3>
 </div>
-<div id="outline-container-orgc7e1bac" class="outline-3">
-<h3 id="orgc7e1bac"><span class="section-number-3">5.5</span> IB卡</h3>
+<div id="outline-container-org51e4674" class="outline-3">
+<h3 id="org51e4674"><span class="section-number-3">5.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-org87ad3db" class="outline-2">
-<h2 id="org87ad3db"><span class="section-number-2">6</span> SCSI协议</h2>
+<div id="outline-container-orgbcf6ca2" class="outline-2">
+<h2 id="orgbcf6ca2"><span class="section-number-2">6</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org154fce4" class="outline-2">
-<h2 id="org154fce4"><span class="section-number-2">7</span> BACKUP</h2>
+<div id="outline-container-org05dfa27" class="outline-2">
+<h2 id="org05dfa27"><span class="section-number-2">7</span> BACKUP</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
@@ -183,21 +183,21 @@ hello world
 </ul>
 </div>
 </div>
-<div id="outline-container-org8d0bce1" class="outline-2">
-<h2 id="org8d0bce1"><span class="section-number-2">8</span> 方案</h2>
+<div id="outline-container-orgd13c6f4" class="outline-2">
+<h2 id="orgd13c6f4"><span class="section-number-2">8</span> 方案</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-orge3a5046" class="outline-3">
-<h3 id="orge3a5046"><span class="section-number-3">8.1</span> 容灾</h3>
+<div id="outline-container-orge665a85" class="outline-3">
+<h3 id="orge665a85"><span class="section-number-3">8.1</span> 容灾</h3>
 <div class="outline-text-3" id="text-8-1">
 </div>
-<div id="outline-container-orgfa80add" class="outline-4">
-<h4 id="orgfa80add"><span class="section-number-4">8.1.1</span> 介绍</h4>
+<div id="outline-container-orgb36e21b" class="outline-4">
+<h4 id="orgb36e21b"><span class="section-number-4">8.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-8-1-1">
 <p>
 随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
 </p>
-<table border="2" cellspacing="0" cellpadding="6" rules="all :frame: border" frame="hsides">
+<table class="table table-hover" border="2" rules="all :frame: border">
 <caption class="t-above"><span class="table-number">&#34920;1&nbsp;</span> IDC宕机损失统计</caption>
 
 <colgroup>
@@ -268,8 +268,8 @@ hello world
 </div>
 </div>
 
-<div id="outline-container-org1e0df3e" class="outline-4">
-<h4 id="org1e0df3e"><span class="section-number-4">8.1.2</span> 技术点</h4>
+<div id="outline-container-org4627bb5" class="outline-4">
+<h4 id="org4627bb5"><span class="section-number-4">8.1.2</span> 技术点</h4>
 <div class="outline-text-4" id="text-8-1-2">
 <p>
 容灾技术用以解决这类异常将导致严重的后果。不同行业对业务连续性和数据可靠性有不同的要求，
@@ -292,19 +292,19 @@ hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org0ee6c8c" class="outline-4">
-<h4 id="org0ee6c8c"><span class="section-number-4">8.1.3</span> 两地三中心</h4>
+<div id="outline-container-org7214927" class="outline-4">
+<h4 id="org7214927"><span class="section-number-4">8.1.3</span> 两地三中心</h4>
 <div class="outline-text-4" id="text-8-1-3">
 <p>
 “两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
 </p>
 </div>
 </div>
-<div id="outline-container-org6a72dc1" class="outline-4">
-<h4 id="org6a72dc1"><span class="section-number-4">8.1.4</span> 双活</h4>
+<div id="outline-container-orgfbe1e1a" class="outline-4">
+<h4 id="orgfbe1e1a"><span class="section-number-4">8.1.4</span> 双活</h4>
 </div>
-<div id="outline-container-org83a274a" class="outline-4">
-<h4 id="org83a274a"><span class="section-number-4">8.1.5</span> 关键词</h4>
+<div id="outline-container-org7f6878a" class="outline-4">
+<h4 id="org7f6878a"><span class="section-number-4">8.1.5</span> 关键词</h4>
 <div class="outline-text-4" id="text-8-1-5">
 <ul class="org-ul">
 <li>CAP</li>
@@ -327,31 +327,25 @@ hello world
 </div>
 </div></div>
 <div id="postamble" class="status">
-2012-2020 (&copy;) <i>yanyg</i>
-
-<div id="disqus_thread"></div>
+<div id="disqus_thread" class="disqus"></div>
 <script>
-  var disqus_developer = 1;
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
+  var disqus_config = function () {
+    this.page.url = http://ycdeo.org/storage-companion.html;
+    this.page.identifier = storage-companion.html;
+  };
 
-        s.src = 'https://yanyg.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yanyg.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+  })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

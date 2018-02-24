@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:59 -->
+<!-- 2018-02-25 Sun 00:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -22,20 +22,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbe6025b">1. 介绍</a></li>
-<li><a href="#org8ea70c0">2. 代码分析</a>
+<li><a href="#org5426649">1. 介绍</a></li>
+<li><a href="#org4cfcb5b">2. 代码分析</a>
 <ul>
-<li><a href="#orgacee331">2.1. 数据结构</a></li>
-<li><a href="#orgb438af1">2.2. idr_alloc分析</a></li>
+<li><a href="#org81035c6">2.1. 数据结构</a></li>
+<li><a href="#orgd0fdd2b">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#orgb84bc63">3. Reference Material</a></li>
+<li><a href="#orgd71155d">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgbe6025b" class="outline-2">
-<h2 id="orgbe6025b"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org5426649" class="outline-2">
+<h2 id="org5426649"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -43,12 +43,12 @@
 </div>
 </div>
 
-<div id="outline-container-org8ea70c0" class="outline-2">
-<h2 id="org8ea70c0"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-org4cfcb5b" class="outline-2">
+<h2 id="org4cfcb5b"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgacee331" class="outline-3">
-<h3 id="orgacee331"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-org81035c6" class="outline-3">
+<h3 id="org81035c6"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
@@ -92,8 +92,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgb438af1" class="outline-3">
-<h3 id="orgb438af1"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-orgd0fdd2b" class="outline-3">
+<h3 id="orgd0fdd2b"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -126,8 +126,8 @@
 </div>
 
 
-<div id="outline-container-orgb84bc63" class="outline-2">
-<h2 id="orgb84bc63"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-orgd71155d" class="outline-2">
+<h2 id="orgd71155d"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
@@ -137,31 +137,25 @@
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 (&copy;) <i>yanyg</i>
-
-<div id="disqus_thread"></div>
+<div id="disqus_thread" class="disqus"></div>
 <script>
-  var disqus_developer = 1;
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
+  var disqus_config = function () {
+    this.page.url = http://ycdeo.org/algos-lk-idr.html;
+    this.page.identifier = algos-lk-idr.html;
+  };
 
-        s.src = 'https://yanyg.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yanyg.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+  })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

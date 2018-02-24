@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:59 -->
+<!-- 2018-02-25 Sun 00:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>PCI技术</title>
 <meta name="generator" content="Org mode" />
@@ -22,44 +22,44 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf84fda0">1. 错误处理</a>
+<li><a href="#org7f27091">1. 错误处理</a>
 <ul>
-<li><a href="#org66a09f5">1.1. ROB超时问题</a></li>
-<li><a href="#orga494c2c">1.2. </a></li>
-<li><a href="#org3fc73ab">1.3. </a></li>
-<li><a href="#org71919d9">1.4. </a></li>
+<li><a href="#orgc4f4afa">1.1. ROB超时问题</a></li>
+<li><a href="#orgd34e1af">1.2. </a></li>
+<li><a href="#org2ccd2b2">1.3. </a></li>
+<li><a href="#org458c8cb">1.4. </a></li>
 </ul>
 </li>
-<li><a href="#org3314a12">2. 资源链接</a>
+<li><a href="#org420b941">2. 资源链接</a>
 <ul>
-<li><a href="#org83b14cf">2.1. ECN Internal Error Reporting</a></li>
-<li><a href="#orge630d06">2.2. ROB timeout debug guide</a></li>
+<li><a href="#org9271b90">2.1. ECN Internal Error Reporting</a></li>
+<li><a href="#orga043a3e">2.2. ROB timeout debug guide</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf84fda0" class="outline-2">
-<h2 id="orgf84fda0"><span class="section-number-2">1</span> 错误处理</h2>
+<div id="outline-container-org7f27091" class="outline-2">
+<h2 id="org7f27091"><span class="section-number-2">1</span> 错误处理</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org66a09f5" class="outline-3">
-<h3 id="org66a09f5"><span class="section-number-3">1.1</span> ROB超时问题</h3>
+<div id="outline-container-orgc4f4afa" class="outline-3">
+<h3 id="orgc4f4afa"><span class="section-number-3">1.1</span> ROB超时问题</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之后按照原有顺序提交. 目前普遍使用<a href="https://en.wikipedia.org/wiki/Tomasulo_algorithm">Tomasulo算法</a>. 
 </p>
 </div>
 </div>
-<div id="outline-container-orga494c2c" class="outline-3">
-<h3 id="orga494c2c"><span class="section-number-3">1.2</span> </h3>
+<div id="outline-container-orgd34e1af" class="outline-3">
+<h3 id="orgd34e1af"><span class="section-number-3">1.2</span> </h3>
 </div>
-<div id="outline-container-org3fc73ab" class="outline-3">
-<h3 id="org3fc73ab"><span class="section-number-3">1.3</span> </h3>
+<div id="outline-container-org2ccd2b2" class="outline-3">
+<h3 id="org2ccd2b2"><span class="section-number-3">1.3</span> </h3>
 </div>
-<div id="outline-container-org71919d9" class="outline-3">
-<h3 id="org71919d9"><span class="section-number-3">1.4</span> </h3>
+<div id="outline-container-org458c8cb" class="outline-3">
+<h3 id="org458c8cb"><span class="section-number-3">1.4</span> </h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 **
@@ -68,12 +68,12 @@ ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之�
 </div>
 </div>
 
-<div id="outline-container-org3314a12" class="outline-2">
-<h2 id="org3314a12"><span class="section-number-2">2</span> 资源链接</h2>
+<div id="outline-container-org420b941" class="outline-2">
+<h2 id="org420b941"><span class="section-number-2">2</span> 资源链接</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org83b14cf" class="outline-3">
-<h3 id="org83b14cf"><span class="section-number-3">2.1</span> ECN Internal Error Reporting</h3>
+<div id="outline-container-org9271b90" class="outline-3">
+<h3 id="org9271b90"><span class="section-number-3">2.1</span> ECN Internal Error Reporting</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 <a href="https://pcisig.com/sites/default/files/specification_documents/ECN_Internal-Error-Reporting_24Apr08.pdf">https://pcisig.com/sites/default/files/specification_documents/ECN_Internal-Error-Reporting_24Apr08.pdf</a>
@@ -81,8 +81,8 @@ ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之�
 </div>
 </div>
 
-<div id="outline-container-orge630d06" class="outline-3">
-<h3 id="orge630d06"><span class="section-number-3">2.2</span> ROB timeout debug guide</h3>
+<div id="outline-container-orga043a3e" class="outline-3">
+<h3 id="orga043a3e"><span class="section-number-3">2.2</span> ROB timeout debug guide</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <a href="https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/rob-timeout-debug-guide-paper.pdf">https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/rob-timeout-debug-guide-paper.pdf</a>
@@ -92,31 +92,25 @@ ROB(re-order buffer, 重排序缓冲区)允许处理器指令乱序执行, 之�
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 (&copy;) <i>yanyg</i>
-
-<div id="disqus_thread"></div>
+<div id="disqus_thread" class="disqus"></div>
 <script>
-  var disqus_developer = 1;
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
+  var disqus_config = function () {
+    this.page.url = http://ycdeo.org/pci.html;
+    this.page.identifier = pci.html;
+  };
 
-        s.src = 'https://yanyg.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yanyg.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+  })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

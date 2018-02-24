@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-21 Wed 19:59 -->
+<!-- 2018-02-25 Sun 00:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - RADIX树实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -28,27 +28,27 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2290a06">1. 介绍</a></li>
-<li><a href="#org05cec9d">2. 结构体描述</a>
+<li><a href="#org9f24212">1. 介绍</a></li>
+<li><a href="#org574ee9b">2. 结构体描述</a>
 <ul>
-<li><a href="#org205e91c">2.1. radix_tree_node</a></li>
-<li><a href="#org61b8283">2.2. radix_tree_root</a></li>
+<li><a href="#org6db9e1c">2.1. radix_tree_node</a></li>
+<li><a href="#orgd76124e">2.2. radix_tree_root</a></li>
 </ul>
 </li>
-<li><a href="#orgef80889">3. 插入操作</a></li>
-<li><a href="#orge95ef51">4. API</a>
+<li><a href="#orgf94faca">3. 插入操作</a></li>
+<li><a href="#org7876df4">4. API</a>
 <ul>
-<li><a href="#org4f3f44d">4.1. radix_tree_lookup</a></li>
+<li><a href="#orgb865767">4.1. radix_tree_lookup</a></li>
 </ul>
 </li>
-<li><a href="#orgc9d0f79">5. Data Structures</a></li>
-<li><a href="#org690fa6f">6. Reference</a></li>
+<li><a href="#org347566b">5. Data Structures</a></li>
+<li><a href="#org7b54406">6. Reference</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2290a06" class="outline-2">
-<h2 id="org2290a06"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org9f24212" class="outline-2">
+<h2 id="org9f24212"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://en.wikipedia.org/wiki/Radix_tree">RADIX-TREE</a>，也称为Radix Trie或Compact Prefix Tree，中文翻译基数树，是一种空间优化的字典树，其每一个节点都是由子节点和它的父节点合并而成。其结果是，每个内部节点的子节点数目至少是基数数的基数r，其中r是一个正数，且为 2<sup>x</sup>，其中x&ge;1。有别于其他的字典树，RADIX树的边可以标记为元素序列或单个元素，这使得小集合场景下基数树更加有效，由于对于比较长的字符串，以及有比较长前缀的字符串。
@@ -79,12 +79,12 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 </div>
 </div>
 
-<div id="outline-container-org05cec9d" class="outline-2">
-<h2 id="org05cec9d"><span class="section-number-2">2</span> 结构体描述</h2>
+<div id="outline-container-org574ee9b" class="outline-2">
+<h2 id="org574ee9b"><span class="section-number-2">2</span> 结构体描述</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org205e91c" class="outline-3">
-<h3 id="org205e91c"><span class="section-number-3">2.1</span> radix_tree_node</h3>
+<div id="outline-container-org6db9e1c" class="outline-3">
+<h3 id="org6db9e1c"><span class="section-number-3">2.1</span> radix_tree_node</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li><code>RADIX_TREE_MAP_SHIFT</code> 定义基数r，内核通过CONFIG选项，可设置为4或6，默认为6；</li>
@@ -167,8 +167,8 @@ Linux内核实现的RADIX树key值为unsigned long数值。另外，再次强调
 </div>
 </div>
 
-<div id="outline-container-org61b8283" class="outline-3">
-<h3 id="org61b8283"><span class="section-number-3">2.2</span> radix_tree_root</h3>
+<div id="outline-container-orgd76124e" class="outline-3">
+<h3 id="orgd76124e"><span class="section-number-3">2.2</span> radix_tree_root</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向第一个节点；
@@ -184,8 +184,8 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-orgef80889" class="outline-2">
-<h2 id="orgef80889"><span class="section-number-2">3</span> 插入操作</h2>
+<div id="outline-container-orgf94faca" class="outline-2">
+<h2 id="orgf94faca"><span class="section-number-2">3</span> 插入操作</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <code>radix_tree_insert</code> 是一个包装函数，将任务派发给 <code>__radix_tree_insert</code> 。
@@ -244,17 +244,17 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-orge95ef51" class="outline-2">
-<h2 id="orge95ef51"><span class="section-number-2">4</span> API</h2>
+<div id="outline-container-org7876df4" class="outline-2">
+<h2 id="org7876df4"><span class="section-number-2">4</span> API</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4f3f44d" class="outline-3">
-<h3 id="org4f3f44d"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
+<div id="outline-container-orgb865767" class="outline-3">
+<h3 id="orgb865767"><span class="section-number-3">4.1</span> radix_tree_lookup</h3>
 </div>
 </div>
 
-<div id="outline-container-orgc9d0f79" class="outline-2">
-<h2 id="orgc9d0f79"><span class="section-number-2">5</span> Data Structures</h2>
+<div id="outline-container-org347566b" class="outline-2">
+<h2 id="org347566b"><span class="section-number-2">5</span> Data Structures</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 **
@@ -266,8 +266,8 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 
-<div id="outline-container-org690fa6f" class="outline-2">
-<h2 id="org690fa6f"><span class="section-number-2">6</span> Reference</h2>
+<div id="outline-container-org7b54406" class="outline-2">
+<h2 id="org7b54406"><span class="section-number-2">6</span> Reference</h2>
 <div class="outline-text-2" id="text-6">
 <dl class="org-dl">
 <dt>LWN Trees I: Radix Tree</dt><dd><a href="https://lwn.net/Articles/175432/">https://lwn.net/Articles/175432/</a></dd>
@@ -277,31 +277,25 @@ radix树根节点。gfp_mask 指定从哪个内存域分配内存，rnode指向�
 </div>
 </div>
 <div id="postamble" class="status">
-2012-2020 (&copy;) <i>yanyg</i>
-
-<div id="disqus_thread"></div>
+<div id="disqus_thread" class="disqus"></div>
 <script>
-  var disqus_developer = 1;
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
-    /*
-    var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
+  var disqus_config = function () {
+    this.page.url = http://ycdeo.org/algos-lk-radix-tree.html;
+    this.page.identifier = algos-lk-radix-tree.html;
+  };
 
-        s.src = 'https://yanyg.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+  (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yanyg.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+  })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>
