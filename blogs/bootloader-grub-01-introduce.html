@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 00:39 -->
+<!-- 2018-02-25 Sun 01:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>深入理解GRUB 01 - 介绍</title>
 <meta name="generator" content="Org mode" />
@@ -31,11 +31,11 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org954cb25">1. 概述</a>
+<li><a href="#orgcd75c7e">1. 概述</a>
 <ul>
-<li><a href="#org25a3319">1.1. GRUB是什么</a></li>
-<li><a href="#orgd1ba808">1.2. 系统启动过程</a></li>
-<li><a href="#org859feca">1.3. GRUB 1.98加载流程</a></li>
+<li><a href="#orged75b05">1.1. GRUB是什么</a></li>
+<li><a href="#orgb8b241f">1.2. 系统启动过程</a></li>
+<li><a href="#org191444a">1.3. GRUB 1.98加载流程</a></li>
 </ul>
 </li>
 </ul>
@@ -45,12 +45,12 @@
 说明：本文最初放在CSDN博客上，现重新整理到这里(<a href="http://blog.csdn.net/cppgp">http://blog.csdn.net/cppgp</a>)。
 </p>
 
-<div id="outline-container-org954cb25" class="outline-2">
-<h2 id="org954cb25"><span class="section-number-2">1</span> 概述</h2>
+<div id="outline-container-orgcd75c7e" class="outline-2">
+<h2 id="orgcd75c7e"><span class="section-number-2">1</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org25a3319" class="outline-3">
-<h3 id="org25a3319"><span class="section-number-3">1.1</span> GRUB是什么</h3>
+<div id="outline-container-orged75b05" class="outline-3">
+<h3 id="orged75b05"><span class="section-number-3">1.1</span> GRUB是什么</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 GNU GRUB是一款多重引导程序。简单来讲，引导程序是计算机开机运行的第一个软件，它的使命是装载操作系统并运行。实际上，由于平台、存储介质、操作系统、文件系统等的多样性，引导程序都很复杂，同时，引导程序要求有更高安全性、健壮性。
@@ -74,8 +74,8 @@ U盘）、多操作系统（例如Linux、Gnu Hurd等）、多重引导（例如
 </div>
 </div>
 
-<div id="outline-container-orgd1ba808" class="outline-3">
-<h3 id="orgd1ba808"><span class="section-number-3">1.2</span> 系统启动过程</h3>
+<div id="outline-container-orgb8b241f" class="outline-3">
+<h3 id="orgb8b241f"><span class="section-number-3">1.2</span> 系统启动过程</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 当计算机开机时，所有电子元器件都处于随机状态。此时一个特殊的硬件电路产生复位脉冲信号RESET，经CPU复位引脚进入CPU，CPU检测到RESET信号后，设置某些寄存器为预定值，其中寄存器CS和IP被预置为CS:IP=0xF000:FFF0，并让CPU在实模式下运行，可知CPU将执行地址0xFFFF0处代码。硬件电路把地址0xFFFF0映射到ROM中， ROM上保存有BIOS（Basic
@@ -85,8 +85,8 @@ BIOS初始化完成后，将搜索一个操作系统来启动，按照用户配�
 </div>
 </div>
 
-<div id="outline-container-org859feca" class="outline-3">
-<h3 id="org859feca"><span class="section-number-3">1.3</span> GRUB 1.98加载流程</h3>
+<div id="outline-container-org191444a" class="outline-3">
+<h3 id="org191444a"><span class="section-number-3">1.3</span> GRUB 1.98加载流程</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 安装在硬盘中的GRUB，完整的加载到内存中需要三步：
@@ -126,18 +126,18 @@ GRUB4DOS（只需要grldr、menu.ls两个文件）就可实现，网上资料很
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycdeo.org/blogs/bootloader-grub-01-introduce.html;
+    this.page.url = http://ycode.org/blogs/bootloader-grub-01-introduce.html;
     this.page.identifier = bootloader-grub-01-introduce.html;
   };
 
   (function() {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://yanyg.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
   })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>

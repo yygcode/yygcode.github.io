@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 00:38 -->
+<!-- 2018-02-25 Sun 01:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>性能测试/Performance Test</title>
 <meta name="generator" content="Org mode" />
@@ -44,34 +44,34 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org789ec35">1. 声明</a></li>
-<li><a href="#orgfdacfd0">2. 简述</a></li>
-<li><a href="#orge416d45">3. 名词介绍</a>
+<li><a href="#orgd009e44">1. 声明</a></li>
+<li><a href="#org5c25bda">2. 简述</a></li>
+<li><a href="#orgcfaaadc">3. 名词介绍</a>
 <ul>
-<li><a href="#org986fcc8">3.1. 带宽</a></li>
-<li><a href="#orgad6a12f">3.2. IOPS</a></li>
+<li><a href="#orga40794f">3.1. 带宽</a></li>
+<li><a href="#org771a6ab">3.2. IOPS</a></li>
 </ul>
 </li>
-<li><a href="#org6180e8c">4. Resource list</a></li>
-<li><a href="#orga661abe">5. Patterns</a></li>
-<li><a href="#org463e726">6. 素材搜集</a>
+<li><a href="#org8fa1fcc">4. Resource list</a></li>
+<li><a href="#orgf0083ee">5. Patterns</a></li>
+<li><a href="#org8a44507">6. 素材搜集</a>
 <ul>
-<li><a href="#orge248e67">6.1. 性能影响因素</a></li>
+<li><a href="#org635a02a">6.1. 性能影响因素</a></li>
 </ul>
 </li>
-<li><a href="#orgb1cb66f">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
+<li><a href="#org72cca8a">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
 <ul>
-<li><a href="#org3d63a63">7.1. Three Great Buckets Of Testing</a></li>
-<li><a href="#orga0f8ea8">7.2. Block/SAN operations</a></li>
-<li><a href="#orgc64123e">7.3. Terminology</a></li>
+<li><a href="#org1fed60b">7.1. Three Great Buckets Of Testing</a></li>
+<li><a href="#orgf0cef24">7.2. Block/SAN operations</a></li>
+<li><a href="#org887cd13">7.3. Terminology</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org789ec35" class="outline-2">
-<h2 id="org789ec35"><span class="section-number-2">1</span> 声明</h2>
+<div id="outline-container-orgd009e44" class="outline-2">
+<h2 id="orgd009e44"><span class="section-number-2">1</span> 声明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文描述准确性仅限于存储系统.
@@ -79,16 +79,16 @@
 </div>
 </div>
 
-<div id="outline-container-orgfdacfd0" class="outline-2">
-<h2 id="orgfdacfd0"><span class="section-number-2">2</span> 简述</h2>
+<div id="outline-container-org5c25bda" class="outline-2">
+<h2 id="org5c25bda"><span class="section-number-2">2</span> 简述</h2>
 </div>
 
-<div id="outline-container-orge416d45" class="outline-2">
-<h2 id="orge416d45"><span class="section-number-2">3</span> 名词介绍</h2>
+<div id="outline-container-orgcfaaadc" class="outline-2">
+<h2 id="orgcfaaadc"><span class="section-number-2">3</span> 名词介绍</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org986fcc8" class="outline-3">
-<h3 id="org986fcc8"><span class="section-number-3">3.1</span> 带宽</h3>
+<div id="outline-container-orga40794f" class="outline-3">
+<h3 id="orga40794f"><span class="section-number-3">3.1</span> 带宽</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 系统的最大吞吐量. 一般单位是KBps/MBps/GBps/TBps, 指每秒数据的传输量.
@@ -105,8 +105,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgad6a12f" class="outline-3">
-<h3 id="orgad6a12f"><span class="section-number-3">3.2</span> IOPS</h3>
+<div id="outline-container-org771a6ab" class="outline-3">
+<h3 id="org771a6ab"><span class="section-number-3">3.2</span> IOPS</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 IOPS/Throughput/Response Time/Latency/Utilization/Saturation/Bottleneck
@@ -171,8 +171,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org6180e8c" class="outline-2">
-<h2 id="org6180e8c"><span class="section-number-2">4</span> Resource list</h2>
+<div id="outline-container-org8fa1fcc" class="outline-2">
+<h2 id="org8fa1fcc"><span class="section-number-2">4</span> Resource list</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>CPU</li>
@@ -185,8 +185,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-orga661abe" class="outline-2">
-<h2 id="orga661abe"><span class="section-number-2">5</span> Patterns</h2>
+<div id="outline-container-orgf0083ee" class="outline-2">
+<h2 id="orgf0083ee"><span class="section-number-2">5</span> Patterns</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>Linear scalability</li>
@@ -198,12 +198,12 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org463e726" class="outline-2">
-<h2 id="org463e726"><span class="section-number-2">6</span> 素材搜集</h2>
+<div id="outline-container-org8a44507" class="outline-2">
+<h2 id="org8a44507"><span class="section-number-2">6</span> 素材搜集</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orge248e67" class="outline-3">
-<h3 id="orge248e67"><span class="section-number-3">6.1</span> 性能影响因素</h3>
+<div id="outline-container-org635a02a" class="outline-3">
+<h3 id="org635a02a"><span class="section-number-3">6.1</span> 性能影响因素</h3>
 <div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>是否所有IO来自首选节点(preferred node)</li>
@@ -222,8 +222,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 </div>
-<div id="outline-container-orgb1cb66f" class="outline-2">
-<h2 id="orgb1cb66f"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
+<div id="outline-container-org72cca8a" class="outline-2">
+<h2 id="org72cca8a"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>Metrics and Terminology: IOPS, MBps, Response Time</li>
@@ -233,8 +233,8 @@ Cache Cold, Hot, Warm, Warmth
 <li>Workload Definitions</li>
 </ul>
 </div>
-<div id="outline-container-org3d63a63" class="outline-3">
-<h3 id="org3d63a63"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
+<div id="outline-container-org1fed60b" class="outline-3">
+<h3 id="org1fed60b"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
 <div class="outline-text-3" id="text-7-1">
 <ul class="org-ul">
 <li>Bake-offs: Single Obscure Metric, DD, IOMETER, IOZONE, VDBENCH</li>
@@ -243,8 +243,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-orga0f8ea8" class="outline-3">
-<h3 id="orga0f8ea8"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
+<div id="outline-container-orgf0cef24" class="outline-3">
+<h3 id="orgf0cef24"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
 <div class="outline-text-3" id="text-7-2">
 <ul class="org-ul">
 <li>LOG SENSE</li>
@@ -257,8 +257,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc64123e" class="outline-3">
-<h3 id="orgc64123e"><span class="section-number-3">7.3</span> Terminology</h3>
+<div id="outline-container-org887cd13" class="outline-3">
+<h3 id="org887cd13"><span class="section-number-3">7.3</span> Terminology</h3>
 <div class="outline-text-3" id="text-7-3">
 <ul class="org-ul">
 <li>IO Operation AKA type READ WRITE</li>
@@ -276,18 +276,18 @@ Cache Cold, Hot, Warm, Warmth
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycdeo.org/storage-performance.html;
+    this.page.url = http://ycode.org/storage-performance.html;
     this.page.identifier = storage-performance.html;
   };
 
   (function() {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://yanyg.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
   })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
