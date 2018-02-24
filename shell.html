@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:10 -->
+<!-- 2018-02-25 Sun 01:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Shell编程技术</title>
 <meta name="generator" content="Org mode" />
@@ -28,41 +28,41 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcaf2735">1. 介绍</a></li>
-<li><a href="#orgfb8377f">2. Bash</a></li>
-<li><a href="#org240d162">3. 调用方式与初始化/Invocation Methods and Inital Scripts</a>
+<li><a href="#org24d4072">1. 介绍</a></li>
+<li><a href="#org4658340">2. Bash</a></li>
+<li><a href="#org1b59447">3. 调用方式与初始化/Invocation Methods and Inital Scripts</a>
 <ul>
-<li><a href="#orgbfd7f10">3.1. 启动模式与文件</a>
+<li><a href="#org5683e6a">3.1. 启动模式与文件</a>
 <ul>
-<li><a href="#orgab8e040">3.1.1. interactive shell</a></li>
-<li><a href="#org1d481e2">3.1.2. login shell</a></li>
-<li><a href="#org9256c7d">3.1.3. run scripts</a></li>
+<li><a href="#org17a49b5">3.1.1. interactive shell</a></li>
+<li><a href="#org3cc26e3">3.1.2. login shell</a></li>
+<li><a href="#org194f2dc">3.1.3. run scripts</a></li>
 </ul>
 </li>
-<li><a href="#org9885b97">3.2. 调试方法</a></li>
-<li><a href="#org09a7b0f">3.3. 配置</a></li>
+<li><a href="#orga9fcf74">3.2. 调试方法</a></li>
+<li><a href="#org00e4a35">3.3. 配置</a></li>
 </ul>
 </li>
-<li><a href="#org9d2cd21">4. 变量</a>
+<li><a href="#org9b152b7">4. 变量</a>
 <ul>
-<li><a href="#org4a781bb">4.1. 特殊变量</a>
+<li><a href="#org82f8de9">4.1. 特殊变量</a>
 <ul>
-<li><a href="#org59e2eba">4.1.1. $-</a></li>
+<li><a href="#org8cecf32">4.1.1. $-</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org3cd17bf">5. 参考资料</a></li>
+<li><a href="#orgf10b756">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgcaf2735" class="outline-2">
-<h2 id="orgcaf2735"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org24d4072" class="outline-2">
+<h2 id="org24d4072"><span class="section-number-2">1</span> 介绍</h2>
 </div>
 
-<div id="outline-container-orgfb8377f" class="outline-2">
-<h2 id="orgfb8377f"><span class="section-number-2">2</span> Bash</h2>
+<div id="outline-container-org4658340" class="outline-2">
+<h2 id="org4658340"><span class="section-number-2">2</span> Bash</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://www.gnu.org/software/bash/">Bash(GNU Bourne-Again Shell)</a>，<a href="https://en.wikipedia.org/wiki/Brian_Fox_(computer_programmer)">Brian J. Fox</a>在1987年为GNU计划而写，是Linux与MAC
@@ -94,19 +94,19 @@ The improvements offered by Bash include:
 </div>
 </div>
 
-<div id="outline-container-org240d162" class="outline-2">
-<h2 id="org240d162"><span class="section-number-2">3</span> 调用方式与初始化/Invocation Methods and Inital Scripts</h2>
+<div id="outline-container-org1b59447" class="outline-2">
+<h2 id="org1b59447"><span class="section-number-2">3</span> 调用方式与初始化/Invocation Methods and Inital Scripts</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgbfd7f10" class="outline-3">
-<h3 id="orgbfd7f10"><span class="section-number-3">3.1</span> 启动模式与文件</h3>
+<div id="outline-container-org5683e6a" class="outline-3">
+<h3 id="org5683e6a"><span class="section-number-3">3.1</span> 启动模式与文件</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Bash启动方式包括interactive、login、run scripts，三种场景执行不同的脚本初始化。当对应的脚本文件不存在时忽略。
 </p>
 </div>
-<div id="outline-container-orgab8e040" class="outline-4">
-<h4 id="orgab8e040"><span class="section-number-4">3.1.1</span> interactive shell</h4>
+<div id="outline-container-org17a49b5" class="outline-4">
+<h4 id="org17a49b5"><span class="section-number-4">3.1.1</span> interactive shell</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Bash不带参数启动，或者带有-i参数启动。此时设置 <code>PS1</code> ， <code>$-</code> 包含 <i>i</i> 。
@@ -119,8 +119,8 @@ interactive模式下，默认执行/etc/bash.bashrc与~/.bashrc，bash参数&#x2
 </div>
 </div>
 
-<div id="outline-container-org1d481e2" class="outline-4">
-<h4 id="org1d481e2"><span class="section-number-4">3.1.2</span> login shell</h4>
+<div id="outline-container-org3cc26e3" class="outline-4">
+<h4 id="org3cc26e3"><span class="section-number-4">3.1.2</span> login shell</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Bash以interactive login Shell，或者non-interactive shell用&#x2013;login参数启动时，默认执行/etc/profile, ~/.bash_profile, ~/.bash_login, ~/.profile。bash参数
@@ -129,8 +129,8 @@ Bash以interactive login Shell，或者non-interactive shell用&#x2013;login参�
 </div>
 </div>
 
-<div id="outline-container-org9256c7d" class="outline-4">
-<h4 id="org9256c7d"><span class="section-number-4">3.1.3</span> run scripts</h4>
+<div id="outline-container-org194f2dc" class="outline-4">
+<h4 id="org194f2dc"><span class="section-number-4">3.1.3</span> run scripts</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Bash以non-interactive、non-login启动时，搜寻环境变量BASH_ENV，如果环境变量存在，则在扩展后作为文件名去执行。BASH搜索次文件不使用PATH变量，因此需要设置绝对路径，或者在当前目录的相对路径。
@@ -138,8 +138,8 @@ Bash以non-interactive、non-login启动时，搜寻环境变量BASH_ENV，如�
 </div>
 </div>
 </div>
-<div id="outline-container-org9885b97" class="outline-3">
-<h3 id="org9885b97"><span class="section-number-3">3.2</span> 调试方法</h3>
+<div id="outline-container-orga9fcf74" class="outline-3">
+<h3 id="orga9fcf74"><span class="section-number-3">3.2</span> 调试方法</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 启动shell后，用命令 <code>bash --verbose</code> 再次启动bash，观察终端输出。附加可选参数
@@ -160,21 +160,21 @@ bash bash.scripts
 </div>
 </div>
 
-<div id="outline-container-org09a7b0f" class="outline-3">
-<h3 id="org09a7b0f"><span class="section-number-3">3.3</span> 配置</h3>
+<div id="outline-container-org00e4a35" class="outline-3">
+<h3 id="org00e4a35"><span class="section-number-3">3.3</span> 配置</h3>
 </div>
 </div>
 
-<div id="outline-container-org9d2cd21" class="outline-2">
-<h2 id="org9d2cd21"><span class="section-number-2">4</span> 变量</h2>
+<div id="outline-container-org9b152b7" class="outline-2">
+<h2 id="org9b152b7"><span class="section-number-2">4</span> 变量</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4a781bb" class="outline-3">
-<h3 id="org4a781bb"><span class="section-number-3">4.1</span> 特殊变量</h3>
+<div id="outline-container-org82f8de9" class="outline-3">
+<h3 id="org82f8de9"><span class="section-number-3">4.1</span> 特殊变量</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-org59e2eba" class="outline-4">
-<h4 id="org59e2eba"><span class="section-number-4">4.1.1</span> $-</h4>
+<div id="outline-container-org8cecf32" class="outline-4">
+<h4 id="org8cecf32"><span class="section-number-4">4.1.1</span> $-</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 Shell Flag设置，通过set配置。唯一例外的是i，i在初始化时确定，以interactive启动时设置，不可设置不可清除。例如，set -H设置H，set +H清除。
@@ -330,8 +330,8 @@ himBs
 </div>
 </div>
 
-<div id="outline-container-org3cd17bf" class="outline-2">
-<h2 id="org3cd17bf"><span class="section-number-2">5</span> 参考资料</h2>
+<div id="outline-container-orgf10b756" class="outline-2">
+<h2 id="orgf10b756"><span class="section-number-2">5</span> 参考资料</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li><a href="http://tldp.org/LDP/abs/html/">http://tldp.org/LDP/abs/html/</a></li>
@@ -345,8 +345,8 @@ himBs
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycode.org/shell.html;
-    this.page.identifier = shell.html;
+    this.page.url = 'http://ycode.org/shell.html';
+    this.page.identifier = 'shell.html';
   };
 
   (function() {

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:10 -->
+<!-- 2018-02-25 Sun 01:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>字符串搜索算法</title>
 <meta name="generator" content="Org mode" />
@@ -53,37 +53,37 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org917ca6b">1. 问题定义</a></li>
-<li><a href="#org307bca3">2. 测试结果</a></li>
-<li><a href="#orgaa24d07">3. glibc C库字符串算法</a>
+<li><a href="#org3fdcbee">1. 问题定义</a></li>
+<li><a href="#orgaaa1cf5">2. 测试结果</a></li>
+<li><a href="#org79ac077">3. glibc C库字符串算法</a>
 <ul>
-<li><a href="#orga25d154">3.1. 概要介绍</a></li>
-<li><a href="#org313c7e3">3.2. 参考资料</a></li>
+<li><a href="#org3974976">3.1. 概要介绍</a></li>
+<li><a href="#org6702885">3.2. 参考资料</a></li>
 </ul>
 </li>
-<li><a href="#org37457de">4. Boyer-Moore[BM 77]</a>
+<li><a href="#org6a6c104">4. Boyer-Moore[BM 77]</a>
 <ul>
-<li><a href="#org2ac5620">4.1. 概要介绍</a></li>
-<li><a href="#orgffeb3ac">4.2. 参考资料</a></li>
-<li><a href="#orgb7d71fd">4.3. 代码实现</a></li>
+<li><a href="#org86a73ad">4.1. 概要介绍</a></li>
+<li><a href="#org3ea6013">4.2. 参考资料</a></li>
+<li><a href="#orgef9059b">4.3. 代码实现</a></li>
 </ul>
 </li>
-<li><a href="#org2136862">5. Boyer-Moore-Horspool[Hor 80]</a>
+<li><a href="#org730affa">5. Boyer-Moore-Horspool[Hor 80]</a>
 <ul>
-<li><a href="#orgba4176f">5.1. 概要介绍</a></li>
-<li><a href="#org2f64094">5.2. 参考资料</a></li>
-<li><a href="#orgfda3b85">5.3. 代码实现</a></li>
+<li><a href="#orge04c962">5.1. 概要介绍</a></li>
+<li><a href="#org13ca96b">5.2. 参考资料</a></li>
+<li><a href="#org23c14c1">5.3. 代码实现</a></li>
 </ul>
 </li>
-<li><a href="#org9ca53e4">6. Boyer-Moore-Sunday [Sun 90]</a></li>
-<li><a href="#orga9da2d1">7. Knuth-Morris-Pratt[KMP 77]</a>
+<li><a href="#orgd1aa7c6">6. Boyer-Moore-Sunday [Sun 90]</a></li>
+<li><a href="#orgc744232">7. Knuth-Morris-Pratt[KMP 77]</a>
 <ul>
-<li><a href="#orgf378809">7.1. 概要介绍</a></li>
-<li><a href="#orgdacec86">7.2. 参考资料</a></li>
-<li><a href="#orgf4759ef">7.3. 代码实现</a></li>
+<li><a href="#orgdf1d71e">7.1. 概要介绍</a></li>
+<li><a href="#orgdf17052">7.2. 参考资料</a></li>
+<li><a href="#orgd9b65ae">7.3. 代码实现</a></li>
 </ul>
 </li>
-<li><a href="#orgc27b720">8. References</a></li>
+<li><a href="#orgeac8b2d">8. References</a></li>
 </ul>
 </div>
 </div>
@@ -95,8 +95,8 @@
 
 </div>
 
-<div id="outline-container-org917ca6b" class="outline-2">
-<h2 id="org917ca6b"><span class="section-number-2">1</span> 问题定义</h2>
+<div id="outline-container-org3fdcbee" class="outline-2">
+<h2 id="org3fdcbee"><span class="section-number-2">1</span> 问题定义</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 字符串搜索问题，又称为文本匹配问题。其定义如下：
@@ -110,8 +110,8 @@
 </div>
 </div>
 
-<div id="outline-container-org307bca3" class="outline-2">
-<h2 id="org307bca3"><span class="section-number-2">2</span> 测试结果</h2>
+<div id="outline-container-orgaaa1cf5" class="outline-2">
+<h2 id="orgaaa1cf5"><span class="section-number-2">2</span> 测试结果</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 测试Linux系统glibc strstr，native, KMP, BM, BMH算法。使用大量随机字符串测试，其性能排名是：strstr、BMH、BM、native、KMP。KMP的实现应该是有问题，后期分析更正。
@@ -119,12 +119,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgaa24d07" class="outline-2">
-<h2 id="orgaa24d07"><span class="section-number-2">3</span> glibc C库字符串算法</h2>
+<div id="outline-container-org79ac077" class="outline-2">
+<h2 id="org79ac077"><span class="section-number-2">3</span> glibc C库字符串算法</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orga25d154" class="outline-3">
-<h3 id="orga25d154"><span class="section-number-3">3.1</span> 概要介绍</h3>
+<div id="outline-container-org3974976" class="outline-3">
+<h3 id="org3974976"><span class="section-number-3">3.1</span> 概要介绍</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 GLIBC库提供two-way搜索算法，以及针对各平台的硬件优化实现(X86平台是SSE2)。TWO WAY
@@ -138,8 +138,8 @@ GLIBC库提供two-way搜索算法，以及针对各平台的硬件优化实现(X
 </div>
 </div>
 
-<div id="outline-container-org313c7e3" class="outline-3">
-<h3 id="org313c7e3"><span class="section-number-3">3.2</span> 参考资料</h3>
+<div id="outline-container-org6702885" class="outline-3">
+<h3 id="org6702885"><span class="section-number-3">3.2</span> 参考资料</h3>
 <div class="outline-text-3" id="text-3-2">
 <dl class="org-dl">
 <dt>TWO WAY ALGORITHM</dt><dd><a href="http://www-igm.univ-mlv.fr/~lecroq/string/node26.html">http://www-igm.univ-mlv.fr/~lecroq/string/node26.html</a></dd>
@@ -149,12 +149,12 @@ GLIBC库提供two-way搜索算法，以及针对各平台的硬件优化实现(X
 </div>
 </div>
 
-<div id="outline-container-org37457de" class="outline-2">
-<h2 id="org37457de"><span class="section-number-2">4</span> Boyer-Moore[BM 77]</h2>
+<div id="outline-container-org6a6c104" class="outline-2">
+<h2 id="org6a6c104"><span class="section-number-2">4</span> Boyer-Moore[BM 77]</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2ac5620" class="outline-3">
-<h3 id="org2ac5620"><span class="section-number-3">4.1</span> 概要介绍</h3>
+<div id="outline-container-org86a73ad" class="outline-3">
+<h3 id="org86a73ad"><span class="section-number-3">4.1</span> 概要介绍</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>和<a href="https://www.cs.utexas.edu/users/moore/">J Strother Moore</a>于1977年发表。BM算法使用坏字符和好后缀规则，在失配后一次跳动多个字符，进行匹配加速。
@@ -162,8 +162,8 @@ BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>�
 </div>
 </div>
 
-<div id="outline-container-orgffeb3ac" class="outline-3">
-<h3 id="orgffeb3ac"><span class="section-number-3">4.2</span> 参考资料</h3>
+<div id="outline-container-org3ea6013" class="outline-3">
+<h3 id="org3ea6013"><span class="section-number-3">4.2</span> 参考资料</h3>
 <div class="outline-text-3" id="text-4-2">
 <dl class="org-dl">
 <dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm">https://en.wikipedia.org/wiki/Boyer–Moore_string_search_algorithm</a></dd>
@@ -172,8 +172,8 @@ BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>�
 </div>
 </div>
 
-<div id="outline-container-orgb7d71fd" class="outline-3">
-<h3 id="orgb7d71fd"><span class="section-number-3">4.3</span> 代码实现</h3>
+<div id="outline-container-orgef9059b" class="outline-3">
+<h3 id="orgef9059b"><span class="section-number-3">4.3</span> 代码实现</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 2012/2/29实现此算法，发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbm.c">GitHub</a>：
@@ -277,12 +277,12 @@ BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>�
 </div>
 </div>
 
-<div id="outline-container-org2136862" class="outline-2">
-<h2 id="org2136862"><span class="section-number-2">5</span> Boyer-Moore-Horspool[Hor 80]</h2>
+<div id="outline-container-org730affa" class="outline-2">
+<h2 id="org730affa"><span class="section-number-2">5</span> Boyer-Moore-Horspool[Hor 80]</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgba4176f" class="outline-3">
-<h3 id="orgba4176f"><span class="section-number-3">5.1</span> 概要介绍</h3>
+<div id="outline-container-orge04c962" class="outline-3">
+<h3 id="orge04c962"><span class="section-number-3">5.1</span> 概要介绍</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1980年。在随机测试结果中，比BM有更好的表现，性能提升10%左右。BMH是BM算法的简化。
@@ -290,8 +290,8 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 </div>
 </div>
 
-<div id="outline-container-org2f64094" class="outline-3">
-<h3 id="org2f64094"><span class="section-number-3">5.2</span> 参考资料</h3>
+<div id="outline-container-org13ca96b" class="outline-3">
+<h3 id="org13ca96b"><span class="section-number-3">5.2</span> 参考资料</h3>
 <div class="outline-text-3" id="text-5-2">
 <dl class="org-dl">
 <dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm">https://en.wikipedia.org/wiki/Boyer–Moore–Horspool_algorithm</a></dd>
@@ -300,8 +300,8 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 </div>
 </div>
 
-<div id="outline-container-orgfda3b85" class="outline-3">
-<h3 id="orgfda3b85"><span class="section-number-3">5.3</span> 代码实现</h3>
+<div id="outline-container-org23c14c1" class="outline-3">
+<h3 id="org23c14c1"><span class="section-number-3">5.3</span> 代码实现</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 2012/2/29发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbmh.c">GitHub</a>：
@@ -361,19 +361,19 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 </div>
 </div>
 
-<div id="outline-container-org9ca53e4" class="outline-2">
-<h2 id="org9ca53e4"><span class="section-number-2">6</span> Boyer-Moore-Sunday [Sun 90]</h2>
+<div id="outline-container-orgd1aa7c6" class="outline-2">
+<h2 id="orgd1aa7c6"><span class="section-number-2">6</span> Boyer-Moore-Sunday [Sun 90]</h2>
 </div>
 
-<div id="outline-container-orga9da2d1" class="outline-2">
-<h2 id="orga9da2d1"><span class="section-number-2">7</span> Knuth-Morris-Pratt[KMP 77]</h2>
+<div id="outline-container-orgc744232" class="outline-2">
+<h2 id="orgc744232"><span class="section-number-2">7</span> Knuth-Morris-Pratt[KMP 77]</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgf378809" class="outline-3">
-<h3 id="orgf378809"><span class="section-number-3">7.1</span> 概要介绍</h3>
+<div id="outline-container-orgdf1d71e" class="outline-3">
+<h3 id="orgdf1d71e"><span class="section-number-3">7.1</span> 概要介绍</h3>
 </div>
-<div id="outline-container-orgdacec86" class="outline-3">
-<h3 id="orgdacec86"><span class="section-number-3">7.2</span> 参考资料</h3>
+<div id="outline-container-orgdf17052" class="outline-3">
+<h3 id="orgdf17052"><span class="section-number-3">7.2</span> 参考资料</h3>
 <div class="outline-text-3" id="text-7-2">
 <dl class="org-dl">
 <dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">https://en.wikipedia.org/wiki/Knuth–Morris–Pratt_algorithm</a></dd>
@@ -381,8 +381,8 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 </div>
 </div>
 
-<div id="outline-container-orgf4759ef" class="outline-3">
-<h3 id="orgf4759ef"><span class="section-number-3">7.3</span> 代码实现</h3>
+<div id="outline-container-orgd9b65ae" class="outline-3">
+<h3 id="orgd9b65ae"><span class="section-number-3">7.3</span> 代码实现</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 此算法测试结果十分糟糕，怀疑实现有问题。以后更正分析。
@@ -450,8 +450,8 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 </div>
 </div>
 
-<div id="outline-container-orgc27b720" class="outline-2">
-<h2 id="orgc27b720"><span class="section-number-2">8</span> References</h2>
+<div id="outline-container-orgeac8b2d" class="outline-2">
+<h2 id="orgeac8b2d"><span class="section-number-2">8</span> References</h2>
 <div class="outline-text-2" id="text-8">
 <dl class="org-dl">
 <dt>why grep so fast</dt><dd><a href="https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html">https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html</a></dd>
@@ -469,8 +469,8 @@ BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycode.org/blogs/algos-exact-string-matching.html;
-    this.page.identifier = algos-exact-string-matching.html;
+    this.page.url = 'http://ycode.org/blogs/algos-exact-string-matching.html';
+    this.page.identifier = 'algos-exact-string-matching.html';
   };
 
   (function() {

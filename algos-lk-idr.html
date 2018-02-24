@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:10 -->
+<!-- 2018-02-25 Sun 01:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -22,20 +22,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgaef0fdb">1. 介绍</a></li>
-<li><a href="#org3ffef89">2. 代码分析</a>
+<li><a href="#org453c60e">1. 介绍</a></li>
+<li><a href="#org754f865">2. 代码分析</a>
 <ul>
-<li><a href="#org5d572a0">2.1. 数据结构</a></li>
-<li><a href="#org95d8326">2.2. idr_alloc分析</a></li>
+<li><a href="#org0e2b933">2.1. 数据结构</a></li>
+<li><a href="#org00da2dc">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#org030e8be">3. Reference Material</a></li>
+<li><a href="#org6075e7e">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgaef0fdb" class="outline-2">
-<h2 id="orgaef0fdb"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org453c60e" class="outline-2">
+<h2 id="org453c60e"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -43,12 +43,12 @@
 </div>
 </div>
 
-<div id="outline-container-org3ffef89" class="outline-2">
-<h2 id="org3ffef89"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-org754f865" class="outline-2">
+<h2 id="org754f865"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5d572a0" class="outline-3">
-<h3 id="org5d572a0"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-org0e2b933" class="outline-3">
+<h3 id="org0e2b933"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
@@ -92,8 +92,8 @@
 </div>
 </div>
 
-<div id="outline-container-org95d8326" class="outline-3">
-<h3 id="org95d8326"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-org00da2dc" class="outline-3">
+<h3 id="org00da2dc"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -126,8 +126,8 @@
 </div>
 
 
-<div id="outline-container-org030e8be" class="outline-2">
-<h2 id="org030e8be"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org6075e7e" class="outline-2">
+<h2 id="org6075e7e"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
@@ -140,8 +140,8 @@
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycode.org/algos-lk-idr.html;
-    this.page.identifier = algos-lk-idr.html;
+    this.page.url = 'http://ycode.org/algos-lk-idr.html';
+    this.page.identifier = 'algos-lk-idr.html';
   };
 
   (function() {

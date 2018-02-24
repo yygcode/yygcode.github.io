@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:10 -->
+<!-- 2018-02-25 Sun 01:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Kernel Config Notes</title>
 <meta name="generator" content="Org mode" />
@@ -31,8 +31,8 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc40ec60">1. CONFIG_KASAN - Kernel Address Sanitizer(防毒)</a></li>
-<li><a href="#orga47536c">2. CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</a></li>
+<li><a href="#org1a0ec26">1. CONFIG_KASAN - Kernel Address Sanitizer(防毒)</a></li>
+<li><a href="#orgdbdc9de">2. CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</a></li>
 </ul>
 </div>
 </div>
@@ -44,8 +44,8 @@
 本文持续更新
 </p>
 
-<div id="outline-container-orgc40ec60" class="outline-2">
-<h2 id="orgc40ec60"><span class="section-number-2">1</span> CONFIG_KASAN - Kernel Address Sanitizer(防毒)</h2>
+<div id="outline-container-org1a0ec26" class="outline-2">
+<h2 id="org1a0ec26"><span class="section-number-2">1</span> CONFIG_KASAN - Kernel Address Sanitizer(防毒)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 KASAN是动态内存错误检测器，为查找use-after-free(释放后使用)和out-of-bounds(越界使用)提供快速全面的方案。
@@ -74,8 +74,8 @@ Currently KASAN is supported only for the x86_64 and arm64 architectures.
 </div>
 </div>
 
-<div id="outline-container-orga47536c" class="outline-2">
-<h2 id="orga47536c"><span class="section-number-2">2</span> CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</h2>
+<div id="outline-container-orgdbdc9de" class="outline-2">
+<h2 id="orgdbdc9de"><span class="section-number-2">2</span> CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 打开此选项调试内存泄漏和访问溢出。
@@ -94,8 +94,8 @@ Ref:
 <div id="disqus_thread" class="disqus"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = http://ycode.org/blogs/kernel-config.html;
-    this.page.identifier = kernel-config.html;
+    this.page.url = 'http://ycode.org/blogs/kernel-config.html';
+    this.page.identifier = 'kernel-config.html';
   };
 
   (function() {
