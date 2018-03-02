@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:44 -->
+<!-- 2018-03-02 Fri 22:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>存储产品规格</title>
 <meta name="generator" content="Org mode" />
@@ -25,6 +25,11 @@
 <li><a href="#org23c700b">1. OceanStor</a>
 <ul>
 <li><a href="#org3ed0cd7">1.1. Dorado V3</a></li>
+<li><a href="#org32e08d6">1.2. 5300F&amp;5500F&amp;5600F&amp;5800F V5 - All-Flash Storage Systems</a>
+<ul>
+<li><a href="#org7a99fde">1.2.1. Controller Enclosure Specifications</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -38,7 +43,7 @@
 <div id="outline-container-org3ed0cd7" class="outline-3">
 <h3 id="org3ed0cd7"><span class="section-number-3">1.1</span> Dorado V3</h3>
 <div class="outline-text-3" id="text-1-1">
-<table class="table table-hover">
+<table>
 
 
 <colgroup>
@@ -81,6 +86,358 @@
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div id="outline-container-org32e08d6" class="outline-3">
+<h3 id="org32e08d6"><span class="section-number-3">1.2</span> 5300F&amp;5500F&amp;5600F&amp;5800F V5 - All-Flash Storage Systems</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-org7a99fde" class="outline-4">
+<h4 id="org7a99fde"><span class="section-number-4">1.2.1</span> Controller Enclosure Specifications</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Name</td>
+<td class="org-left">5300F V5</td>
+<td class="org-left">5500F V5</td>
+<td class="org-left">5600F V5</td>
+<td class="org-left">5800F V5</td>
+</tr>
+
+<tr>
+<td class="org-left">Architecture</td>
+<td class="org-left">All-Flash</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Latency</td>
+<td class="org-left">&lt; 1 ms</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Processor</td>
+<td class="org-left">Multi-core Processors</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">System Cache(expands with the number of controllers)</td>
+<td class="org-left">64GB to 512GB</td>
+<td class="org-left">128 GB to 1,024 GB</td>
+<td class="org-left">256 GB to 2,048 GB</td>
+<td class="org-left">512 GB to 4,096 GB</td>
+</tr>
+
+<tr>
+<td class="org-left">Maximum number of controllers</td>
+<td class="org-left">8</td>
+<td class="org-left">8</td>
+<td class="org-left">8</td>
+<td class="org-left">8</td>
+</tr>
+</tbody>
+</table>
+<pre class="example">
+| &lt;10&gt;             | &lt;15&gt;                  |
+| A very wide cell | Another very wide cell|
+
+</pre>
+
+<p>
+what is this ?
+yes that
+ok
+</p>
+
+
+<pre class="example">
+|   |  N | N^2 | N^3 | N^4 | sqrt(n) | sqrt[4](N) |
+|---+----+-----+-----+-----+---------+------------|
+| / | &lt;&gt; |   &lt; |     |   &gt; |       &lt; |          &gt; |
+| # |  1 |   1 |   1 |   1 |       1 |          1 |
+| # |  2 |   4 |   8 |  16 |  1.4142 |     1.1892 |
+| # |  3 |   9 |  27 |  81 |  1.7321 |     1.3161 |
+|---+----+-----+-----+-----+---------+------------|
+
+</pre>
+
+
+<table>
+
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">N</th>
+<th scope="col" class="org-right">N^2</th>
+<th scope="col" class="org-right">N^3</th>
+<th scope="col" class="org-right">N^4</th>
+<th scope="col" class="org-right">sqrt(n)</th>
+<th scope="col" class="org-right">sqrt(N)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+<td class="org-right">8</td>
+<td class="org-right">16</td>
+<td class="org-right">1.4142</td>
+<td class="org-right">1.1892</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">9</td>
+<td class="org-right">27</td>
+<td class="org-right">81</td>
+<td class="org-right">1.7321</td>
+<td class="org-right">1.3161</td>
+</tr>
+</tbody>
+</table>
+
+<table id="orgb1a6d2f">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">independent var</th>
+<th scope="col" class="org-right">first dependent var</th>
+<th scope="col" class="org-right">second dependent var</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0.1</td>
+<td class="org-right">0.425</td>
+<td class="org-right">0.375</td>
+</tr>
+
+<tr>
+<td class="org-right">0.2</td>
+<td class="org-right">0.3125</td>
+<td class="org-right">0.3375</td>
+</tr>
+
+<tr>
+<td class="org-right">0.3</td>
+<td class="org-right">0.24999993</td>
+<td class="org-right">0.28333338</td>
+</tr>
+
+<tr>
+<td class="org-right">0.4</td>
+<td class="org-right">0.275</td>
+<td class="org-right">0.28125</td>
+</tr>
+
+<tr>
+<td class="org-right">0.5</td>
+<td class="org-right">0.26</td>
+<td class="org-right">0.27</td>
+</tr>
+
+<tr>
+<td class="org-right">0.6</td>
+<td class="org-right">0.25833338</td>
+<td class="org-right">0.24999993</td>
+</tr>
+
+<tr>
+<td class="org-right">0.7</td>
+<td class="org-right">0.24642845</td>
+<td class="org-right">0.23928553</td>
+</tr>
+
+<tr>
+<td class="org-right">0.8</td>
+<td class="org-right">0.23125</td>
+<td class="org-right">0.2375</td>
+</tr>
+
+<tr>
+<td class="org-right">0.9</td>
+<td class="org-right">0.23333323</td>
+<td class="org-right">0.2333332</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">0.2225</td>
+<td class="org-right">0.22</td>
+</tr>
+
+<tr>
+<td class="org-right">1.1</td>
+<td class="org-right">0.20909075</td>
+<td class="org-right">0.22272708</td>
+</tr>
+
+<tr>
+<td class="org-right">1.2</td>
+<td class="org-right">0.19999998</td>
+<td class="org-right">0.21458333</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">0.19615368</td>
+<td class="org-right">0.21730748</td>
+</tr>
+
+<tr>
+<td class="org-right">1.4</td>
+<td class="org-right">0.18571433</td>
+<td class="org-right">0.21071435</td>
+</tr>
+
+<tr>
+<td class="org-right">1.5</td>
+<td class="org-right">0.19000008</td>
+<td class="org-right">0.2150001</td>
+</tr>
+
+<tr>
+<td class="org-right">1.6</td>
+<td class="org-right">0.1828125</td>
+<td class="org-right">0.2046875</td>
+</tr>
+
+<tr>
+<td class="org-right">1.7</td>
+<td class="org-right">0.18088253</td>
+<td class="org-right">0.1985296</td>
+</tr>
+
+<tr>
+<td class="org-right">1.8</td>
+<td class="org-right">0.17916675</td>
+<td class="org-right">0.18888898</td>
+</tr>
+
+<tr>
+<td class="org-right">1.9</td>
+<td class="org-right">0.19342103</td>
+<td class="org-right">0.21315783</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">0.19</td>
+<td class="org-right">0.21625</td>
+</tr>
+
+<tr>
+<td class="org-right">2.1</td>
+<td class="org-right">0.18214268</td>
+<td class="org-right">0.20714265</td>
+</tr>
+
+<tr>
+<td class="org-right">2.2</td>
+<td class="org-right">0.17727275</td>
+<td class="org-right">0.2022727</td>
+</tr>
+
+<tr>
+<td class="org-right">2.3</td>
+<td class="org-right">0.1739131</td>
+<td class="org-right">0.1989131</td>
+</tr>
+
+<tr>
+<td class="org-right">2.4</td>
+<td class="org-right">0.16770833</td>
+<td class="org-right">0.1916667</td>
+</tr>
+
+<tr>
+<td class="org-right">2.5</td>
+<td class="org-right">0.164</td>
+<td class="org-right">0.188</td>
+</tr>
+
+<tr>
+<td class="org-right">2.6</td>
+<td class="org-right">0.15769238</td>
+<td class="org-right">0.18076923</td>
+</tr>
+
+<tr>
+<td class="org-right">2.7</td>
+<td class="org-right">0.1592591</td>
+<td class="org-right">0.1888887</td>
+</tr>
+
+<tr>
+<td class="org-right">2.8</td>
+<td class="org-right">0.1598214</td>
+<td class="org-right">0.18928565</td>
+</tr>
+
+<tr>
+<td class="org-right">2.9</td>
+<td class="org-right">0.15603453</td>
+<td class="org-right">0.1844828</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>
