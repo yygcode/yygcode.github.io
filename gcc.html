@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:44 -->
+<!-- 2018-03-22 Thu 23:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>GCC使用手记</title>
 <meta name="generator" content="Org mode" />
@@ -14,12 +14,28 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -31,8 +47,19 @@
 <li><a href="#org805ec9b">1. Attributes</a>
 <ul>
 <li><a href="#orgd6b6c4d">1.1. 别名/alias</a></li>
+<li><a href="#orgbec927a">1.2. __builtin_expect</a>
+<ul>
+<li><a href="#org6cb4387">1.2.1. 应用</a></li>
+<li><a href="#org5c9fb9c">1.2.2. 说明</a></li>
+<li><a href="#orga0bcd51">1.2.3. 性能差异测试</a></li>
+<li><a href="#org38fd3bb">1.2.4. onlinedocs</a></li>
+<li><a href="#org36579d7">1.2.5. manpages</a></li>
 </ul>
 </li>
+<li><a href="#org680a46f">1.3. __builtin_constant_p</a></li>
+</ul>
+</li>
+<li><a href="#org0c31e16">2. References</a></li>
 </ul>
 </div>
 </div>
@@ -100,6 +127,245 @@ GCC手册<a href="https://gcc.gnu.org/onlinedocs/gcc-7.2.0/gcc/Common-Function-A
 </pre>
 </div>
 </div>
+</div>
+<div id="outline-container-orgbec927a" class="outline-3">
+<h3 id="orgbec927a"><span class="section-number-3">1.2</span> __builtin_expect</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-org6cb4387" class="outline-4">
+<h4 id="org6cb4387"><span class="section-number-4">1.2.1</span> 应用</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Kernel常见的\(likely/unlikely\)基于此实现：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor"># define</span> <span class="org-function-name">likely</span>(<span class="org-variable-name">x</span>)      __builtin_expect(<span class="org-negation-char">!</span>!(x), 1)
+<span class="org-preprocessor"># define</span> <span class="org-function-name">unlikely</span>(<span class="org-variable-name">x</span>)    __builtin_expect(<span class="org-negation-char">!</span>!(x), 0)
+</pre>
+</div>
+
+<p>
+glibc中有类似定义：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#if</span> __GNUC__ &gt;= 3
+<span class="org-preprocessor"># define</span> <span class="org-function-name">__glibc_unlikely</span>(<span class="org-variable-name">cond</span>) __builtin_expect ((cond), 0)
+<span class="org-preprocessor"># define</span> <span class="org-function-name">__glibc_likely</span>(<span class="org-variable-name">cond</span>)   __builtin_expect ((cond), 1)
+<span class="org-preprocessor">#else</span>
+<span class="org-preprocessor"># define</span> <span class="org-function-name">__glibc_unlikely</span>(<span class="org-variable-name">cond</span>) (cond)
+<span class="org-preprocessor"># define</span> <span class="org-function-name">__glibc_likely</span>(<span class="org-variable-name">cond</span>)   (cond)
+<span class="org-preprocessor">#endif</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5c9fb9c" class="outline-4">
+<h4 id="org5c9fb9c"><span class="section-number-4">1.2.2</span> 说明</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+基于分支预测，辅助编译器生成更高效代码。\(if (__builtin_expect(expr, 0))\)表示不大可能发生，而\(if (__builtin_expect(expr,1))\)表示很有可能发生的。应该在非常“有可能”时才使用此参数，否则可带来负面影响。可以使用-fprofile-arcs搜集运行信息辅助分析。
+</p>
+
+<p>
+简单代码测试 \(__builtin_expect\) 生成的汇编差异：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">func_expect_0</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">result</span>;
+
+        <span class="org-keyword">if</span> (__builtin_expect(i &gt; 2, 0)) {
+                result = 100;
+        } <span class="org-keyword">else</span> {
+                result = 200;
+        }
+
+        <span class="org-keyword">return</span> result;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">func_expect_1</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">result</span>;
+
+        <span class="org-keyword">if</span> (__builtin_expect(i &gt; 4, 1)) {
+                result = 100;
+        } <span class="org-keyword">else</span> {
+                result = 200;
+        }
+
+        <span class="org-keyword">return</span> result;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> **<span class="org-variable-name">argv</span>)
+{
+
+        <span class="org-type">int</span> <span class="org-variable-name">ret1</span>, <span class="org-variable-name">ret2</span>;
+
+        ret1 = func_expect_0(argc);
+        ret2 = func_expect_1(argc);
+
+        printf(<span class="org-string">"ret1=%d, ret2=%d\n"</span>, ret1, ret2);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+使用gcc -Og built_expect.c观察，跳转处调整分支位置。用-O优化时我的机器上编译器消除了差异：
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">        <span class="org-keyword">.globl</span>  func_expect_0
+        <span class="org-keyword">.def</span>    func_expect_0<span class="org-comment-delimiter">;  </span><span class="org-comment">.scl    2;      .type   32;     .endef</span>
+        <span class="org-keyword">.seh_proc</span>       func_expect_0
+<span class="org-function-name">func_expect_0</span>:
+        <span class="org-keyword">.seh_endprologue</span>
+        <span class="org-keyword">cmpl</span>    $2, <span class="org-variable-name">%ecx</span>
+        <span class="org-keyword">jg</span>      .L4
+        <span class="org-keyword">movl</span>    $200, <span class="org-variable-name">%eax</span>
+<span class="org-function-name">.L1</span>:
+        <span class="org-keyword">ret</span>
+<span class="org-function-name">.L4</span>:
+        <span class="org-keyword">movl</span>    $100, <span class="org-variable-name">%eax</span>
+        <span class="org-keyword">jmp</span>     .L1
+        <span class="org-keyword">.seh_endproc</span>
+        <span class="org-keyword">.globl</span>  func_expect_1
+        <span class="org-keyword">.def</span>    func_expect_1<span class="org-comment-delimiter">;  </span><span class="org-comment">.scl    2;      .type   32;     .endef</span>
+        <span class="org-keyword">.seh_proc</span>       func_expect_1
+<span class="org-function-name">func_expect_1</span>:
+        <span class="org-keyword">.seh_endprologue</span>
+        <span class="org-keyword">cmpl</span>    $4, <span class="org-variable-name">%ecx</span>
+        <span class="org-keyword">jle</span>     .L7
+        <span class="org-keyword">movl</span>    $100, <span class="org-variable-name">%eax</span>
+<span class="org-function-name">.L5</span>:
+        <span class="org-keyword">ret</span>
+<span class="org-function-name">.L7</span>:
+        <span class="org-keyword">movl</span>    $200, <span class="org-variable-name">%eax</span>
+        <span class="org-keyword">jmp</span>     .L5
+        <span class="org-keyword">.seh_endproc</span>
+</pre>
+</div>
+
+<p>
+直接编译可执行文件，objdump结果如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gcc -Og -o builtin_expect builtin_expect.c
+~$ objdump -d builtin_expect
+...
+00000000000006b0 &lt;func_expect_0&gt;:
+ 6b0:   83 ff 02                cmp    $<span class="org-variable-name">0</span>x2,%edi
+ 6b3:   7f 06                   jg     6bb &lt;func_expect_0+0xb&gt;
+ 6b5:   b8 c8 00 00 00          mov    $<span class="org-variable-name">0</span>xc8,%eax
+ 6ba:   c3                      retq
+ 6bb:   b8 64 00 00 00          mov    $<span class="org-variable-name">0</span>x64,%eax
+ 6c0:   c3                      retq
+
+00000000000006c1 &lt;func_expect_1&gt;:
+ 6c1:   83 ff 04                cmp    $<span class="org-variable-name">0</span>x4,%edi
+ 6c4:   7e 06                   jle    6cc &lt;func_expect_1+0xb&gt;
+ 6c6:   b8 64 00 00 00          mov    $<span class="org-variable-name">0</span>x64,%eax
+ 6cb:   c3                      retq
+ 6cc:   b8 c8 00 00 00          mov    $<span class="org-variable-name">0</span>xc8,%eax
+ 6d1:   c3                      retq
+...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga0bcd51" class="outline-4">
+<h4 id="orga0bcd51"><span class="section-number-4">1.2.3</span> 性能差异测试</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+<a href="http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html">How much do __builtin_expect(), likely(), and unlikely() improve performance?</a>描述了不同场景下 \(__builtin_expect\) 的性能差异，但我未能测试到这点。在Linux下bash提供默认的time，因此使用绝对路径\(/usr/bin/time\)测试（安装 \(sudo apt-get install time\) ）：
+<a href="http://man7.org/linux/tests/gcc/builtin_expect_test.c">这里是测试代码</a>，如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cc -DDONT_EXPECT -O3 builtin_expect_test.c -o bn
+~$ /usr/bin/time -f <span class="org-string">"%E real, %U user, %S sys"</span> ./bn 1000
+0, 1000000000
+0:01.43 real, 1.42 user, 0.00 sys
+
+~$ cc -DEXPECT_RESULT=0 -O3 builtin_expect_test.c -o b0
+~$ /usr/bin/time -f <span class="org-string">"%E real, %U user, %S sys"</span> ./b0 1000
+0, 1000000000
+0:01.41 real, 1.41 user, 0.00 sys
+
+~$ cc -DEXPECT_RESULT=1 -O3 builtin_expect_test.c -o b1
+~$ /usr/bin/time -f <span class="org-string">"%E real, %U user, %S sys"</span> ./b1 1000
+0, 1000000000
+0:01.40 real, 1.40 user, 0.00 sys
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org38fd3bb" class="outline-4">
+<h4 id="org38fd3bb"><span class="section-number-4">1.2.4</span> onlinedocs</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<ul class="org-ul">
+<li>LINK: <a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html</a></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-quote">Built-in Function: long __builtin_expect (long exp, long c)
+You may use __builtin_expect to provide the compiler with branch prediction information. In general, you should prefer to use actual profile feedback for this (-fprofile-arcs), as programmers are notoriously bad at predicting how their programs actually perform. However, there are applications in which this data is hard to collect.
+
+The return value is the value of exp, which should be an integral expression. The semantics of the built-in are that it is expected that exp == c. For example:
+
+if (__builtin_expect (x, 0))
+  foo ();
+indicates that we do not expect to call foo, since we expect x to be zero. Since you are limited to integral expressions for exp, you should use constructions such as
+
+if (__builtin_expect (ptr != NULL, 1))
+  foo (*ptr);
+when testing pointer or floating-point values.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org36579d7" class="outline-4">
+<h4 id="org36579d7"><span class="section-number-4">1.2.5</span> manpages</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<blockquote>
+<p>
+-fno-guess-branch-probability
+    Do not guess branch probabilities using heuristics.
+</p>
+
+<p>
+GCC uses heuristics to guess branch probabilities if they are not provided by profiling feedback (-fprofile-arcs).  These heuristics are based on the control flow graph.  If some branch probabilities are
+specified by "__builtin_expect", then the heuristics are used to guess branch probabilities for the rest of the control flow graph, taking the "__builtin_expect" info into account.  The interactions between
+the heuristics and "__builtin_expect" can be complex, and in some cases, it may be useful to disable the heuristics so that the effects of "__builtin_expect" are easier to understand.
+</p>
+
+<p>
+The default is -fguess-branch-probability at levels -O, -O2, -O3, -Os.
+</p>
+
+<p>
+builtin-expect-probability
+    Control the probability of the expression having the specified value. This parameter takes a percentage (i.e. 0 &#x2026; 100) as input.  The default probability of 90 is obtained empirically.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org680a46f" class="outline-3">
+<h3 id="org680a46f"><span class="section-number-3">1.3</span> __builtin_constant_p</h3>
+</div>
+</div>
+<div id="outline-container-org0c31e16" class="outline-2">
+<h2 id="org0c31e16"><span class="section-number-2">2</span> References</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>Builtin_expect</dt><dd><a href="http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html">http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html</a></dd>
+<dt>IBM Developerworks Linux内核中GCC特性</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/">https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/</a></dd>
+</dl>
 </div>
 </div>
 </div>

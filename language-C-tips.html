@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:44 -->
+<!-- 2018-03-22 Thu 23:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>C语言编程技巧/C Programming Tips</title>
 <meta name="generator" content="Org mode" />
@@ -14,6 +14,28 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -25,9 +47,26 @@
 <li><a href="#orga119212">1. 说明</a></li>
 <li><a href="#org167cff4">2. 内联汇编</a>
 <ul>
-<li><a href="#org8ac7937">2.1. cpu ticks rdstc</a></li>
+<li><a href="#org5075414">2.1. 基本格式</a>
+<ul>
+<li><a href="#org50bff3b">2.1.1. 语法</a></li>
+<li><a href="#org18dea9e">2.1.2. 示例</a></li>
 </ul>
 </li>
+<li><a href="#org246fa1f">2.2. 扩展格式</a>
+<ul>
+<li><a href="#org46c7d01">2.2.1. 语法</a></li>
+</ul>
+</li>
+<li><a href="#org8ac7937">2.3. cpu ticks rdstc</a>
+<ul>
+<li><a href="#org2f02275">2.3.1. inline function</a></li>
+<li><a href="#org2a9abb8">2.3.2. gcc extend macro</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf35fe2c">3. Reference Materials</a></li>
 </ul>
 </div>
 </div>
@@ -46,8 +85,147 @@
 <h2 id="org167cff4"><span class="section-number-2">2</span> 内联汇编</h2>
 <div class="outline-text-2" id="text-2">
 </div>
+<div id="outline-container-org5075414" class="outline-3">
+<h3 id="org5075414"><span class="section-number-3">2.1</span> 基本格式</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org50bff3b" class="outline-4">
+<h4 id="org50bff3b"><span class="section-number-4">2.1.1</span> 语法</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span>);
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>指令在引号之间</li>
+<li>多行汇编语言之间要加上换行"\n"，一般也加上"\t"进行适度缩进</li>
+<li>添加\(volatile\)禁止编译器优化inline汇编</li>
+<li>ANSI C对\(asm\)有其他定义，可替换为\(__asm__\)关键字替换</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org18dea9e" class="outline-4">
+<h4 id="org18dea9e"><span class="section-number-4">2.1.2</span> 示例</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-variable-name">a</span> = 10, <span class="org-variable-name">b</span> = 20, <span class="org-variable-name">r</span> = 0;
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"movl a, %eax\n\t"</span>
+                     <span class="org-string">"addl b, %eax\n\t"</span>
+                     <span class="org-string">"movl %eax, r\n\t"</span>);
+
+        printf(<span class="org-string">"%d + %d = %d\n"</span>, a, b, r);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org246fa1f" class="outline-3">
+<h3 id="org246fa1f"><span class="section-number-3">2.2</span> 扩展格式</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-org46c7d01" class="outline-4">
+<h4 id="org46c7d01"><span class="section-number-4">2.2.1</span> 语法</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span> : output locations : input operands : changed registers);
+</pre>
+</div>
+
+<dl class="org-dl">
+<dt>assembly code</dt><dd>与基本格式的assembly code格式相同，</dd>
+<dt>output locations</dt><dd>inline汇编代码输出</dd>
+</dl>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org8ac7937" class="outline-3">
-<h3 id="org8ac7937"><span class="section-number-3">2.1</span> cpu ticks rdstc</h3>
+<h3 id="org8ac7937"><span class="section-number-3">2.3</span> cpu ticks rdstc</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="outline-container-org2f02275" class="outline-4">
+<h4 id="org2f02275"><span class="section-number-4">2.3.1</span> inline function</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+
+<span class="org-keyword">static</span> __always_inline <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-function-name">rdtsc_ordered</span>(<span class="org-type">void</span>)
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">low</span>, <span class="org-variable-name">high</span>;
+
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (low), <span class="org-string">"=d"</span> (high));
+
+        <span class="org-keyword">return</span> low | (high &lt;&lt; 32);
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+
+        start = rdtsc_ordered();
+        usleep(1000);
+        end = rdtsc_ordered();
+
+        printf(<span class="org-string">"elapsed=%lu [start=%lu end=%lu]\n"</span>, end - start, start, end);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2a9abb8" class="outline-4">
+<h4 id="org2a9abb8"><span class="section-number-4">2.3.2</span> gcc extend macro</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">rdtsc_ordered</span>() ({                              \
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">low</span>, <span class="org-variable-name">high</span>;                                \
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);      \
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (low), <span class="org-string">"=d"</span> (high));        \
+        low | (high &lt;&lt; 32); })
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+
+        start = rdtsc_ordered();
+        usleep(1000);
+        end = rdtsc_ordered();
+
+        printf(<span class="org-string">"elapsed=%lu [start=%lu end=%lu]\n"</span>, end - start, start, end);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf35fe2c" class="outline-2">
+<h2 id="orgf35fe2c"><span class="section-number-2">3</span> Reference Materials</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>LWN A guide to inline assembly code in GCC</dt><dd><a href="https://lwn.net/Articles/685739/">https://lwn.net/Articles/685739/</a></dd>
+</dl>
 </div>
 </div>
 </div>

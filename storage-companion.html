@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:44 -->
+<!-- 2018-03-22 Thu 23:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
@@ -28,39 +28,50 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc2942f5">1. 介绍</a>
+<li><a href="#orgefadd66">1. 介绍</a>
 <ul>
 <li><a href="#org8ae1b03">1.1. 发展历史</a></li>
 <li><a href="#org7d7a81f">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org5afbb76">2. 存储产品分析</a>
+<li><a href="#orga57a342">2. 测试工具</a>
 <ul>
-<li><a href="#org7c1a8f0">2.1. IBM V7000</a></li>
+<li><a href="#orge53224d">2.1. SPC(SPC-1/SPC-2)</a></li>
+<li><a href="#org22e6020">2.2. IOMeter</a></li>
+<li><a href="#org10eda30">2.3. IOZone</a></li>
+<li><a href="#orgc7bee1c">2.4. dd</a></li>
+<li><a href="#orgc687c45">2.5. Oracle Orion</a></li>
+<li><a href="#orga5d21ed">2.6. SNIA XAM</a></li>
+<li><a href="#org46937af">2.7. vdbench</a></li>
 </ul>
 </li>
-<li><a href="#org992eff6">3. 软件架构</a></li>
-<li><a href="#orgbe9f5d4">4. 机箱管理</a></li>
-<li><a href="#orgbc6dd17">5. 驱动</a>
+<li><a href="#org5afbb76">3. 存储产品分析</a>
 <ul>
-<li><a href="#org3839036">5.1. 双控互联NTB</a></li>
-<li><a href="#org30a030d">5.2. FC卡</a></li>
-<li><a href="#orgea1dd70">5.3. SAS卡</a></li>
-<li><a href="#org4e46d35">5.4. 网卡</a></li>
-<li><a href="#orgcbdaa70">5.5. IB卡</a></li>
+<li><a href="#org7c1a8f0">3.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#orgfd71a60">6. SCSI协议</a></li>
-<li><a href="#org0832f46">7. BACKUP</a></li>
-<li><a href="#org9b1a339">8. 方案</a>
+<li><a href="#org992eff6">4. 软件架构</a></li>
+<li><a href="#orgbe9f5d4">5. 机箱管理</a></li>
+<li><a href="#orgbc6dd17">6. 驱动</a>
 <ul>
-<li><a href="#orgaf374f5">8.1. 容灾</a>
+<li><a href="#org3839036">6.1. 双控互联NTB</a></li>
+<li><a href="#org30a030d">6.2. FC卡</a></li>
+<li><a href="#orgea1dd70">6.3. SAS卡</a></li>
+<li><a href="#org4e46d35">6.4. 网卡</a></li>
+<li><a href="#orgcbdaa70">6.5. IB卡</a></li>
+</ul>
+</li>
+<li><a href="#orgfd71a60">7. SCSI协议</a></li>
+<li><a href="#org0832f46">8. BACKUP</a></li>
+<li><a href="#org9b1a339">9. 方案</a>
 <ul>
-<li><a href="#orgefadd66">8.1.1. 介绍</a></li>
-<li><a href="#org2f2d92c">8.1.2. 技术点</a></li>
-<li><a href="#orgba7238c">8.1.3. 两地三中心</a></li>
-<li><a href="#org929a547">8.1.4. 双活</a></li>
-<li><a href="#org0acb8ba">8.1.5. 关键词</a></li>
+<li><a href="#orgaf374f5">9.1. 容灾</a>
+<ul>
+<li><a href="#orgd01b6e4">9.1.1. 介绍</a></li>
+<li><a href="#org2f2d92c">9.1.2. 技术点</a></li>
+<li><a href="#orgba7238c">9.1.3. 两地三中心</a></li>
+<li><a href="#org929a547">9.1.4. 双活</a></li>
+<li><a href="#org0acb8ba">9.1.5. 关键词</a></li>
 </ul>
 </li>
 </ul>
@@ -72,8 +83,8 @@
 本文尚未完成。
 </p>
 
-<div id="outline-container-orgc2942f5" class="outline-2">
-<h2 id="orgc2942f5"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgefadd66" class="outline-2">
+<h2 id="orgefadd66"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 统一存储分数据面与管里面。机箱管理使用exp实现。
@@ -103,13 +114,40 @@ SAN存储需要关注如下几个方面:
 </div>
 </div>
 
-<div id="outline-container-org5afbb76" class="outline-2">
-<h2 id="org5afbb76"><span class="section-number-2">2</span> 存储产品分析</h2>
+<div id="outline-container-orga57a342" class="outline-2">
+<h2 id="orga57a342"><span class="section-number-2">2</span> 测试工具</h2>
 <div class="outline-text-2" id="text-2">
 </div>
+<div id="outline-container-orge53224d" class="outline-3">
+<h3 id="orge53224d"><span class="section-number-3">2.1</span> SPC(SPC-1/SPC-2)</h3>
+</div>
+<div id="outline-container-org22e6020" class="outline-3">
+<h3 id="org22e6020"><span class="section-number-3">2.2</span> IOMeter</h3>
+</div>
+<div id="outline-container-org10eda30" class="outline-3">
+<h3 id="org10eda30"><span class="section-number-3">2.3</span> IOZone</h3>
+</div>
+<div id="outline-container-orgc7bee1c" class="outline-3">
+<h3 id="orgc7bee1c"><span class="section-number-3">2.4</span> dd</h3>
+</div>
+<div id="outline-container-orgc687c45" class="outline-3">
+<h3 id="orgc687c45"><span class="section-number-3">2.5</span> Oracle Orion</h3>
+</div>
+<div id="outline-container-orga5d21ed" class="outline-3">
+<h3 id="orga5d21ed"><span class="section-number-3">2.6</span> SNIA XAM</h3>
+</div>
+<div id="outline-container-org46937af" class="outline-3">
+<h3 id="org46937af"><span class="section-number-3">2.7</span> vdbench</h3>
+</div>
+</div>
+
+<div id="outline-container-org5afbb76" class="outline-2">
+<h2 id="org5afbb76"><span class="section-number-2">3</span> 存储产品分析</h2>
+<div class="outline-text-2" id="text-3">
+</div>
 <div id="outline-container-org7c1a8f0" class="outline-3">
-<h3 id="org7c1a8f0"><span class="section-number-3">2.1</span> IBM V7000</h3>
-<div class="outline-text-3" id="text-2-1">
+<h3 id="org7c1a8f0"><span class="section-number-3">3.1</span> IBM V7000</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
 V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg247938.html?Open">Redbooks</a>
@@ -119,11 +157,11 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 
 <div id="outline-container-org992eff6" class="outline-2">
-<h2 id="org992eff6"><span class="section-number-2">3</span> 软件架构</h2>
+<h2 id="org992eff6"><span class="section-number-2">4</span> 软件架构</h2>
 </div>
 <div id="outline-container-orgbe9f5d4" class="outline-2">
-<h2 id="orgbe9f5d4"><span class="section-number-2">4</span> 机箱管理</h2>
-<div class="outline-text-2" id="text-4">
+<h2 id="orgbe9f5d4"><span class="section-number-2">5</span> 机箱管理</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic)设备，控制器向Expander sg设备发送SES命令管理机箱。NVMe管理芯片方案中，PSX支持SES封装进NVMe
 中下发。PSX是否上报自己为只接收少量管理命令和SES命令的NVMe控制器？
@@ -137,37 +175,37 @@ SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic
 </div>
 
 <div id="outline-container-orgbc6dd17" class="outline-2">
-<h2 id="orgbc6dd17"><span class="section-number-2">5</span> 驱动</h2>
-<div class="outline-text-2" id="text-5">
+<h2 id="orgbc6dd17"><span class="section-number-2">6</span> 驱动</h2>
+<div class="outline-text-2" id="text-6">
 </div>
 <div id="outline-container-org3839036" class="outline-3">
-<h3 id="org3839036"><span class="section-number-3">5.1</span> 双控互联NTB</h3>
+<h3 id="org3839036"><span class="section-number-3">6.1</span> 双控互联NTB</h3>
 </div>
 <div id="outline-container-org30a030d" class="outline-3">
-<h3 id="org30a030d"><span class="section-number-3">5.2</span> FC卡</h3>
+<h3 id="org30a030d"><span class="section-number-3">6.2</span> FC卡</h3>
 </div>
 <div id="outline-container-orgea1dd70" class="outline-3">
-<h3 id="orgea1dd70"><span class="section-number-3">5.3</span> SAS卡</h3>
+<h3 id="orgea1dd70"><span class="section-number-3">6.3</span> SAS卡</h3>
 </div>
 <div id="outline-container-org4e46d35" class="outline-3">
-<h3 id="org4e46d35"><span class="section-number-3">5.4</span> 网卡</h3>
+<h3 id="org4e46d35"><span class="section-number-3">6.4</span> 网卡</h3>
 </div>
 <div id="outline-container-orgcbdaa70" class="outline-3">
-<h3 id="orgcbdaa70"><span class="section-number-3">5.5</span> IB卡</h3>
+<h3 id="orgcbdaa70"><span class="section-number-3">6.5</span> IB卡</h3>
 </div>
 </div>
 
 <div id="outline-container-orgfd71a60" class="outline-2">
-<h2 id="orgfd71a60"><span class="section-number-2">6</span> SCSI协议</h2>
-<div class="outline-text-2" id="text-6">
+<h2 id="orgfd71a60"><span class="section-number-2">7</span> SCSI协议</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 hello world
 </p>
 </div>
 </div>
 <div id="outline-container-org0832f46" class="outline-2">
-<h2 id="org0832f46"><span class="section-number-2">7</span> BACKUP</h2>
-<div class="outline-text-2" id="text-7">
+<h2 id="org0832f46"><span class="section-number-2">8</span> BACKUP</h2>
+<div class="outline-text-2" id="text-8">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
 <li>VVOL, NPIV, ALUA, AA,</li>
@@ -184,20 +222,20 @@ hello world
 </div>
 </div>
 <div id="outline-container-org9b1a339" class="outline-2">
-<h2 id="org9b1a339"><span class="section-number-2">8</span> 方案</h2>
-<div class="outline-text-2" id="text-8">
+<h2 id="org9b1a339"><span class="section-number-2">9</span> 方案</h2>
+<div class="outline-text-2" id="text-9">
 </div>
 <div id="outline-container-orgaf374f5" class="outline-3">
-<h3 id="orgaf374f5"><span class="section-number-3">8.1</span> 容灾</h3>
-<div class="outline-text-3" id="text-8-1">
+<h3 id="orgaf374f5"><span class="section-number-3">9.1</span> 容灾</h3>
+<div class="outline-text-3" id="text-9-1">
 </div>
-<div id="outline-container-orgefadd66" class="outline-4">
-<h4 id="orgefadd66"><span class="section-number-4">8.1.1</span> 介绍</h4>
-<div class="outline-text-4" id="text-8-1-1">
+<div id="outline-container-orgd01b6e4" class="outline-4">
+<h4 id="orgd01b6e4"><span class="section-number-4">9.1.1</span> 介绍</h4>
+<div class="outline-text-4" id="text-9-1-1">
 <p>
 随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
 </p>
-<table class="table table-hover" border="2" rules="all :frame: border">
+<table border="2" rules="all :frame: border">
 <caption class="t-above"><span class="table-number">&#34920;1&nbsp;</span> IDC宕机损失统计</caption>
 
 <colgroup>
@@ -269,8 +307,8 @@ hello world
 </div>
 
 <div id="outline-container-org2f2d92c" class="outline-4">
-<h4 id="org2f2d92c"><span class="section-number-4">8.1.2</span> 技术点</h4>
-<div class="outline-text-4" id="text-8-1-2">
+<h4 id="org2f2d92c"><span class="section-number-4">9.1.2</span> 技术点</h4>
+<div class="outline-text-4" id="text-9-1-2">
 <p>
 容灾技术用以解决这类异常将导致严重的后果。不同行业对业务连续性和数据可靠性有不同的要求，
 </p>
@@ -293,19 +331,19 @@ hello world
 </div>
 </div>
 <div id="outline-container-orgba7238c" class="outline-4">
-<h4 id="orgba7238c"><span class="section-number-4">8.1.3</span> 两地三中心</h4>
-<div class="outline-text-4" id="text-8-1-3">
+<h4 id="orgba7238c"><span class="section-number-4">9.1.3</span> 两地三中心</h4>
+<div class="outline-text-4" id="text-9-1-3">
 <p>
 “两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
 </p>
 </div>
 </div>
 <div id="outline-container-org929a547" class="outline-4">
-<h4 id="org929a547"><span class="section-number-4">8.1.4</span> 双活</h4>
+<h4 id="org929a547"><span class="section-number-4">9.1.4</span> 双活</h4>
 </div>
 <div id="outline-container-org0acb8ba" class="outline-4">
-<h4 id="org0acb8ba"><span class="section-number-4">8.1.5</span> 关键词</h4>
-<div class="outline-text-4" id="text-8-1-5">
+<h4 id="org0acb8ba"><span class="section-number-4">9.1.5</span> 关键词</h4>
+<div class="outline-text-4" id="text-9-1-5">
 <ul class="org-ul">
 <li>CAP</li>
 <li>RTO/RPO</li>

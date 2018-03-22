@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-02-25 Sun 01:44 -->
+<!-- 2018-03-22 Thu 23:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
@@ -71,7 +71,13 @@
 <li><a href="#orgba92b80">3.11. proc/filesystems</a></li>
 <li><a href="#org5696bbd">3.12. proc/fs</a></li>
 <li><a href="#orgb2cb08a">3.13. proc/interrups</a></li>
-<li><a href="#org5833bca">3.14. proc/&lt;pid&gt;</a></li>
+<li><a href="#org5833bca">3.14. proc/&lt;pid&gt;</a>
+<ul>
+<li><a href="#org7880f0c">3.14.1. proc/&lt;pid&gt;/oom_adj</a></li>
+<li><a href="#orgca662c6">3.14.2. proc/&lt;pid&gt;/oom_score</a></li>
+<li><a href="#org7fbb3fb">3.14.3. proc/&lt;pid&gt;/oom_score_adj</a></li>
+</ul>
+</li>
 <li><a href="#orgdb8fb5e">3.15. proc/self</a></li>
 <li><a href="#orge9762eb">3.16. oom_score</a></li>
 </ul>
@@ -1194,13 +1200,98 @@ PIW:          0          0          0          0   Posted-interrupt wakeup event
 
 <div id="outline-container-org5833bca" class="outline-3">
 <h3 id="org5833bca"><span class="section-number-3">3.14</span> proc/&lt;pid&gt;</h3>
+<div class="outline-text-3" id="text-3-14">
+</div>
+<div id="outline-container-org7880f0c" class="outline-4">
+<h4 id="org7880f0c"><span class="section-number-4">3.14.1</span> proc/&lt;pid&gt;/oom_adj</h4>
+<div class="outline-text-4" id="text-3-14-1">
+<p>
+调整进程OOM-killing亲和度。有效范围[-17, +15]。-17是特殊值，禁止OOM-Killing。数值越大，OOM时被选中的可能性越大。默认为0，需要CAP_SYS_RESOURCE权限修改此值。2.6.36之后版本不建议使用此方式，请使用/proc/&lt;pid&gt;/oom_score_adj代替。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca662c6" class="outline-4">
+<h4 id="orgca662c6"><span class="section-number-4">3.14.2</span> proc/&lt;pid&gt;/oom_score</h4>
+<div class="outline-text-4" id="text-3-14-2">
+<p>
+查看当前进程OOM-killer分值。分数越高越容易被OOM-Killer选中。基本分值与进程占用内存相关，且随着fork数量、CPU占用、nice、privileged、是否直接存取硬件调整：
+</p>
+<blockquote>
+<p>
+This  file displays the current score that the kernel gives to this process for the purpose of selecting
+a process for the OOM-killer.  A higher score means that the process is more likely to  be  selected  by
+the  OOM-killer.   The  basis for this score is the amount of memory used by the process, with increases
+(+) or decreases (-) for factors including:
+</p>
+<ul class="org-ul">
+<li>whether the process creates a lot of children using fork(2) (+);</li>
+<li>whether the process has been running a long time, or has used a lot of CPU time (-);</li>
+<li>whether the process has a low nice value (i.e., &gt; 0) (+);</li>
+<li>whether the process is privileged (-); and</li>
+<li>whether the process is making direct hardware access (-).</li>
+<li>The oom_score also reflects the adjustment specified by the oom_score_adj or  oom_adj  setting  for  the</li>
+</ul>
+<p>
+process.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org7fbb3fb" class="outline-4">
+<h4 id="org7fbb3fb"><span class="section-number-4">3.14.3</span> proc/&lt;pid&gt;/oom_score_adj</h4>
+<div class="outline-text-4" id="text-3-14-3">
+<p>
+调整OOM-killer选择该进程的坏值。数值范围[-1000, +1000]。-1000表示禁止被选中。重要的常驻程序可以设置-1000禁止进程被OOM-killer选中杀死：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;errno.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">disable_oom</span>()
+{
+    <span class="org-type">FILE</span> *<span class="org-variable-name">fp</span> = fopen(<span class="org-string">"/proc/self/oom_score_adj"</span>, <span class="org-string">"w"</span>);
+
+    <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>fp) {
+            fprintf(stderr, <span class="org-string">"open oom_score_adj failed\n"</span>);
+            <span class="org-keyword">return</span> -1;
+    }
+
+    fprintf(fp, <span class="org-string">"%i"</span>, -1000);
+    fclose(fp);
+
+    <span class="org-keyword">return</span> 0;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-type">int</span> <span class="org-variable-name">ret</span>;
+
+        ret = disable_oom();
+        <span class="org-keyword">if</span> (0 == ret)
+                printf(<span class="org-string">"disable oom success\n"</span>);
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">do post work ...</span>
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<pre class="example">
+disable oom success
+
+</pre>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgdb8fb5e" class="outline-3">
 <h3 id="orgdb8fb5e"><span class="section-number-3">3.15</span> proc/self</h3>
 <div class="outline-text-3" id="text-3-15">
 <p>
-proc/self是一个符号链接，总是指向执行进程本身。
+proc/self是一个符号链接，总是指向执行进程本身(/proc/&lt;pid&gt;)。
 </p>
 
 <div class="org-src-container">

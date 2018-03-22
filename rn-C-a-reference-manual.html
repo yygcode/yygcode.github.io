@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-03-22 Thu 23:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>C: A Reference Manual</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">C: A Reference Manual</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga95c425">1. Introduction</a></li>
+<li><a href="#orgbd64e0f">2. 1. CHARACTER SET</a></li>
+</ul>
+</div>
+</div>
+<p>
+PART 1 The C Language
+</p>
+
+<div id="outline-container-orga95c425" class="outline-2">
+<h2 id="orga95c425"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Dennis Ritchie
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbd64e0f" class="outline-2">
+<h2 id="orgbd64e0f"><span class="section-number-2">2</span> 1. CHARACTER SET</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+A C source file is a sequence of characters selected from a character. C programs are written using the following characters:
+</p>
+
+<p>
+1). the 52 Latin capital and small letters: A~Z and a~z
+</p>
+
+<p>
+2). the 10 digits: 0~9
+</p>
+
+<p>
+3). the space
+</p>
+
+<p>
+4). the horizontal tab(HT), vertical tab(VT), form feed(FF) control characters.
+</p>
+
+<p>
+5). the 29 graphic character and their official names.
+</p>
+
+<p>
+!     execlamation mark
+</p>
+
+<p>
+%   percent sign
+</p>
+
+<p>
+^    circumflex accent
+</p>
+
+<p>
+&amp;    ampersand
+</p>
+
+<ul class="org-ul">
+<li>asterisk</li>
+</ul>
+
+<p>
+(     left parenthesis
+</p>
+
+<p>
+_    lowline(underscore)
+</p>
+
+<p>
+)     right parenthesis
+</p>
+
+<ul class="org-ul">
+<li>hyphen-minus</li>
+
+<li>plus sign</li>
+</ul>
+
+<p>
+=    equals sign
+</p>
+
+<p>
+~    tilde
+</p>
+
+<p>
+[     left square bracket
+</p>
+
+<p>
+]     right square bracket
+</p>
+
+<p>
+'     apostrhphe
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">vertical line</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+/     reverse solidus(backslash)
+</p>
+
+<p>
+;     semicolon
+</p>
+
+<pre class="example">
+colon
+
+</pre>
+
+<p>
+"     quotation mark
+</p>
+
+<p>
+{     left curly bracket
+</p>
+
+<p>
+}     right curly bracket
+</p>
+
+<p>
+,      comma
+</p>
+
+<p>
+.      full stop
+</p>
+
+<p>
+&lt;     less-than sign
+</p>
+
+<p>
+&gt;     greater-than sign
+</p>
+
+<p>
+/      solidus(slash, divide sign)
+</p>
+
+<p>
+?      question mark
+</p>
+
+<p>
+Some countries have national character sets that do not include all the graphic character above defined trigraphs and token respelling to allow C programs to be written in the ISO 646-1083 Invariant Code Set.
+</p>
+
+<p>
+6). additional characters are sometimes used in C source programes, including
+</p>
+
+<p>
+a). formatting characters such as backspace(BS) and carriage return(CR) characters
+</p>
+
+<p>
+b). additional Basic Latin characters, include the character $,@,`(grave accent)
+</p>
+
+<p>
+The formatting characters are treated as spaces and do not otherwise affect the source program. The additional graphic characters may appear only in comments, character constants, string constants, and file names.
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Execution Character Set
+</p>
+
+<p>
+The character set interpreted during the execution of a C program is not necessarily the same as the one in which the C programe is written.(like as cross compiler tool). Character int the execution character set are represented by their equivalent int the source character set or by special character escape sequences(escape sequence 换码顺序) that begin with the backslash(/) character.
+</p>
+
+<p>
+In addition to the standard characters methioned before, the execution character set must also include:
+</p>
+
+<p>
+1). a null character that must be encoded as the value 0, which is used to mark the end of strings.
+</p>
+
+<p>
+2). a newline character that is used as the end-of-line marker whichi divide character streams into lines during input/output.
+</p>
+
+<p>
+3). the alert,backspace,and carriage return characters.
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Whitespace and Line Terminaton
+</p>
+
+<p>
+In C source programs the blank(space), end-of-line, VT,FF,HT are known collectively as whitespace characters.(Comments are also whitespace) These characters are ignored except insofar as they are used to separate adjacent tokens.
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Character Encoding
+</p>
+
+<p>
+A common C programming error is to aussume a particular encoding is in use when another one holds in fact.
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Trigraphs
+</p>
+
+<p>
+A set of trigraphs is included in Standard C so that programs may be written using only thew ISO 646-1083 Invariant Code Set, a subset of the seven-bit ASCII code set and a code set that is common to many non-english national character sets. The trigraphs, introduced by two consecutive question mark characters. listed in follows:
+</p>
+
+<p>
+??(            [
+</p>
+
+<p>
+??)            ]
+</p>
+
+<p>
+??&lt;           {
+</p>
+
+<p>
+??&gt;           }
+</p>
+
+<p>
+??/            /
+</p>
+
+<p>
+??!            |
+</p>
+
+<p>
+??'            ^
+</p>
+
+<p>
+??-            _
+</p>
+
+<p>
+??=           #
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Digraphs
+</p>
+
+<p>
+&lt;:           [
+</p>
+
+<p>
+:&gt;           ]
+</p>
+
+<p>
+&lt;%         {
+</p>
+
+<p>
+%&gt;         }
+</p>
+
+<p>
+%:          #
+</p>
+
+<p>
+%:%:     ##
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Ended with Hello world program
+</p>
+
+<p>
+%:include &lt;stdio.h&gt;
+int main() &lt;%
+     char buf&lt;:??)="Hello world !";
+     printf("%s/n", buf);
+     return 0;
+??&gt;
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/rn-C-a-reference-manual.html';
+    this.page.identifier = 'rn-C-a-reference-manual.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

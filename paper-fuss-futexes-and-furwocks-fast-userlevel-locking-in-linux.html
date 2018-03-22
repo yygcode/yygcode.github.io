@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-03-22 Thu 23:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Fuss, Futexes and Furwocks: Fast Userlevel Locking in Linux</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Fuss, Futexes and Furwocks: Fast Userlevel Locking in Linux</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgee3bc91">1. Author</a>
+<ul>
+<li><a href="#orgf39d735">1.1. Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</a></li>
+<li><a href="#org54250f9">1.2. Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</a></li>
+<li><a href="#org02a721d">1.3. Matthew Kirkwood, matthew@hairy.beasts.org</a></li>
+</ul>
+</li>
+<li><a href="#org0be3c07">2. Abstract</a></li>
+<li><a href="#org99a4a96">3. Introduction</a></li>
+<li><a href="#orgc70ba6d">4. Requirements</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgee3bc91" class="outline-2">
+<h2 id="orgee3bc91"><span class="section-number-2">1</span> Author</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgf39d735" class="outline-3">
+<h3 id="orgf39d735"><span class="section-number-3">1.1</span> Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Homepage: <a href="https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1">https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org54250f9" class="outline-3">
+<h3 id="org54250f9"><span class="section-number-3">1.2</span> Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>Blog(may right?): <a href="https://rusty.ozlabs.org/">https://rusty.ozlabs.org/</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org02a721d" class="outline-3">
+<h3 id="org02a721d"><span class="section-number-3">1.3</span> Matthew Kirkwood, matthew@hairy.beasts.org</h3>
+</div>
+</div>
+
+<div id="outline-container-org0be3c07" class="outline-2">
+<h2 id="org0be3c07"><span class="section-number-2">2</span> Abstract</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Fast userlevel locking is an alternative locking mechanism to the typically
+heavy weight kernel approaches such as fcntl locking and System V semaphores.
+Here, multiple processes communicate locking state through shared memory regions
+and atomic operations. Kernel involvement(卷入) is only necessary when there is
+contention on a lock, in order to perform queueing and scheduling functions. In
+this paper we discuss the issues related to user level locking by following the
+history of ideas and the code to the current day. We present the efficacy of
+"futexes" through benchmarks, both synthetic(合成) and through adaptations to
+existing databases. We conclude by presenting the potential future directions of
+the "futex" interface.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org99a4a96" class="outline-2">
+<h2 id="org99a4a96"><span class="section-number-2">3</span> Introduction</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Linux<sup>TM</sup><sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> has seen significant(重要的) growth as a server operating system
+and has been successfully deployed in enterprise environments for Web, file and
+print serving. With the deployment of Version 2.4, Linux has seen a tremendous
+boost in scalability and robustness that makes it now feasible to deploy even
+more demanding enterprise applications such as high end databases, business
+intelligence software and application servers. As a result, whole enterprise
+business suites and middleware such as SAP<sup>TM</sup>,Websphere<sup>TM</sup>, Oracle,
+DB2<sup>TM</sup><sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>, etc., are now available for Linux.
+</p>
+
+<p>
+For these enterprise applications to run efficiently on Linux, or on any other
+operating system for that matter, the OS must provide the proper abstractions
+and services. Enterprise applications and applications suites are increasingly
+built as multi process / multithreaded applications. Multi-threaded applications
+can take better advantage of SMP hardware, while multiple processes allows for
+higher degrees of fault tolerance, i.e., a single process abort does not
+necessarily bring the entire application down. Furthermore, applications suites
+are often a collection of multiple independent subsystems.
+</p>
+
+<p>
+Despite their functional separation, the processes representing these subsystems
+often must communicate with each other and share state amongst each other.
+Examples of this are database systems, which typically maintain shared I/O
+buffers in user space. The buffers are concurrently accessed by various database
+engines and prefetching processes.
+</p>
+
+<p>
+Access to such shared state must be properly synchronized through either
+exclusive or shared locks. Exclusive locks allow only one party access to the
+protected entity, while shared locks allow multiple reader – single writer
+semantics. Synchronization implies a shared state, indicating that a particular
+resource is available or busy, and a means to wait for its availability. The
+latter one can either be accomplished through busy-waiting or through a explicit
+/implicit call to the scheduler.
+</p>
+
+<p>
+In traditional UNIX<sup>TM</sup><sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> systems, System V IPC (inter process communication)
+such as semaphores, msgqueues, sockets and the file locking mechanism (flock())
+are the basic mechanisms for two processes to synchronize. These mechanisms
+expose an opaque(不透明的) handle to a kernel object that naturally provides the
+shared state and atomic operations in the kernel. Services must be requested
+through system calls (e.g., semop()). The drawback of this approach is that
+every lock access requires a system call. When locks have low contention rates,
+the system call can constitute a significant overhead.
+</p>
+
+<p>
+One solution to this problem is to deploy user level locking, which avoids some
+of the overhead associated with purely kernel-based locking mechanisms. It
+relies on a user level lock located in a shared memory region and modified
+through atomic operations to indicate the lock status. Only the contended case
+requires kernel intervention. The exact behavior and the obtainable performance
+are directly affected by how and when the kernel services are invoked. The idea
+described here is not new. Some of the foundation of this paper are described
+in [4], [7] and [6]. In [2] the impact of locking on JVM performance is
+discussed.
+</p>
+
+<p>
+In this paper we are describing a particular fast user level locking mechanism
+called futexes that was developed in the context of the Linux operating system.
+It consists of two parts, the user library and a kernel service that has been
+integrated into the Linux kernel distribution version 2.5.7.
+</p>
+
+<p>
+The paper is organized as followed. In section 2 we describe the basic
+behavioral and functional requirements of a user level locking mechanism. In
+section 3 we describe some of the earlier approaches that led to the current
+design of futexes and the futexes themselves. In section 4 we provide a
+performance assessment(评估) on a synthetic(合成) and a database benchmark. In
+section 5 we elaborate on current and future efforts and in 6 we conclude.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc70ba6d" class="outline-2">
+<h2 id="orgc70ba6d"><span class="section-number-2">4</span> Requirements</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+In this section we are stating some of the requirements of a fast userlevel
+locking mechanism that we derived as part of this work and that were posted to
+us as requirements by middleware providers.
+</p>
+
+<p>
+There are various behavioral requirements that need to be considered. Most
+center around the fairness of the locking scheme and the lock release policy.
+In a <b>fair</b> locking scheme the lock is granted in the order it was requested,
+i.e., it is handed over to the longest waiting task. This can have negative
+impact on throughput due to the increased number of context switches. At the
+same time it can lead to the so called <b>convoy(护航) problem</b>. Since, the locks
+are granted in the order of request arrival, they all proceed at the speed of
+the slowest process, slowing down all waiting processes. A common solution to
+the convoy problem has been to mark the lock available upon release, wake all
+waiting processes and have them recontend for the lock. This is referred to as
+<b>random fairness</b>, although higher priority tasks will usually have an advantage
+over lower priority ones. However, this also leads to the well known thundering
+herd problem. Despite this, it can work quite well on uni-processor systems if
+the first task to wake releases the lock before being preempted or scheduled,
+allowing the second herd member to obtain the lock, etc. It works less
+spectacularly on SMP. To avoid this problem, one should only wake up one waiting
+task upon lock release. Marking the lock available as part of releasing it,
+gives the releasing task the opportunity to reacquire the lock immediately again,
+if so desired, and avoid unnecessary context switches and the convoy problem.
+Some refer to these as greedy, as the running task has the highest probability
+of reacquiring the lock if the lock is hot. However, this can lead to starvation.
+Hence, the basic mechanisms must enable both fair locking, random locking and
+greedy or convoy avoidance locking (short ca-locking). Another requirement is to
+enable spin locking, i.e., have an application spin for the availablilty of the
+lock for some user specified time (or until granted) before giving up and
+resolving to block in the kernel for its availability. Hence an application has
+the choice to either (a) block waiting to be notified for the lock to be
+released, or (b)yield the processor until the thread is rescheduled and then the
+lock is tried to be acquired again, or (c) spin consuming CPU cycles until the
+lock is released.
+</p>
+
+<p>
+With respect to performance, there are basically two overriding goals:
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Linux is a trademark of Linus Torvalds
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+All third party trademarks are the property of their respective owners.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+UNIX is a trademark of The Open Group
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/paper-fuss-futexes-and-furwocks-fast-userlevel-locking-in-linux.html';
+    this.page.identifier = 'paper-fuss-futexes-and-furwocks-fast-userlevel-locking-in-linux.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
