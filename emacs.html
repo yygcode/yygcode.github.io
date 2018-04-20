@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-04-21 Sat 07:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Emacs笔记</title>
 <meta name="generator" content="Org mode" />
@@ -70,13 +70,11 @@
 </ul>
 </li>
 <li><a href="#org8052248">5. 基本配置</a></li>
-<li><a href="#org71b6007">6. Org mode</a>
+<li><a href="#orga737119">6. Org mode</a>
 <ul>
-<li><a href="#org7708c50">6.1. 静态页面发布</a></li>
-<li><a href="#orge8b8c6d">6.2. 博客</a></li>
-<li><a href="#org64de759">6.3. 文学编程</a>
+<li><a href="#org64de759">6.1. 文学编程</a>
 <ul>
-<li><a href="#orgf1da91b">6.3.1. 代码求值与安全性问题</a></li>
+<li><a href="#orgf1da91b">6.1.1. 代码求值与安全性问题</a></li>
 </ul>
 </li>
 </ul>
@@ -141,7 +139,7 @@
 <li><a href="#org5efaabe">12. 常用快捷键</a>
 <ul>
 <li><a href="#orgd3d6a68">12.1. Global</a></li>
-<li><a href="#orga737119">12.2. Org mode</a>
+<li><a href="#org85fc087">12.2. Org mode</a>
 <ul>
 <li><a href="#orgbba3b17">12.2.1. insert literal hot key</a></li>
 </ul>
@@ -268,7 +266,7 @@ GNU Emacs不做配置启动界面是这个样子：
 我的配置启动时是这样的：
 </p>
 
-<div id="orgb2afdc2" class="figure">
+<div id="orgea1909d" class="figure">
 <p><img src="./img/emacs-customized.png" alt="emacs-customized.png" />
 </p>
 <p><span class="figure-number">&#22270;2&nbsp; </span>emacs配置后启动界面</p>
@@ -278,7 +276,7 @@ GNU Emacs不做配置启动界面是这个样子：
 浏览代码时是这样：
 </p>
 
-<div id="orgea1909d" class="figure">
+<div id="org77d44e6" class="figure">
 <p><img src="./img/emacs-code.png" alt="emacs-code.png" />
 </p>
 <p><span class="figure-number">&#22270;3&nbsp; </span>emacs浏览代码</p>
@@ -593,23 +591,40 @@ Double click the runemacs.exe in C:\emacs\bin. If no errors occur, you have succ
 </div>
 </div>
 
-<div id="outline-container-org71b6007" class="outline-2">
-<h2 id="org71b6007"><span class="section-number-2">6</span> Org mode</h2>
+<div id="outline-container-orga737119" class="outline-2">
+<h2 id="orga737119"><span class="section-number-2">6</span> Org mode</h2>
 <div class="outline-text-2" id="text-6">
+<p>
+C mode和Org mode是我在Emacs下最常用的两种major mode。<a href="https://orgmode.org/worg/index.html">Worg</a>上对Org mode介绍如下：
+</p>
+<blockquote>
+<p>
+Org-mode is a powerful system for organizing your complex life with simple
+plain-text files. It seamlessly integrates all your notes, mindmaps, TODO lists,
+calendar, day planner, and project schedules into a single system that can be
+easily searched (e.g. by grep), encrypted (e.g. by GnuPG), backed up and synced
+(e.g. by Dropbox), imported/exported, and accessed on the go (e.g. on an iPhone
+or Android smartphone). It can even be used for authoring web pages and
+documents.
+</p>
+</blockquote>
+
+<p>
+Orgmode主页<a href="https://orgmode.org/">https://orgmode.org/</a>，学习资料有<a href="https://orgmode.org/orgguide.pdf">精简手册(pdf)</a>和<a href="https://orgmode.org/org.pdf">完整手册(pdf)</a>。
+</p>
+
+<p>
+我使用Org记录读书笔记、会议纪要、管理日程、维护待办事项，以及写博客、维护个人站点。Org学习请移步<a href="https://orgmode.org/worg/index.html">Worg</a>，以及我的<a href="emacs-orgmode.html">Emacs Org使用笔记</a>。
+</p>
 </div>
-<div id="outline-container-org7708c50" class="outline-3">
-<h3 id="org7708c50"><span class="section-number-3">6.1</span> 静态页面发布</h3>
-</div>
-<div id="outline-container-orge8b8c6d" class="outline-3">
-<h3 id="orge8b8c6d"><span class="section-number-3">6.2</span> 博客</h3>
-</div>
+
 <div id="outline-container-org64de759" class="outline-3">
-<h3 id="org64de759"><span class="section-number-3">6.3</span> 文学编程</h3>
-<div class="outline-text-3" id="text-6-3">
+<h3 id="org64de759"><span class="section-number-3">6.1</span> 文学编程</h3>
+<div class="outline-text-3" id="text-6-1">
 </div>
 <div id="outline-container-orgf1da91b" class="outline-4">
-<h4 id="orgf1da91b"><span class="section-number-4">6.3.1</span> 代码求值与安全性问题</h4>
-<div class="outline-text-4" id="text-6-3-1">
+<h4 id="orgf1da91b"><span class="section-number-4">6.1.1</span> 代码求值与安全性问题</h4>
+<div class="outline-text-4" id="text-6-1-1">
 <p>
 Org mode代码块 <code>END_SRC</code> 处 <code>C-c C-c</code> 对代码块求值，结果在代码块其后 <code>#+RESULTS</code>
 行。例如在如下代码 <code>END_SRC</code> 处求值：
@@ -1375,8 +1390,8 @@ libxml2-2.dll, zlib1.dll) to emacs.exe/runemacs.exe directory.</li>
 </div>
 </div>
 
-<div id="outline-container-orga737119" class="outline-3">
-<h3 id="orga737119"><span class="section-number-3">12.2</span> Org mode</h3>
+<div id="outline-container-org85fc087" class="outline-3">
+<h3 id="org85fc087"><span class="section-number-3">12.2</span> Org mode</h3>
 <div class="outline-text-3" id="text-12-2">
 <table>
 

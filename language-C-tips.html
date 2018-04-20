@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-04-21 Sat 07:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>C语言编程技巧/C Programming Tips</title>
 <meta name="generator" content="Org mode" />
@@ -45,28 +45,29 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orga119212">1. 说明</a></li>
-<li><a href="#org167cff4">2. 内联汇编</a>
+<li><a href="#orgc9cba35">2. 返回结构体</a></li>
+<li><a href="#org167cff4">3. 内联汇编</a>
 <ul>
-<li><a href="#org5075414">2.1. 基本格式</a>
+<li><a href="#org5075414">3.1. 基本格式</a>
 <ul>
-<li><a href="#org46c7d01">2.1.1. 语法</a></li>
-<li><a href="#org18dea9e">2.1.2. 示例</a></li>
+<li><a href="#orgef413f3">3.1.1. 语法</a></li>
+<li><a href="#org18dea9e">3.1.2. 示例</a></li>
 </ul>
 </li>
-<li><a href="#org246fa1f">2.2. 扩展格式</a>
+<li><a href="#org246fa1f">3.2. 扩展格式</a>
 <ul>
-<li><a href="#orgef413f3">2.2.1. 语法</a></li>
+<li><a href="#org3803553">3.2.1. 语法</a></li>
 </ul>
 </li>
-<li><a href="#org8ac7937">2.3. cpu ticks rdstc</a>
+<li><a href="#org8ac7937">3.3. cpu ticks rdstc</a>
 <ul>
-<li><a href="#org2f02275">2.3.1. inline function</a></li>
-<li><a href="#org2a9abb8">2.3.2. gcc extend macro</a></li>
+<li><a href="#org2f02275">3.3.1. inline function</a></li>
+<li><a href="#org2a9abb8">3.3.2. gcc extend macro</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf35fe2c">3. Reference Materials</a></li>
+<li><a href="#orgf35fe2c">4. Reference Materials</a></li>
 </ul>
 </div>
 </div>
@@ -81,17 +82,55 @@
 </div>
 </div>
 
-<div id="outline-container-org167cff4" class="outline-2">
-<h2 id="org167cff4"><span class="section-number-2">2</span> 内联汇编</h2>
+<div id="outline-container-orgc9cba35" class="outline-2">
+<h2 id="orgc9cba35"><span class="section-number-2">2</span> 返回结构体</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+使用型别强制转换与打括号组合，返回结构体类别：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-keyword">struct</span> <span class="org-type">bucket</span> {
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[128];
+};
+
+<span class="org-keyword">struct</span> <span class="org-type">slot</span> {
+        <span class="org-type">int</span> <span class="org-variable-name">x</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">bucket</span> *<span class="org-variable-name">bucket</span>;
+};
+
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-keyword">struct</span> <span class="org-type">slot</span> <span class="org-function-name">__to_slot</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">v</span>)
+{
+        <span class="org-keyword">return</span> (<span class="org-keyword">struct</span> <span class="org-type">slot</span>){v &amp; 3, (<span class="org-keyword">struct</span> <span class="org-type">bucket</span> *)(v &amp; ~3)};
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-keyword">struct</span> <span class="org-type">slot</span> <span class="org-variable-name">sl</span>;
+
+        sl = __to_slot(0x1234567890abcdef);
+
+        printf(<span class="org-string">"bucket=%p, x=%x\n"</span>, sl.bucket, sl.x);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org167cff4" class="outline-2">
+<h2 id="org167cff4"><span class="section-number-2">3</span> 内联汇编</h2>
+<div class="outline-text-2" id="text-3">
 </div>
 <div id="outline-container-org5075414" class="outline-3">
-<h3 id="org5075414"><span class="section-number-3">2.1</span> 基本格式</h3>
-<div class="outline-text-3" id="text-2-1">
+<h3 id="org5075414"><span class="section-number-3">3.1</span> 基本格式</h3>
+<div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org46c7d01" class="outline-4">
-<h4 id="org46c7d01"><span class="section-number-4">2.1.1</span> 语法</h4>
-<div class="outline-text-4" id="text-2-1-1">
+<div id="outline-container-orgef413f3" class="outline-4">
+<h4 id="orgef413f3"><span class="section-number-4">3.1.1</span> 语法</h4>
+<div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span>);
 </pre>
@@ -107,8 +146,8 @@
 </div>
 
 <div id="outline-container-org18dea9e" class="outline-4">
-<h4 id="org18dea9e"><span class="section-number-4">2.1.2</span> 示例</h4>
-<div class="outline-text-4" id="text-2-1-2">
+<h4 id="org18dea9e"><span class="section-number-4">3.1.2</span> 示例</h4>
+<div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
@@ -130,12 +169,12 @@
 </div>
 
 <div id="outline-container-org246fa1f" class="outline-3">
-<h3 id="org246fa1f"><span class="section-number-3">2.2</span> 扩展格式</h3>
-<div class="outline-text-3" id="text-2-2">
+<h3 id="org246fa1f"><span class="section-number-3">3.2</span> 扩展格式</h3>
+<div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-orgef413f3" class="outline-4">
-<h4 id="orgef413f3"><span class="section-number-4">2.2.1</span> 语法</h4>
-<div class="outline-text-4" id="text-2-2-1">
+<div id="outline-container-org3803553" class="outline-4">
+<h4 id="org3803553"><span class="section-number-4">3.2.1</span> 语法</h4>
+<div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span> : output locations : input operands : changed registers);
 </pre>
@@ -150,12 +189,12 @@
 </div>
 
 <div id="outline-container-org8ac7937" class="outline-3">
-<h3 id="org8ac7937"><span class="section-number-3">2.3</span> cpu ticks rdstc</h3>
-<div class="outline-text-3" id="text-2-3">
+<h3 id="org8ac7937"><span class="section-number-3">3.3</span> cpu ticks rdstc</h3>
+<div class="outline-text-3" id="text-3-3">
 </div>
 <div id="outline-container-org2f02275" class="outline-4">
-<h4 id="org2f02275"><span class="section-number-4">2.3.1</span> inline function</h4>
-<div class="outline-text-4" id="text-2-3-1">
+<h4 id="org2f02275"><span class="section-number-4">3.3.1</span> inline function</h4>
+<div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 <span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
@@ -189,8 +228,8 @@
 </div>
 
 <div id="outline-container-org2a9abb8" class="outline-4">
-<h4 id="org2a9abb8"><span class="section-number-4">2.3.2</span> gcc extend macro</h4>
-<div class="outline-text-4" id="text-2-3-2">
+<h4 id="org2a9abb8"><span class="section-number-4">3.3.2</span> gcc extend macro</h4>
+<div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 <span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
@@ -221,8 +260,8 @@
 </div>
 </div>
 <div id="outline-container-orgf35fe2c" class="outline-2">
-<h2 id="orgf35fe2c"><span class="section-number-2">3</span> Reference Materials</h2>
-<div class="outline-text-2" id="text-3">
+<h2 id="orgf35fe2c"><span class="section-number-2">4</span> Reference Materials</h2>
+<div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>LWN A guide to inline assembly code in GCC</dt><dd><a href="https://lwn.net/Articles/685739/">https://lwn.net/Articles/685739/</a></dd>
 </dl>

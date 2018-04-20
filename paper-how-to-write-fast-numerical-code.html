@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-04-21 Sat 07:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>How To Write Numerical Code</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">How To Write Numerical Code</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org47f8113">1. Performance Optimization: The basics</a>
+<ul>
+<li><a href="#org272f5dd">1.1. Floating The Hotspots</a></li>
+<li><a href="#org3219ee3">1.2. Timing a Hotspot</a>
+<ul>
+<li><a href="#org80938c0">1.2.1. Known Problems</a></li>
+</ul>
+</li>
+<li><a href="#orgc1aca3a">1.3. Analyzing the Measured Runtime</a></li>
+<li><a href="#org043dbe7">1.4. Exercises</a></li>
+</ul>
+</li>
+<li><a href="#org96819a5">2. Optimization for the Memory Hierarchy</a>
+<ul>
+<li><a href="#orgd0ab866">2.1. Performance-Conscious Programming</a></li>
+<li><a href="#org470c28d">2.2. Cache Optimization</a></li>
+<li><a href="#orgb7f8588">2.3. CPU and Register Level Optimization</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org47f8113" class="outline-2">
+<h2 id="org47f8113"><span class="section-number-2">1</span> Performance Optimization: The basics</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org272f5dd" class="outline-3">
+<h3 id="org272f5dd"><span class="section-number-3">1.1</span> Floating The Hotspots</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>gprof</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">float</span> <span class="org-function-name">func1</span>()
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+        <span class="org-type">float</span> <span class="org-variable-name">ret</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 1000000; ++i) {
+                ret += (1/i);
+        }
+
+        <span class="org-keyword">return</span> ret;
+}
+
+<span class="org-type">float</span> <span class="org-function-name">func2</span>()
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+        <span class="org-type">float</span> <span class="org-variable-name">ret</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 1000000; ++i) {
+                ret += (1/(i + 1));
+        }
+
+        <span class="org-keyword">return</span> ret;
+}
+
+<span class="org-type">void</span> <span class="org-function-name">func3</span>()
+{
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+
+        printf(<span class="org-string">"result: %.2f\n"</span>, func1());
+        printf(<span class="org-string">"result: %.2f\n"</span>, func2());
+        func3();
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+Compile:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gcc -O0 -g -pg -o hotspot hotspot.c
+~$ gprof hotspot gmon.out
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ <span class="org-keyword">time</span>   seconds   seconds    calls  ms/call  ms/call  name
+101.01      0.03     0.03        1    30.30    30.30  func2
+  0.00      0.03     0.00        1     0.00     0.00  func1
+  0.00      0.03     0.00        1     0.00     0.00  func3
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3219ee3" class="outline-3">
+<h3 id="org3219ee3"><span class="section-number-3">1.2</span> Timing a Hotspot</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>参考<a href="blogs/linux-benchmark-time.html">Blogs Linux Benchmark Time</a>。</li>
+</ul>
+</div>
+
+<div id="outline-container-org80938c0" class="outline-4">
+<h4 id="org80938c0"><span class="section-number-4">1.2.1</span> Known Problems</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li>指令太少时，时钟精度导致时间评估不准确；</li>
+<li>指令太多，因系统事件（调度），导致时间评估不准确；</li>
+<li>设备负载导致的边界效应；</li>
+<li>任务并发导致互相影响；</li>
+<li>输入输出数据对齐导致的缓存问题；</li>
+<li>虚拟到物理内存翻译时间不可抑制；</li>
+<li>TSC溢出触发一个终端或产生无意义的结果；</li>
+<li>读取TSC需要一定的cycles，这影响时间结果；</li>
+<li>链接顺序导致本地静态常量变化导致缓存干扰；</li>
+<li>设备长期运行导致的OS状态问题；</li>
+<li>数字内核的控制流数据会被评估时间，但测试数据不具代表性；</li>
+<li>OS聪明处理“全零页”，导致更高的性能；</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1aca3a" class="outline-3">
+<h3 id="orgc1aca3a"><span class="section-number-3">1.3</span> Analyzing the Measured Runtime</h3>
+</div>
+
+<div id="outline-container-org043dbe7" class="outline-3">
+<h3 id="org043dbe7"><span class="section-number-3">1.4</span> Exercises</h3>
+</div>
+</div>
+
+<div id="outline-container-org96819a5" class="outline-2">
+<h2 id="org96819a5"><span class="section-number-2">2</span> Optimization for the Memory Hierarchy</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgd0ab866" class="outline-3">
+<h3 id="orgd0ab866"><span class="section-number-3">2.1</span> Performance-Conscious Programming</h3>
+<div class="outline-text-3" id="text-2-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">使用C</td>
+<td class="org-left">不用C++(面向对象的)或Java(字节码的)</td>
+</tr>
+
+<tr>
+<td class="org-left">Arrays</td>
+<td class="org-left">尽量使用一维的，或者编译器能确定大小的</td>
+</tr>
+
+<tr>
+<td class="org-left">Records</td>
+<td class="org-left">避免复杂的struct和union，编译器无法处理最优的对齐</td>
+</tr>
+
+<tr>
+<td class="org-left">Dynamic data structures</td>
+<td class="org-left">避免指针链表，多用数组</td>
+</tr>
+
+<tr>
+<td class="org-left">Control Flow</td>
+<td class="org-left">减少分支，如while, for, switch, if</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org470c28d" class="outline-3">
+<h3 id="org470c28d"><span class="section-number-3">2.2</span> Cache Optimization</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>Blocking: data in chunks fit respective cache level;</li>
+<li>Loop Merging(循环归并，循环合并): 连续循环合并</li>
+<li>Buffering: 拷贝数据到连续缓冲区，客服缓存miss问题；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb7f8588" class="outline-3">
+<h3 id="orgb7f8588"><span class="section-number-3">2.3</span> CPU and Register Level Optimization</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/paper-how-to-write-fast-numerical-code.html';
+    this.page.identifier = 'paper-how-to-write-fast-numerical-code.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

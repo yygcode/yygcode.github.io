@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-04-21 Sat 07:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
@@ -14,34 +14,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
-</script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -60,26 +32,36 @@
 <ul>
 <li><a href="#buddyinfo">3.1. proc/buddyinfo</a></li>
 <li><a href="#org622e0c6">3.2. proc/cgroups</a></li>
-<li><a href="#org6006b3a">3.3. proc/consoles</a></li>
-<li><a href="#org5edc631">3.4. proc/cpuinfo</a></li>
-<li><a href="#orgb4150db">3.5. proc/crypto</a></li>
-<li><a href="#orgb5458a8">3.6. proc/devices</a></li>
-<li><a href="#orgdeab8b9">3.7. proc/diskstats</a></li>
-<li><a href="#org9c7cf0e">3.8. proc/dma</a></li>
-<li><a href="#org5512de8">3.9. proc/execdomains</a></li>
-<li><a href="#org514fc33">3.10. proc/fb</a></li>
-<li><a href="#orgba92b80">3.11. proc/filesystems</a></li>
-<li><a href="#org5696bbd">3.12. proc/fs</a></li>
-<li><a href="#orgb2cb08a">3.13. proc/interrups</a></li>
-<li><a href="#org5833bca">3.14. proc/&lt;pid&gt;</a>
+<li><a href="#org418929f">3.3. proc/cmdline</a></li>
+<li><a href="#org6006b3a">3.4. proc/consoles</a></li>
+<li><a href="#org5edc631">3.5. proc/cpuinfo</a></li>
+<li><a href="#orgb4150db">3.6. proc/crypto</a></li>
+<li><a href="#orgb5458a8">3.7. proc/devices</a></li>
+<li><a href="#orgdeab8b9">3.8. proc/diskstats</a></li>
+<li><a href="#org9c7cf0e">3.9. proc/dma</a></li>
+<li><a href="#org5512de8">3.10. proc/execdomains</a></li>
+<li><a href="#org514fc33">3.11. proc/fb</a></li>
+<li><a href="#orgba92b80">3.12. proc/filesystems</a></li>
+<li><a href="#org5696bbd">3.13. proc/fs</a></li>
+<li><a href="#orgb2cb08a">3.14. proc/interrups</a></li>
+<li><a href="#iomem">3.15. iomem</a></li>
+<li><a href="#org931015b">3.16. proc/ioports</a></li>
+<li><a href="#orgfca19bc">3.17. proc/kallsyms</a></li>
+<li><a href="#orgc83a10a">3.18. proc/meminfo</a></li>
+<li><a href="#org5833bca">3.19. proc/&lt;pid&gt;</a>
 <ul>
-<li><a href="#org7880f0c">3.14.1. proc/&lt;pid&gt;/oom_adj</a></li>
-<li><a href="#orgca662c6">3.14.2. proc/&lt;pid&gt;/oom_score</a></li>
-<li><a href="#org7fbb3fb">3.14.3. proc/&lt;pid&gt;/oom_score_adj</a></li>
+<li><a href="#org7880f0c">3.19.1. proc/&lt;pid&gt;/oom_adj</a></li>
+<li><a href="#orgca662c6">3.19.2. proc/&lt;pid&gt;/oom_score</a></li>
+<li><a href="#org7fbb3fb">3.19.3. proc/&lt;pid&gt;/oom_score_adj</a></li>
+<li><a href="#org68bbdd0">3.19.4. proc/&lt;pid&gt;/stack</a></li>
+<li><a href="#org4775e62">3.19.5. proc/&lt;pid&gt;/stat</a></li>
+<li><a href="#org747e7ee">3.19.6. proc/&lt;pid&gt;/statm</a></li>
+<li><a href="#org43cc10c">3.19.7. proc/&lt;pid&gt;/status</a></li>
+<li><a href="#orgcd86cc6">3.19.8. proc/&lt;pid&gt;/syscall</a></li>
 </ul>
 </li>
-<li><a href="#orgdb8fb5e">3.15. proc/self</a></li>
-<li><a href="#orge9762eb">3.16. oom_score</a></li>
+<li><a href="#orgdb8fb5e">3.20. proc/self</a></li>
+<li><a href="#orge9762eb">3.21. oom_score</a></li>
 </ul>
 </li>
 <li><a href="#orgbe5dfea">4. 内核实现</a></li>
@@ -153,7 +135,7 @@ Node 0, zone   Normal    143    100     14     14      5      1      3      2   
 <h3 id="org622e0c6"><span class="section-number-3">3.2</span> proc/cgroups</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行资源限制和监控。通过伪文件系统cgroupfs提供交互接口。\(man 7 cgroups\)获取详细信息。
+cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行资源限制和监控。通过伪文件系统cgroupfs提供交互接口。<a href="http://man7.org/linux/man-pages/man7/cgroups.7.html">man 7 cgroups</a>获取详细信息。
 </p>
 
 <p>
@@ -186,12 +168,291 @@ cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行�
 <span class="org-function-name">fs_initcall</span>(proc_cmdline_init);
 </pre>
 </div>
+
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/cgroups
+<span class="org-comment-delimiter">#</span><span class="org-comment">subsys_name    hierarchy       num_cgroups     enabled</span>
+cpuset  2       1       1
+cpu     3       1       1
+cpuacct 3       1       1
+memory  0       1       0
+devices 4       76      1
+freezer 5       1       1
+net_cls 6       1       1
+blkio   7       1       1
+perf_event      8       1       1
+net_prio        6       1       1
+</pre>
+</div>
+
+<p>
+<a href="http://man7.org/linux/man-pages/man7/cgroups.7.html">Man7</a>信息截取：
+</p>
+<blockquote>
+<p>
+Control cgroups, usually referred to as cgroups, are a Linux kernel
+feature which allow processes to be organized into hierarchical
+groups whose usage of various types of resources can then be limited
+and monitored.  The kernel's cgroup interface is provided through a
+pseudo-filesystem called cgroupfs.  Grouping is implemented in the
+core cgroup kernel code, while resource tracking and limits are
+implemented in a set of per-resource-type subsystems (memory, CPU,
+and so on).
+</p>
+
+<p>
+Terminology
+    A cgroup is a collection of processes that are bound to a set of
+    limits or parameters defined via the cgroup filesystem.
+</p>
+
+<p>
+A subsystem is a kernel component that modifies the behavior of the
+processes in a cgroup.  Various subsystems have been implemented,
+making it possible to do things such as limiting the amount of CPU
+time and memory available to a cgroup, accounting for the CPU time
+used by a cgroup, and freezing and resuming execution of the
+processes in a cgroup.  Subsystems are sometimes also known as
+resource controllers (or simply, controllers).
+</p>
+
+<p>
+The cgroups for a controller are arranged in a hierarchy.  This
+hierarchy is defined by creating, removing, and renaming
+subdirectories within the cgroup filesystem.  At each level of the
+hierarchy, attributes (e.g., limits) can be defined.  The limits,
+control, and accounting provided by cgroups generally have effect
+throughout the subhierarchy underneath the cgroup where the
+attributes are defined.  Thus, for example, the limits placed on a
+cgroup at a higher level in the hierarchy cannot be exceeded by
+descendant cgroups.
+</p>
+
+<p>
+Cgroups version 1 controllers
+    Each of the cgroups version 1 controllers is governed by a kernel
+    configuration option (listed below).  Additionally, the availability
+    of the cgroups feature is governed by the CONFIG_CGROUPS kernel con‐
+    figuration option.
+</p>
+
+<p>
+cpu (since Linux 2.6.24; CONFIG_CGROUP_SCHED)
+       Cgroups can be guaranteed a minimum number of "CPU shares"
+       when a system is busy.  This does not limit a cgroup's CPU
+       usage if the CPUs are not busy.  For further information, see
+       Documentation/scheduler/sched-design-CFS.txt.
+</p>
+
+<p>
+In Linux 3.2, this controller was extended to provide CPU
+"bandwidth" control.  If the kernel is configured with CON‐
+FIG_CFS_BANDWIDTH, then within each scheduling period (defined
+via a file in the cgroup directory), it is possible to define
+an upper limit on the CPU time allocated to the processes in a
+cgroup.  This upper limit applies even if there is no other
+competition for the CPU.  Further information can be found in
+the kernel source file Documentation/scheduler/sched-bwc.txt.
+</p>
+
+<p>
+cpuacct (since Linux 2.6.24; CONFIG_CGROUP_CPUACCT)
+       This provides accounting for CPU usage by groups of processes.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/cpuacct.txt.
+</p>
+
+<p>
+cpuset (since Linux 2.6.24; CONFIG_CPUSETS)
+       This cgroup can be used to bind the processes in a cgroup to a
+       specified set of CPUs and NUMA nodes.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/cpusets.txt.
+</p>
+
+<p>
+memory (since Linux 2.6.25; CONFIG_MEMCG)
+       The memory controller supports reporting and limiting of
+       process memory, kernel memory, and swap used by cgroups.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/memory.txt.
+</p>
+
+<p>
+devices (since Linux 2.6.26; CONFIG_CGROUP_DEVICE)
+       This supports controlling which processes may create (mknod)
+       devices as well as open them for reading or writing.  The
+       policies may be specified as whitelists and blacklists.  Hier‐
+       archy is enforced, so new rules must not violate existing
+       rules for the target or ancestor cgroups.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/devices.txt.
+</p>
+
+<p>
+freezer (since Linux 2.6.28; CONFIG_CGROUP_FREEZER)
+       The freezer cgroup can suspend and restore (resume) all pro‐
+       cesses in a cgroup.  Freezing a cgroup /A also causes its
+       children, for example, processes in /A/B, to be frozen.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/freezer-subsystem.txt.
+</p>
+
+<p>
+net_cls (since Linux 2.6.29; CONFIG_CGROUP_NET_CLASSID)
+       This places a classid, specified for the cgroup, on network
+       packets created by a cgroup.  These classids can then be used
+       in firewall rules, as well as used to shape traffic using
+       tc(8).  This applies only to packets leaving the cgroup, not
+       to traffic arriving at the cgroup.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/net_cls.txt.
+</p>
+
+<p>
+blkio (since Linux 2.6.33; CONFIG_BLK_CGROUP)
+       The blkio cgroup controls and limits access to specified block
+       devices by applying IO control in the form of throttling and
+       upper limits against leaf nodes and intermediate nodes in the
+       storage hierarchy.
+</p>
+
+<p>
+Two policies are available.  The first is a proportional-
+weight time-based division of disk implemented with CFQ.  This
+is in effect for leaf nodes using CFQ.  The second is a throt‐
+tling policy which specifies upper I/O rate limits on a
+device.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/blkio-controller.txt.
+</p>
+
+<p>
+perf_event (since Linux 2.6.39; CONFIG_CGROUP_PERF)
+       This controller allows perf monitoring of the set of processes
+       grouped in a cgroup.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+tools/perf/Documentation/perf-record.txt.
+</p>
+
+<p>
+net_prio (since Linux 3.3; CONFIG_CGROUP_NET_PRIO)
+       This allows priorities to be specified, per network interface,
+       for cgroups.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/net_prio.txt.
+</p>
+
+<p>
+hugetlb (since Linux 3.5; CONFIG_CGROUP_HUGETLB)
+       This supports limiting the use of huge pages by cgroups.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/hugetlb.txt.
+</p>
+
+<p>
+pids (since Linux 4.3; CONFIG_CGROUP_PIDS)
+       This controller permits limiting the number of process that
+       may be created in a cgroup (and its descendants).
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/pids.txt.
+</p>
+
+<p>
+rdma (since Linux 4.11; CONFIG_CGROUP_RDMA)
+       The RDMA controller permits limiting the use of RDMA/IB-spe‐
+       cific resources per cgroup.
+</p>
+
+<p>
+Further information can be found in the kernel source file
+Documentation/cgroup-v1/rdma.txt.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org418929f" class="outline-3">
+<h3 id="org418929f"><span class="section-number-3">3.3</span> proc/cmdline</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Linux系统引导参数：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/cmdline
+<span class="org-variable-name">BOOT_IMAGE</span>=/vmlinuz-3.16.0-4-amd64 <span class="org-variable-name">root</span>=<span class="org-variable-name">UUID</span>=62c7ce2d-be7b-43d1-b9e1-6002ee63577d ro quiet
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/cmdline.c">fs/proc/cmdline.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">cmdline_proc_show</span>(<span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span>, <span class="org-type">void</span> *<span class="org-variable-name">v</span>)
+{
+        seq_printf(m, <span class="org-string">"%s\n"</span>, saved_command_line);
+        <span class="org-keyword">return</span> 0;
+}
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">cmdline_proc_open</span>(<span class="org-keyword">struct</span> <span class="org-type">inode</span> *<span class="org-variable-name">inode</span>, <span class="org-keyword">struct</span> <span class="org-type">file</span> *<span class="org-variable-name">file</span>)
+{
+        <span class="org-keyword">return</span> single_open(file, cmdline_proc_show, <span class="org-constant">NULL</span>);
+}
+
+<span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-keyword">struct</span> <span class="org-type">file_operations</span> <span class="org-variable-name">cmdline_proc_fops</span> = {
+        .open           = cmdline_proc_open,
+        .read           = seq_read,
+        .llseek         = seq_lseek,
+        .release        = single_release,
+};
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">__init</span> proc_cmdline_init(<span class="org-type">void</span>)
+{
+        proc_create(<span class="org-string">"cmdline"</span>, 0, <span class="org-constant">NULL</span>, &amp;cmdline_proc_fops);
+        <span class="org-keyword">return</span> 0;
+}
+<span class="org-function-name">fs_initcall</span>(proc_cmdline_init);
+</pre>
+</div>
 </div>
 </div>
 
 <div id="outline-container-org6006b3a" class="outline-3">
-<h3 id="org6006b3a"><span class="section-number-3">3.3</span> proc/consoles</h3>
-<div class="outline-text-3" id="text-3-3">
+<h3 id="org6006b3a"><span class="section-number-3">3.4</span> proc/consoles</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 consoles显示系统中所有可见的console信息。
 </p>
@@ -231,8 +492,8 @@ consoles显示系统中所有可见的console信息。
 </div>
 
 <div id="outline-container-org5edc631" class="outline-3">
-<h3 id="org5edc631"><span class="section-number-3">3.4</span> proc/cpuinfo</h3>
-<div class="outline-text-3" id="text-3-4">
+<h3 id="org5edc631"><span class="section-number-3">3.5</span> proc/cpuinfo</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 cpuinfo显示CPU相关信息：
 </p>
@@ -307,8 +568,8 @@ stepping        : 3
 </div>
 
 <div id="outline-container-orgb4150db" class="outline-3">
-<h3 id="orgb4150db"><span class="section-number-3">3.5</span> proc/crypto</h3>
-<div class="outline-text-3" id="text-3-5">
+<h3 id="orgb4150db"><span class="section-number-3">3.6</span> proc/crypto</h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 crypto显示系统支持的密码算法。部分内容示例如下：
 </p>
@@ -376,8 +637,8 @@ digestsize   : 20
 </div>
 
 <div id="outline-container-orgb5458a8" class="outline-3">
-<h3 id="orgb5458a8"><span class="section-number-3">3.6</span> proc/devices</h3>
-<div class="outline-text-3" id="text-3-6">
+<h3 id="orgb5458a8"><span class="section-number-3">3.7</span> proc/devices</h3>
+<div class="outline-text-3" id="text-3-7">
 <p>
 devices显示字符设备和块设备主设备号。如下：
 </p>
@@ -506,8 +767,8 @@ Block devices:
 </div>
 
 <div id="outline-container-orgdeab8b9" class="outline-3">
-<h3 id="orgdeab8b9"><span class="section-number-3">3.7</span> proc/diskstats</h3>
-<div class="outline-text-3" id="text-3-7">
+<h3 id="orgdeab8b9"><span class="section-number-3">3.8</span> proc/diskstats</h3>
+<div class="outline-text-3" id="text-3-8">
 <p>
 diskstats显示disk统计信息。如下是示例，输出内容解析参考<a href="https://elixir.bootlin.com/linux/v4.15.4/source/Documentation/iostats.txt">Documentation/iostats.txt</a>：
 </p>
@@ -680,8 +941,8 @@ Field 11 &#x2013; weighted # of milliseconds spent doing I/Os<br />
 </div>
 
 <div id="outline-container-org9c7cf0e" class="outline-3">
-<h3 id="org9c7cf0e"><span class="section-number-3">3.8</span> proc/dma</h3>
-<div class="outline-text-3" id="text-3-8">
+<h3 id="org9c7cf0e"><span class="section-number-3">3.9</span> proc/dma</h3>
+<div class="outline-text-3" id="text-3-9">
 <p>
 This is a list of the registered ISA DMA (direct memory access) channels in use.
 </p>
@@ -741,8 +1002,8 @@ This is a list of the registered ISA DMA (direct memory access) channels in use.
 </div>
 
 <div id="outline-container-org5512de8" class="outline-3">
-<h3 id="org5512de8"><span class="section-number-3">3.9</span> proc/execdomains</h3>
-<div class="outline-text-3" id="text-3-9">
+<h3 id="org5512de8"><span class="section-number-3">3.10</span> proc/execdomains</h3>
+<div class="outline-text-3" id="text-3-10">
 <p>
 execdomains显示当前支持的可执行文件domains(ABI)。当前总是显示Linux [kernel]：
 </p>
@@ -798,8 +1059,8 @@ execdomains显示当前支持的可执行文件domains(ABI)。当前总是显示
 </div>
 
 <div id="outline-container-org514fc33" class="outline-3">
-<h3 id="org514fc33"><span class="section-number-3">3.10</span> proc/fb</h3>
-<div class="outline-text-3" id="text-3-10">
+<h3 id="org514fc33"><span class="section-number-3">3.11</span> proc/fb</h3>
+<div class="outline-text-3" id="text-3-11">
 <p>
 fb(frame buffer)显示当前系统fb信息：
 </p>
@@ -848,8 +1109,8 @@ fb(frame buffer)显示当前系统fb信息：
 </div>
 
 <div id="outline-container-orgba92b80" class="outline-3">
-<h3 id="orgba92b80"><span class="section-number-3">3.11</span> proc/filesystems</h3>
-<div class="outline-text-3" id="text-3-11">
+<h3 id="orgba92b80"><span class="section-number-3">3.12</span> proc/filesystems</h3>
+<div class="outline-text-3" id="text-3-12">
 <p>
 filesystems列举当前支持的文件系统类型：
 </p>
@@ -930,8 +1191,8 @@ nodev   fusectl
 </div>
 
 <div id="outline-container-org5696bbd" class="outline-3">
-<h3 id="org5696bbd"><span class="section-number-3">3.12</span> proc/fs</h3>
-<div class="outline-text-3" id="text-3-12">
+<h3 id="org5696bbd"><span class="section-number-3">3.13</span> proc/fs</h3>
+<div class="outline-text-3" id="text-3-13">
 <p>
 fs目录下包含子目录，每个子目录是一种当前正在使用的文件系统名称（比如ext4），每个文件系统子目录下二级子目录是每个挂载的块设备（比如sda2），其下文件是其属性。
 </p>
@@ -1039,8 +1300,8 @@ proc/fs是由<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/ro
 </div>
 
 <div id="outline-container-orgb2cb08a" class="outline-3">
-<h3 id="orgb2cb08a"><span class="section-number-3">3.13</span> proc/interrups</h3>
-<div class="outline-text-3" id="text-3-13">
+<h3 id="orgb2cb08a"><span class="section-number-3">3.14</span> proc/interrups</h3>
+<div class="outline-text-3" id="text-3-14">
 <p>
 interrupts显示每CPU每设备的中断数，此文件信息可用来分析中断是否均衡：
 </p>
@@ -1198,13 +1459,361 @@ PIW:          0          0          0          0   Posted-interrupt wakeup event
 </div>
 </div>
 
+<div id="outline-container-org6646b6f" class="outline-3">
+<h3 id="iomem"><a id="org6646b6f"></a><span class="section-number-3">3.15</span> iomem</h3>
+<div class="outline-text-3" id="text-iomem">
+<p>
+I/O内存映射表。包括预留、BIOS、显卡、内存、PCI地址空间等。部分PCIe地址空间因安全原因，BIOS不暴露给OS，此时显示为reserved。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/iomem
+00000000-00000fff : reserved
+00001000-0009d7ff : System RAM
+0009d800-0009ffff : reserved
+000a0000-000bffff : PCI Bus 0000:00
+000c0000-000c7fff : Video ROM
+000c8000-000cbfff : pnp 00:00
+000cc000-000cffff : pnp 00:00
+000d0000-000d3fff : pnp 00:00
+000d4000-000d7fff : pnp 00:00
+000d8000-000dbfff : pnp 00:00
+000dc000-000dffff : pnp 00:00
+000e0000-000fffff : reserved
+  000f0000-000fffff : System ROM
+00100000-1fffffff : System RAM
+  01000000-01519c00 : Kernel code
+  01519c01-018ecdff : Kernel data
+  01a21000-01af2fff : Kernel bss
+20000000-201fffff : reserved
+20200000-40003fff : System RAM
+40004000-40004fff : reserved
+40005000-cdba6fff : System RAM
+cdba7000-dae9efff : reserved
+dae9f000-daf9efff : ACPI Non-volatile Storage
+daf9f000-daffefff : ACPI Tables
+dafff000-df9fffff : reserved
+  dba00000-df9fffff : Graphics Stolen Memory
+dfa00000-febfffff : PCI Bus 0000:00
+  e0000000-efffffff : 0000:00:02.0
+  f0000000-f03fffff : 0000:00:02.0
+  f0400000-f0bfffff : PCI Bus 0000:02
+  f0c00000-f13fffff : PCI Bus 0000:04
+  f1400000-f1bfffff : PCI Bus 0000:04
+  f1c00000-f1cfffff : PCI Bus 0000:03
+    f1c00000-f1c01fff : 0000:03:00.0
+      f1c00000-f1c01fff : iwlwifi
+  f1d00000-f24fffff : PCI Bus 0000:02
+    f1d00000-f1d000ff : 0000:02:00.0
+      f1d00000-f1d000ff : mmc0
+  f2500000-f251ffff : 0000:00:19.0
+    f2500000-f251ffff : e1000e
+  f2520000-f252ffff : 0000:00:14.0
+    f2520000-f252ffff : xhci_hcd
+  f2530000-f2533fff : 0000:00:1b.0
+    f2530000-f2533fff : ICH HD audio
+  f2534000-f25340ff : 0000:00:1f.3
+  f2535000-f253500f : 0000:00:16.0
+    f2535000-f253500f : mei_me
+  f2538000-f25387ff : 0000:00:1f.2
+    f2538000-f25387ff : ahci
+  f2539000-f25393ff : 0000:00:1d.0
+    f2539000-f25393ff : ehci_hcd
+  f253a000-f253a3ff : 0000:00:1a.0
+    f253a000-f253a3ff : ehci_hcd
+  f253b000-f253bfff : 0000:00:19.0
+    f253b000-f253bfff : e1000e
+  f253c000-f253cfff : 0000:00:16.3
+  f8000000-fbffffff : PCI MMCONFIG 0000 [bus 00-3f]
+    f8000000-fbffffff : reserved
+      f8000000-fbffffff : pnp 00:01
+fec00000-fec00fff : reserved
+  fec00000-fec003ff : IOAPIC 0
+fed00000-fed003ff : HPET 0
+  fed00000-fed003ff : PNP0103:00
+fed08000-fed08fff : reserved
+fed10000-fed19fff : reserved
+  fed10000-fed17fff : pnp 00:01
+  fed18000-fed18fff : pnp 00:01
+  fed19000-fed19fff : pnp 00:01
+fed1c000-fed1ffff : reserved
+  fed1c000-fed1ffff : pnp 00:01
+    fed1f410-fed1f414 : iTCO_wdt
+      fed1f410-fed1f414 : iTCO_wdt
+fed40000-fed4bfff : PCI Bus 0000:00
+  fed45000-fed4bfff : pnp 00:01
+fed90000-fed90fff : dmar0
+fed91000-fed91fff : dmar1
+fee00000-fee00fff : Local APIC
+  fee00000-fee00fff : reserved
+ffc00000-ffffffff : reserved
+  fffff000-ffffffff : pnp 00:01
+100000000-41e5fffff : System RAM
+41e600000-41effffff : reserved
+41f000000-41fffffff : RAM buffer
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/kernel/resource.c">kernel/resource.c</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#ifdef</span> CONFIG_PROC_FS
+
+<span class="org-keyword">enum</span> { <span class="org-variable-name">MAX_IORES_LEVEL</span> = 5 };
+
+<span class="org-keyword">static</span> <span class="org-type">void</span> *<span class="org-function-name">r_start</span>(<span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span>, <span class="org-type">loff_t</span> *<span class="org-variable-name">pos</span>)
+        <span class="org-function-name">__acquires</span>(resource_lock)
+{
+        <span class="org-keyword">struct</span> <span class="org-type">resource</span> *<span class="org-variable-name">p</span> = m-&gt;private;
+        <span class="org-type">loff_t</span> <span class="org-variable-name">l</span> = 0;
+        read_lock(&amp;resource_lock);
+        <span class="org-keyword">for</span> (p = p-&gt;child; p &amp;&amp; l &lt; *pos; p = r_next(m, p, &amp;l))
+                ;
+        <span class="org-keyword">return</span> p;
+}
+
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">r_stop</span>(<span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span>, <span class="org-type">void</span> *<span class="org-variable-name">v</span>)
+        <span class="org-function-name">__releases</span>(resource_lock)
+{
+        read_unlock(&amp;resource_lock);
+}
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">r_show</span>(<span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span>, <span class="org-type">void</span> *<span class="org-variable-name">v</span>)
+{
+        <span class="org-keyword">struct</span> <span class="org-type">resource</span> *<span class="org-variable-name">root</span> = m-&gt;private;
+        <span class="org-keyword">struct</span> <span class="org-type">resource</span> *<span class="org-variable-name">r</span> = v, *<span class="org-variable-name">p</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+        <span class="org-type">int</span> <span class="org-variable-name">width</span> = root-&gt;end &lt; 0x10000 ? 4 : 8;
+        <span class="org-type">int</span> <span class="org-variable-name">depth</span>;
+
+        <span class="org-keyword">for</span> (depth = 0, p = r; depth &lt; MAX_IORES_LEVEL; depth++, p = p-&gt;parent)
+                <span class="org-keyword">if</span> (p-&gt;parent == root)
+                        <span class="org-keyword">break</span>;
+
+        <span class="org-keyword">if</span> (file_ns_capable(m-&gt;file, &amp;init_user_ns, CAP_SYS_ADMIN)) {
+                start = r-&gt;start;
+                end = r-&gt;end;
+        } <span class="org-keyword">else</span> {
+                start = end = 0;
+        }
+
+        seq_printf(m, <span class="org-string">"%*s%0*llx-%0*llx : %s\n"</span>,
+                        <span class="org-type">depth</span> * 2, <span class="org-string">""</span>,
+                        width, start,
+                        width, end,
+                        r-&gt;name ? r-&gt;name : <span class="org-string">"&lt;BAD&gt;"</span>);
+        <span class="org-keyword">return</span> 0;
+}
+
+<span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-keyword">struct</span> <span class="org-type">seq_operations</span> <span class="org-variable-name">resource_op</span> = {
+        .start  = r_start,
+        .next   = r_next,
+        .stop   = r_stop,
+        .show   = r_show,
+};
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">ioports_open</span>(<span class="org-keyword">struct</span> <span class="org-type">inode</span> *<span class="org-variable-name">inode</span>, <span class="org-keyword">struct</span> <span class="org-type">file</span> *<span class="org-variable-name">file</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">res</span> = seq_open(file, &amp;resource_op);
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>res) {
+                <span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span> = file-&gt;private_data;
+                m-&gt;private = &amp;ioport_resource;
+        }
+        <span class="org-keyword">return</span> res;
+}
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">iomem_open</span>(<span class="org-keyword">struct</span> <span class="org-type">inode</span> *<span class="org-variable-name">inode</span>, <span class="org-keyword">struct</span> <span class="org-type">file</span> *<span class="org-variable-name">file</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">res</span> = seq_open(file, &amp;resource_op);
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>res) {
+                <span class="org-keyword">struct</span> <span class="org-type">seq_file</span> *<span class="org-variable-name">m</span> = file-&gt;private_data;
+                m-&gt;private = &amp;iomem_resource;
+        }
+        <span class="org-keyword">return</span> res;
+}
+
+<span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-keyword">struct</span> <span class="org-type">file_operations</span> <span class="org-variable-name">proc_ioports_operations</span> = {
+        .open           = ioports_open,
+        .read           = seq_read,
+        .llseek         = seq_lseek,
+        .release        = seq_release,
+};
+
+<span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-keyword">struct</span> <span class="org-type">file_operations</span> <span class="org-variable-name">proc_iomem_operations</span> = {
+        .open           = iomem_open,
+        .read           = seq_read,
+        .llseek         = seq_lseek,
+        .release        = seq_release,
+};
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">__init</span> ioresources_init(<span class="org-type">void</span>)
+{
+        proc_create(<span class="org-string">"ioports"</span>, 0, <span class="org-constant">NULL</span>, &amp;proc_ioports_operations);
+        proc_create(<span class="org-string">"iomem"</span>, 0, <span class="org-constant">NULL</span>, &amp;proc_iomem_operations);
+        <span class="org-keyword">return</span> 0;
+}
+<span class="org-function-name">__initcall</span>(ioresources_init);
+
+<span class="org-preprocessor">#endif</span> <span class="org-comment-delimiter">/* </span><span class="org-comment">CONFIG_PROC_FS </span><span class="org-comment-delimiter">*/</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org931015b" class="outline-3">
+<h3 id="org931015b"><span class="section-number-3">3.16</span> proc/ioports</h3>
+<div class="outline-text-3" id="text-3-16">
+<p>
+注册的IO端口区间，用inb、outb访问：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/ioports
+0000-0cf7 : PCI Bus 0000:00
+  0000-001f : dma1
+  0020-0021 : pic1
+  0040-0043 : timer0
+  0050-0053 : timer1
+  0060-0060 : keyboard
+  0061-0061 : PNP0800:00
+  0062-0062 : PNP0C09:00
+    0062-0062 : EC data
+  0064-0064 : keyboard
+  0066-0066 : PNP0C09:00
+    0066-0066 : EC cmd
+  0070-0071 : rtc0
+  0080-008f : dma page reg
+  00a0-00a1 : pic2
+  00c0-00df : dma2
+  00f0-00ff : fpu
+    00f0-00f0 : PNP0C04:00
+  03c0-03df : vga+
+  0400-0403 : ACPI PM1a_EVT_BLK
+  0404-0405 : ACPI PM1a_CNT_BLK
+  0408-040b : ACPI PM_TMR
+  0410-0415 : ACPI CPU throttle
+  0420-042f : ACPI GPE0_BLK
+  0430-0433 : iTCO_wdt
+    0430-0433 : iTCO_wdt
+  0450-0450 : ACPI PM2_CNT_BLK
+  0460-047f : iTCO_wdt
+    0460-047f : iTCO_wdt
+  0500-057f : pnp 00:01
+  0800-080f : pnp 00:01
+0cf8-0cff : PCI conf1
+0d00-ffff : PCI Bus 0000:00
+  15e0-15ef : pnp 00:01
+  1600-167f : pnp 00:01
+  3000-3fff : PCI Bus 0000:04
+  4000-4fff : PCI Bus 0000:02
+  5000-503f : 0000:00:02.0
+  5060-507f : 0000:00:1f.2
+    5060-507f : ahci
+  5080-509f : 0000:00:19.0
+  50a0-50a7 : 0000:00:1f.2
+    50a0-50a7 : ahci
+  50a8-50af : 0000:00:1f.2
+    50a8-50af : ahci
+  50b0-50b7 : 0000:00:16.3
+    50b0-50b7 : serial
+  50b8-50bb : 0000:00:1f.2
+    50b8-50bb : ahci
+  50bc-50bf : 0000:00:1f.2
+    50bc-50bf : ahci
+  efa0-efbf : 0000:00:1f.3
+    efa0-efbf : i801_smbus
+</pre>
+</div>
+
+<p>
+内核代码<a href="https://elixir.bootlin.com/linux/v4.15.4/source/kernel/resource.c">kernel/resource.c</a>，参见<a href="#iomem">iomem代码</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfca19bc" class="outline-3">
+<h3 id="orgfca19bc"><span class="section-number-3">3.17</span> proc/kallsyms</h3>
+<div class="outline-text-3" id="text-3-17">
+<p>
+内核导出的符号定义，供module(X)工具链接和绑定使用：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/kallsyms
+0000000000000000 A irq_stack_union
+0000000000000000 A __per_cpu_start
+ffffffff810002b8 T _stext
+ffffffff81001000 T hypercall_page
+ffffffff81001000 T xen_hypercall_set_trap_table
+ffffffff81001020 T xen_hypercall_mmu_update
+ffffffff81001040 T xen_hypercall_set_gdt
+ffffffff81001060 T xen_hypercall_stack_switch
+ffffffff81001080 T xen_hypercall_set_callbacks
+ffffffff810010a0 T xen_hypercall_fpu_taskswitch
+ffffffff810010c0 T xen_hypercall_sched_op_compat
+ffffffff810010e0 T xen_hypercall_platform_op
+ffffffff81001100 T xen_hypercall_set_debugreg
+ffffffff81001120 T xen_hypercall_get_debugreg
+ffffffff81001140 T xen_hypercall_update_descriptor
+ffffffff81001160 T xen_hypercall_ni
+ffffffff81001180 T xen_hypercall_memory_op
+...
+ffffffff8113fb60 T find_get_entries
+ffffffff8113fc90 T find_get_pages
+ffffffff8113fdd0 T mempool_kfree
+ffffffff8113fde0 T mempool_alloc_slab
+ffffffff8113fe00 T mempool_free_slab
+ffffffff8113fe20 T mempool_alloc_pages
+ffffffff8113fe30 T mempool_free_pages
+ffffffff8113fe40 t remove_element.isra.1
+ffffffff8113fe60 T mempool_destroy
+ffffffff8113fec0 T mempool_alloc
+ffffffff81140010 t add_element
+ffffffff81140030 T mempool_free
+ffffffff811400c0 T mempool_create_node
+ffffffff81140200 T mempool_create
+ffffffff81140220 T mempool_resize
+ffffffff811403c0 T mempool_kmalloc
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc83a10a" class="outline-3">
+<h3 id="orgc83a10a"><span class="section-number-3">3.18</span> proc/meminfo</h3>
+<div class="outline-text-3" id="text-3-18">
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/meminfo
+MemTotal:       16145220 kB
+MemFree:        14074612 kB
+MemAvailable:   14689140 kB
+Buffers:           88384 kB
+Cached:           878512 kB
+SwapCached:            0 kB
+Active:          1272364 kB
+Inactive:         597024 kB
+<span class="org-function-name">Active</span>(anon):     903844 kB
+<span class="org-function-name">Inactive</span>(anon):   217676 kB
+<span class="org-function-name">Active</span>(file):     368520 kB
+<span class="org-function-name">Inactive</span>(file):   379348 kB
+Unevictable:         120 kB
+Mlocked:             120 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               100 kB
+Writeback:             0 kB
+AnonPages:        902604 kB
+...
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org5833bca" class="outline-3">
-<h3 id="org5833bca"><span class="section-number-3">3.14</span> proc/&lt;pid&gt;</h3>
-<div class="outline-text-3" id="text-3-14">
+<h3 id="org5833bca"><span class="section-number-3">3.19</span> proc/&lt;pid&gt;</h3>
+<div class="outline-text-3" id="text-3-19">
 </div>
 <div id="outline-container-org7880f0c" class="outline-4">
-<h4 id="org7880f0c"><span class="section-number-4">3.14.1</span> proc/&lt;pid&gt;/oom_adj</h4>
-<div class="outline-text-4" id="text-3-14-1">
+<h4 id="org7880f0c"><span class="section-number-4">3.19.1</span> proc/&lt;pid&gt;/oom_adj</h4>
+<div class="outline-text-4" id="text-3-19-1">
 <p>
 调整进程OOM-killing亲和度。有效范围[-17, +15]。-17是特殊值，禁止OOM-Killing。数值越大，OOM时被选中的可能性越大。默认为0，需要CAP_SYS_RESOURCE权限修改此值。2.6.36之后版本不建议使用此方式，请使用/proc/&lt;pid&gt;/oom_score_adj代替。
 </p>
@@ -1212,8 +1821,8 @@ PIW:          0          0          0          0   Posted-interrupt wakeup event
 </div>
 
 <div id="outline-container-orgca662c6" class="outline-4">
-<h4 id="orgca662c6"><span class="section-number-4">3.14.2</span> proc/&lt;pid&gt;/oom_score</h4>
-<div class="outline-text-4" id="text-3-14-2">
+<h4 id="orgca662c6"><span class="section-number-4">3.19.2</span> proc/&lt;pid&gt;/oom_score</h4>
+<div class="outline-text-4" id="text-3-19-2">
 <p>
 查看当前进程OOM-killer分值。分数越高越容易被OOM-Killer选中。基本分值与进程占用内存相关，且随着fork数量、CPU占用、nice、privileged、是否直接存取硬件调整：
 </p>
@@ -1240,8 +1849,8 @@ process.
 </div>
 
 <div id="outline-container-org7fbb3fb" class="outline-4">
-<h4 id="org7fbb3fb"><span class="section-number-4">3.14.3</span> proc/&lt;pid&gt;/oom_score_adj</h4>
-<div class="outline-text-4" id="text-3-14-3">
+<h4 id="org7fbb3fb"><span class="section-number-4">3.19.3</span> proc/&lt;pid&gt;/oom_score_adj</h4>
+<div class="outline-text-4" id="text-3-19-3">
 <p>
 调整OOM-killer选择该进程的坏值。数值范围[-1000, +1000]。-1000表示禁止被选中。重要的常驻程序可以设置-1000禁止进程被OOM-killer选中杀死：
 </p>
@@ -1285,11 +1894,688 @@ disable oom success
 </pre>
 </div>
 </div>
+
+<div id="outline-container-org68bbdd0" class="outline-4">
+<h4 id="org68bbdd0"><span class="section-number-4">3.19.4</span> proc/&lt;pid&gt;/stack</h4>
+<div class="outline-text-4" id="text-3-19-4">
+<p>
+进程内核态栈调用符号跟踪。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/self/stack
+[&lt;ffffffff810695d9&gt;] do_wait+0x1d9/0x230
+[&lt;ffffffff8106a637&gt;] SyS_wait4+0x67/0xe0
+[&lt;ffffffff81068430&gt;] child_wait_callback+0x0/0x60
+[&lt;ffffffff81514a0d&gt;] system_call_fast_compare_end+0x10/0x15
+[&lt;ffffffffffffffff&gt;] 0xffffffffffffffff
+
+~$ cat /proc/self/stack
+[&lt;ffffffff81021bae&gt;] save_stack_trace_tsk+0x1e/0x40
+[&lt;ffffffff81208ebd&gt;] proc_pid_stack+0x8d/0xe0
+[&lt;ffffffff81209ac7&gt;] proc_single_show+0x47/0x80
+[&lt;ffffffff811ca132&gt;] seq_read+0xe2/0x360
+[&lt;ffffffff811a8723&gt;] vfs_read+0x93/0x170
+[&lt;ffffffff811a9352&gt;] SyS_read+0x42/0xa0
+[&lt;ffffffff81516a28&gt;] page_fault+0x28/0x30
+[&lt;ffffffff81514a0d&gt;] system_call_fast_compare_end+0x10/0x15
+[&lt;ffffffffffffffff&gt;] 0xffffffffffffffff
+
+~$ sudo cat /proc/1/stack
+[&lt;ffffffff811e8730&gt;] ep_send_events_proc+0x0/0x1b0
+[&lt;ffffffff811e9079&gt;] ep_scan_ready_list.isra.7+0x199/0x1c0
+[&lt;ffffffff811e931a&gt;] ep_poll+0x25a/0x340
+[&lt;ffffffff810970a0&gt;] default_wake_function+0x0/0x10
+[&lt;ffffffff811ea7a4&gt;] SyS_epoll_wait+0xb4/0xe0
+[&lt;ffffffff81514a0d&gt;] system_call_fast_compare_end+0x10/0x15
+[&lt;ffffffffffffffff&gt;] 0xffffffffffffffff
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4775e62" class="outline-4">
+<h4 id="org4775e62"><span class="section-number-4">3.19.5</span> proc/&lt;pid&gt;/stat</h4>
+<div class="outline-text-4" id="text-3-19-5">
+<p>
+进程状态信息，ps使用此处信息，对应代码<a href="https://elixir.bootlin.com/linux/v4.15.14/source/fs/proc/array.c">kernel/fs/proc/array.c</a>，截取部分意义代码：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * The task state array is a strange "bitmap" of</span>
+<span class="org-comment"> * reasons to sleep. Thus "running" is zero, and</span>
+<span class="org-comment"> * you can test for combinations of others with</span>
+<span class="org-comment"> * simple bit tests.</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-type">char</span> * <span class="org-keyword">const</span> <span class="org-variable-name">task_state_array</span>[] = {
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">states in TASK_REPORT: </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"R (running)"</span>,          <span class="org-comment-delimiter">/* </span><span class="org-comment">0x00 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"S (sleeping)"</span>,         <span class="org-comment-delimiter">/* </span><span class="org-comment">0x01 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"D (disk sleep)"</span>,       <span class="org-comment-delimiter">/* </span><span class="org-comment">0x02 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"T (stopped)"</span>,          <span class="org-comment-delimiter">/* </span><span class="org-comment">0x04 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"t (tracing stop)"</span>,     <span class="org-comment-delimiter">/* </span><span class="org-comment">0x08 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"X (dead)"</span>,             <span class="org-comment-delimiter">/* </span><span class="org-comment">0x10 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"Z (zombie)"</span>,           <span class="org-comment-delimiter">/* </span><span class="org-comment">0x20 </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"P (parked)"</span>,           <span class="org-comment-delimiter">/* </span><span class="org-comment">0x40 </span><span class="org-comment-delimiter">*/</span>
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">states beyond TASK_REPORT: </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-string">"I (idle)"</span>,             <span class="org-comment-delimiter">/* </span><span class="org-comment">0x80 </span><span class="org-comment-delimiter">*/</span>
+};
+</pre>
+</div>
+
+<p>
+Man页有各细节描述：
+</p>
+<blockquote>
+<p>
+~$ cat /proc/self/stat
+1897 (bash) S 1892 1897 1897 34817 6762 4202496 76561 174332 1 115 113 36 134 64 20 0 1 0 3871 31305728 1893 18446744073709551615 4194304 5184116 140734690585584 140734690584264 140388838861628 0 65536 3670020 1266777851 0 0 0 17 2 0 0 2 0 0 7282144 7319112 11919360 140734690589286 140734690589292 140734690589292 140734690590702 0
+</p>
+
+<p>
+<i>proc</i>[pid]/stat
+       Status  information  about the process.  This is used by ps(1).  It
+       is defined in the kernel source file fs/proc/array.c.
+</p>
+
+<p>
+The fields, in order, with their proper scanf(3) format specifiers,
+are:
+</p>
+
+<p>
+(1) pid  %d
+	  The process ID.
+</p>
+
+<p>
+(2) comm  %s
+	  The  filename of the executable, in parentheses.  This is
+	  visible whether or not the executable is swapped out.
+</p>
+
+<p>
+(3) state  %c
+	  One  of  the  following  characters,  indicating  process
+	  state:
+</p>
+
+<p>
+R  Running
+</p>
+
+<p>
+S  Sleeping in an interruptible wait
+</p>
+
+<p>
+D  Waiting in uninterruptible disk sleep
+</p>
+
+<p>
+Z  Zombie
+</p>
+
+<p>
+T  Stopped  (on  a signal) or (before Linux 2.6.33) trace
+   stopped
+</p>
+
+<p>
+t  Tracing stop (Linux 2.6.33 onward)
+</p>
+
+<p>
+W  Paging (only before Linux 2.6.0)
+</p>
+
+<p>
+X  Dead (from Linux 2.6.0 onward)
+</p>
+
+<p>
+x  Dead (Linux 2.6.33 to 3.13 only)
+</p>
+
+<p>
+K  Wakekill (Linux 2.6.33 to 3.13 only)
+</p>
+
+<p>
+W  Waking (Linux 2.6.33 to 3.13 only)
+</p>
+
+<p>
+P  Parked (Linux 3.9 to 3.13 only)
+</p>
+
+
+<p>
+(4) ppid  %d
+	  The PID of the parent of this process.
+</p>
+
+<p>
+(5) pgrp  %d
+	  The process group ID of the process.
+</p>
+
+<p>
+(6) session  %d
+	  The session ID of the process.
+</p>
+
+<p>
+(7) tty_nr  %d
+	  The controlling terminal  of  the  process.   (The  minor
+	  device  number is contained in the combination of bits 31
+	  to 20 and 7 to 0; the major device number is in  bits  15
+	  to 8.)
+</p>
+
+<p>
+(8) tpgid  %d
+	  The ID of the foreground process group of the controlling
+	  terminal of the process.
+</p>
+
+<p>
+(9) flags  %u
+	  The kernel flags word of the process.  For bit  meanings,
+	  see  the  PF_*  defines  in  the Linux kernel source file
+	  include/linux/sched.h.  Details depend on the kernel ver‐
+	  sion.
+</p>
+
+<p>
+The format for this field was %lu before Linux 2.6.
+</p>
+
+<p>
+(1) minflt  %lu
+	  The  number  of  minor  faults the process has made which
+	  have not required loading a memory page from disk.
+</p>
+
+<p>
+(11) cminflt  %lu
+	  The number of minor faults that the process's  waited-for
+	  children have made.
+</p>
+
+<p>
+(12) majflt  %lu
+	  The  number  of  major  faults the process has made which
+	  have required loading a memory page from disk.
+</p>
+
+<p>
+(13) cmajflt  %lu
+	  The number of major faults that the process's  waited-for
+	  children have made.
+</p>
+
+<p>
+(14) utime  %lu
+	  Amount  of  time  that this process has been scheduled in
+	  user  mode,  measured   in   clock   ticks   (divide   by
+	  sysconf(_SC_CLK_TCK)).    This   includes   guest   time,
+	  guest_time (time spent running a virtual CPU, see below),
+	  so that applications that are not aware of the guest time
+	  field do not lose that time from their calculations.
+</p>
+
+<p>
+(15) stime  %lu
+	  Amount of time that this process has  been  scheduled  in
+	  kernel   mode,   measured   in  clock  ticks  (divide  by
+	  sysconf(_SC_CLK_TCK)).
+</p>
+
+<p>
+(16) cutime  %ld
+	  Amount of time that this  process's  waited-for  children
+	  have been scheduled in user mode, measured in clock ticks
+	  (divide by sysconf(_SC_CLK_TCK)).  (See  also  times(2).)
+	  This includes guest time, cguest_time (time spent running
+	  a virtual CPU, see below).
+</p>
+
+<p>
+(17) cstime  %ld
+	  Amount of time that this  process's  waited-for  children
+	  have  been  scheduled  in  kernel mode, measured in clock
+	  ticks (divide by sysconf(_SC_CLK_TCK)).
+</p>
+
+
+<p>
+(18) priority  %ld
+	  (Explanation for Linux 2.6) For processes running a real-
+	  time scheduling policy (policy below; see sched_setsched‐
+	  uler(2)), this is the negated scheduling priority,  minus
+	  one;  that  is,  a number in the range -2 to -100, corre‐
+	  sponding to real-time priorities 1 to 99.  For  processes
+	  running  under a non-real-time scheduling policy, this is
+	  the raw nice value (setpriority(2)) as represented in the
+	  kernel.   The kernel stores nice values as numbers in the
+	  range 0 (high) to 39 (low), corresponding  to  the  user-
+	  visible nice range of -20 to 19.
+</p>
+
+<p>
+Before  Linux  2.6,  this was a scaled value based on the
+scheduler weighting given to this process.
+</p>
+
+<p>
+(19) nice  %ld
+	  The nice value (see setpriority(2)), a value in the range
+	  19 (low priority) to -20 (high priority).
+</p>
+
+<p>
+(20) num_threads  %ld
+	  Number  of  threads  in  this  process (since Linux 2.6).
+	  Before kernel 2.6, this field was hard coded to  0  as  a
+	  placeholder for an earlier removed field.
+</p>
+
+<p>
+(21) itrealvalue  %ld
+	  The  time  in  jiffies before the next SIGALRM is sent to
+	  the process due  to  an  interval  timer.   Since  kernel
+	  2.6.17,  this  field is no longer maintained, and is hard
+	  coded as 0.
+</p>
+
+<p>
+(22) starttime  %llu
+	  The time the process started after system boot.  In  ker‐
+	  nels  before  Linux  2.6,  this  value  was  expressed in
+	  jiffies.  Since Linux 2.6,  the  value  is  expressed  in
+	  clock ticks (divide by sysconf(_SC_CLK_TCK)).
+</p>
+
+<p>
+The format for this field was %lu before Linux 2.6.
+</p>
+
+<p>
+(23) vsize  %lu
+	  Virtual memory size in bytes.
+</p>
+
+<p>
+(24) rss  %ld
+	  Resident  Set  Size:  number  of pages the process has in
+	  real memory.  This is just the pages which  count  toward
+	  text,  data, or stack space.  This does not include pages
+	  which have  not  been  demand-loaded  in,  or  which  are
+	  swapped out.
+</p>
+
+<p>
+(25) rsslim  %lu
+	  Current  soft  limit  in bytes on the rss of the process;
+	  see the description of RLIMIT_RSS in getrlimit(2).
+</p>
+
+<p>
+(26) startcode  %lu
+	  The address above which program text can run.
+</p>
+
+<p>
+(27) endcode  %lu
+	  The address below which program text can run.
+</p>
+
+<p>
+(28) startstack  %lu
+	  The address of the start (i.e., bottom) of the stack.
+</p>
+
+<p>
+(29) kstkesp  %lu
+	  The current value of ESP (stack pointer), as found in the
+	  kernel stack page for the process.
+</p>
+
+<p>
+(30) kstkeip  %lu
+	  The current EIP (instruction pointer).
+</p>
+
+<p>
+(31) signal  %lu
+	  The  bitmap  of  pending  signals, displayed as a decimal
+	  number.  Obsolete, because it does not  provide  informa‐
+	  tion   on   real-time   signals;  use  <i>proc</i>[pid]/status
+	  instead.
+</p>
+
+<p>
+(32) blocked  %lu
+	  The bitmap of blocked signals,  displayed  as  a  decimal
+	  number.   Obsolete,  because it does not provide informa‐
+	  tion  on  real-time   signals;   use   <i>proc</i>[pid]/status
+	  instead.
+</p>
+
+<p>
+(33) sigignore  %lu
+	  The  bitmap  of  ignored  signals, displayed as a decimal
+	  number.  Obsolete, because it does not  provide  informa‐
+	  tion   on   real-time   signals;  use  <i>proc</i>[pid]/status
+	  instead.
+</p>
+
+<p>
+(34) sigcatch  %lu
+	  The bitmap of caught signals, displayed as a decimal num‐
+	  ber.   Obsolete,  because it does not provide information
+	  on real-time signals; use <i>proc</i>[pid]/status instead.
+</p>
+
+<p>
+(35) wchan  %lu
+	  This is the "channel" in which the  process  is  waiting.
+	  It  is  the address of a location in the kernel where the
+	  process is sleeping.  The corresponding symbolic name can
+	  be found in <i>proc</i>[pid]/wchan.
+</p>
+
+<p>
+(36) nswap  %lu
+	  Number of pages swapped (not maintained).
+</p>
+
+<p>
+(37) cnswap  %lu
+	  Cumulative nswap for child processes (not maintained).
+</p>
+
+<p>
+(38) exit_signal  %d  (since Linux 2.1.22)
+	  Signal to be sent to parent when we die.
+</p>
+
+<p>
+(39) processor  %d  (since Linux 2.2.8)
+	  CPU number last executed on.
+</p>
+
+<p>
+(40) rt_priority  %u  (since Linux 2.5.19)
+	  Real-time scheduling priority, a number in the range 1 to
+	  99 for processes scheduled under a real-time  policy,  or
+	  0,   for  non-real-time  processes  (see  sched_setsched‐
+	  uler(2)).
+</p>
+
+<p>
+(41) policy  %u  (since Linux 2.5.19)
+	  Scheduling policy  (see  sched_setscheduler(2)).   Decode
+	  using the SCHED_* constants in linux/sched.h.
+</p>
+
+<p>
+The format for this field was %lu before Linux 2.6.22.
+</p>
+
+<p>
+(42) delayacct_blkio_ticks  %llu  (since Linux 2.6.18)
+	  Aggregated  block  I/O  delays,  measured  in clock ticks
+	  (centiseconds).
+</p>
+
+<p>
+(43) guest_time  %lu  (since Linux 2.6.24)
+	  Guest time of the process (time spent running  a  virtual
+	  CPU  for  a  guest  operating  system), measured in clock
+	  ticks (divide by sysconf(_SC_CLK_TCK)).
+</p>
+
+<p>
+(44) cguest_time  %ld  (since Linux 2.6.24)
+	  Guest time of the process's children, measured  in  clock
+	  ticks (divide by sysconf(_SC_CLK_TCK)).
+</p>
+
+<p>
+(45) start_data  %lu  (since Linux 3.3)
+	  Address above which program initialized and uninitialized
+	  (BSS) data are placed.
+</p>
+
+<p>
+(46) end_data  %lu  (since Linux 3.3)
+	  Address below which program initialized and uninitialized
+	  (BSS) data are placed.
+</p>
+
+<p>
+(47) start_brk  %lu  (since Linux 3.3)
+	  Address  above  which  program  heap can be expanded with
+	  brk(2).
+</p>
+
+<p>
+(48) arg_start  %lu  (since Linux 3.5)
+	  Address above which program command-line arguments (argv)
+	  are placed.
+</p>
+
+<p>
+(49) arg_end  %lu  (since Linux 3.5)
+	  Address  below  program command-line arguments (argv) are
+	  placed.
+</p>
+
+<p>
+(50) env_start  %lu  (since Linux 3.5)
+	  Address above which program environment is placed.
+</p>
+
+<p>
+(51) env_end  %lu  (since Linux 3.5)
+	  Address below which program environment is placed.
+</p>
+
+<p>
+(52) exit_code  %d  (since Linux 3.5)
+	  The thread's exit status in the form  reported  by  wait‐
+	  pid(2).
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org747e7ee" class="outline-4">
+<h4 id="org747e7ee"><span class="section-number-4">3.19.6</span> proc/&lt;pid&gt;/statm</h4>
+<div class="outline-text-4" id="text-3-19-6">
+<p>
+进程内存使用评估，以Page为单位。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat statm
+7643 1893 850 242 0 1040 0
+</pre>
+</div>
+
+<blockquote>
+<p>
+<i>proc</i>[pid]/statm
+       Provides  information  about  memory usage, measured in pages.  The
+       columns are:
+</p>
+
+<p>
+size       (1) total program size
+	   (same as VmSize in <i>proc</i>[pid]/status)
+resident   (2) resident set size
+	   (same as VmRSS in <i>proc</i>[pid]/status)
+share      (3) shared pages (i.e., backed by a file)
+text       (4) text (code)
+lib        (5) library (unused in Linux 2.6)
+data       (6) data + stack
+dt         (7) dirty pages (unused in Linux 2.6)
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org43cc10c" class="outline-4">
+<h4 id="org43cc10c"><span class="section-number-4">3.19.7</span> proc/&lt;pid&gt;/status</h4>
+<div class="outline-text-4" id="text-3-19-7">
+<p>
+可读方式提供更多进程信息：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/self/status
+Name:   cat
+State:  R (running)
+Tgid:   6955
+Ngid:   0
+Pid:    6955
+PPid:   1897
+TracerPid:      0
+Uid:    1000    1000    1000    1000
+Gid:    1000    1000    1000    1000
+FDSize: 256
+Groups: 24 25 29 30 44 46 108 110 113 118 1000
+VmPeak:    11012 kB
+VmSize:    11012 kB
+VmLck:         0 kB
+VmPin:         0 kB
+VmHWM:       712 kB
+VmRSS:       712 kB
+VmData:      324 kB
+VmStk:       136 kB
+VmExe:        48 kB
+VmLib:      1796 kB
+VmPTE:        40 kB
+VmSwap:        0 kB
+Threads:        1
+SigQ:   0/63000
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000000000
+SigIgn: 0000000000000000
+SigCgt: 0000000000000000
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: 0000003fffffffff
+Seccomp:        0
+Cpus_allowed:   ff
+Cpus_allowed_list:      0-7
+Mems_allowed:   00000000,00000001
+Mems_allowed_list:      0
+voluntary_ctxt_switches:        0
+nonvoluntary_ctxt_switches:     1
+</pre>
+</div>
+
+<blockquote>
+<ul class="org-ul">
+<li>Name: Command run by this process.</li>
+
+<li>State: Current state of the process.  One of  "R  (running)",  "S
+(sleeping)", "D (disk sleep)", "T (stopped)", "T (tracing stop)",
+"Z (zombie)", or "X (dead)".</li>
+
+<li>Tgid: Thread group ID (i.e., Process ID).</li>
+
+<li>Pid: Thread ID (see gettid(2)).</li>
+
+<li>PPid: PID of parent process.</li>
+
+<li>TracerPid: PID of process tracing this process (0  if  not  being
+traced).</li>
+
+<li>Uid, Gid: Real, effective, saved set, and filesystem UIDs (GIDs).</li>
+
+<li>FDSize: Number of file descriptor slots currently allocated.</li>
+
+<li>Groups: Supplementary group list.</li>
+
+<li>VmPeak: Peak virtual memory size.</li>
+
+<li>VmSize: Virtual memory size.</li>
+
+<li>VmLck: Locked memory size (see mlock(3)).</li>
+
+<li>VmHWM: Peak resident set size ("high water mark").</li>
+
+<li>VmRSS: Resident set size.</li>
+
+<li>VmData, VmStk, VmExe: Size of data, stack, and text segments.</li>
+
+<li>VmLib: Shared library code size.</li>
+
+<li>VmPTE: Page table entries size (since Linux 2.6.10).</li>
+
+<li>Threads: Number of threads in process containing this thread.</li>
+
+<li>SigQ: This field contains two slash-separated numbers that relate
+to queued signals for the real user  ID  of  this  process.   The
+first of these is the number of currently queued signals for this
+real user ID, and the second is the resource limit on the  number
+of  queued  signals  for  this  process  (see  the description of
+RLIMIT_SIGPENDING in getrlimit(2)).</li>
+
+<li>SigPnd, ShdPnd: Number of signals  pending  for  thread  and  for
+process as a whole (see pthreads(7) and signal(7)).</li>
+
+<li>SigBlk,  SigIgn,  SigCgt: Masks indicating signals being blocked,
+ignored, and caught (see signal(7)).</li>
+
+<li>CapInh, CapPrm, CapEff: Masks of capabilities enabled in  inheri‐
+table, permitted, and effective sets (see capabilities(7)).</li>
+
+<li>CapBnd: Capability Bounding set (since Linux 2.6.26, see capabil‐
+ities(7)).</li>
+
+<li>Cpus_allowed: Mask of CPUs on which this process may  run  (since
+Linux 2.6.24, see cpuset(7)).</li>
+
+<li>Cpus_allowed_list:  Same as previous, but in "list format" (since
+Linux 2.6.26, see cpuset(7)).</li>
+
+<li>Mems_allowed: Mask of memory nodes allowed to this process (since
+Linux 2.6.24, see cpuset(7)).</li>
+
+<li>Mems_allowed_list:  Same as previous, but in "list format" (since
+Linux 2.6.26, see cpuset(7)).</li>
+
+<li>voluntary_ctxt_switches,  nonvoluntary_ctxt_switches:  Number  of
+voluntary and involuntary context switches (since Linux 2.6.23).</li>
+</ul>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgcd86cc6" class="outline-4">
+<h4 id="orgcd86cc6"><span class="section-number-4">3.19.8</span> proc/&lt;pid&gt;/syscall</h4>
+<div class="outline-text-4" id="text-3-19-8">
+<p>
+进程最近系统调用的信息。第一列为调用号，其后是stack地址、ecx，和6个通用寄存器信息。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ cat /proc/self/syscall
+0 0x3 0x7f065d1ad000 0x20000 0x7ffcb1120dd0 0xffffffff 0x0 0x7ffcb1120f70 0x7f065cce0ba0
+</pre>
+</div>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgdb8fb5e" class="outline-3">
-<h3 id="orgdb8fb5e"><span class="section-number-3">3.15</span> proc/self</h3>
-<div class="outline-text-3" id="text-3-15">
+<h3 id="orgdb8fb5e"><span class="section-number-3">3.20</span> proc/self</h3>
+<div class="outline-text-3" id="text-3-20">
 <p>
 proc/self是一个符号链接，总是指向执行进程本身(/proc/&lt;pid&gt;)。
 </p>
@@ -1303,8 +2589,8 @@ lrwxrwxrwx 1 root root 0 Dec 20 18:47 /proc/self -&gt; 2289
 </div>
 
 <div id="outline-container-orge9762eb" class="outline-3">
-<h3 id="orge9762eb"><span class="section-number-3">3.16</span> oom_score</h3>
-<div class="outline-text-3" id="text-3-16">
+<h3 id="orge9762eb"><span class="section-number-3">3.21</span> oom_score</h3>
+<div class="outline-text-3" id="text-3-21">
 <div class="org-src-container">
 <pre class="src src-C">
 </pre>

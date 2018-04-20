@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-04-21 Sat 07:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Inspur G2 CLI</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Inspur G2 CLI</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org08eb91e">1. catauditlog</a>
+<ul>
+<li><a href="#org744b1c0">1.1. help</a></li>
+<li><a href="#orgfaf3a81">1.2. example</a></li>
+</ul>
+</li>
+<li><a href="#org5604967">2. lssystem</a></li>
+<li><a href="#orgb92d5c1">3. mtinq</a>
+<ul>
+<li><a href="#org9b17d63">3.1. lsservicenodes</a></li>
+<li><a href="#orgb5b1622">3.2. lsservicestatus</a></li>
+</ul>
+</li>
+<li><a href="#org4be8179">4. Misc</a>
+<ul>
+<li><a href="#org219e93c">4.1. Show all candidates</a></li>
+<li><a href="#org0537a54">4.2. mtinq candidates</a></li>
+<li><a href="#orgd4d4d64">4.3. mtop candidates</a></li>
+<li><a href="#org2eee262">4.4. mcsinq candidates</a></li>
+<li><a href="#org9a16975">4.5. mcsop candidates</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org08eb91e" class="outline-2">
+<h2 id="org08eb91e"><span class="section-number-2">1</span> catauditlog</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org744b1c0" class="outline-3">
+<h3 id="org744b1c0"><span class="section-number-3">1.1</span> help</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-sh">~$ help catauditlog
+
+Description
+
+This command lists a specified number of the most recently audited
+commands.
+
+Use this command to display the in-memory audit log. Use the
+dumpauditlog command to manually dump the contents of the in-memory
+audit log to a file on the current configuration node and clear the
+contents of the in-memory audit log
+
+The in-memory portion of the audit log holds approximately 1 MB of audit
+information. Depending on the command text size and the number of
+parameters, this equals 1 MB records or approximately 6000 commands.
+
+Once the in-memory audit log reaches maximum capacity, the log is
+written to a local file on the configuration node<span class="org-keyword"> in</span> the /dumps/audit
+directory. The catauditlog command only displays the in-memory part of
+the audit log; the on-disk part of the audit log is<span class="org-keyword"> in</span> readable text
+format and does not require any special command to decode it.
+
+The in-memory log entries are reset and cleared automatically, ready to
+accumulate new commands. The on-disk portion of the audit log can then
+be analyzed at a later date.
+
+The lsdumps command with -prefix parameter (and the /dumps/audit file)
+can be used to list the files on the disk.
+
+As commands are executed, they are recorded<span class="org-keyword"> in</span> the in-memory audit log.
+When the in-memory audit log becomes full, it is automatically dumped to
+an audit log file and the in-memory audit log is cleared.
+
+
+
+
+
+
+
+An invocation example
+
+This example lists the five most recent audit log entries.
+
+catauditlog -delim : -first 5
+
+The resulting output:
+
+audit_seq_no timestamp    cluster_user challenge  source_panel target_panel ssh_ip_address result res_obj_id action_cmd
+0            160313152255 superuser               7830619-2    7830619-2                   0      0          mtop restartservice -service tomcat
+1            160313152303 superuser               01-2         01-1         9.174.187.11   0      0          mtop chnodeled -on 01-1
+2            160313152312 superuser               01-1         01-2         9.174.187.11   0      0          mtop chnodeled -on 01-2
+3            160313152314 superuser               01-1         01-1         9.174.187.11   0      0          mtop chnodeled -on
+4            160313152316 superuser                                         9.174.187.11   0      0          mcsop chenclosure -managed yes 1
+5            160313152349 superuser                                         9.174.187.11   0      0          mcsop mkmdiskgrp -ext 256
+6            160313152352 superuser                                         9.174.187.11   0      0          mcsop mkarray -level raid5 -drive 3:4:5 0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfaf3a81" class="outline-3">
+<h3 id="orgfaf3a81"><span class="section-number-3">1.2</span> example</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;catauditlog
+audit_seq_no timestamp    cluster_user challenge source_panel target_panel ssh_ip_address result res_obj_id action_cmd
+0            180321160329 superuser                                        10.165.20.17   0                 mcsop chsystem -name C95
+1            180321160335 superuser                                        10.165.20.17   0                 mcsop chsystem -ntpip 0.0.0.0
+2            180321160335 superuser                                        10.165.20.17   0                 mcsop settimezone -timezone 248
+3            180321160336 superuser                                        10.165.20.17   0                 mcsop chsystem -invemailinterval 7
+4            180321160336 superuser                                        10.165.20.17   0                 mcsop chemail -address 1 -city 1 -contact 1 -country CN -location 1 -organization 1 -primary 111111 -reply 1@1.com -state XX -zip 11111
+5            180321160336 superuser                                        10.165.20.17   0                 mcsop chsystem -easysetup no
+6            180321160337 superuser                                        10.165.20.17   0      0          mcsop mkdnsserver -ip 10.150.1.11 -name DNS0
+7            180321160338 superuser                                        10.165.20.17   0                 mcsop chenclosure -managed yes 1
+8            180321160748 superuser                                        10.165.20.17   0                 mcsop activatefeature -trial 1
+9            180321162442 superuser                                        10.165.20.17   0                 mcsop mkfcpartnership -backgroundcopyrate 50 -gui -linkbandwidthmbits 8000 C90
+10           180321164043 superuser                                        10.165.20.17   0      0          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name Pool0 -warning 80%
+11           180321164059 superuser                                        10.165.20.17   0      0          mcsop mkarray -drive 1:2:6:0:5 -gui -level raid6 -sparegoal 0 -strip 256 Pool0
+12           180321164128 superuser                                        10.165.20.17   0      0          mcsop mkvdisk -gui -mdiskgrp 0 -name mengxw-01 -size 107374182400 -unit b
+13           180321164142 superuser                                        10.165.20.17   0      1          mcsop mkvdisk -autoexpand -gui -iogrp io_grp0 -mdiskgrp Pool0 -name mengxw-01_01 -rsize 0% -size 107374182400 -unit b
+14           180321164142 superuser                                        10.165.20.17   0      0          mcsop mklcmap -cleanrate 0 -copyrate 0 -gui -source mengxw-01 -target mengxw-01_01
+15           180321164142 superuser                                        10.165.20.17   0                 mcsop startlcmap -gui -prep 0
+16           180321164337 superuser                                        10.200.36.37   0                 mcsop rmpartnership -gui 000000003FE27034
+17           180321180239 superuser                                        10.200.36.37   0      2          mcsop mkvdisk -gui -mdiskgrp 0 -name yizz0 -size 10737418240 -unit b
+18           180321180239 superuser                                        10.200.36.37   0      3          mcsop mkvdisk -gui -mdiskgrp 0 -name yizz1 -size 10737418240 -unit b
+19           180321180303 superuser                                        10.200.36.37   0      2          mcsop mkrcrelationship -aux yizz1 -cluster C95 -gui -master yizz0
+20           180321180305 superuser                                        10.200.36.37   0                 mcsop startrcrelationship -force -gui 2
+21           180321181257 superuser                                        10.72.134.197  0      0          mcsop mkrcconsistgrp -gui -name jmc_tg
+22           180321181413 superuser                                        10.72.134.197  0      4          mcsop mkvdisk -autoexpand -grainsize 256 -gui -mdiskgrp 0 -name jmc_tv1 -rsize 2% -size 1073741824 -unit b -warning 80%
+23           180321181445 superuser                                        10.72.134.197  0      5          mcsop mkvdisk -autoexpand -grainsize 256 -gui -mdiskgrp 0 -name jmc_tv2 -rsize 2% -size 1073741824 -unit b -warning 80%
+24           180321181519 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -aux jmc_tv2 -cluster C95 -gui -master jmc_tv1
+25           180321181522 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -consistgrp 0 -gui 4
+26           180321181636 superuser                                        10.72.134.197  0                 mcsop startrcconsistgrp -gui 0
+27           180321181912 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -gui -noconsistgrp 4
+28           180321182052 superuser                                        10.72.134.197  0                 mcsop rmrcconsistgrp -force -gui 0
+29           180321182116 superuser                                        10.72.134.197  0                 mcsop stoprcrelationship -access -gui 4
+30           180321182127 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship -force -gui 4
+31           180321182251 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -aux jmc_tv2 -cluster C95 -gui -master jmc_tv1
+32           180321182252 superuser                                        10.72.134.197  0                 mcsop startrcrelationship -force -gui 4
+33           180321182456 superuser                                        10.72.134.197  0      0          mcsop mkrcconsistgrp -gui -name jmc_tg
+34           180321182456 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -consistgrp jmc_tg -gui rcrel1
+35           180321182623 superuser                                        10.72.134.197  0      1          mcsop mkrcconsistgrp -gui -name jmc_tg2
+36           180321183049 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship -force -gui 4
+37           180321183209 superuser                                        10.72.134.197  0                 mcsop rmrcconsistgrp jmc_tg2
+38           180321183654 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -master jmc_tv1 -aux jmc_tv2 -cluster C95 -consistgrp jmc_tg -sync
+39           180321184221 superuser                                        10.72.134.197  0                 mcsop startrcconsistgrp jmc_tg
+40           180321184511 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship rcrel1
+41           180321184741 superuser                                        10.72.134.197  0                 mcsop rmrcconsistgrp jmc_tg
+42           180321185226 superuser                                        10.72.134.197  0      0          mcsop mkrcconsistgrp -name jmc_tg
+43           180321190019 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -master jmc_tv1 -aux jmc_tv2 -cluster C95 -async
+44           180321190152 superuser                                        10.72.134.197  0                 mcsop startrcrelationship rcrel1
+45           180321190911 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -consistgrp jmc_tg rcrel1
+46           180321191637 superuser                                        10.72.134.197  0                 mcsop stoprcconsistgrp -access jmc_tg
+47           180321193405 superuser                                        10.72.134.197  0                 mcsop startrcconsistgrp -primary master jmc_tg
+48           180321193522 superuser                                        10.72.134.197  0                 mcsop switchrcconsistgrp -primary aux jmc_tg
+49           180321193820 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship -force -gui 4
+50           180321193914 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -async -aux jmc_tv2 -cluster C95 -gui -master jmc_tv1
+51           180321193917 superuser                                        10.72.134.197  0      6          mcsop mkvdisk -autoexpand -grainsize 256 -gui -iogrp io_grp0 -mdiskgrp Pool0 -rsize 2% -size 1073741824 -unit b
+52           180321193917 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -gui -masterchange 6 4
+53           180321193918 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -cyclingmode multi -gui 4
+54           180321193918 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -consistgrp 0 -gui 4
+55           180321194032 superuser                                        10.72.134.197  0      7          mcsop mkvdisk -autoexpand -grainsize 256 -gui -iogrp io_grp0 -mdiskgrp Pool0 -rsize 2% -size 1073741824 -unit b
+56           180321194032 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -auxchange 7 -gui 4
+57           180321194041 superuser                                        10.72.134.197  0                 mcsop startrcconsistgrp -gui 0
+58           180321194612 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship -force -gui 4
+59           180321194939 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -async -aux jmc_tv2 -cluster C95 -gui -master jmc_tv1
+60           180321194940 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -consistgrp 0 -gui 4
+61           180321195009 superuser                                        10.72.134.197  0                 mcsop startrcconsistgrp -gui 0
+62           180321195021 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship -force -gui 4
+63           180321195046 superuser                                        10.72.134.197  0      4          mcsop mkrcrelationship -master jmc_tv1 -aux jmc_tv2 -cluster C95 -name C95 -consistgrp jmc_tg -async
+64           180321195256 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -gui -masterchange vdisk0 4
+65           180321195410 superuser                                        10.72.134.197  0                 mcsop chrcrelationship -auxchange vdisk1 -gui 4
+66           180321195535 superuser                                        10.72.134.197  0                 mcsop rmrcconsistgrp -force -gui 0
+67           180321195753 superuser                                        10.72.134.197  0                 mcsop rmrcrelationship C95
+68           180321195757 superuser                                        10.72.134.197  0                 mcsop rmvolume jmc_tv2
+69           180321195813 superuser                                        10.72.134.197  0                 mcsop rmvolume jmc_tv1
+70           180321195836 superuser                                        10.72.134.197  0                 mcsop rmvolume vdisk0
+71           180321195838 superuser                                        10.72.134.197  0                 mcsop rmvolume vdisk1
+72           180321201441 superuser                                        10.200.36.37   0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2004-12.com.inspur:mcs.c90.node1 -name node91 -type generic
+73           180321201501 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 2
+74           180321201701 superuser                                        10.200.36.37   0                 mcsop rmhost -force -gui 0
+75           180321202429 superuser                                        10.200.36.37   0      0          mcsop mkhost -fcwwpn 5005076803212011 -force -gui -iogrp 0:1:2:3 -name node91 -type generic
+76           180321202438 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 2
+77           180321202642 superuser                                        10.200.36.37   0      4          mcsop mkvdisk -gui -mdiskgrp 0 -name yizz2 -size 536870912000 -unit b
+78           180321202649 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 4
+79           180321202702 superuser                                        10.200.36.37   0      5          mcsop mkvdisk -gui -mdiskgrp 0 -name yizz3 -size 644245094400 -unit b
+80           180321202708 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 5
+81           180321202752 superuser                                        10.200.36.37   0      1          mcsop mkhost -fcwwpn 5005076803222011 -force -gui -iogrp 0:1:2:3 -name node91_2 -type generic
+82           180321202806 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 1 2
+83           180321202806 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 1 4
+84           180321202806 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 1 5
+85           180321203615 superuser              01-1         01-1         10.200.36.37   0                 mtop stopnode -reboot
+86           180322010003 admin                                            127.0.0.1      0                 mcsop detectmdisk
+87           180322091400 superuser                                        10.72.134.197  0      1          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name jmc_tp -warning 80%
+88           180322091713 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 1 2
+89           180322091713 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 0 2
+90           180322091714 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 1 4
+91           180322091714 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 0 4
+92           180322091714 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 0 5
+93           180322091715 superuser                                        10.200.36.37   0                 mcsop rmvdiskhostmap -gui -host 1 5
+94           180322091729 superuser                                        10.200.36.37   0                 mcsop rmvdisk -gui 4
+95           180322091729 superuser                                        10.200.36.37   0                 mcsop rmvdisk -gui 5
+96           180322091756 superuser                                        10.200.36.37   0      4          mcsop mkvdisk -cache readwrite -copies 2 -gui -mdiskgrp 0:0 -name yizz2 -nofmtdisk -size 214748364800 -syncrate 80 -unit b
+97           180322091818 superuser                                        10.200.36.37   0                 mcsop rmhost -gui 0
+98           180322091819 superuser                                        10.200.36.37   0                 mcsop rmhost -gui 1
+99           180322091852 superuser                                        10.200.36.37   0                 mcsop cfgportip -gui -gw 10.151.12.254 -ip 10.151.12.96 -mask 255.255.255.0 -node 1 1
+100          180322092040 superuser                                        10.200.36.37   0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2004-12.com.inspur:mcs.c90.node1 -name node91 -type generic
+101          180322092202 superuser                                        10.72.134.197  0                 mcsop rmmdiskgrp jmc_tp
+102          180322092241 superuser                                        10.200.36.37   0                 mcsop cfgportip -gui -node 1 -storage yes 1
+103          180322092535 superuser                                        10.72.134.197  0      1          mcsop mkmdiskgrp -unit mb -name jmc_tp -ext 1024 -warning 80% -intier auto
+104          180322093208 superuser                                        10.72.134.197  0                 mcsop chdrive -gui -use spare 4
+105          180322093213 superuser                                        10.72.134.197  0      1          mcsop mkarray -drive 7:3 -gui -level raid10 -sparegoal 1 -strip 256 jmc_tp
+106          180322094140 superuser                                        10.200.36.37   0      1          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2004-12.com.inspur:mcs.c90.node2 -name node92 -type generic
+107          180322094338 superuser                                        10.72.134.197  0                 mcsop rmarray -force -gui -mdisk 1 1
+108          180322094846 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 4
+109          180322094846 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 0 3
+110          180322095010 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 1 4
+111          180322095010 superuser                                        10.200.36.37   0                 mcsop mkvdiskhostmap -force -gui -host 1 3
+112          180322095142 superuser                                        10.72.134.197  0      1          mcsop mkarray -level raid10 -drive 3:7 -strip 256 -sparegoal 1 -name jmc_mdisk jmc_tp
+113          180322095917 superuser                                        10.72.134.197  0                 mcsop chmdiskgrp -unit mb -warning 85% jmc_tp
+114          180322101621 superuser                                        10.165.20.17   0                 mcsop cfgportip -gui -gw 10.151.12.98 -ip 10.151.12.97 -mask 255.255.255.0 -node 2 1
+115          180322101733 superuser                                        10.72.134.197  0                 mcsop rmmdisk -mdisk jmc_mdisk jmc_tp
+116          180322102815 superuser                                        10.72.134.197  0                 mcsop chdrive -use candidate 4
+117          180322103030 superuser                                        10.72.134.197  0      1          mcsop mkarray -level raid10 -drive 3:4 -strip 256 -sparegoal 1 -name jmc_tm jmc_tp
+118          180322103214 superuser                                        10.72.134.197  0                 mcsop chdrive -use spare 7
+119          180322105203 superuser                                        10.200.36.37   0      2          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name Pool1 -warning 80%
+120          180322110737 superuser                                        10.72.134.197  0                 mcsop rmarray -mdisk jmc_tm jmc_tp
+121          180322111122 superuser                                        10.72.134.197  0      1          mcsop mkarray -drive 4:3 -gui -level raid10 -sparegoal 1 -strip 256 jmc_tp
+122          180322141610 superuser                                        10.72.134.197  0      5          mcsop mkvdisk -autoexpand -grainsize 256 -gui -iogrp 0 -mdiskgrp 1 -name jmc_tv -rsize 2% -size 2147483648 -unit b -warning 80%
+123          180322142837 superuser                                        10.72.134.197  0      6          mcsop mkvdisk -unit mb -mdiskgrp jmc_tp -iogrp io_grp0 -size 2048 -rsize 80% -fmtdisk -autoexpand -grainsize 256 -copies 1 -mdisk mdisk1 -name jmc_tv2 -cache readwrite -intier on
+124          180322145255 superuser                                        10.72.134.197  0      7          mcsop mkvdisk -unit mb -mdiskgrp jmc_tp -iogrp io_grp0 -size 2048 -fmtdisk -copies 1 -mdisk mdisk1 -name jmc_tv3 -cache readwrite -intier on
+125          180322145915 superuser                                        10.72.134.197  0                 mcsop mkvdiskhostmap -host 0 jmc_tv3
+126          180322150832 superuser                                        10.72.134.197  0                 mcsop movevdisk -iogrp io_grp0 -node node1 jmc_tv2
+127          180322151018 superuser                                        10.72.134.197  0                 mcsop movevdisk -iogrp io_grp0 -node node2 jmc_tv2
+128          180322153146 superuser                                        10.72.134.197  0                 mcsop rmvdisk -removehostmappings jmc_tv3
+129          180322155254 superuser                                        10.72.134.197  0                 mcsop shrinkvdisksize -size 512 -unit mb jmc_tv2
+130          180322155416 superuser                                        10.72.134.197  0                 mcsop rmvolume jmc_tv
+131          180322162437 superuser                                        10.165.20.17   0      5          mcsop mkvdisk -gui -iogrp io_grp0 -mdiskgrp Pool0 -name mengxw-01_02 -size 107374182400 -unit b
+132          180322162437 superuser                                        10.165.20.17   0      1          mcsop mklcmap -cleanrate 50 -copyrate 50 -gui -incremental -source mengxw-01 -target mengxw-01_02
+133          180322162437 superuser                                        10.165.20.17   0                 mcsop startlcmap -gui -prep 1
+134          180322181826 superuser                                        10.165.18.213  0      2          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:71dbb8b89b844f1fb28df09bc7df5d5d -name node85 -type generic
+135          180322181853 superuser                                        10.165.18.213  0      3          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:0266ec1e0aa64b28961020f85fe243f6 -name node84 -type generic
+136          180322181928 superuser                                        10.165.18.213  0      4          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:ca77e092e0a5411b9bc481c54cc91a45 -name node83 -type generic
+137          180322182712 superuser                                        10.165.18.213  0                 mcsop rmhost -force -gui 0
+138          180322182723 superuser                                        10.165.18.213  0                 mcsop rmhost -force -gui 1
+139          180322183454 superuser                                        10.165.18.213  0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.1991-05.com.microsoft:zuoqiang01.home.langchao.com -name zq -type generic
+140          180322183514 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 0 0
+141          180323010003 admin                                            127.0.0.1      0                 mcsop detectmdisk
+180          180323030125 superuser              6577501-1    6577501-1    10.165.20.17   0                 mtop chvpd --reset
+181          180323030335 superuser              6577501-1    6577501-1    10.165.20.17   0                 mtop leavecluster -force 6577501-1
+182          180323030603 superuser              6577501-1    6577501-1    10.165.20.17   0                 mtop chvpd --reset
+142          180323084740 superuser                                        10.72.134.197  0      1          mcsop mklcconsistgrp -name jmc_tg
+143          180323085507 superuser                                        10.72.134.197  0      7          mcsop mkvdisk -mdiskgrp jmc_tp -iogrp io_grp0 -size 2 -rsize 80% -fmtdisk -autoexpand -warning 80% -grainsize 256 -node node2 -unit gb -mdisk mdisk1 -name jmc_tv -cache readwrite
+144          180323085616 superuser                                        10.72.134.197  0      8          mcsop mkvdisk -mdiskgrp jmc_tp -iogrp io_grp0 -size 2 -rsize 80% -fmtdisk -autoexpand -warning 80% -grainsize 256 -node node2 -unit gb -mdisk mdisk1 -name jmc_tv1 -cache readwrite
+145          180323090534 superuser                                        10.72.134.197  0      2          mcsop mklcmap -source jmc_tv -target jmc_tv1 -name jmc_map -consistgrp jmc_tg
+146          180323092145 superuser                                        10.72.134.197  0      9          mcsop mkvdisk -autoexpand -grainsize 256 -gui -iogrp io_grp0 -mdiskgrp jmc_tp -name jmc_tv_01 -rsize 0% -size 2147483648 -unit b
+147          180323092145 superuser                                        10.72.134.197  0      3          mcsop mklcmap -cleanrate 0 -copyrate 0 -gui -source jmc_tv -target jmc_tv_01
+148          180323092145 superuser                                        10.72.134.197  0                 mcsop startlcmap -gui -prep 3
+149          180323092205 superuser                                        10.72.134.197  0                 mcsop stoplcmap -gui 3
+150          180323092216 superuser                                        10.72.134.197  0                 mcsop rmlcmap -force -gui 3
+151          180323092317 superuser                                        10.72.134.197  0                 mcsop rmlcmap jmc_map
+152          180323092412 superuser                                        10.72.134.197  0      10         mcsop mkvdisk -autoexpand -grainsize 256 -gui -iogrp io_grp0 -mdiskgrp jmc_tp -name jmc_tv_02 -rsize 0% -size 2147483648 -unit b
+153          180323092412 superuser                                        10.72.134.197  0      2          mcsop mklcmap -cleanrate 0 -copyrate 0 -gui -source jmc_tv -target jmc_tv_02
+154          180323092412 superuser                                        10.72.134.197  0                 mcsop startlcmap -gui -prep 2
+155          180323092445 superuser                                        10.72.134.197  0                 mcsop rmvdisk -force -gui 9
+156          180323092446 superuser                                        10.72.134.197  0                 mcsop rmvdisk -force -gui 10
+157          180323092845 superuser                                        10.72.134.197  0      2          mcsop mklcmap -source jmc_tv -target jmc_tv1 -name jmc_map -consistgrp jmc_tg -copyrate 30 -autodelete -grainsize 256 -cleanrate 50 -keeptarget
+158          180323093415 superuser                                        10.72.134.197  0                 mcsop prestartlcconsistgrp jmc_tg
+159          180323093549 superuser                                        10.72.134.197  0                 mcsop startlcconsistgrp jmc_tg
+160          180323095005 superuser                                        10.72.134.197  0      2          mcsop mklcmap -source jmc_tv -target jmc_tv1 -name jmc_map0
+161          180323095144 superuser                                        10.72.134.197  0                 mcsop prestartlcmap jmc_map0
+162          180323095149 superuser                                        10.72.134.197  0                 mcsop startlcmap jmc_map0
+163          180323095835 superuser                                        10.72.134.197  0                 mcsop chlcmap -consistgrp jmc_tg jmc_map0
+164          180323101016 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 167 -gui
+165          180323101023 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 166 -gui
+166          180323101030 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 165 -gui
+167          180323101037 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 164 -gui
+168          180323101051 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 112 -gui
+169          180323101140 superuser                                        10.165.18.213  0                 mcsop rmhost -force -gui 3
+170          180323101154 superuser                                        10.165.18.213  0                 mcsop rmhost -force -gui 4
+171          180323101222 superuser                                        10.165.18.213  0                 mcsop rmhost -gui 2
+172          180323101239 superuser                                        10.165.18.213  0                 mcsop rmhost -force -gui 0
+173          180323104247 superuser                                        10.165.20.17   0                 mcsop addcontrolenclosure -gui -iogrp 1 -sernum 6577501
+174          180323111439 superuser                                        10.165.18.213  0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:71dbb8b89b844f1fb28df09bc7df5d5d -name node85 -type generic
+175          180323111447 superuser                                        10.165.20.17   0                 mcsop rmnodecanister 3
+176          180323111450 superuser                                        10.165.20.17   0                 mcsop rmnodecanister 4
+177          180323111504 superuser                                        10.165.18.213  0      1          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:8153fa8880254968ac7a8a29a7bd4e34 -name node86 -type generic
+178          180323111528 superuser                                        10.165.18.213  0      2          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.2016-04.com.inspur.ics:03790dff49f44605898e9832e4cc119e -name node87 -type generic
+179          180323111701 superuser                                        10.165.20.17   0                 mcsop addcontrolenclosure -gui -iogrp 1 -sernum 6577501
+183          180323111935 superuser                                        10.165.20.17   0                 mcsop chenclosure -gui -managed yes 2
+184          180323112206 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 0 4
+185          180323112207 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 1 4
+186          180323112207 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 2 4
+187          180323112445 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 2 4
+188          180323112446 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 1 4
+189          180323112446 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 0 4
+190          180323112620 superuser                                        10.165.20.17   0      9          mcsop mkvdisk -gui -mdiskgrp 0 -name ICS_volume -size 536870912000 -unit b
+191          180323112638 superuser                                        10.165.20.17   0                 mcsop mkvdiskhostmap -force -gui -host 0 9
+192          180323112639 superuser                                        10.165.20.17   0                 mcsop mkvdiskhostmap -force -gui -host 1 9
+193          180323112639 superuser                                        10.165.20.17   0                 mcsop mkvdiskhostmap -force -gui -host 2 9
+194          180323112735 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 222 -gui
+195          180323112743 superuser                                        10.165.20.17   0                 mcsop cheventlog -fix 198 -gui
+196          180323140522 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 0 9
+197          180323140522 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 1 9
+198          180323140522 superuser                                        10.165.18.213  0                 mcsop rmvdiskhostmap -gui -host 2 9
+199          180323140604 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 0 9
+200          180323140604 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 1 9
+201          180323140604 superuser                                        10.165.18.213  0                 mcsop mkvdiskhostmap -force -gui -host 2 9
+202          180323162218 superuser                                        10.165.20.17   0                 mcsop stoplcmap -gui 1
+203          180323162224 superuser                                        10.165.20.17   0                 mcsop stoplcmap -gui 0
+204          180323162233 superuser                                        10.165.20.17   0                 mcsop rmlcmap -gui 1
+205          180323162251 superuser                                        10.165.20.17   0                 mcsop rmlcmap -force -gui 0
+206          180323162315 superuser                                        10.165.20.17   0      0          mcsop mkrcrelationship -aux mengxw-01_01 -cluster C95 -gui -master mengxw-01 -sync
+207          180323162317 superuser                                        10.165.20.17   0                 mcsop startrcrelationship -gui 0
+208          180323162326 superuser                                        10.165.20.17   0                 mcsop stoprcrelationship -gui 0
+209          180324010003 admin                                            127.0.0.1      0                 mcsop detectmdisk
+210          180325010003 admin                                            127.0.0.1      0                 mcsop detectmdisk
+211          180326010003 admin                                            127.0.0.1      0                 mcsop detectmdisk
+Inspur_MCS:C95:superuser&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5604967" class="outline-2">
+<h2 id="org5604967"><span class="section-number-2">2</span> lssystem</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;lssystem
+id 0000000025E27502
+name C95
+location local
+partnership
+total_mdisk_capacity 10.8TB
+space_in_mdisk_grps 10.8TB
+space_allocated_to_vdisks 1.10TB
+total_free_space 9.7TB
+total_vdiskcopy_capacity 1.20TB
+total_used_capacity 1.09TB
+total_overallocation 11
+total_vdisk_capacity 1.00TB
+total_allocated_extent_capacity 1.10TB
+statistics_status on
+statistics_frequency 15
+cluster_locale en_US
+time_zone 248 Asia/Taipei
+code_level 3.1.6.20 (build 133.18.1803141557900)
+console_IP 10.151.12.95:443
+id_alias 0000000025E27502
+ac_link_tolerance 300
+ac_inter_cluster_delay_simulation 0
+ac_intra_cluster_delay_simulation 0
+ac_max_host_delay 5
+email_reply 1@1.com
+email_contact 1
+email_contact_primary 111111
+email_contact_alternate
+email_contact_location 1
+email_contact2
+email_contact2_primary
+email_contact2_alternate
+email_state stopped
+inventory_mail_interval 7
+cluster_ntp_IP_address
+cluster_isns_IP_address
+iscsi_auth_method none
+iscsi_chap_secret
+auth_service_configured no
+auth_service_enabled no
+auth_service_url
+auth_service_user_name
+auth_service_pwd_set no
+auth_service_cert_set no
+auth_service_type tip
+relationship_bandwidth_limit 25
+tier tier0_flash
+tier_capacity 0.00MB
+tier_free_capacity 0.00MB
+tier tier1_flash
+tier_capacity 0.00MB
+tier_free_capacity 0.00MB
+tier tier_enterprise
+tier_capacity 0.00MB
+tier_free_capacity 0.00MB
+tier tier_nearline
+tier_capacity 10.80TB
+tier_free_capacity 9.70TB
+in_tier_acceleration off
+has_nas_key no
+layer storage
+rc_buffer_size 48
+compression_active no
+compression_virtual_capacity 0.00MB
+compression_compressed_capacity 0.00MB
+compression_uncompressed_capacity 0.00MB
+cache_prefetch on
+email_organization 1
+email_machine_address 1
+email_machine_city 1
+email_machine_state XX
+email_machine_zip 11111
+email_machine_country CN
+total_drive_raw_capacity 58.22TB
+compression_destage_mode off
+local_fc_port_mask 1111111111111111111111111111111111111111111111111111111111111111
+partner_fc_port_mask 1111111111111111111111111111111111111111111111111111111111111111
+high_temp_mode off
+topology standard
+topology_status
+rc_auth_method none
+vdisk_protection_time 15
+vdisk_protection_enabled no
+product_name Inspur AS5500G2
+odx off
+max_replication_delay 0
+partnership_exclusion_threshold 315
+gen1_compatibility_mode_enabled no
+inspur_customer
+inspur_component SANVCNSW1
+inspur_country
+tier0_flash_compressed_data_used 0.00MB
+tier1_flash_compressed_data_used 0.00MB
+tier_enterprise_compressed_data_used 0.00MB
+tier_nearline_compressed_data_used 0.00MB
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb92d5c1" class="outline-2">
+<h2 id="orgb92d5c1"><span class="section-number-2">3</span> mtinq</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org9b17d63" class="outline-3">
+<h3 id="org9b17d63"><span class="section-number-3">3.1</span> lsservicenodes</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mtinq lsservicenodes
+panel_name cluster_id       cluster_name node_id node_name relation node_status error_data
+01-2       0000000025E27502 C95          2       node2     local    Active      706 1 3 0
+01-1       0000000025E27502 C95          1       node1     partner  Active      706 1 3 0
+02-1       0000000025E27502 C95          5       node3     cluster  Active      706 1 3 0
+02-2       0000000025E27502 C95          6       node4     cluster  Active      706 1 3 0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb5b1622" class="outline-3">
+<h3 id="orgb5b1622"><span class="section-number-3">3.2</span> lsservicestatus</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mtinq lsservicestatus
+panel_name 01-2
+cluster_id 0000000025e27502
+cluster_name C95
+cluster_status Active
+cluster_ip_count 2
+cluster_port 1
+cluster_ip 10.151.12.95
+cluster_gw 10.151.12.254
+cluster_mask 255.255.255.0
+cluster_ip_6
+cluster_gw_6
+cluster_prefix_6
+cluster_port 2
+cluster_ip
+cluster_gw
+cluster_mask
+cluster_ip_6
+cluster_gw_6
+cluster_prefix_6
+node_id 2
+node_name node2
+node_status Active
+config_node Yes
+hardware I1M
+service_IP_address 10.151.12.94
+service_gateway 10.151.12.254
+service_subnet_mask 255.255.255.0
+service_IP_address_6
+service_gateway_6
+service_prefix_6
+node_code_version 3.1.6.20
+node_code_build 133.18.1803141557900
+cluster_code_build 133.18.1803141557900
+node_error_count 1
+error_code 706
+error_data 1 3 0
+fc_ports 4
+port_id 1
+port_status Active
+port_speed 8Gb
+port_WWPN 5005076b00212555
+SFP_type Short-wave
+port_id 2
+port_status Active
+port_speed 8Gb
+port_WWPN 5005076b00222555
+SFP_type Short-wave
+port_id 3
+port_status Inactive
+port_speed N/A
+port_WWPN 5005076b00232555
+SFP_type Short-wave
+port_id 4
+port_status Inactive
+port_speed N/A
+port_WWPN 5005076b00242555
+SFP_type Short-wave
+ethernet_ports 3
+ethernet_port_id 1
+port_status Link Online
+port_speed 1Gb/s - Full
+MAC 6c:92:bf:1b:f8:08
+ethernet_port_id 2
+port_status Not Configured
+port_speed
+MAC 6c:92:bf:1b:f8:09
+ethernet_port_id 3
+port_status Not Configured
+port_speed
+MAC 6c:92:bf:1b:f8:0a
+product_mtm 1813-M12
+product_serial 6577502
+time_to_charge 0
+battery_charging 100
+dump_name 6577502-2
+node_WWNN
+disk_WWNN_suffix
+panel_WWNN_suffix
+UPS_serial_number
+UPS_status
+enclosure_WWNN_1 5005076b00012355
+enclosure_WWNN_2 5005076b00012555
+node_part_identity 11S0000000Y00000000000
+node_FRU_part 0000000
+enclosure_identity 11SCA00633MCA602G070KN
+PSU_count 0
+PSU_id 1
+PSU_status
+PSU_id 2
+PSU_status
+Battery_count 1
+Battery_id 1
+Battery_status active
+Battery_FRU_part 31P1807
+Battery_part_identity 11S00AR085YM12BG6AA0SR
+Battery_fault_led off
+Battery_charging_status idle
+Battery_cycle_count 25
+Battery_power_on_hours 6751
+Battery_last_recondition 180113194025
+node_location_copy 2
+node_product_mtm_copy 1813-M12
+node_product_serial_copy 6577502
+node_WWNN_1_copy 5005076b00012355
+node_WWNN_2_copy 5005076b00012555
+latest_cluster_id 25e27502
+next_cluster_id 26027502
+console_IP 10.151.12.95:443
+has_nas_key no
+fc_io_ports 4
+fc_io_port_id 1
+fc_io_port_WWPN 5005076b00212555
+fc_io_port_switch_WWPN 5005076803262011
+fc_io_port_state Active
+fc_io_port_FCF_MAC N/A
+fc_io_port_vlanid N/A
+fc_io_port_type FC
+fc_io_port_type_port_id 1
+fc_io_port_id 2
+fc_io_port_WWPN 5005076b00222555
+fc_io_port_switch_WWPN 5005076803222010
+fc_io_port_state Active
+fc_io_port_FCF_MAC N/A
+fc_io_port_vlanid N/A
+fc_io_port_type FC
+fc_io_port_type_port_id 2
+fc_io_port_id 3
+fc_io_port_WWPN 5005076b00232555
+fc_io_port_switch_WWPN 0000000000000000
+fc_io_port_state Inactive
+fc_io_port_FCF_MAC N/A
+fc_io_port_vlanid N/A
+fc_io_port_type FC
+fc_io_port_type_port_id 3
+fc_io_port_id 4
+fc_io_port_WWPN 5005076b00242555
+fc_io_port_switch_WWPN 0000000000000000
+fc_io_port_state Inactive
+fc_io_port_FCF_MAC N/A
+fc_io_port_vlanid N/A
+fc_io_port_type FC
+fc_io_port_type_port_id 4
+service_IP_mode static
+service_IP_mode_6
+machine_part_number
+node_machine_part_number_copy
+local_fc_port_mask 1111111111111111111111111111111111111111111111111111111111111111
+partner_fc_port_mask 1111111111111111111111111111111111111111111111111111111111111111
+topology standard
+site_id
+site_name
+password_reset_enabled yes
+identify_LED off
+Battery_midplane_FRU_part
+Battery_midplane_part_identity
+Battery_midplane_FW_version
+Battery_power_cable_FRU_part
+Battery_power_sense_cable_FRU_part
+Battery_comms_cable_FRU_part
+Battery_EPOW_cable_FRU_part
+product_name Inspur AS5500G2
+techport permanent
+fcportmap
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4be8179" class="outline-2">
+<h2 id="org4be8179"><span class="section-number-2">4</span> Misc</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org219e93c" class="outline-3">
+<h3 id="org219e93c"><span class="section-number-3">4.1</span> Show all candidates</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>input two tab</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;
+Display all 426 possibilities? (y or n)
+<span class="org-negation-char">!</span>                                lsarray                          migratevdisk
+./                               lsarrayinitprogress              mkarray
+:                                lsarraylba                       mkcloudaccountawss3
+[                                lsarraymember                    mkcloudaccountswift
+[[                               lsarraymembergoals               mkdistributedarray
+]]                               lsarraymemberprogress            mkdnsserver
+_applydrivesoftware              lsarrayrecommendation            mkemailserver
+_applysoftware                   lsarraysyncprogress              mkemailuser
+_help                            lscloudaccount                   mkfcpartnership
+_list                            lscloudaccountimportcandidate    mkhost
+_mcsconfig                       lscloudaccountusage              mkhostcluster
+_mcsinq                          lscontrolenclosurecandidate      mkimagevolume
+_mcsop                           lscontroller                     mkippartnership
+_mtinq                           lscopystatus                     mkkeyserver
+_mtop                            lscurrentroute                   mklcconsistgrp
+_up_files                        lscurrentuser                    mklcmap
+activatefeature                  lsdependentvdisks                mkldapserver
+addcontrolenclosure              lsdiscoverystatus                mkmdiskgrp
+addhostclustermember             lsdnsserver                      mkmetadatavdisk
+addhostiogrp                     lsdrive                          mkpartnership
+addhostport                      lsdriveclass                     mkquorumapp
+addiscsistorageport              lsdrivelba                       mkrcconsistgrp
+addmdisk                         lsdriveprogress                  mkrcrelationship
+addvdiskaccess                   lsdriveupgradeprogress           mksnmpserver
+addvdiskcopy                     lsdumps                          mksyslogserver
+addvolumecopy                    lsemailserver                    mkthrottle
+analyzevdisk                     lsemailuser                      mkuser
+analyzevdiskbysystem             lsenclosure                      mkusergrp
+applydrivesoftware               lsenclosurebattery               mkvdisk
+applysoftware                    lsenclosurecanister              mkvdiskhostmap
+backupvolume                     lsenclosurechassis               mkvolume
+backupvolumegroup                lsenclosuredisplaypanel          mkvolumegroup
+<span class="org-builtin">bg</span>                               lsenclosuredrawer                mkvolumehostclustermap
+<span class="org-builtin">bind</span>                             lsenclosureencryption            movevdisk
+<span class="org-keyword">break</span>                            lsenclosurefanmodule             mtinq
+<span class="org-builtin">caller</span>                           lsenclosurepsu                   mtop
+cancellivedump                   lsenclosuresem                   ping
+<span class="org-keyword">case</span>                             lsenclosureslot                  popd
+catauditlog                      lsenclosurestats                 preplivedump
+<span class="org-builtin">cd</span>                               lsencryption                     prestartlcconsistgrp
+cfgportip                        lseventlog                       prestartlcmap
+charray                          lsfabric                         printf
+charraymember                    lsfcportcandidate                prompt_fn
+chauthservice                    lsfeature                        pushd
+chbanner                         lsfreeextents                    pwd
+chcloudaccountawss3              lshbaportcandidate               quit
+chcloudaccountswift              lshost                           read
+chcontroller                     lshostcluster                    readarray
+chcurrentuser                    lshostclustermember              readonly
+chdnsserver                      lshostclustervolumemap           recoverarray
+chdrive                          lshostiogrp                      recoverarraybysystem
+chemail                          lshostvdiskmap                   recovervdisk
+chemailserver                    lsiogrp                          recovervdiskbyiogrp
+chemailuser                      lsiogrpcandidate                 recovervdiskbysystem
+chenclosure                      lsiogrphost                      repairsevdiskcopy
+chenclosurecanister              lsiscsiauth                      repairvdiskcopy
+chenclosuredrawer                lsiscsistorageport               resetleds
+chenclosurefanmodule             lsiscsistorageportcandidate      restorevolume
+chenclosuresem                   lskeyserver                      return
+chenclosureslot                  lskeyserverisklm                 rmarray
+chencryption                     lslcconsistgrp                   rmcloudaccount
+cherrstate                       lslcmap                          rmdnsserver
+cheventlog                       lslcmapcandidate                 rmemailserver
+chhost                           lslcmapdependentmaps             rmemailuser
+chhostcluster                    lslcmapprogress                  rmhost
+chiogrp                          lsldap                           rmhostcluster
+chkeyserver                      lsldapserver                     rmhostclustermember
+chkeyserverisklm                 lslicense                        rmhostiogrp
+chlcconsistgrp                   lslivedump                       rmhostport
+chlcmap                          lsmdisk                          rmiscsistorageport
+chldap                           lsmdiskcandidate                 rmkeyserver
+chldapserver                     lsmdiskextent                    rmlcconsistgrp
+chlicense                        lsmdiskgrp                       rmlcmap
+chmdisk                          lsmdisklba                       rmldapserver
+chmdiskgrp                       lsmdiskmember                    rmmdisk
+chnodecanister                   lsmetadatavdisk                  rmmdiskgrp
+chnodecanisterhw                 lsmigrate                        rmmetadatavdisk
+chpartnership                    lsnodecanister                   rmnodecanister
+chquorum                         lsnodecanisterhw                 rmpartnership
+chrcconsistgrp                   lsnodecanisterstats              rmportip
+chrcrelationship                 lsnodecanistervpd                rmrcconsistgrp
+chsecurity                       lspartnership                    rmrcrelationship
+chsnmpserver                     lspartnershipcandidate           rmsnmpserver
+chsra                            lsportfc                         rmsyslogserver
+chsyslogserver                   lsportip                         rmthrottle
+chsystem                         lsportsas                        rmuser
+chsystemcert                     lsportusb                        rmusergrp
+chsystemip                       lspotentialarraysize             rmvdisk
+chthrottle                       lsquorum                         rmvdiskaccess
+chuser                           lsrcconsistgrp                   rmvdiskcopy
+chusergrp                        lsrcrelationship                 rmvdiskhostmap
+chvdisk                          lsrcrelationshipcandidate        rmvolume
+chvolumegroup                    lsrcrelationshipprogress         rmvolumebackupgeneration
+cleardumps                       lsrepairsevdiskcopyprogress      rmvolumecopy
+clearerrlog                      lsrepairvdiskcopyprogress        rmvolumegroup
+<span class="org-builtin">command</span>                          lsrmvdiskdependentmaps           rmvolumehostclustermap
+<span class="org-builtin">compgen</span>                          lsroute                          select
+<span class="org-builtin">complete</span>                         lssasfabric                      sendinventoryemail
+compopt                          lssasportcandidate               set
+<span class="org-keyword">continue</span>                         lssecurity                       setlocale
+<span class="org-builtin">coproc</span>                           lssevdiskcopy                    setpwdreset
+cpdumps                          lssite                           setsystemtime
+deactivatefeature                lssnmpserver                     settimezone
+detectiscsistorageportcandidate  lssra                            shift
+detectmdisk                      lssyslogserver                   showtimezone
+<span class="org-builtin">dirs</span>                             lssystem                         shrinkvdisksize
+<span class="org-builtin">disown</span>                           lssystemcert                     source
+<span class="org-keyword">do</span>                               lssystemip                       splitvdiskcopy
+<span class="org-keyword">done</span>                             lssystemstats                    startemail
+dumpallmdiskbadblocks            lstargetportfc                   startlcconsistgrp
+dumpauditlog                     lsthrottle                       startlcmap
+dumperrlog                       lstimezones                      startrcconsistgrp
+dumpmdiskbadblocks               lsupdate                         startrcrelationship
+<span class="org-builtin">echo</span>                             lsuser                           startstats
+<span class="org-keyword">elif</span>                             lsusergrp                        stopemail
+<span class="org-keyword">else</span>                             lsvdisk                          stoplcconsistgrp
+enablecli                        lsvdiskaccess                    stoplcmap
+<span class="org-keyword">esac</span>                             lsvdiskanalysis                  stoprcconsistgrp
+<span class="org-builtin">eval</span>                             lsvdiskanalysisprogress          stoprcrelationship
+<span class="org-keyword">exec</span>                             lsvdiskcopy                      stopsystem
+<span class="org-keyword">exit</span>                             lsvdiskdependentmaps             switchrcconsistgrp
+expandvdisksize                  lsvdiskextent                    switchrcrelationship
+<span class="org-builtin">export</span>                           lsvdiskhostmap                   test
+false                            lsvdisklba                       testcloudaccount
+<span class="org-builtin">fc</span>                               lsvdisklcmapcopies               testemail
+<span class="org-builtin">fg</span>                               lsvdisklcmappings                testkeyserver
+<span class="org-keyword">fi</span>                               lsvdiskmember                    testldapserver
+finderr                          lsvdiskprogress                  then
+<span class="org-keyword">for</span>                              lsvdisksyncprogress              time
+<span class="org-keyword">function</span>                         <span class="org-function-name">lsvolumebackup</span>                   times
+<span class="org-builtin">getopts</span>                          lsvolumebackupgeneration         trap
+<span class="org-builtin">hash</span>                             lsvolumebackupprogress           triggerdrivedump
+<span class="org-builtin">help</span>                             lsvolumegroup                    triggerenclosuredump
+<span class="org-builtin">history</span>                          lsvolumerestoreprogress          triggerlivedump
+<span class="org-keyword">if</span>                               man                              true
+<span class="org-keyword">in                               </span><span class="org-builtin">mapfile</span>                          type
+includemdisk                     mcs_livedump                     typeset
+<span class="org-builtin">jobs</span>                             mcsconfig                        until
+less                             mcsinq                           wait
+<span class="org-builtin">let</span>                              mcsop                            while
+<span class="org-builtin">local</span>                            migrateexts                      {
+<span class="org-keyword">logout</span>                           migratetoimage                   }
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0537a54" class="outline-3">
+<h3 id="org0537a54"><span class="section-number-3">4.2</span> mtinq candidates</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>Input mtinq, then press two tabs.</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mtinq
+host                     lsfiles                  lsservicerecommendation
+lsbootdrive              lshardware               lsservicestatus
+lscmdstatus              lsservicenodes           traceroute
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd4d4d64" class="outline-3">
+<h3 id="orgd4d4d64"><span class="section-number-3">4.3</span> mtop candidates</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mtop
+chbootdrive      chserviceip      installsoftware  rescuenode       snap             stopservice
+chenclosurevpd   chvpd            leavecluster     setlocale        start10gcl       t3recovery
+chnaskey         chwwnn           mkcluster        setpacedccu      startservice
+chnodeled        cpfiles          overridequorum   settempsshkey    stopnode
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2eee262" class="outline-3">
+<h3 id="org2eee262"><span class="section-number-3">4.4</span> mcsinq candidates</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mcsinq
+Display all 136 possibilities? (y or n)
+catauditlog                    lshost                         lsrcrelationshipprogress
+lsarray                        lshostcluster                  lsrepairsevdiskcopyprogress
+lsarrayinitprogress            lshostclustermember            lsrepairvdiskcopyprogress
+lsarraylba                     lshostclustervolumemap         lsrmvdiskdependentmaps
+lsarraymember                  lshostiogrp                    lsroute
+lsarraymembergoals             lshostvdiskmap                 lssasfabric
+lsarraymemberprogress          lsiogrp                        lssasportcandidate
+lsarrayrecommendation          lsiogrpcandidate               lssecurity
+lsarraysyncprogress            lsiogrphost                    lssevdiskcopy
+lscloudaccount                 lsiscsiauth                    lssite
+lscloudaccountimportcandidate  lsiscsistorageport             lssnmpserver
+lscloudaccountusage            lsiscsistorageportcandidate    lssra
+lscontrolenclosurecandidate    lskeyserver                    lssyslogserver
+lscontroller                   lskeyserverisklm               lssystem
+lscopystatus                   lslcconsistgrp                 lssystemcert
+lscurrentroute                 lslcmap                        lssystemip
+lscurrentuser                  lslcmapcandidate               lssystemstats
+lsdependentvdisks              lslcmapdependentmaps           lstargetportfc
+lsdiscoverystatus              lslcmapprogress                lsthrottle
+lsdnsserver                    lsldap                         lstimezones
+lsdrive                        lsldapserver                   lsupdate
+lsdriveclass                   lslicense                      lsuser
+lsdrivelba                     lslivedump                     lsusergrp
+lsdriveprogress                lsmdisk                        lsvdisk
+lsdriveupgradeprogress         lsmdiskcandidate               lsvdiskaccess
+lsdumps                        lsmdiskextent                  lsvdiskanalysis
+lsemailserver                  lsmdiskgrp                     lsvdiskanalysisprogress
+lsemailuser                    lsmdisklba                     lsvdiskcopy
+lsenclosure                    lsmdiskmember                  lsvdiskdependentmaps
+lsenclosurebattery             lsmetadatavdisk                lsvdiskextent
+lsenclosurecanister            lsmigrate                      lsvdiskhostmap
+lsenclosurechassis             lsnodecanister                 lsvdisklba
+lsenclosuredisplaypanel        lsnodecanisterhw               lsvdisklcmapcopies
+lsenclosuredrawer              lsnodecanisterstats            lsvdisklcmappings
+lsenclosurefanmodule           lsnodecanistervpd              lsvdiskmember
+lsenclosurepsu                 lspartnership                  lsvdiskprogress
+lsenclosuresem                 lspartnershipcandidate         lsvdisksyncprogress
+lsenclosureslot                lsportfc                       lsvolumebackup
+lsenclosurestats               lsportip                       lsvolumebackupgeneration
+lsencryption                   lsportsas                      lsvolumebackupprogress
+lseventlog                     lsportusb                      lsvolumegroup
+lsfabric                       lspotentialarraysize           lsvolumerestoreprogress
+lsfcportcandidate              lsquorum                       showtimezone
+lsfeature                      lsrcconsistgrp                 testldapserver
+lsfreeextents                  lsrcrelationship
+lshbaportcandidate             lsrcrelationshipcandidate
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9a16975" class="outline-3">
+<h3 id="org9a16975"><span class="section-number-3">4.5</span> mcsop candidates</h3>
+<div class="outline-text-3" id="text-4-5">
+<div class="org-src-container">
+<pre class="src src-sh">Inspur_MCS:C95:superuser&gt;mcsop
+Display all 197 possibilities? (y or n)
+activatefeature                  chuser                           restorevolume
+addcontrolenclosure              chusergrp                        rmarray
+addhostclustermember             chvdisk                          rmcloudaccount
+addhostiogrp                     chvolumegroup                    rmdnsserver
+addhostport                      cleardumps                       rmemailserver
+addiscsistorageport              clearerrlog                      rmemailuser
+addmdisk                         cpdumps                          rmhost
+addvdiskaccess                   deactivatefeature                rmhostcluster
+addvdiskcopy                     detectiscsistorageportcandidate  rmhostclustermember
+addvolumecopy                    detectmdisk                      rmhostiogrp
+analyzevdisk                     dumpallmdiskbadblocks            rmhostport
+analyzevdiskbysystem             dumpauditlog                     rmiscsistorageport
+applydrivesoftware               dumperrlog                       rmkeyserver
+applysoftware                    dumpmdiskbadblocks               rmlcconsistgrp
+backupvolume                     enablecli                        rmlcmap
+backupvolumegroup                expandvdisksize                  rmldapserver
+cancellivedump                   finderr                          rmmdisk
+cfgportip                        includemdisk                     rmmdiskgrp
+charray                          migrateexts                      rmmetadatavdisk
+charraymember                    migratetoimage                   rmnodecanister
+chauthservice                    migratevdisk                     rmpartnership
+chbanner                         mkarray                          rmportip
+chcloudaccountawss3              mkcloudaccountawss3              rmrcconsistgrp
+chcloudaccountswift              mkcloudaccountswift              rmrcrelationship
+chcontroller                     mkdistributedarray               rmsnmpserver
+chcurrentuser                    mkdnsserver                      rmsyslogserver
+chdnsserver                      mkemailserver                    rmthrottle
+chdrive                          mkemailuser                      rmuser
+chemail                          mkfcpartnership                  rmusergrp
+chemailserver                    mkhost                           rmvdisk
+chemailuser                      mkhostcluster                    rmvdiskaccess
+chenclosure                      mkimagevolume                    rmvdiskcopy
+chenclosurecanister              mkippartnership                  rmvdiskhostmap
+chenclosuredrawer                mkkeyserver                      rmvolume
+chenclosurefanmodule             mklcconsistgrp                   rmvolumebackupgeneration
+chenclosuresem                   mklcmap                          rmvolumecopy
+chenclosureslot                  mkldapserver                     rmvolumegroup
+chencryption                     mkmdiskgrp                       rmvolumehostclustermap
+cherrstate                       mkmetadatavdisk                  sendinventoryemail
+cheventlog                       mkpartnership                    setlocale
+chhost                           mkquorumapp                      setpwdreset
+chhostcluster                    mkrcconsistgrp                   setsystemtime
+chiogrp                          mkrcrelationship                 settimezone
+chkeyserver                      mksnmpserver                     shrinkvdisksize
+chkeyserverisklm                 mksyslogserver                   splitvdiskcopy
+chlcconsistgrp                   mkthrottle                       startemail
+chlcmap                          mkuser                           startlcconsistgrp
+chldap                           mkusergrp                        startlcmap
+chldapserver                     mkvdisk                          startrcconsistgrp
+chlicense                        mkvdiskhostmap                   startrcrelationship
+chmdisk                          mkvolume                         startstats
+chmdiskgrp                       mkvolumegroup                    stopemail
+chnodecanister                   mkvolumehostclustermap           stoplcconsistgrp
+chnodecanisterhw                 movevdisk                        stoplcmap
+chpartnership                    ping                             stoprcconsistgrp
+chquorum                         preplivedump                     stoprcrelationship
+chrcconsistgrp                   prestartlcconsistgrp             stopsystem
+chrcrelationship                 prestartlcmap                    switchrcconsistgrp
+chsecurity                       recoverarray                     switchrcrelationship
+chsnmpserver                     recoverarraybysystem             testcloudaccount
+chsra                            recovervdisk                     testemail
+chsyslogserver                   recovervdiskbyiogrp              testkeyserver
+chsystem                         recovervdiskbysystem             triggerdrivedump
+chsystemcert                     repairsevdiskcopy                triggerenclosuredump
+chsystemip                       repairvdiskcopy                  triggerlivedump
+chthrottle                       resetleds
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/storage-inspur-g2-cli.html';
+    this.page.identifier = 'storage-inspur-g2-cli.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
