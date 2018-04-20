@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-03-22 Thu 23:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>程序执行时间与代码执行时间评估/Benchmark process execution time and code execution time</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">程序执行时间与代码执行时间评估/Benchmark process execution time and code execution time</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org54712c8">1. 评估进程执行时间</a></li>
+<li><a href="#org4274834">2. 代码段执行时间评估</a>
+<ul>
+<li><a href="#orga50c572">2.1. Methods</a></li>
+<li><a href="#org767ea57">2.2. Test Results</a></li>
+</ul>
+</li>
+<li><a href="#orgf193763">3. Test Code</a></li>
+<li><a href="#orge84d5d9">4. 参考资源</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org54712c8" class="outline-2">
+<h2 id="org54712c8"><span class="section-number-2">1</span> 评估进程执行时间</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Shell环境下使用time评估。bash shell有内置的time，系统提供功能更多的time命令
+(<a href="https://ftp.gnu.org/gnu/time/">GNU Time</a>，<a href="https://savannah.gnu.org/git/?group=time">GNU Time Git</a>，安装位置一般是/usr/bin/time)。GNU Time基于
+\(gettimeofday\)和\(wait3\)实现。
+</p>
+<div class="org-src-container">
+<pre class="src src-C">~$ time sudo dd <span class="org-keyword">if</span>=/dev/sdb of=/dev/null bs=4K count=1K iflag=direct
+1024+0 records in
+1024+0 records out
+4194304 bytes (4.2 MB) copied, 0.370473 s, 11.3 MB/s
+
+real    0m0.380s
+user    0m0.004s
+sys     0m0.004s
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">~$ /usr/bin/time --format <span class="org-string">"Time:\n\t%E real,\n\t%U user,\n\t%S sys"</span> sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=4K <span class="org-variable-name">count</span>=1K <span class="org-variable-name">iflag</span>=direct
+1024+0 records<span class="org-keyword"> in</span>
+1024+0 records out
+4194304 bytes (4.2 MB) copied, 0.39669 s, 10.6 MB/s
+
+Time:
+        0:00.40 real,
+        0.00 user,
+        0.01 sys
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4274834" class="outline-2">
+<h2 id="org4274834"><span class="section-number-2">2</span> 代码段执行时间评估</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orga50c572" class="outline-3">
+<h3 id="orga50c572"><span class="section-number-3">2.1</span> Methods</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+使用\(time\)、\(gettimeofday\)、\(clock\_gettime\)获取秒、微秒、纳秒级别的时间精度，但上述三者都触发系统调用或vdso。使用内嵌汇编和CPU指令RDTSC获取更高精度(与
+CPU主频相同)的时间精度。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org767ea57" class="outline-3">
+<h3 id="org767ea57"><span class="section-number-3">2.2</span> Test Results</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+通过测试代码，在我的T430(CPU 2.89Hz Cores 4)上2594 TSC为1微秒(10<sup>-6</sup>)，2.8 TSC
+为1纳秒(这和CPU的频率2.8GHz是一致的)。系统调用成本大概240-310 TSC，而vdso(虚拟系统调用)110-130 TSC。vdso是系统调用成本的40%左右。传递编译参数\(-static\)使用系统调用，不传递该参数默认为动态链接，在支持vdso系统上优先使用vdso。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">~$ lscpu
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+<span class="org-function-name">CPU</span>(s):                4
+On-line CPU(s) list:   0-3
+<span class="org-function-name">Thread</span>(s) per core:    2
+<span class="org-function-name">Core</span>(s) per socket:    2
+<span class="org-function-name">Socket</span>(s):             1
+NUMA node(s):          1
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 60
+Model name:            Intel(R) Core(TM) i7-4600M CPU @ 2.90GHz
+Stepping:              3
+CPU MHz:               2904.248
+CPU max MHz:           3600.0000
+CPU min MHz:           800.0000
+BogoMIPS:              5786.24
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              4096K
+NUMA node0 CPU(s):     0-3
+Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm epb tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm xsaveopt dtherm ida arat pln pts
+~$ gcc -Wall -O3 benchmark-time.c -o test-benchmark -static  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;-- remove -static for vdso test</span>
+~$ taskset 0x1 ./test-benchmark
+init TSC to microsecond (about 2 seconds)
+        1000 system call tsc = 296148
+        <span class="org-variable-name">tsc2microsec</span>=2893 <span class="org-variable-name">tsc2clock</span>=2 <span class="org-variable-name">system_call</span>=296 [<span class="org-variable-name">tsc</span>=5787006236, <span class="org-variable-name">millisecond</span>=2000127, <span class="org-variable-name">nanosec</span>=2000123893, <span class="org-variable-name">tsc2nanosec</span>=2.893324]
+rdtsc test limits = 100000000
+        elpased(544894707) [<span class="org-variable-name">start</span>=8746910496255, <span class="org-variable-name">end</span>=8747455390962, <span class="org-variable-name">time</span>=0.188349]
+rdtsc test limits = 1000000
+        elpased(5561326) [<span class="org-variable-name">start</span>=8747455521373, <span class="org-variable-name">end</span>=8747461082699, <span class="org-variable-name">time</span>=0.001922]
+rdtsc test limits = 10000
+        elpased(92467) [<span class="org-variable-name">start</span>=8747461122832, <span class="org-variable-name">end</span>=8747461215299, <span class="org-variable-name">time</span>=0.000031]
+rdtsc test limits = 1000
+        elpased(5018) [<span class="org-variable-name">start</span>=8747461231815, <span class="org-variable-name">end</span>=8747461236833, <span class="org-variable-name">time</span>=0.000001]
+rdtsc test limits = 100
+        elpased(539) [<span class="org-variable-name">start</span>=8747461246770, <span class="org-variable-name">end</span>=8747461247309, <span class="org-variable-name">time</span>=0.000000]
+gettimeofday test limits = 100000000
+        elpased(181964) [<span class="org-variable-name">time</span>=0.181964]
+gettimeofday test limits = 1000000
+        elpased(1737) [<span class="org-variable-name">time</span>=0.001737]
+gettimeofday test limits = 10000
+        elpased(22) [<span class="org-variable-name">time</span>=0.000022]
+gettimeofday test limits = 1000
+        elpased(2) [<span class="org-variable-name">time</span>=0.000002]
+gettimeofday test limits = 100
+        elpased(1) [<span class="org-variable-name">time</span>=0.000001]
+clock test limits = 100000000
+        <span class="org-variable-name">CLOCKS_PER_SEC</span>=1000000
+        elpased(183109) [<span class="org-variable-name">clk1</span>=375095, <span class="org-variable-name">clk2</span>=558204]
+clock test limits = 1000000
+        <span class="org-variable-name">CLOCKS_PER_SEC</span>=1000000
+        elpased(1795) [<span class="org-variable-name">clk1</span>=558251, <span class="org-variable-name">clk2</span>=560046]
+clock test limits = 10000
+        <span class="org-variable-name">CLOCKS_PER_SEC</span>=1000000
+        elpased(29) [<span class="org-variable-name">clk1</span>=560054, <span class="org-variable-name">clk2</span>=560083]
+clock test limits = 1000
+        <span class="org-variable-name">CLOCKS_PER_SEC</span>=1000000
+        elpased(2) [<span class="org-variable-name">clk1</span>=560089, <span class="org-variable-name">clk2</span>=560091]
+clock test limits = 100
+        <span class="org-variable-name">CLOCKS_PER_SEC</span>=1000000
+        elpased(0) [<span class="org-variable-name">clk1</span>=560096, <span class="org-variable-name">clk2</span>=560096]
+clock_gettime test limits = 100000000
+        elpased(173184980) [<span class="org-variable-name">start</span>=3012.610434665 <span class="org-variable-name">end</span>=3012.610434665]
+clock_gettime test limits = 1000000
+        elpased(1761542) [<span class="org-variable-name">start</span>=3012.783671238 <span class="org-variable-name">end</span>=3012.783671238]
+clock_gettime test limits = 1000
+        elpased(2169) [<span class="org-variable-name">start</span>=3012.785437408 <span class="org-variable-name">end</span>=3012.785437408]
+clock_gettime test limits = 100
+        elpased(236) [<span class="org-variable-name">start</span>=3012.785444798 <span class="org-variable-name">end</span>=3012.785444798]
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf193763" class="outline-2">
+<h2 id="orgf193763"><span class="section-number-2">3</span> Test Code</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+如下是benchmark-time.c代码：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;errno.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/time.h&gt;</span>
+
+<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">val_tsc2microsec</span>, <span class="org-variable-name">val_systemcall</span>;
+
+<span class="org-type">void</span> <span class="org-function-name">cpu_burst</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limits</span>)
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">i</span>;
+        <span class="org-keyword">volatile</span> <span class="org-type">int</span> <span class="org-variable-name">x</span> = 0;
+
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>limits)
+                limits = 1000*1000*100;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; limits; ++i) {
+                x += i;
+        }
+
+        (<span class="org-type">void</span>)x;
+}
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">T2M</span>(<span class="org-variable-name">tsc</span>) ({ <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv</span>; tsc2microsec((tsc), &amp;tv); tv; })
+<span class="org-type">void</span> <span class="org-function-name">tsc2microsec</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">tsc</span>, <span class="org-keyword">struct</span> <span class="org-type">timeval</span> *<span class="org-variable-name">tv</span>)
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">microsec</span> = tsc/val_tsc2microsec;
+        tv-&gt;tv_sec = microsec/(1000*1000);
+        tv-&gt;tv_usec = microsec%(1000*1000);
+}
+
+<span class="org-keyword">static</span> __always_inline <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-function-name">rdtsc_ordered</span>(<span class="org-type">void</span>)
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">low</span>, <span class="org-variable-name">high</span>;
+
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (low), <span class="org-string">"=d"</span> (high));
+
+        <span class="org-keyword">return</span> low | (high &lt;&lt; 32);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">init_tsc_time</span>()
+{
+        <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv1</span>, <span class="org-variable-name">tv2</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>, <span class="org-variable-name">val</span>, <span class="org-variable-name">microsec</span>, <span class="org-variable-name">idx</span>;
+
+        printf(<span class="org-string">"init TSC to microsecond (about 2 seconds)\n"</span>);
+
+        <span class="org-keyword">for</span> (val = 0, idx = 0; idx &lt; 1000; ++idx) {
+                start = rdtsc_ordered();
+                gettimeofday(&amp;tv1, <span class="org-constant">NULL</span>);
+                end = rdtsc_ordered();
+                (<span class="org-type">void</span>)tv1;
+                val += end - start;
+        }
+        printf(<span class="org-string">"\t1000 system call tsc = %lu\n"</span>, val);
+        val_systemcall = val/1000;
+
+        gettimeofday(&amp;tv1, <span class="org-constant">NULL</span>);
+        start = rdtsc_ordered();
+        sleep(2);
+        end = rdtsc_ordered();
+        gettimeofday(&amp;tv2, <span class="org-constant">NULL</span>);
+
+        microsec = (tv2.tv_sec - tv1.tv_sec)*1000*1000;
+        <span class="org-keyword">if</span> (tv2.tv_usec &lt; tv1.tv_usec) {
+                tv2.tv_usec += 1000*1000;
+                microsec -= 1000*1000;
+        }
+
+        microsec += tv2.tv_usec - tv1.tv_usec;
+        val_tsc2microsec = (end - start)/microsec;
+
+        printf(<span class="org-string">"\ttsc2microsec=%lu system_call=%lu [tsc=%lu, millisecond=%lu]\n"</span>,
+               val_tsc2microsec, val_systemcall, (end - start), microsec);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">rdtsc_test</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limits</span>)
+{
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+        <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv</span>;
+
+        printf(<span class="org-string">"rdtsc test limits = %lu\n"</span>, limits);
+
+        start = rdtsc_ordered();
+        cpu_burst(limits);
+        end = rdtsc_ordered();
+        tsc2microsec(end - start, &amp;tv);
+
+        printf(<span class="org-string">"\telpased(%lu) [start=%lu, end=%lu, time=%lu.%06lu]\n"</span>,
+               end - start, start, end,
+               tv.tv_sec, tv.tv_usec);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">gettimeofday_test</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limits</span>)
+{
+        <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv1</span>, <span class="org-variable-name">tv2</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">microsec</span>;
+
+        printf(<span class="org-string">"gettimeofday test limits = %lu\n"</span>, limits);
+
+        gettimeofday(&amp;tv1, <span class="org-constant">NULL</span>);
+        cpu_burst(limits);
+        gettimeofday(&amp;tv2, <span class="org-constant">NULL</span>);
+
+        microsec = (tv2.tv_sec - tv1.tv_sec)*1000*1000;
+        microsec += tv2.tv_usec;
+        microsec -= tv1.tv_usec;
+        microsec -= (val_systemcall*2)/val_tsc2microsec;
+
+        printf(<span class="org-string">"\telpased(%lu) [time=%lu.%06lu]\n"</span>,
+               microsec, microsec/1000/1000, microsec);
+}
+
+<span class="org-type">void</span> <span class="org-function-name">clock_test</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limits</span>)
+{
+        <span class="org-type">clock_t</span> <span class="org-variable-name">clk1</span>, <span class="org-variable-name">clk2</span>;
+
+        printf(<span class="org-string">"clock test limits = %lu\n"</span>, limits);
+
+        clk1 = clock();
+        cpu_burst(limits);
+        clk2 = clock();
+
+        printf(<span class="org-string">"\tCLOCKS_PER_SEC=%lu\n"</span>, CLOCKS_PER_SEC);
+        printf(<span class="org-string">"\telpased(%lu) [clk1=%lu, clk2=%lu]\n"</span>,
+               clk2 - clk1, clk1, clk2);
+}
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">CLOCK_GETX_EXEC_CHECK</span>(<span class="org-variable-name">func</span>, <span class="org-variable-name">arg1</span>, <span class="org-variable-name">arg2</span>) \
+        ({                                              \
+        <span class="org-type">int</span> <span class="org-variable-name">ret</span> = func(arg1, arg2);                     \
+        <span class="org-keyword">if</span> (ret)                                        \
+                fprintf(stderr, <span class="org-string">"%s error(%d,%s)"</span>,      \
+                        #func, ret, strerror(errno));   \
+        ret; })
+
+<span class="org-type">void</span> <span class="org-function-name">clock_gettime_test</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limits</span>)
+{
+        <span class="org-keyword">struct</span> <span class="org-type">timespec</span> <span class="org-variable-name">ts1</span>, <span class="org-variable-name">ts2</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">v</span>;
+
+        printf(<span class="org-string">"clock_gettime test limits = %lu\n"</span>, limits);
+
+        CLOCK_GETX_EXEC_CHECK(clock_gettime,CLOCK_MONOTONIC, &amp;ts1);
+        cpu_burst(limits);
+        CLOCK_GETX_EXEC_CHECK(clock_gettime,CLOCK_MONOTONIC, &amp;ts2);
+
+        v = (ts2.tv_sec - ts1.tv_sec)*1000*1000*1000;
+        v += ts2.tv_nsec;
+        v -= ts1.tv_nsec;
+
+        printf(<span class="org-string">"\telpased(%lu) [start=%lu.%09lu end=%lu.%09lu]\n"</span>,
+               v, ts1.tv_sec, ts1.tv_nsec, ts1.tv_sec, ts1.tv_nsec);
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        init_tsc_time();
+
+        rdtsc_test(1000*1000*100);
+        rdtsc_test(1000*1000);
+        rdtsc_test(1000*10);
+        rdtsc_test(1000);
+        rdtsc_test(100);
+
+        gettimeofday_test(1000*1000*100);
+        gettimeofday_test(1000*1000);
+        gettimeofday_test(1000*10);
+        gettimeofday_test(1000);
+        gettimeofday_test(100);
+
+        clock_test(1000*1000*100);
+        clock_test(1000*1000);
+        clock_test(1000*10);
+        clock_test(1000);
+        clock_test(100);
+
+        clock_gettime_test(1000*1000*100);
+        clock_gettime_test(1000*1000);
+        clock_gettime_test(1000 );
+        clock_gettime_test(100);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge84d5d9" class="outline-2">
+<h2 id="orge84d5d9"><span class="section-number-2">4</span> 参考资源</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>LWN - X86: Unify/Rewrite SMP TSC sync mode</dt><dd><a href="https://lwn.net/Articles/211051/">https://lwn.net/Articles/211051/</a></dd>
+<dt>Time Stamp Counter</dt><dd><a href="https://en.wikipedia.org/wiki/Time_Stamp_Counter">https://en.wikipedia.org/wiki/Time_Stamp_Counter</a></dd>
+<dt>LWN - A guide to inline assembly code in GCC</dt><dd><a href="https://lwn.net/Articles/686055/">https://lwn.net/Articles/686055/</a></dd>
+<dt>章炎 - GCC内嵌汇编</dt><dd><a href="https://dirtysalt.github.io/html/gcc-asm.html">https://dirtysalt.github.io/html/gcc-asm.html</a></dd>
+<dt>GCC OnlineDocs - Inline Assembly</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html</a></dd>
+<dt>linux rdtsc code</dt><dd><a href="https://elixir.bootlin.com/linux/v4.15.7/source/arch/x86/include/asm/msr.h#L204">https://elixir.bootlin.com/linux/v4.15.7/source/arch/x86/include/asm/msr.h#L204</a></dd>
+<dt>Performance measurements with RDTSC</dt><dd><a href="https://www.strchr.com/performance_measurements_with_rdtsc">https://www.strchr.com/performance_measurements_with_rdtsc</a></dd>
+<dt>LWN The trouble with the TSC</dt><dd><a href="https://lwn.net/Articles/388188/">https://lwn.net/Articles/388188/</a></dd>
+<dt>The Definitive Guide to Linux System Calls</dt><dd><a href="https://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/">https://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/</a></dd>
+<dt>How does strace work?</dt><dd><a href="https://blog.packagecloud.io/eng/2016/02/29/how-does-strace-work/">https://blog.packagecloud.io/eng/2016/02/29/how-does-strace-work/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-benchmark-time.html';
+    this.page.identifier = 'linux-benchmark-time.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

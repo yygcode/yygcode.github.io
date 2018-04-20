@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-04-21 Sat 07:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux Mutex Implementation</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Linux Mutex Implementation</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org054d98e">1. 介绍</a></li>
+<li><a href="#orgbc95b9b">2. Kernel Code Comments</a></li>
+<li><a href="#org15b18f9">3. size</a></li>
+<li><a href="#orgcb0e4d4">4. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org054d98e" class="outline-2">
+<h2 id="org054d98e"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Linux Mutex是Futex的包装，本文介绍Mutex实现机制。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbc95b9b" class="outline-2">
+<h2 id="orgbc95b9b"><span class="section-number-2">2</span> Kernel Code Comments</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * READ this before attempting to hack on futexes!</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * Basic futex operation and ordering guarantees</span>
+<span class="org-comment"> * =============================================</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * The waiter reads the futex value in user space and calls</span>
+<span class="org-comment"> * futex_wait(). This function computes the hash bucket and acquires</span>
+<span class="org-comment"> * the hash bucket lock. After that it reads the futex user space value</span>
+<span class="org-comment"> * again and verifies that the data has not changed. If it has not changed</span>
+<span class="org-comment"> * it enqueues itself into the hash bucket, releases the hash bucket lock</span>
+<span class="org-comment"> * and schedules.</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * The waker side modifies the user space value of the futex and calls</span>
+<span class="org-comment"> * futex_wake(). This function computes the hash bucket and acquires the</span>
+<span class="org-comment"> * hash bucket lock. Then it looks for waiters on that futex in the hash</span>
+<span class="org-comment"> * bucket and wakes them.</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * In futex wake up scenarios where no tasks are blocked on a futex, taking</span>
+<span class="org-comment"> * the hb spinlock can be avoided and simply return. In order for this</span>
+<span class="org-comment"> * optimization to work, ordering guarantees must exist so that the waiter</span>
+<span class="org-comment"> * being added to the list is acknowledged when the list is concurrently being</span>
+<span class="org-comment"> * checked by the waker, avoiding scenarios like the following:</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * CPU 0                               CPU 1</span>
+<span class="org-comment"> * val = *futex;</span>
+<span class="org-comment"> * sys_futex(WAIT, futex, val);</span>
+<span class="org-comment"> *   futex_wait(futex, val);</span>
+<span class="org-comment"> *   uval = *futex;</span>
+<span class="org-comment"> *                                     *futex = newval;</span>
+<span class="org-comment"> *                                     sys_futex(WAKE, futex);</span>
+<span class="org-comment"> *                                       futex_wake(futex);</span>
+<span class="org-comment"> *                                       if (queue_empty())</span>
+<span class="org-comment"> *                                         return;</span>
+<span class="org-comment"> *   if (uval == val)</span>
+<span class="org-comment"> *      lock(hash_bucket(futex));</span>
+<span class="org-comment"> *      queue();</span>
+<span class="org-comment"> *     unlock(hash_bucket(futex));</span>
+<span class="org-comment"> *     schedule();</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * This would cause the waiter on CPU 0 to wait forever because it</span>
+<span class="org-comment"> * missed the transition of the user space value from val to newval</span>
+<span class="org-comment"> * and the waker did not find the waiter in the hash bucket queue.</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * The correct serialization ensures that a waiter either observes</span>
+<span class="org-comment"> * the changed user space value before blocking or is woken by a</span>
+<span class="org-comment"> * concurrent waker:</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * CPU 0                                 CPU 1</span>
+<span class="org-comment"> * val = *futex;</span>
+<span class="org-comment"> * sys_futex(WAIT, futex, val);</span>
+<span class="org-comment"> *   futex_wait(futex, val);</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> *   waiters++; (a)</span>
+<span class="org-comment"> *   smp_mb(); (A) &lt;-- paired with -.</span>
+<span class="org-comment"> *                                  |</span>
+<span class="org-comment"> *   lock(hash_bucket(futex));      |</span>
+<span class="org-comment"> *                                  |</span>
+<span class="org-comment"> *   uval = *futex;                 |</span>
+<span class="org-comment"> *                                  |        *futex = newval;</span>
+<span class="org-comment"> *                                  |        sys_futex(WAKE, futex);</span>
+<span class="org-comment"> *                                  |          futex_wake(futex);</span>
+<span class="org-comment"> *                                  |</span>
+<span class="org-comment"> *                                  `--------&gt; smp_mb(); (B)</span>
+<span class="org-comment"> *   if (uval == val)</span>
+<span class="org-comment"> *     queue();</span>
+<span class="org-comment"> *     unlock(hash_bucket(futex));</span>
+<span class="org-comment"> *     schedule();                         if (waiters)</span>
+<span class="org-comment"> *                                           lock(hash_bucket(futex));</span>
+<span class="org-comment"> *   else                                    wake_waiters(futex);</span>
+<span class="org-comment"> *     waiters--; (b)                        unlock(hash_bucket(futex));</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * Where (A) orders the waiters increment and the futex value read through</span>
+<span class="org-comment"> * atomic operations (see hb_waiters_inc) and where (B) orders the write</span>
+<span class="org-comment"> * to futex and the waiters read -- this is done by the barriers for both</span>
+<span class="org-comment"> * shared and private futexes in get_futex_key_refs().</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * This yields the following case (where X:=waiters, Y:=futex):</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> *      X = Y = 0</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> *      w[X]=1          w[Y]=1</span>
+<span class="org-comment"> *      MB              MB</span>
+<span class="org-comment"> *      r[Y]=y          r[X]=x</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * Which guarantees that x==0 &amp;&amp; y==0 is impossible; which translates back into</span>
+<span class="org-comment"> * the guarantee that we cannot both miss the futex variable change and the</span>
+<span class="org-comment"> * enqueue.</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * Note that a new waiter is accounted for in (a) even when it is possible that</span>
+<span class="org-comment"> * the wait call can return error, in which case we backtrack from it in (b).</span>
+<span class="org-comment"> * Refer to the comment in queue_lock().</span>
+<span class="org-comment"> *</span>
+<span class="org-comment"> * Similarly, in order to account for waiters being requeued on another</span>
+<span class="org-comment"> * address we always increment the waiters for the destination bucket before</span>
+<span class="org-comment"> * acquiring the lock. It then decrements them again  after releasing it -</span>
+<span class="org-comment"> * the code that actually moves the futex(es) between hash buckets (requeue_futex)</span>
+<span class="org-comment"> * will do the additional required waiter count housekeeping. This is done for</span>
+<span class="org-comment"> * double_lock_hb() and double_unlock_hb(), respectively.</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org15b18f9" class="outline-2">
+<h2 id="org15b18f9"><span class="section-number-2">3</span> size</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;pthread.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        printf(<span class="org-string">"sizeof pthread_mutex_t = %u\n"</span>, <span class="org-keyword">sizeof</span>(pthread_mutex_t));
+        printf(<span class="org-string">"sizeof internal struct __pthread_mutex_s = %u\n"</span>,
+               <span class="org-keyword">sizeof</span>(<span class="org-keyword">struct</span> <span class="org-type">__pthread_mutex_s</span>));
+        printf(<span class="org-string">"sizeof pthread_rwlock_t = %u\n"</span>, <span class="org-keyword">sizeof</span>(pthread_rwlock_t));
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcb0e4d4" class="outline-2">
+<h2 id="orgcb0e4d4"><span class="section-number-2">4</span> References</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>A futex overview and update</dt><dd><a href="https://lwn.net/Articles/360699/">https://lwn.net/Articles/360699/</a></dd>
+<dt>futex: introduce an optimistic spinning futex</dt><dd><a href="https://lwn.net/Articles/606051/">https://lwn.net/Articles/606051/</a></dd>
+<dt>POSIX锁的属性</dt><dd><a href="http://blog.csdn.net/jasmineal/article/details/8807635">http://blog.csdn.net/jasmineal/article/details/8807635</a></dd>
+<dt>pthread related issues</dt><dd><a href="http://lkml.iu.edu/hypermail/linux/kernel/0103.1/0030.html">http://lkml.iu.edu/hypermail/linux/kernel/0103.1/0030.html</a></dd>
+<dt>mutexs</dt><dd><a href="http://elias.rhi.hi.is/libc/Mutexes.html">http://elias.rhi.hi.is/libc/Mutexes.html</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-mutex.html';
+    this.page.identifier = 'linux-mutex.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

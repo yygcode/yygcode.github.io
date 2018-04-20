@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-04-21 Sat 07:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>LINUX IDR/IDA算法分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LINUX IDR/IDA算法分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge3be427">1. 介绍</a>
+<ul>
+<li><a href="#org40cbcba">1.1. loop示例</a>
+<ul>
+<li><a href="#org18a25d2">1.1.1. 静态初始化</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgcc66433">2. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge3be427" class="outline-2">
+<h2 id="orge3be427"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<blockquote>
+<p>
+<a href="https://elixir.bootlin.com/linux/v4.16.2/source/include/linux/idr.h">idr.h</a>:
+Small id to pointer translation service avoiding fixed sized tables.
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org40cbcba" class="outline-3">
+<h3 id="org40cbcba"><span class="section-number-3">1.1</span> loop示例</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2/source/drivers/block/loop.c">loop.c</a>使用为例阐述：
+</p>
+</div>
+<div id="outline-container-org18a25d2" class="outline-4">
+<h4 id="org18a25d2"><span class="section-number-4">1.1.1</span> 静态初始化</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-comment">- idr.h -</span><span class="org-comment-delimiter">*/</span>
+<span class="org-comment-delimiter">/* </span><span class="org-comment">Set the IDR flag and the IDR_FREE tag </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">IDR_RT_MARKER</span>           ((__force <span class="org-type">gfp_t</span>)(3 &lt;&lt; __GFP_BITS_SHIFT))
+
+<span class="org-preprocessor">#define</span> <span class="org-variable-name">IDR_INIT</span>                                                        \
+{                                                                       \
+        .idr_rt = RADIX_TREE_INIT(IDR_RT_MARKER)                        \
+}
+<span class="org-preprocessor">#define</span> <span class="org-function-name">DEFINE_IDR</span>(<span class="org-variable-name">name</span>)        <span class="org-keyword">struct</span> <span class="org-type">idr</span> <span class="org-variable-name">name</span> = IDR_INIT
+
+<span class="org-comment-delimiter">/*</span><span class="org-comment">- loop.c -</span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-function-name">DEFINE_IDR</span>(loop_index_idr);
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcc66433" class="outline-2">
+<h2 id="orgcc66433"><span class="section-number-2">2</span> References</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>LWN A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-algorithms-idr.html';
+    this.page.identifier = 'linux-algorithms-idr.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

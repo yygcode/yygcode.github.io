@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-03-22 Thu 23:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>VC 目录操作函数</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">VC 目录操作函数</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgabbb65c">1. int _access( const char *path, int mode );</a></li>
+<li><a href="#orgb0e437b">2. int _chdir( const char *dirname );</a></li>
+<li><a href="#org4c593d3">3. int _chdrive( int drive );</a></li>
+<li><a href="#orgb479701">4. int _findclose( long handle );</a></li>
+<li><a href="#orgc87fb48">5. long _findfirst( char *filespec, struct _finddata_t *fileinfo );</a></li>
+<li><a href="#org9ed7d83">6. int _findnext( long handle, struct _finddata_t *fileinfo );</a></li>
+<li><a href="#org5f285ca">7. char *_getcwd( char *buffer, int maxlen );</a></li>
+<li><a href="#org0d15a8b">8. char *_getdcwd( int drive, char *buffer, int maxlen );</a></li>
+<li><a href="#org5bb92e3">9. int _getdrive( void );</a></li>
+<li><a href="#org6c7a883">10. unsigned long _getdrives(void);</a></li>
+<li><a href="#org7af599d">11. int _mkdir( const char *dirname );</a></li>
+<li><a href="#orga9bce66">12. int _rmdir( const char *dirname );</a></li>
+</ul>
+</div>
+</div>
+<p>
+//Author : cppgp
+//Email   : cppgp@163.com
+//Time    : 2007 03 30
+//按照字母顺序排列
+</p>
+
+<div id="outline-container-orgabbb65c" class="outline-2">
+<h2 id="orgabbb65c"><span class="section-number-2">1</span> int _access( const char *path, int mode );</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>功   能 : 测定文件/目录存取权限.</li>
+<li>头文件 : #include &lt;io.h&gt;</li>
+<li>参   数 : path:文件或者目录
+mode:权限设定,其值如下:
+00 Existence only
+02 Write permission
+04 Read permission
+06 Read and write permission</li>
+
+<li>返回值 : 拥有该权限返回0
+没有权限返回-1，且设置errno为如下值
+ENOENT 路径/文件不存在
+EACCES 没有相应权限</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb0e437b" class="outline-2">
+<h2 id="orgb0e437b"><span class="section-number-2">2</span> int _chdir( const char *dirname );</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>功   能 : 更改当前工作目录.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 成功返回0
+失败返回-1，且设置errno如下:
+ENOENT 该路径不存在</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4c593d3" class="outline-2">
+<h2 id="org4c593d3"><span class="section-number-2">3</span> int _chdrive( int drive );</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>功   能 : 更改当前工作驱动器.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 成功返回0
+失败返回-1</li>
+<li>注   释 : 参数说明
+  drive =1&lt;==&gt; A盘
+  drive =2&lt;==&gt; B盘
+  drive =3&lt;==&gt; C盘如此等等,该函数可以由_chdir代替</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb479701" class="outline-2">
+<h2 id="orgb479701"><span class="section-number-2">4</span> int _findclose( long handle );</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>功   能 : 关闭搜寻句柄并释放相应资源</li>
+<li>头文件 : #include &lt;io.h&gt;</li>
+<li>参   数 : long handle 搜索句柄(通常由紧靠其前的_findfirst()返回,_findfirst()见下)
+fileinfo 文件信息buffer</li>
+<li>返回值 : 成功返回0
+出错返回-1,且设置errno为如下值
+ENOENT 没有更多的符合该泛式的文件</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc87fb48" class="outline-2">
+<h2 id="orgc87fb48"><span class="section-number-2">5</span> long _findfirst( char *filespec, struct _finddata_t *fileinfo );</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>功   能 : 提供与filespec指定入口泛式匹配的第一个文件.通常后继用_findnext函数后续使用来完成某泛式下的文件遍历.</li>
+<li>头文件 : #include &lt;io.h&gt;</li>
+<li>参   数 : filespec 目标文件规范,可以包含通配符
+fileinfo 文件信息buffer</li>
+<li>返回值 : 成功返回唯一的搜索句柄出错返回-1,且设置errno为如下值
+ENOENT 该泛式无法匹配
+EINVAL 无效文件名</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9ed7d83" class="outline-2">
+<h2 id="org9ed7d83"><span class="section-number-2">6</span> int _findnext( long handle, struct _finddata_t *fileinfo );</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>功   能 : 按照前面_findfirst中的泛式规则，查找下一个符合该泛式的文件，并以 此为依据修改fileinfo中的值</li>
+<li>头文件 : #include &lt;io.h&gt;</li>
+<li>参   数 : long handle 搜索句柄(通常由紧靠其前的_findfirst()返回)
+fileinfo 文件信息buffer</li>
+<li>返回值 : 成功返回0
+出错返回-1,且设置errno为如下值
+ENOENT 没有更多的符合该泛式的文件</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org5f285ca" class="outline-2">
+<h2 id="org5f285ca"><span class="section-number-2">7</span> char *_getcwd( char *buffer, int maxlen );</h2>
+<div class="outline-text-2" id="text-7">
+<ul class="org-ul">
+<li>功   能 : 获得当前工作目录.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 成功返回指向buffer的pointer
+失败返回NULL，且设置errno为以下三个值之一:
+ENODEV 无该设备
+ENOMEM 内存不够
+ERANGE 结果超出范围</li>
+<li>注   意 : 当第一个参数为 NULL 时,第二个参数 maxlen 长度设置无效,且函数使用malloc分配足够内存,需要将函数返回值传递给free()函数来释放内存.
+当第一个参数不为 NULL 时,maxlen 指定长度不够函数返回错,设置errno为ERANGE</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0d15a8b" class="outline-2">
+<h2 id="org0d15a8b"><span class="section-number-2">8</span> char *_getdcwd( int drive, char *buffer, int maxlen );</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+功   能 : 获得指定驱动器的当前工作路径.
+头文件 : #include &lt;direct.h&gt;
+返回值 : 成功返回指向buffer的pointer
+   失败返回NULL，且设置errno为以下三个值之一:
+   ENODEV 无该设备
+   ENOMEM 内存不够
+   ERANGE 结果超出范围
+</p>
+<ul class="org-ul">
+<li>注   意 : 当第一个参数为 NULL 时,该函数设置errno为ERANGE</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5bb92e3" class="outline-2">
+<h2 id="org5bb92e3"><span class="section-number-2">9</span> int _getdrive( void );</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li>功   能 : 获得当前磁盘驱动器.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 返回驱动器值,1&lt;==&gt;A 2&lt;==&gt;B 如此等等;函数不会出错!</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6c7a883" class="outline-2">
+<h2 id="org6c7a883"><span class="section-number-2">10</span> unsigned long _getdrives(void);</h2>
+<div class="outline-text-2" id="text-10">
+<ul class="org-ul">
+<li>功   能 : 获得当前所有驱动器.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 各个位代表对应驱动器,
+bit 0 &lt;==&gt; A
+bit 1 &lt;==&gt; B
+bit 2 &lt;==&gt; C
+&#x2026; &#x2026;</li>
+<li>注：bit x 表示unsigned long的第x位</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7af599d" class="outline-2">
+<h2 id="org7af599d"><span class="section-number-2">11</span> int _mkdir( const char *dirname );</h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>功   能 : 创建一个新目录,目录名为dirname.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 成功返回0
+失败返回-1，且设置errno为以下三个值之一
+EACCESS 权限不允许
+EEXIST   该目录已存在
+ENOENT   无该文件或目录</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga9bce66" class="outline-2">
+<h2 id="orga9bce66"><span class="section-number-2">12</span> int _rmdir( const char *dirname );</h2>
+<div class="outline-text-2" id="text-12">
+<ul class="org-ul">
+<li>功   能 : 删除名为dirname的目录.</li>
+<li>头文件 : #include &lt;direct.h&gt;</li>
+<li>返回值 : 成功返回0
+失败返回-1，且设置errno为以下三个值之一
+EACCESS    权限不允许
+ENOTEMPTY dirname不是文件夹;
+   或者该文件夹不空;
+   或者dirname为当前工作文件夹;
+   或者dirname为当根文件夹;
+ENOENT     无该文件或目录</li>
+</ul>
+
+<p>
+//&#x2013;end&#x2013;
+</p>
+
+<p>
+//如有错误，希望指出!
+</p>
+
+<p>
+//联系 : cppgp@163.com
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/vc-file-operations.html';
+    this.page.identifier = 'vc-file-operations.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

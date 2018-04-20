@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-03-22 Thu 23:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>存储多租户特性分析/Storage Multi Tenancy Analysis</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">存储多租户特性分析/Storage Multi Tenancy Analysis</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb39433f">1. 定义</a></li>
+<li><a href="#orgc0cd691">2. 产品分析</a>
+<ul>
+<li><a href="#org75fc29e">2.1. HW OceanStor V5 SmartMulti-Tenant</a>
+<ul>
+<li><a href="#org84e773b">2.1.1. 背景</a></li>
+<li><a href="#orgae3c493">2.1.2. 定义</a></li>
+<li><a href="#orgeda05c1">2.1.3. 原理</a>
+<ul>
+<li><a href="#org7260da5">2.1.3.1. 相关概念</a></li>
+<li><a href="#orga78a118">2.1.3.2. 资源分配</a></li>
+<li><a href="#orgefc4ec3">2.1.3.3. 用户管理</a></li>
+<li><a href="#org3716bc7">2.1.3.4. 角色管理</a></li>
+</ul>
+</li>
+<li><a href="#org587ebe5">2.1.4. 影响与限制</a></li>
+<li><a href="#org09def6b">2.1.5. 应用场景</a></li>
+<li><a href="#org772a3d8">2.1.6. 规划管理用户</a></li>
+<li><a href="#org0c737d6">2.1.7. 配置多租户</a></li>
+<li><a href="#org4c8bc21">2.1.8. 管理多租户</a></li>
+<li><a href="#org86afd35">2.1.9. 管理租户基础存储业务</a></li>
+<li><a href="#orga1d1e8c">2.1.10. 管理基于应用的存储资源</a></li>
+</ul>
+</li>
+<li><a href="#org3689b0e">2.2. EMC Unity</a>
+<ul>
+<li><a href="#orgb48a055">2.2.1. What is multitenancy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6c6de56">3. 参考资料摘抄</a>
+<ul>
+<li><a href="#org0092526">3.1. What Is Multi-Tenant Stoarge</a></li>
+</ul>
+</li>
+<li><a href="#org867885f">4. 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb39433f" class="outline-2">
+<h2 id="orgb39433f"><span class="section-number-2">1</span> 定义</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+多租户是指在一套物理系统中创建多个虚拟存储系统，给每个虚拟存储系统分配、限定、隔离资源，这些资源包括卷容量、IOPS、吞吐、延时、服务级别。对于每个租户而言，其看到的是一个完全独立的存储系统。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc0cd691" class="outline-2">
+<h2 id="orgc0cd691"><span class="section-number-2">2</span> 产品分析</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org75fc29e" class="outline-3">
+<h3 id="org75fc29e"><span class="section-number-3">2.1</span> HW OceanStor V5 SmartMulti-Tenant</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org84e773b" class="outline-4">
+<h4 id="org84e773b"><span class="section-number-4">2.1.1</span> 背景</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+云服务XaaS服务需求，要求IT服务商将同一台物理存储设备提供给多个企业与个人使用。引入如下问题：
+</p>
+<ol class="org-ol">
+<li>使用同一物理存储资源的企业/用户存在逻辑资源干扰和互访的风险，影响数据安全；</li>
+<li>用户管理将给IT服务商带来额外的运维成本；</li>
+<li>数据迁移等业务场景存在业务无影响的需求。</li>
+</ol>
+<p>
+多租户技术可有效解决上述问题，共享资源，简化配置管理，提升数据安全性。
+</p>
+</div>
+</div>
+<div id="outline-container-orgae3c493" class="outline-4">
+<h4 id="orgae3c493"><span class="section-number-4">2.1.2</span> 定义</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+华为多租户特性SmartMulti-Tenant，实现了在一个物理存储系统中创建多个虚拟存储系统，让租户在多协议统一存储架构中既能共享相同的存储硬件资源，又不影响相互的数据安全性和隐私。
+</p>
+
+<p>
+License收费使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeda05c1" class="outline-4">
+<h4 id="orgeda05c1"><span class="section-number-4">2.1.3</span> 原理</h4>
+<div class="outline-text-4" id="text-2-1-3">
+</div>
+<div id="outline-container-org7260da5" class="outline-5">
+<h5 id="org7260da5"><span class="section-number-5">2.1.3.1</span> 相关概念</h5>
+<div class="outline-text-5" id="text-2-1-3-1">
+<ul class="org-ul">
+<li>vStore(Virtual Store)：虚拟存储系统</li>
+<li>系统视图：超级管理员通过该视图进行存储系统全局资源的分配和管理；</li>
+<li>租户视图：超级管理员和租户用户通过该视图进行租户存储资源的分配和管理；</li>
+<li>预置默认角色：系统预置给系统管理员和租户用户的默认角色；</li>
+<li>自定义角色：系统管理用户依据场景自定义系统或租户下的用户角色。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga78a118" class="outline-5">
+<h5 id="orga78a118"><span class="section-number-5">2.1.3.2</span> 资源分配</h5>
+<div class="outline-text-5" id="text-2-1-3-2">
+<p>
+存储系统可分为多个虚拟存储分区，这些分区称为vStore；一个物理存储系统可划分出多个
+vStore，vStore间共享存储池。系统管理员和租户进入每个vStore中为其分配块存储资源。每个租户下创建的LUN资源可映射给上层服务器使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgefc4ec3" class="outline-5">
+<h5 id="orgefc4ec3"><span class="section-number-5">2.1.3.3</span> 用户管理</h5>
+<div class="outline-text-5" id="text-2-1-3-3">
+<p>
+用户的管理通过权限和角色共同定义，权限和角色所属组分为系统组和租户组，其中租户组的角色仅用于租户。不同角色的用户可拥有不同的访问控制权限。
+</p>
+<ul class="org-ul">
+<li>权限：预定义权限、自定义权限；权限有只读、读写；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3716bc7" class="outline-5">
+<h5 id="org3716bc7"><span class="section-number-5">2.1.3.4</span> 角色管理</h5>
+<div class="outline-text-5" id="text-2-1-3-4">
+<p>
+默认角色和自定义角色。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org587ebe5" class="outline-4">
+<h4 id="org587ebe5"><span class="section-number-4">2.1.4</span> 影响与限制</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+多租户是在存储池级别上进行的逻辑隔离和权限控制。每个租户都占用存储系统的开销，增加的开销源于应用多租户特性时存储系统CPU利用率的提高。此开销仅在CPU是实际瓶颈时影响应用。当瓶颈在硬盘时此开销影响很小。因多数IO时间用于硬盘，CPU使用率的提高不会对I/O带来进一步的延时。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org09def6b" class="outline-4">
+<h4 id="org09def6b"><span class="section-number-4">2.1.5</span> 应用场景</h4>
+</div>
+
+<div id="outline-container-org772a3d8" class="outline-4">
+<h4 id="org772a3d8"><span class="section-number-4">2.1.6</span> 规划管理用户</h4>
+</div>
+<div id="outline-container-org0c737d6" class="outline-4">
+<h4 id="org0c737d6"><span class="section-number-4">2.1.7</span> 配置多租户</h4>
+</div>
+<div id="outline-container-org4c8bc21" class="outline-4">
+<h4 id="org4c8bc21"><span class="section-number-4">2.1.8</span> 管理多租户</h4>
+</div>
+<div id="outline-container-org86afd35" class="outline-4">
+<h4 id="org86afd35"><span class="section-number-4">2.1.9</span> 管理租户基础存储业务</h4>
+</div>
+<div id="outline-container-orga1d1e8c" class="outline-4">
+<h4 id="orga1d1e8c"><span class="section-number-4">2.1.10</span> 管理基于应用的存储资源</h4>
+</div>
+</div>
+
+<div id="outline-container-org3689b0e" class="outline-3">
+<h3 id="org3689b0e"><span class="section-number-3">2.2</span> EMC Unity</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-orgb48a055" class="outline-4">
+<h4 id="orgb48a055"><span class="section-number-4">2.2.1</span> What is multitenancy</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+landlord
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c6de56" class="outline-2">
+<h2 id="org6c6de56"><span class="section-number-2">3</span> 参考资料摘抄</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org0092526" class="outline-3">
+<h3 id="org0092526"><span class="section-number-3">3.1</span> What Is Multi-Tenant Stoarge</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li><a href="http://www.storage-switzerland.com/Articles/Entries/2012/5/16_What_Is_Multi-Tenant_Storage.html">What Is Multi-Tenant Storage?</a></li>
+</ul>
+<blockquote>
+<p>
+Enterprise IT departments are using server virtualization to increase their
+responsiveness to business functions and help them be more flexible and nimble
+in reacting to rapidly shifting market and competitive dynamics. Cloud providers
+are using server virtualization to share compute resources across potentially
+thousands of subscribers. Ideally, in both cases, 100% of the server
+infrastructure would be virtualized with maximum virtual machine (VM) density
+per host allowing for the most efficiency. Such a densely packed, highly
+virtualized environment needs to provide secure resource sharing, granular
+delegation of management functions and specific service level agreements for
+each virtualized application at each level of the virtualized infrastructure.
+</p>
+
+<p>
+The server and network level of the virtualized infrastructure can deliver this
+functionality in large part already. However the traditional storage
+infrastructure layer is lacking when it comes to these requirements. Most
+storage systems have limited, if any, functionality to provide secure, shared
+access in the virtual environment, to delegate storage management to business
+functions or to guarantee specific application service levels. A new paradigm
+for storage is needed, one that is better aligned with the virtual environment
+at the server and networking levels so that application requirements can be met
+on an end-to-end basis. That paradigm is the basis for multi-tenant storage.
+</p>
+
+<p>
+Multi-tenant storage systems, like those offered by <a href="http://www.cloudbyte.com/">CloudByte</a>, are systems that
+can create virtual storage controllers in the same way a hypervisor divides host
+compute resources through VMs. The storage manager of a multi-tenant storage
+system can keep VM or tenant data isolated, delegate management responsibilities
+and guarantee service levels (IOPS, throughput and latency) like a server
+virtualization administrator accomplishes this with the host and VMs that they
+manage.
+</p>
+
+<p>
+<b>Architecture of a Multi-Tenant Storage System</b>
+</p>
+
+<p>
+The multi-tenant storage system or controller acts in similar fashion to a
+large host in a virtual server environment. Storage is attached to the large
+physical controller and then divided into virtual controllers called “tenants”.
+Each of these tenants is mapped to one, or a group, of VMs. The tenants can also
+map to stand alone physical servers that are not part of the virtualized
+infrastructure. These tenants can then be assigned characteristics based on the
+needs of that VM, group of VMs or physical host(s).
+</p>
+
+<p>
+In the same way that a virtual machine is protected from other virtual machines
+on the same hypervisor, the tenants are also protected from each other. A
+‘misbehaving’ storage tenant wouldn’t impact another and cause data loss. The
+multi-tenant storage system also enables granular business line management or
+subscriber management of their specific storage resources.
+</p>
+
+<p>
+A virtual controller could be created that would be set for a controlled amount
+of storage performance and capacity to be used from the primary storage
+controller. That tenant could then be assigned to the business line or
+subscriber enabling them to be responsible for their own storage resources.
+</p>
+
+<p>
+Finally, the multi-tenant storage controller could create tenants that are
+dedicated to particular VMs, each guaranteed certain levels of performance. The
+storage administrator could design the system such that these tenants could be
+used elsewhere when not required by mission critical VMs, but be made instantly
+available to them when the need arises, thereby allowing maximum utilization.
+Alternatively, the tenants could be allocated to ensure continuous availability
+to mission critical VMs and guaranteeing performance and preventing users of
+less-critical VMs from getting accustomed to performance they were never
+intended to have.
+</p>
+
+<p>
+Finally, one of the biggest challenges in providing consistent performance is
+the load placed on the controller when back-end data protection and backup jobs
+occur. Multi-tenant storage systems can manage these functions as well, making
+sure that their activity does not impact front-end performance.
+</p>
+
+<p>
+<b>Implementing A New Storage Dynamic into an Old Architecture</b>
+</p>
+
+<p>
+The problem for most data centers is that significant investments have been made
+in legacy storage systems that don’t provide this multi-tenant functionality.
+Therefore data center managers seeking multi-tenant storage solutions would be
+forced to wait until the next storage refresh or operate both systems in
+parallel, gradually migrating data and bringing up new VMs on the multi-tenant
+system. However it would increase costs, complexity and make it harder to
+realize the value of multi-tenancy.
+</p>
+
+<p>
+An alternative would be to enable the multi-tenant controller to manage legacy
+storage systems. This approach would allow legacy storage to be consumed by the
+new multi-tenant primary storage controller and immediately gain the benefits of
+a multi-tenant architecture, without a costly storage refresh. This is the
+approach that CloudByte has taken. They provide a software storage controller
+that will run on X86 server-class hardware. Then, any storage assigned to that
+server is available to provide multi-tenant services, plus other, more
+traditional data services like snapshots. After the legacy storage is consumed
+all future storage purchases can be standard, less expensive arrays.
+</p>
+
+<p>
+<b>Use Cases For Multi-Tenant Storage</b>
+</p>
+
+<p>
+There are two primary use cases for multi-tenant storage, the first being the
+enterprise data center and the second cloud service providers. Enterprise
+environments are typically constructed with dedicated storage resources “siloed”
+by line of business and by performance requirements. While many enterprise IT
+teams have tried to consolidate their storage systems, they have struggled due
+to myriad unique security, management and SLA requirements. Multi-tenant storage
+as described above not only eliminates these concerns, but allows for the
+consolidation of all the various storage assets, virtualizing them behind a
+single primary storage controller or a series of such controllers.
+</p>
+
+<p>
+The second use case is the Cloud Service Provider. Similar to the enterprise
+environment, these businesses have hundreds or thousands of subscribers that
+need varying amounts of storage resources, but also want assurances of security
+between subscribers, granular management and performance guarantees. A storage
+system with an underlying multi-tenant architecture simplifies their
+provisioning and management tasks to meet their subscriber requirements.
+</p>
+
+<p>
+<b>Summary</b>
+</p>
+
+<p>
+Server virtualization has brought great efficiency gains to the data center,
+but hasn’t decreased the number of servers that need to have storage assigned
+to them. The virtual machines in these environments may not physically be there
+but they need physical capacity. Those virtual servers do take up less data
+center floor space but the requirements to keep them secure, managed and
+performing correctly remain. Multi-tenant storage is not a revolution in storage
+but the obvious next step in its evolution. It better compliments the
+requirements of the increasingly virtualized data center to provide the key
+security, management and performance needs of the application.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org867885f" class="outline-2">
+<h2 id="org867885f"><span class="section-number-2">4</span> 参考资料</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>What is Multi-Tenant Storage</dt><dd><a href="http://www.storage-switzerland.com/Articles/Entries/2012/5/16_What_Is_Multi-Tenant_Storage.html">http://www.storage-switzerland.com/Articles/Entries/2012/5/16_What_Is_Multi-Tenant_Storage.html</a></dd>
+<dt>HW配置多租户</dt><dd><a href="http://support.huawei.com/enterprise/docinforeader!loadDocument1.action?contentId=DOC1000045702&amp;partNo=10052">http://support.huawei.com/enterprise/docinforeader!loadDocument1.action?contentId=DOC1000045702&amp;partNo=10052</a></dd>
+<dt>多租户应用系统性能评估</dt><dd><a href="https://www.ibm.com/developerworks/cn/cloud/library/1506_dongwt_multitenants/index.html">https://www.ibm.com/developerworks/cn/cloud/library/1506_dongwt_multitenants/index.html</a></dd>
+<dt>数据层的多租户浅谈</dt><dd><a href="https://www.ibm.com/developerworks/cn/java/j-lo-dataMultitenant/">https://www.ibm.com/developerworks/cn/java/j-lo-dataMultitenant/</a></dd>
+<dt>What is Multi Tenancy</dt><dd><a href="http://www.asigra.com/blog/what-multi-tenancy-how-secure-it">http://www.asigra.com/blog/what-multi-tenancy-how-secure-it</a></dd>
+<dt>Multi-Tenant Storage with Amazon DynamoDB</dt><dd><a href="https://aws.amazon.com/blogs/apn/multi-tenant-storage-with-amazon-dynamodb/">https://aws.amazon.com/blogs/apn/multi-tenant-storage-with-amazon-dynamodb/</a></dd>
+<dt>XIV GEN3 Storage for Cloud, now with support for multiple tenants</dt><dd><a href="https://www.ibm.com/developerworks/community/blogs/storage_redbooks/entry/xiv_gen3_reinforces_its_storage_for_cloud_advantages_with_support_for_multiple_tenants?lang=en">https://www.ibm.com/developerworks/community/blogs/storage_redbooks/entry/xiv_gen3_reinforces_its_storage_for_cloud_advantages_with_support_for_multiple_tenants?lang=en</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/storage-multi-tenant.html';
+    this.page.identifier = 'storage-multi-tenant.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
