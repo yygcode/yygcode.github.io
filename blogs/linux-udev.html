@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:30 -->
+<!-- 2018-04-22 Sun 00:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX Udev机制介绍及简单调试</title>
 <meta name="generator" content="Org mode" />
@@ -32,6 +32,17 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgd2bdc50">1. udev调测过程</a></li>
+<li><a href="#org188b680">2. udev实现</a>
+<ul>
+<li><a href="#orgf712390">2.1. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#org6b35975">3. References</a>
+<ul>
+<li><a href="#org11940f5">3.1. 使用</a></li>
+<li><a href="#org4b2cf70">3.2. 实现</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -40,9 +51,140 @@
 </p>
 <blockquote>
 <p>
-
+spc5r19 P288:
+In response to an INQUIRY command received by an incorrect logical unit, the
+SCSI target device shall return the INQUIRY data with the peripheral qualifier
+set to the value defined in 6.7.2. The device server or task router (see SAM-5)
+shall terminate an INQUIRY command with CHECK CONDITION status only if the
+device server or task router is unable to return the requested INQUIRY data.
 </p>
 </blockquote>
+
+<table>
+<caption class="t-above"><span class="table-number">&#34920;1&nbsp;</span> spc5r19 P291</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Qualifier</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">000b</td>
+<td class="org-left">An addressed logical unit having the indicated peripheral</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">device type is:</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">a) accessible to the task router (see SAM-5) contained in the</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">SCSI target port that received this INQUIRY command; or</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">b) the task router is unable to determine whether or not the</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">addressed logical unit is accessible from this SCSI target.</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">port This peripheral qualifier value does not indicate that a</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">logical unit accessible by this task router is ready for</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">access.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">001b</td>
+<td class="org-left">An addressed logical unit having the indicated device type is</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">not accessible, at this time, to the task router (see SAM-5)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">contained in the SCSI target port that received this INQUIRY</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">command. However, the task router is capable of accessing the</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">addressed logical unit from this SCSI target port.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">010b</td>
+<td class="org-left">Reserved.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">011b</td>
+<td class="org-left">An addressed logical unit is not accessible to the task</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">router (see SAM-5) contained in the SCSI target port that</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">received this INQUIRY command. If the task router sets the</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">PERIPHERAL QUALIFIER field to 011b, the task router shall set</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">the PERIPHERAL DEVICE TYPE field to 1Fh.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">100b to 111b</td>
+<td class="org-left">Vendor specific</td>
+</tr>
+</tbody>
+</table>
 
 <p>
 应该返回PQualifier=011B，DeviceType=1Fh；实际返回PQualifier=001B，DeviceType=00h。
@@ -112,6 +254,30 @@ Linux内核特化处理了PQualifier=011B，按照异常流程删除了scsi设�
 <h2 id="orgd2bdc50"><span class="section-number-2">1</span> udev调测过程</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
+<li>使用info查看设备属性</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@pc:~$ udevadm info -a -x /dev/sg0
+
+Udevadm info starts with the device specified by the devpath and then
+walks up the chain of parent devices. It prints for every device
+found, all possible attributes<span class="org-keyword"> in</span> the udev rules key format.
+A rule to match, can be composed by the attributes of the device
+and the attributes from one single parent device.
+
+  looking at device <span class="org-string">'/devices/pci0000:00/0000:00:1f.2/ata1/host0/target0:0:0/0:0:0:0/scsi_generic/sg0'</span>:
+    <span class="org-variable-name">KERNEL</span>==<span class="org-string">"sg0"</span>
+    <span class="org-variable-name">SUBSYSTEM</span>==<span class="org-string">"scsi_generic"</span>
+    <span class="org-variable-name">DRIVER</span>==<span class="org-string">""</span>
+
+  looking at parent device <span class="org-string">'/devices/pci0000:00/0000:00:1f.2/ata1/host0/target0:0:0/0:0:0:0'</span>:
+    <span class="org-variable-name">KERNELS</span>==<span class="org-string">"0:0:0:0"</span>
+    <span class="org-variable-name">SUBSYSTEMS</span>==<span class="org-string">"scsi"</span>
+    <span class="org-variable-name">DRIVERS</span>==<span class="org-string">"sd"</span>
+</pre>
+</div>
+
+<ul class="org-ul">
 <li>在/etc/udev/rules.d/下放置特化rules文件（文件扩展名为rules）。例如：</li>
 </ul>
 <div class="org-src-container">
@@ -173,6 +339,114 @@ GROUP 6 /lib/udev/rules.d/50-udev-default.rules:63
 <div class="org-src-container">
 <pre class="src src-text">Apr 20 19:06:32 pc udev[729227.64]: Hello debug udev, process here
 </pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org188b680" class="outline-2">
+<h2 id="org188b680"><span class="section-number-2">2</span> udev实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+LINUX通过设备文件的主次设备号与内核建立映射关系。设备文件的维护经历了静态维护、
+devfs内核态维护、sysfs+hotplug用户态维护、udev几个阶段。相对比之前，udev使用更少空间，提供更高的弹性、更便捷的设备文件维护。参考<a href="http://www.kroah.com/linux/talks/ols_2003_udev_talk/index.html">udev talk</a>获取更多细节。
+</p>
+
+<p>
+优势总结：用户态、动态分配、更小、更便捷。<a href="https://lwn.net/Articles/65197/">LWN 65197</a>有更多细节描述：
+</p>
+<blockquote>
+<p>
+The Problems:
+</p>
+<ol class="org-ol">
+<li>A static /dev is unwieldy and big.  It would be nice to only show
+the /dev entries for the devices we actually have running in the
+system.</li>
+<li>We are (well, were) running out of major and minor numbers for
+devices.</li>
+<li>Users want a way to name devices in a persistent fashion (i.e. "This
+disk here, must <span class="underline">always</span> be called "boot_disk" no matter where in
+the scsi tree I put it", or "This USB camera must always be called
+"camera" no matter if I have other USB scsi devices plugged in or
+not.")</li>
+<li>Userspace programs want to know when devices are created or removed,
+and what /dev entry is associated with them.</li>
+</ol>
+
+<p>
+The constraints:
+</p>
+<ol class="org-ol">
+<li>No policy in the kernel!</li>
+<li>Follow standards (like the LSB)</li>
+<li>must be small so embedded devices will use it.</li>
+</ol>
+<p>
+So, how does devfs stack up to the above problems and constraints:
+  Problems:
+</p>
+<ol class="org-ol">
+<li>devfs only shows the dev entries for the devices in the system.</li>
+<li>devfs does not handle the need for dynamic major/minor numbers</li>
+<li>devfs does not provide a way to name devices in a persistent
+fashion.</li>
+<li>devfs does provide a deamon that userspace programs can hook into
+to listen to see what devices are being created or removed.</li>
+</ol>
+<p>
+Constraints:
+</p>
+<ol class="org-ol">
+<li>devfs forces the devfs naming policy into the kernel.  If you
+don't like this naming scheme, tough.</li>
+<li>devfs does not follow the LSB device naming standard.</li>
+<li>devfs is small, and embedded devices use it.  However it is
+implemented in non-pagable memory.</li>
+</ol>
+</blockquote>
+</div>
+
+<div id="outline-container-orgf712390" class="outline-3">
+<h3 id="orgf712390"><span class="section-number-3">2.1</span> 代码实现</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+代码位于<a href="https://www.kernel.org/pub/linux/utils/kernel/hotplug/">Kernel Utils Hotplug</a>，代码最新更新是2012/4，长久未更新，已经十分稳定了。
+Git仓库如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">git://git.kernel.org/pub/scm/linux/hotplug/udev.git
+https://git.kernel.org/pub/scm/linux/hotplug/udev.git
+https://kernel.googlesource.com/pub/scm/linux/hotplug/udev.git
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6b35975" class="outline-2">
+<h2 id="org6b35975"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org11940f5" class="outline-3">
+<h3 id="org11940f5"><span class="section-number-3">3.1</span> 使用</h3>
+<div class="outline-text-3" id="text-3-1">
+<dl class="org-dl">
+<dt>udev man7</dt><dd><a href="https://linux.die.net/man/7/udev">https://linux.die.net/man/7/udev</a></dd>
+<dt>udev man8</dt><dd><a href="https://linux.die.net/man/8/udev">https://linux.die.net/man/8/udev</a></dd>
+<dt>kernel hotplug udev</dt><dd><a href="https://mirrors.edge.kernel.org/pub/linux/utils/kernel/hotplug/udev/udev.html">https://mirrors.edge.kernel.org/pub/linux/utils/kernel/hotplug/udev/udev.html</a></dd>
+<dt>zh WIKI</dt><dd><a href="https://zh.wikipedia.org/wiki/Udev">https://zh.wikipedia.org/wiki/Udev</a></dd>
+<dt>IBM udev</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-udev/">https://www.ibm.com/developerworks/cn/linux/l-cn-udev/</a></dd>
+</dl>
+</div>
+</div>
+<div id="outline-container-org4b2cf70" class="outline-3">
+<h3 id="org4b2cf70"><span class="section-number-3">3.2</span> 实现</h3>
+<div class="outline-text-3" id="text-3-2">
+<dl class="org-dl">
+<dt>udev and devfs</dt><dd><a href="https://lwn.net/Articles/65197/">https://lwn.net/Articles/65197/</a></dd>
+<dt>slides udev talk</dt><dd><a href="http://www.kroah.com/linux/talks/ols_2003_udev_talk/">http://www.kroah.com/linux/talks/ols_2003_udev_talk/</a></dd>
+<dt>pdf: udev - a Userspace Implementation of devfs</dt><dd><a href="https://landley.net/kdocs/ols/2003/ols2003-pages-249-257.pdf">https://landley.net/kdocs/ols/2003/ols2003-pages-249-257.pdf</a></dd>
+</dl>
 </div>
 </div>
 </div>

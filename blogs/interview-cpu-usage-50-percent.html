@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-04-22 Sun 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>面试 - 如何让应用程序CPU使用率50%</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">面试 - 如何让应用程序CPU使用率50%</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc0a41bd">1. 我的解答</a></li>
+<li><a href="#org087d11d">2. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+在分析<a href="algos-btree-maximum-width-and-distance.html">二叉树最大距离</a>问题时，搜索购买了《编程之美》，该书最前面谈到实现一个应用占用CPU 50%问题。
+</p>
+
+<div id="outline-container-orgc0a41bd" class="outline-2">
+<h2 id="orgc0a41bd"><span class="section-number-2">1</span> 我的解答</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+使用<a href="linux-benchmark-time.html">rdtsc/gettimeofday</a>查询时间，并控制休眠和cpu占用百分比，最终达成目的。添加
+adjust微调循环体本身的CPU占用，实际测试观察意义不大。多核下设置affinity绑定CPU，可以提高稳定性，示例代码未添加。
+</p>
+
+<p>
+代码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/time.h&gt;</span>
+
+<span class="org-keyword">union</span> <span class="org-type">rdtsc_union</span> {
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">v64</span>;
+        <span class="org-keyword">struct</span> {
+                <span class="org-type">unsigned</span> <span class="org-type">int</span> <span class="org-variable-name">low32</span>;
+                <span class="org-type">unsigned</span> <span class="org-type">int</span> <span class="org-variable-name">high32</span>;
+        };
+};
+
+<span class="org-keyword">static</span> __always_inline <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-function-name">rdtsc_ordered</span>(<span class="org-type">void</span>)
+{
+        <span class="org-keyword">union</span> <span class="org-type">rdtsc_union</span> <span class="org-variable-name">ru</span>;
+
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (ru.low32), <span class="org-string">"=d"</span> (ru.high32));
+
+        <span class="org-keyword">return</span> ru.v64;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">ratio</span> = 50, <span class="org-variable-name">idx</span>;
+        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">rs</span>, <span class="org-variable-name">interval</span>, <span class="org-variable-name">interval_10ms</span>, <span class="org-variable-name">adjust</span>;
+        <span class="org-keyword">volatile</span> <span class="org-type">int</span> <span class="org-variable-name">op_dummy</span> = 0;
+
+        <span class="org-keyword">if</span> (argc &gt; 1)
+                ratio = atoi(argv[1]);
+
+        <span class="org-keyword">if</span> (ratio &lt; 0 || ratio &gt; 100) {
+                fprintf(stderr, <span class="org-string">"invalid ratio(%d), reset to 50\n"</span>, ratio);
+                ratio = 50;
+        }
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">benchmark</span>
+        rs = rdtsc_ordered();
+        usleep(1000*10); <span class="org-comment-delimiter">// </span><span class="org-comment">10 millseconds</span>
+        interval_10ms = rdtsc_ordered() - rs;
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">optional adjust result for precising</span>
+        rs = rdtsc_ordered();
+        <span class="org-keyword">for</span> (idx = 0; idx &lt; 100; ++idx) {
+                interval = rdtsc_ordered() - rs;
+                <span class="org-keyword">if</span> (idx &gt; ratio) {
+                        <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv</span>;
+                        gettimeofday(&amp;tv, <span class="org-constant">NULL</span>); <span class="org-comment-delimiter">// </span><span class="org-comment">fake syscall</span>
+                        rdtsc_ordered();
+                }
+        }
+        <span class="org-comment-delimiter">// </span><span class="org-comment">// 100 for os syscall, so call time</span>
+        adjust = (rdtsc_ordered() - rs)*10000*1000/interval_10ms/ratio;
+
+        printf(<span class="org-string">"interval_10ms=%lu, adjust=%lu, press Ctrl+c exit\n"</span>, interval_10ms, adjust);
+
+        <span class="org-keyword">while</span> (1) {
+                interval = rdtsc_ordered() - rs;
+                <span class="org-keyword">if</span> (interval &lt; interval_10ms*ratio) {
+                        ++op_dummy;
+                } <span class="org-keyword">else</span> {
+                        usleep(1000*10*(100-ratio) + adjust);
+                        rs = rdtsc_ordered();
+                }
+        }
+
+        <span class="org-keyword">return</span>  0;
+}
+</pre>
+</div>
+
+<p>
+GCC编译gcc -Wall -o cpuratio cpuratio.c测试，基本CPU占用在49.5%~50.5%之间。传递参数设置不同占用比：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t440:~/org/h/code$ gcc cpu-ratio.c -Wall -o cpu-ratio
+yanyg@t440:~/org/h/code$ ./a.out
+<span class="org-variable-name">interval_10ms</span>=29143618, <span class="org-variable-name">adjust</span>=228, press Ctrl+c exit
+^C
+yanyg@t440:~$ top
+  top output capture:
+  12023 yanyg     20   0    4172    652    576 S  50.2  0.0   0:03.02 cpu-ratio
+
+yanyg@t440:~/org/h/code$ ./cpu-ratio 80
+<span class="org-variable-name">interval_10ms</span>=29217598, <span class="org-variable-name">adjust</span>=262, press Ctrl+c exit
+^C
+yanyg@t440:~$ top
+  top output capture:
+  12059 yanyg     20   0    4172    740    664 R  80.1  0.0   0:12.41 cpu-ratio
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org087d11d" class="outline-2">
+<h2 id="org087d11d"><span class="section-number-2">2</span> References</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>编程之美 - CPU曲线</dt><dd><a href="http://tianshu.xyz/blog/108/">http://tianshu.xyz/blog/108/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/interview-cpu-usage-50-percent.html';
+    this.page.identifier = 'interview-cpu-usage-50-percent.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
