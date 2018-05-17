@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-05-17 Thu 23:41 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcdbff96">1. ABSTRACT</a></li>
+<li><a href="#orgb973b32">2. Keywords</a></li>
+<li><a href="#org656b3e6">3. Introduction</a></li>
+<li><a href="#org49fb69d">4. OS Block Layer</a>
+<ul>
+<li><a href="#org1bdd971">4.1. Architecture</a></li>
+<li><a href="#org56bd7e1">4.2. Scalability</a></li>
+</ul>
+</li>
+<li><a href="#org2952b72">5. Multi-Queue Block Layer</a></li>
+<li><a href="#orgdc8b310">6. English Words</a>
+<ul>
+<li><a href="#org760cd3b">6.1. graciously ['greiʃəsli] adv. 优雅地</a>
+<ul>
+<li><a href="#orge5c5a50">6.1.1. Basic Explains</a></li>
+<li><a href="#orgd8c4cba">6.1.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org494df82">6.2. commonplace ['kɒmənpleɪs] n. 司空见惯的事</a>
+<ul>
+<li><a href="#org4ae48c8">6.2.1. Basic Explains</a></li>
+<li><a href="#orgb5ef3e5">6.2.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org41bdb67">6.3. synonymous [sɪ'nɒnɪməs] adj. 同义的</a>
+<ul>
+<li><a href="#org1e24670">6.3.1. Basic Explains</a></li>
+<li><a href="#orgbd3eca5">6.3.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgd83c702">6.4. advent ['ædvənt] n. 出现</a>
+<ul>
+<li><a href="#org0a9fa2a">6.4.1. Basic Explains</a></li>
+<li><a href="#org87dbeb6">6.4.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgaac60b9">6.5. magnetic [mæg'netɪk] adj. 有磁性的</a>
+<ul>
+<li><a href="#org864ce44">6.5.1. Basic Explains</a></li>
+<li><a href="#org1b72523">6.5.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgfa11b2d">6.6. couple['kʌp(ə)l] of years n. 几年</a>
+<ul>
+<li><a href="#org38d8fb4">6.6.1. Basic Explains</a></li>
+<li><a href="#org3272657">6.6.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org386e810">6.7. albeit [ɔːl'biːɪt] conj. 虽然，即使</a>
+<ul>
+<li><a href="#orgd86273a">6.7.1. Basic Explains</a></li>
+<li><a href="#org52648f9">6.7.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org7afdfdf">6.8. witness [ˈwɪtnɪs] n. 证人；vt. 证明</a>
+<ul>
+<li><a href="#org8190a78">6.8.1. Basic Explains</a></li>
+<li><a href="#org0e042bf">6.8.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgffa6f4a">6.9. steadily ['stedɪlɪ] adv. 稳定地，稳固地</a>
+<ul>
+<li><a href="#org861c84b">6.9.1. Basic Explains</a></li>
+<li><a href="#org13e9e2b">6.9.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org9ecb6ae">6.10. sustain [sə'steɪn] vt. 维持，支撑</a>
+<ul>
+<li><a href="#org84f6632">6.10.1. Basic Explains</a></li>
+<li><a href="#org7f267f9">6.10.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org3495681">6.11. propose [prə'pəʊz] vt. 提出</a>
+<ul>
+<li><a href="#orgba78923">6.11.1. Basic Explains</a></li>
+<li><a href="#org3bdf628">6.11.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org501c40e">6.12. investigate [ɪn'vestɪgeɪt] v. 调查，研究</a>
+<ul>
+<li><a href="#org5839169">6.12.1. Basic Explains</a></li>
+<li><a href="#org30d37fb">6.12.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgf6c6c58">6.13. propose [prə'pəʊz] vi. 建议</a>
+<ul>
+<li><a href="#orgeefa7bb">6.13.1. Basic Explains</a></li>
+<li><a href="#org0d1df3c">6.13.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org7fa1131">6.14. shepherd ['ʃepəd] vt. 牧羊</a>
+<ul>
+<li><a href="#orga809ea9">6.14.1. Basic Explains</a></li>
+<li><a href="#org9204598">6.14.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgceaf870">6.15. malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</a>
+<ul>
+<li><a href="#org5d4715a">6.15.1. Basic Explains</a></li>
+<li><a href="#orgd6856d9">6.15.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org9481824">6.16. proportionally [prəu'pɔ:ʃənəli] adv. 适当地</a>
+<ul>
+<li><a href="#orgcd339f0">6.16.1. Basic Explains</a></li>
+<li><a href="#org0549632">6.16.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orgedfa60d">6.17. exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</a>
+<ul>
+<li><a href="#org7e237b7">6.17.1. Basic Explains</a></li>
+<li><a href="#org037706d">6.17.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org25ffbe7">6.18. depict [dɪ'pɪkt] vt. 描述，描画</a>
+<ul>
+<li><a href="#org51f5f0b">6.18.1. Basic Explains</a></li>
+<li><a href="#orge41a2e8">6.18.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#org1e01cb6">6.19. supplant [sə'plɑːnt] vt. 代替，排挤掉</a>
+<ul>
+<li><a href="#org8d5010d">6.19.1. Basic Explains</a></li>
+<li><a href="#org02f31d2">6.19.2. Web References</a></li>
+</ul>
+</li>
+<li><a href="#orge5901c8">6.20. substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</a>
+<ul>
+<li><a href="#org4e33d24">6.20.1. Basic Explains</a></li>
+<li><a href="#org2d413e6">6.20.2. Web References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcdbff96" class="outline-2">
+<h2 id="orgcdbff96"><span class="section-number-2">1</span> ABSTRACT</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The IO performance of storage devices has accelerated from hundreds of IOPS five
+years ago, to hundreds of thousands of IOPS today, and tens of millions of IOPS
+projected in five years. This sharp evolution is primarily due to the
+introduction of NAND-flash devices and their data parallel design. In this work,
+we demonstrate that the block layer within the operating system, originally
+designed to handle thousands of IOPS, has become a bottleneck to overall storage
+system performance, specially on the high NUMA-factor processors systems that
+are becoming commonplace. We describe the design of a next generation block
+layer that is capable of handling tens of millions of IOPS on a multi-core
+system equipped with a single storage device. Our experiments show that our
+design scales graciously with the number of cores, even on NUMA systems with
+multiple sockets.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb973b32" class="outline-2">
+<h2 id="orgb973b32"><span class="section-number-2">2</span> Keywords</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Linux, Block Layer, Solid State Drives, Non-volatile Memory, Latency,
+Throughput.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org656b3e6" class="outline-2">
+<h2 id="org656b3e6"><span class="section-number-2">3</span> Introduction</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+As long as secondary storage has been synonymous with hard disk drives (HDD), IO
+latency and throughput have been shaped by the physical characteristics of
+rotational devices: Random accesses that require disk head movement are slow and
+sequential accesses that only require rotation of the disk platter are fast.
+Generations of IO intensive algorithms and systems have been designed based on
+these two fundamental characteristics. Today, the advent of solid state disks
+(SSD) based on non-volatile memories (NVM) (e.g., Flash or phase-change memory
+[11, 6]) is transforming the performance characteristics of secondary storage.
+SSDs often exhibit little latency difference between sequential and random IOs
+[16]. IO latency for SSDs is in the order of tens of microseconds as opposed to
+tens of milliseconds for HDDs. Large internal data parallelism in SSDs disks
+enables many concurrent IO operations which, in turn, allows single devices to
+achieve close to a million IOs per second (IOPS) for random accesses, as opposed
+to just hundreds on traditional magnetic hard drives. In Figure 1, we illustrate
+the evolution of SSD performance over the last couple of years.
+</p>
+
+<p>
+A similar, albeit slower, performance transformation has already been witnessed
+for network systems. Ethernet speed evolved steadily from 10 Mb/s in the early
+1990s to 100 Gb/s in 2010. Such a regular evolution over a 20 years period has
+allowed for a smooth transition between lab prototypes and mainstream
+deployments over time. For storage, the rate of change is much faster. We have
+seen a 10,000x improvement over just a few years. The throughput of modern
+storage devices is now often limited by their hardware (i.e., SATA/SAS or PCI-E)
+and software interfaces [28, 26]. Such rapid leaps in hardware performance have
+exposed previously unnoticed bottlenecks at the software level, both in the
+operating system and application layers. Today, with Linux, a single CPU core
+can sustain an IO submission rate of around 800 thousand IOPS. Regardless of how
+many cores are used to submit IOs, the operating system block layer can not
+scale up to over one million IOPS. This may be fast enough for today's SSDs -
+but not for tomorrow's.
+</p>
+
+<p>
+We can expect that (a) SSDs are going to get faster, by increasing their
+internal parallelism1 [9, 8] and (b) CPU performance will improve largely due to
+the addition of more cores, whose performance may largely remain stable[24, 27].
+</p>
+
+<p>
+If we consider a SSD that can provide 2 million IOPS, applications will no
+longer be able to fully utilize a single storage device, regardless of the
+number of threads and CPUs it is parallelized across due to current limitations
+within the operating system.
+</p>
+
+<p>
+Because of the performance bottleneck that exists today within the operating
+system, some applications and device drivers are already choosing to bypass the
+Linux block layer in order to improve performance [8]. This choice increases
+complexity in both driver and hardware implementations. More specifically, it
+increases duplicate code across error-prone driver implementations, and removes
+generic features such as IO scheduling and quality of service trafic shaping
+that are provided by a common OS storage layer.
+</p>
+
+<p>
+Rather than discarding the block layer to keep up with improving storage
+performance, we propose a new design that fixes the scaling issues of the
+existing block layer, while preserving its best features. More specifically, our
+contributions are the following:
+</p>
+
+<ol class="org-ol">
+<li>We recognize that the Linux block layer has become a bottleneck (we detail</li>
+</ol>
+<p>
+our analysis in Section 2). The current design employs a single coarse lock
+design for protecting the request queue, which becomes the main bottleneck to
+overall storage performance as device performance approaches 800 thousand IOPS.
+This single lock design is especially painful on parallel CPUs, as all cores
+must agree on the state of the request queue lock, which quickly results in
+significant performance degradation.
+</p>
+
+<ol class="org-ol">
+<li>We propose a new design for IO management within the block layer. Our design</li>
+</ol>
+<p>
+relies on multiple IO submission/completion queues to minimize cache coherence
+across CPU cores. The main idea of our design is to introduce two levels of
+queues within the block layer: (i) software queues that manage the IOs submitted
+from a given CPU core (e.g., the block layer running on a CPU with 8 cores will
+be equipped with 8 software queues), and (ii) hardware queues mapped on the
+underlying SSD driver submission queue.
+</p>
+
+<ol class="org-ol">
+<li>We evaluate our multi-queue design based on a functional implementation</li>
+</ol>
+<p>
+within the Linux kernel. We implement a new no-op block driver that allows
+developers to investigate OS block layer improvements. We then compare our new
+block layer to the existing one on top of the noop driver (thus focusing purely
+on the block layer performance). We show that a two-level locking design reduces
+the number of cache and pipeline flushes compared to a single level design,
+scales gracefully in high NUMA-factor architectures, and can scale up to 10
+million IOPS to meet the demand of future storage products.
+</p>
+
+<p>
+The rest of the paper is organized as follows: In Section 2 we review the
+current implementation of the Linux block layer and its performance limitations.
+In Section 3 we propose a new multi-queue design for the Linux block layer. In
+Section 4 we describe our experimental framework, and in Section 5, we discuss
+the performance impact of our multi-queue design. We discuss related work in
+Section 6, before drawing our conclusions in Section 7.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org49fb69d" class="outline-2">
+<h2 id="org49fb69d"><span class="section-number-2">4</span> OS Block Layer</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Simply put, the operating system block layer is responsible for shepherding IO
+requests from applications to storage devices [2]. The block layer is a glue
+that, on the one hand, allows applications to access diverse storage devices in
+a uniform way, and on the other hand, provides storage devices and drivers with
+a single point of entry from all applications. It is a convenience library to
+hide the complexity and diversity of storage devices from the application while
+providing common services that are valuable to applications. In addition, the
+block layer implements IO-fairness, IO-error handling, IO-statistics, and
+IO-scheduling that improve performance and help protect end-users from poor or
+malicious implementations of other applications or device drivers.
+</p>
+</div>
+
+<div id="outline-container-org1bdd971" class="outline-3">
+<h3 id="org1bdd971"><span class="section-number-3">4.1</span> Architecture</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Figure 2 illustrates the architecture of the current Linux block layer.
+Applications submit IOs via a kernel system call, that converts them into a data
+structure called a block IO. Each block IO contains information such as IO
+address, IO size, IO modality (read or write) or IO type (synchronous/
+asynchronous)<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>. It is then transferred to either libaio for asynchronous IOs
+or directly to the block layer for synchronous IO that submit it to the block
+layer. Once an IO request is submitted, the corresponding block IO is buffered
+in the staging area, which is implemented as a queue, denoted the request queue.
+Once a request is in the staging area, the block layer may perform IO scheduling
+and adjust accounting information before scheduling IO submissions to the
+appropriate storage device driver. Note that the Linux block layer supports
+pluggable IO schedulers: noop (no scheduling), deadline-based scheduling [12],
+and CFQ [10] that can all operate on IO within this staging area. The block
+layer also provides a mechanism for dealing with IO completions: each time an
+IO completes within the device driver, this driver calls up the stack to the
+generic completion function in the block layer. In turn the block layer then
+calls up to an IO completion function in the libaio library, or returns from the
+synchronous read or write system call, which provides the IO completion signal
+to the application. With the current block layer, the staging area is
+represented by a request queue structure. One such queue is instantiated per
+block device. Access is uniform across all block devices and an application need
+not know what the control flow pattern is within the block layer. A consequence
+of this single queue per device design however is that the block layer cannot
+support IO scheduling across devices.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org56bd7e1" class="outline-3">
+<h3 id="org56bd7e1"><span class="section-number-3">4.2</span> Scalability</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+We analyzed the Linux kernel to evaluate the performance of the current block
+layer on high performance computing systems equipped with high-factor NUMA
+multi-core processors and high IOPS NAND-Flash SSDs. We found that the block
+layer had a considerable overhead for each IO; Specifically, we identified three
+main problems, illustrated in Figure 3:
+</p>
+
+<ol class="org-ol">
+<li>Request Queue Locking: The block layer fundamentally synchronizes shared</li>
+</ol>
+<p>
+accesses to an exclusive resource: the IO request queue. (i) Whenever a block IO
+is inserted or removed from the request queue, this lock must be acquired. (ii)
+Whenever the request queue is manipulated via IO submission, this lock must be
+acquired. (iii) As IOs are submitted, the block layer proceeds to optimizations
+such as plugging (letting IOs accumulate before issuing them to hardware to
+improve cache efficiency), (iv) IO reordering, and (v) fairness scheduling.
+Before any of these operations can proceed, the request queue lock must be
+acquired. This is a major source of contention.
+</p>
+
+<ol class="org-ol">
+<li>Hardware Interrupts: The high number of IOPS causes a proportionally high</li>
+</ol>
+<p>
+number of interrupts. Most of today's storage devices are designed such that one
+core (within CPU 0 on Figure 3) is responsible for handling all hardware
+interrupts and forwarding them to other cores as soft interrupts regardless of
+the CPU issuing and completing the IO. As a result, a single core may spend
+considerable time in handling these interrupts, context switching, and polluting
+L1 and L2 caches that applications could rely on for data locality [31]. The
+other cores (within CPU N on Figure 3) then also must take an IPI to perform the
+IO completion routine. As a result, in many cases two interrupts and context
+switches are required to complete just a single IO.
+</p>
+
+<ol class="org-ol">
+<li>Remote Memory Accesses: Request queue lock contention is exacerbated when it</li>
+</ol>
+<p>
+forces remote memory accesses across CPU cores (or across sockets in a NUMA
+architecture). Such remote memory accesses are needed whenever an IO completes
+on a different core from the one on which it was issued. In such cases,
+acquiring a lock on the request queue to remove the block IO from the request
+queue incurs a remote memory access to the lock state stored in the cache of the
+core where that lock was last acquired, the cache line is then marked shared on
+both cores. When updated, the copy is explicitly invalidated from the remote
+cache. If more than one core is actively issuing IO and thus competing for this
+lock, then the cache line associated with this lock is continuously bounced
+between those cores.
+</p>
+
+<p>
+Figure 4 shows 512 bytes IOs being submitted to the kernel as fast as possible;
+IOPS throughput is depicted as a function of the number of CPU's that are
+submitting and completing IOs to a single device simultaneously. We observe that
+when the number of processes is lower than the number cores on a single socket
+(i.e., 6), throughput improves, or is at least maintained, as multiple CPU's
+issue IOs. For 2, 4, and 8-socket architectures which have largely supplanted
+single socket machines in the HPC space, when IOs are issued from a CPU that is
+located on a remote socket(and typically NUMA node), absolute performance drops
+substantially regardless the absolute number of sockets in the system.
+</p>
+
+<p>
+Remote cacheline invalidation of the request queue lock is significantly more
+costly on complex four and eight socket systems where the NUMA-factor is high
+and large cache directory structures are expensive to access. On four and eight
+socket architectures, the request queue lock contention is so high that multiple
+sockets issuing IOs reduces the throughput of the Linux block layer to just
+about 125 thousand IOPS even though there have been high end solid state devices
+on the market for several years able to achieve higher IOPS than this. The
+scalability of the Linux block layer is not an issue that we might encounter in
+the future, it is a significant problem being faced by HPC in practice today.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2952b72" class="outline-2">
+<h2 id="org2952b72"><span class="section-number-2">5</span> Multi-Queue Block Layer</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+As we have seen in Section 2.2, reducing lock contention and remote memory
+accesses are key challenges when redesigning the block layer to scale on high
+NUMA-factor architectures. Dealing efficiently with the high number of hardware
+interrupts is beyond the control of the block layer(more on this below) as the
+block layer cannot dictate how a device driver interacts with its hardware. In
+this Section, we propose a two-level multi-queue design for the Linux block
+layer and discuss its key differences and advantages over the current single
+queue block layer implementation. Before we detail our design, we summarize the
+general block layer requirements.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdc8b310" class="outline-2">
+<h2 id="orgdc8b310"><span class="section-number-2">6</span> English Words</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org760cd3b" class="outline-3">
+<h3 id="org760cd3b"><span class="section-number-3">6.1</span> graciously ['greiʃəsli] adv. 优雅地</h3>
+<div class="outline-text-3" id="text-6-1">
+</div>
+<div id="outline-container-orge5c5a50" class="outline-4">
+<h4 id="orge5c5a50"><span class="section-number-4">6.1.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<ul class="org-ul">
+<li>adv. 和蔼地；仁慈地；雅致地</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd8c4cba" class="outline-4">
+<h4 id="orgd8c4cba"><span class="section-number-4">6.1.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-1-2">
+<dl class="org-dl">
+<dt>graciously</dt><dd>和蔼地; 优雅地; 雅致地</dd>
+<dt>Win graciously</dt><dd>优雅的取胜</dd>
+<dt>promise graciously</dt><dd>有礼貌地允诺</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org494df82" class="outline-3">
+<h3 id="org494df82"><span class="section-number-3">6.2</span> commonplace ['kɒmənpleɪs] n. 司空见惯的事</h3>
+<div class="outline-text-3" id="text-6-2">
+</div>
+<div id="outline-container-org4ae48c8" class="outline-4">
+<h4 id="org4ae48c8"><span class="section-number-4">6.2.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<ul class="org-ul">
+<li>n. 老生常谈；司空见惯的事；普通的东西</li>
+<li>adj. 平凡的；陈腐的</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb5ef3e5" class="outline-4">
+<h4 id="orgb5ef3e5"><span class="section-number-4">6.2.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-2-2">
+<dl class="org-dl">
+<dt>commonplace</dt><dd>平凡的; 碌碌无为; 平庸的</dd>
+<dt>commonplace book</dt><dd>摘录簿; 札记书; 剪贴集</dd>
+<dt>They Commonplace</dt><dd>他们碌碌无为</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41bdb67" class="outline-3">
+<h3 id="org41bdb67"><span class="section-number-3">6.3</span> synonymous [sɪ'nɒnɪməs] adj. 同义的</h3>
+<div class="outline-text-3" id="text-6-3">
+</div>
+<div id="outline-container-org1e24670" class="outline-4">
+<h4 id="org1e24670"><span class="section-number-4">6.3.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-3-1">
+<ul class="org-ul">
+<li>adj. 同义的；同义词的；同义突变的</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbd3eca5" class="outline-4">
+<h4 id="orgbd3eca5"><span class="section-number-4">6.3.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-3-2">
+<dl class="org-dl">
+<dt>synonymous</dt><dd>同义的; 同义词; 震震</dd>
+<dt>synonymous name</dt><dd>菌株其他名称; 其他名称</dd>
+<dt>synonymous substitutions</dt><dd>同义替换</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd83c702" class="outline-3">
+<h3 id="orgd83c702"><span class="section-number-3">6.4</span> advent ['ædvənt] n. 出现</h3>
+<div class="outline-text-3" id="text-6-4">
+</div>
+<div id="outline-container-org0a9fa2a" class="outline-4">
+<h4 id="org0a9fa2a"><span class="section-number-4">6.4.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-4-1">
+<ul class="org-ul">
+<li>n. 到来；出现；基督降临；基督降临节</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org87dbeb6" class="outline-4">
+<h4 id="org87dbeb6"><span class="section-number-4">6.4.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-4-2">
+<dl class="org-dl">
+<dt>advent</dt><dd>出现; 将临期; 降临节</dd>
+<dt>Second Advent</dt><dd>基督复临; 耶稣再临; 基督复临</dd>
+<dt>Advent Sermon</dt><dd>降临节证道讲章</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaac60b9" class="outline-3">
+<h3 id="orgaac60b9"><span class="section-number-3">6.5</span> magnetic [mæg'netɪk] adj. 有磁性的</h3>
+<div class="outline-text-3" id="text-6-5">
+</div>
+<div id="outline-container-org864ce44" class="outline-4">
+<h4 id="org864ce44"><span class="section-number-4">6.5.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-5-1">
+<ul class="org-ul">
+<li>adj. 地磁的；有磁性的；有吸引力的</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1b72523" class="outline-4">
+<h4 id="org1b72523"><span class="section-number-4">6.5.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-5-2">
+<dl class="org-dl">
+<dt>Magnetic</dt><dd>磁性; 磁的; 磁力</dd>
+<dt>magnetic tape</dt><dd>磁带; 磁带; 磁性录音带</dd>
+<dt>magnetic field</dt><dd>磁场; 磁力场; 耐电源频率磁场测试</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfa11b2d" class="outline-3">
+<h3 id="orgfa11b2d"><span class="section-number-3">6.6</span> couple['kʌp(ə)l] of years n. 几年</h3>
+<div class="outline-text-3" id="text-6-6">
+</div>
+<div id="outline-container-org38d8fb4" class="outline-4">
+<h4 id="org38d8fb4"><span class="section-number-4">6.6.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-6-1">
+<ul class="org-ul">
+<li>几年</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3272657" class="outline-4">
+<h4 id="org3272657"><span class="section-number-4">6.6.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-6-2">
+<dl class="org-dl">
+<dt>a couple of years</dt><dd>两年; 两三年的; 一两年</dd>
+<dt>In a couple of years</dt><dd>若干年后</dd>
+<dt>a couple of years ago</dt><dd>几年前</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org386e810" class="outline-3">
+<h3 id="org386e810"><span class="section-number-3">6.7</span> albeit [ɔːl'biːɪt] conj. 虽然，即使</h3>
+<div class="outline-text-3" id="text-6-7">
+</div>
+<div id="outline-container-orgd86273a" class="outline-4">
+<h4 id="orgd86273a"><span class="section-number-4">6.7.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-7-1">
+<ul class="org-ul">
+<li>conj. 虽然；即使</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org52648f9" class="outline-4">
+<h4 id="org52648f9"><span class="section-number-4">6.7.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-7-2">
+<dl class="org-dl">
+<dt>albeit</dt><dd>虽然; 尽管; 固然</dd>
+<dt>Albeit Mildly</dt><dd>尽管势头很温和</dd>
+<dt>Albeit Monotonous</dt><dd>尽管很枯燥</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org7afdfdf" class="outline-3">
+<h3 id="org7afdfdf"><span class="section-number-3">6.8</span> witness [ˈwɪtnɪs] n. 证人；vt. 证明</h3>
+<div class="outline-text-3" id="text-6-8">
+</div>
+<div id="outline-container-org8190a78" class="outline-4">
+<h4 id="org8190a78"><span class="section-number-4">6.8.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-8-1">
+<ul class="org-ul">
+<li>n. 证人；目击者；证据</li>
+<li>vt. 目击；证明；为…作证</li>
+<li>vi. 作证人</li>
+<li>n. (Witness)人名；(津)威特尼斯</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0e042bf" class="outline-4">
+<h4 id="org0e042bf"><span class="section-number-4">6.8.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-8-2">
+<dl class="org-dl">
+<dt>Witnessed</dt><dd>亲眼目睹; 见证; 目击</dd>
+<dt>Witnessed name</dt><dd>现场的名称; 目击名称; 目睹名称</dd>
+<dt>I  witnessed</dt><dd>我见证</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgffa6f4a" class="outline-3">
+<h3 id="orgffa6f4a"><span class="section-number-3">6.9</span> steadily ['stedɪlɪ] adv. 稳定地，稳固地</h3>
+<div class="outline-text-3" id="text-6-9">
+</div>
+<div id="outline-container-org861c84b" class="outline-4">
+<h4 id="org861c84b"><span class="section-number-4">6.9.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-9-1">
+<ul class="org-ul">
+<li>adv. 稳定地；稳固地；有规则地</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org13e9e2b" class="outline-4">
+<h4 id="org13e9e2b"><span class="section-number-4">6.9.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-9-2">
+<dl class="org-dl">
+<dt>Steadily</dt><dd>稳稳; 稳步; 稳中有升</dd>
+<dt>Moving steadily</dt><dd>稳扎稳打</dd>
+<dt>steadily continuously</dt><dd>持续地</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org9ecb6ae" class="outline-3">
+<h3 id="org9ecb6ae"><span class="section-number-3">6.10</span> sustain [sə'steɪn] vt. 维持，支撑</h3>
+<div class="outline-text-3" id="text-6-10">
+</div>
+<div id="outline-container-org84f6632" class="outline-4">
+<h4 id="org84f6632"><span class="section-number-4">6.10.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-10-1">
+<ul class="org-ul">
+<li>vt. 维持；支撑，承担；忍受；供养；证实</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7f267f9" class="outline-4">
+<h4 id="org7f267f9"><span class="section-number-4">6.10.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-10-2">
+<dl class="org-dl">
+<dt>sustain</dt><dd>维持; 支撑; 保持</dd>
+<dt>sustain losses</dt><dd>蒙受损失; 遭受损失</dd>
+<dt>Sustain Button</dt><dd>持续按钮</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org3495681" class="outline-3">
+<h3 id="org3495681"><span class="section-number-3">6.11</span> propose [prə'pəʊz] vt. 提出</h3>
+<div class="outline-text-3" id="text-6-11">
+</div>
+<div id="outline-container-orgba78923" class="outline-4">
+<h4 id="orgba78923"><span class="section-number-4">6.11.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-11-1">
+<ul class="org-ul">
+<li>vi. 建议；求婚；打算</li>
+<li>vt. 建议；打算，计划；求婚</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3bdf628" class="outline-4">
+<h4 id="org3bdf628"><span class="section-number-4">6.11.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-11-2">
+<dl class="org-dl">
+<dt>Propose</dt><dd>求婚; 提出; 提议</dd>
+<dt>propose explanation</dt><dd>提出解释; 建议的说明; 提出的解释</dd>
+<dt>Marriage propose</dt><dd>提亲</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org501c40e" class="outline-3">
+<h3 id="org501c40e"><span class="section-number-3">6.12</span> investigate [ɪn'vestɪgeɪt] v. 调查，研究</h3>
+<div class="outline-text-3" id="text-6-12">
+</div>
+<div id="outline-container-org5839169" class="outline-4">
+<h4 id="org5839169"><span class="section-number-4">6.12.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-12-1">
+<ul class="org-ul">
+<li>v. 调查；研究</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org30d37fb" class="outline-4">
+<h4 id="org30d37fb"><span class="section-number-4">6.12.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-12-2">
+<dl class="org-dl">
+<dt>investigate</dt><dd>调查; 探讨; 追究</dd>
+<dt>Investigate Mugging</dt><dd>调查街头劫案</dd>
+<dt>to investigate</dt><dd>调查; 侦查; 探究</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf6c6c58" class="outline-3">
+<h3 id="orgf6c6c58"><span class="section-number-3">6.13</span> propose [prə'pəʊz] vi. 建议</h3>
+<div class="outline-text-3" id="text-6-13">
+</div>
+<div id="outline-container-orgeefa7bb" class="outline-4">
+<h4 id="orgeefa7bb"><span class="section-number-4">6.13.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-13-1">
+<ul class="org-ul">
+<li>vi. 建议；求婚；打算</li>
+<li>vt. 建议；打算，计划；求婚</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0d1df3c" class="outline-4">
+<h4 id="org0d1df3c"><span class="section-number-4">6.13.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-13-2">
+<dl class="org-dl">
+<dt>Propose</dt><dd>求婚; 提出; 提议</dd>
+<dt>propose explanation</dt><dd>提出解释; 建议的说明; 提出的解释</dd>
+<dt>Marriage propose</dt><dd>提亲</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org7fa1131" class="outline-3">
+<h3 id="org7fa1131"><span class="section-number-3">6.14</span> shepherd ['ʃepəd] vt. 牧羊</h3>
+<div class="outline-text-3" id="text-6-14">
+</div>
+<div id="outline-container-orga809ea9" class="outline-4">
+<h4 id="orga809ea9"><span class="section-number-4">6.14.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-14-1">
+<ul class="org-ul">
+<li>vt. 牧羊；带领；指导；看管</li>
+<li>n. 牧羊人；牧师；指导者</li>
+<li>n. (Shepherd)人名；(英)谢泼德</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9204598" class="outline-4">
+<h4 id="org9204598"><span class="section-number-4">6.14.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-14-2">
+<dl class="org-dl">
+<dt>shepherding</dt><dd>放牧; 看管</dd>
+<dt>extreme shepherding</dt><dd>极品牧羊</dd>
+<dt>Shepherding Song</dt><dd>牧歌</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-orgceaf870" class="outline-3">
+<h3 id="orgceaf870"><span class="section-number-3">6.15</span> malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</h3>
+<div class="outline-text-3" id="text-6-15">
+</div>
+<div id="outline-container-org5d4715a" class="outline-4">
+<h4 id="org5d4715a"><span class="section-number-4">6.15.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-15-1">
+<ul class="org-ul">
+<li>adj. 恶意的；恶毒的；蓄意的；怀恨的</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd6856d9" class="outline-4">
+<h4 id="orgd6856d9"><span class="section-number-4">6.15.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-15-2">
+<dl class="org-dl">
+<dt>malicious</dt><dd>怀恶意的; 恶意的; 恶毒的</dd>
+<dt>Malicious prosecution</dt><dd>恶意起诉; 诬告; 恶意起诉</dd>
+<dt>malicious software</dt><dd>恶意软件; 恶意软体; 流氓软件</dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org9481824" class="outline-3">
+<h3 id="org9481824"><span class="section-number-3">6.16</span> proportionally [prəu'pɔ:ʃənəli] adv. 适当地</h3>
+<div class="outline-text-3" id="text-6-16">
+</div>
+<div id="outline-container-orgcd339f0" class="outline-4">
+<h4 id="orgcd339f0"><span class="section-number-4">6.16.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-16-1">
+<ul class="org-ul">
+<li>adv. 成比例地；相称地，适当地</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0549632" class="outline-4">
+<h4 id="org0549632"><span class="section-number-4">6.16.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-16-2">
+<dl class="org-dl">
+<dt>proportionally</dt><dd>按比例; 成比例地; 比例</dd>
+<dt>proportionally damped</dt><dd>一般阻尼; 比例阻尼</dd>
+<dt>dilut proportionally</dt><dd>按比例稀释</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgedfa60d" class="outline-3">
+<h3 id="orgedfa60d"><span class="section-number-3">6.17</span> exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</h3>
+<div class="outline-text-3" id="text-6-17">
+</div>
+<div id="outline-container-org7e237b7" class="outline-4">
+<h4 id="org7e237b7"><span class="section-number-4">6.17.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-17-1">
+<ul class="org-ul">
+<li>vt. 使加剧；使恶化；激怒</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org037706d" class="outline-4">
+<h4 id="org037706d"><span class="section-number-4">6.17.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-17-2">
+<dl class="org-dl">
+<dt>exacerbate</dt><dd>使加剧; 使恶化; 恶化</dd>
+<dt>alleviate exacerbate</dt><dd>减轻</dd>
+<dt>exacerbate surroundings</dt><dd>加剧环境恶化</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org25ffbe7" class="outline-3">
+<h3 id="org25ffbe7"><span class="section-number-3">6.18</span> depict [dɪ'pɪkt] vt. 描述，描画</h3>
+<div class="outline-text-3" id="text-6-18">
+</div>
+<div id="outline-container-org51f5f0b" class="outline-4">
+<h4 id="org51f5f0b"><span class="section-number-4">6.18.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-18-1">
+<ul class="org-ul">
+<li>vt. 描述；描画</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge41a2e8" class="outline-4">
+<h4 id="orge41a2e8"><span class="section-number-4">6.18.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-18-2">
+<dl class="org-dl">
+<dt>depicted</dt><dd>描述; 描绘; 描写</dd>
+<dt>landforms depicted</dt><dd>地貌描绘</dd>
+<dt>Depicted thing</dt><dd>描绘事物</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1e01cb6" class="outline-3">
+<h3 id="org1e01cb6"><span class="section-number-3">6.19</span> supplant [sə'plɑːnt] vt. 代替，排挤掉</h3>
+<div class="outline-text-3" id="text-6-19">
+</div>
+<div id="outline-container-org8d5010d" class="outline-4">
+<h4 id="org8d5010d"><span class="section-number-4">6.19.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-19-1">
+<ul class="org-ul">
+<li>vt. 代替；排挤掉</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org02f31d2" class="outline-4">
+<h4 id="org02f31d2"><span class="section-number-4">6.19.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-19-2">
+<dl class="org-dl">
+<dt>supplanted</dt><dd>硫酸灰分; 禅代</dd>
+<dt>Having Supplanted</dt><dd>经取代</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge5901c8" class="outline-3">
+<h3 id="orge5901c8"><span class="section-number-3">6.20</span> substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</h3>
+<div class="outline-text-3" id="text-6-20">
+</div>
+<div id="outline-container-org4e33d24" class="outline-4">
+<h4 id="org4e33d24"><span class="section-number-4">6.20.1</span> Basic Explains</h4>
+<div class="outline-text-4" id="text-6-20-1">
+<ul class="org-ul">
+<li>adv. 实质上；大体上；充分地</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2d413e6" class="outline-4">
+<h4 id="org2d413e6"><span class="section-number-4">6.20.2</span> Web References</h4>
+<div class="outline-text-4" id="text-6-20-2">
+<dl class="org-dl">
+<dt>Substantially</dt><dd>大幅度; 幅度; 大幅</dd>
+<dt>substantially equivalent</dt><dd>实质相当; 实质上相同; 实质等同</dd>
+<dt>substantially similar</dt><dd>实质相似; 实质类似</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+See include <code>linux/blk_types.h</code> in the Linux kernel (kernel.org) for a
+complete description of the Block IO data structure.
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/paper-linux-block-io-introducing-mq-sdd.html';
+    this.page.identifier = 'paper-linux-block-io-introducing-mq-sdd.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
