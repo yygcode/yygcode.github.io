@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:29 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>C语言编程技巧/C Programming Tips</title>
 <meta name="generator" content="Org mode" />
@@ -44,36 +44,36 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga119212">1. 说明</a></li>
-<li><a href="#orgc9cba35">2. 返回结构体</a></li>
-<li><a href="#org167cff4">3. 内联汇编</a>
+<li><a href="#org53ea215">1. 说明</a></li>
+<li><a href="#org2a7dcb8">2. 返回结构体</a></li>
+<li><a href="#org186d7c9">3. 内联汇编</a>
 <ul>
-<li><a href="#org5075414">3.1. 基本格式</a>
+<li><a href="#org92854f6">3.1. 基本格式</a>
 <ul>
-<li><a href="#orgef413f3">3.1.1. 语法</a></li>
-<li><a href="#org18dea9e">3.1.2. 示例</a></li>
+<li><a href="#org4a5b357">3.1.1. 语法</a></li>
+<li><a href="#orgbf0f7fb">3.1.2. 示例</a></li>
 </ul>
 </li>
-<li><a href="#org246fa1f">3.2. 扩展格式</a>
+<li><a href="#org4daf410">3.2. 扩展格式</a>
 <ul>
-<li><a href="#org3803553">3.2.1. 语法</a></li>
+<li><a href="#org02b6420">3.2.1. 语法</a></li>
 </ul>
 </li>
-<li><a href="#org8ac7937">3.3. cpu ticks rdstc</a>
+<li><a href="#org6cdeceb">3.3. cpu ticks rdstc</a>
 <ul>
-<li><a href="#org2f02275">3.3.1. inline function</a></li>
-<li><a href="#org2a9abb8">3.3.2. gcc extend macro</a></li>
+<li><a href="#org3abd743">3.3.1. inline function</a></li>
+<li><a href="#org2fa5225">3.3.2. gcc extend macro</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf35fe2c">4. Reference Materials</a></li>
+<li><a href="#org09cc5bb">4. Reference Materials</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga119212" class="outline-2">
-<h2 id="orga119212"><span class="section-number-2">1</span> 说明</h2>
+<div id="outline-container-org53ea215" class="outline-2">
+<h2 id="org53ea215"><span class="section-number-2">1</span> 说明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文不介绍基本C语言编程，只记录实际代码中用到的各种编程技巧，这些技巧一般是GCC
@@ -82,57 +82,57 @@
 </div>
 </div>
 
-<div id="outline-container-orgc9cba35" class="outline-2">
-<h2 id="orgc9cba35"><span class="section-number-2">2</span> 返回结构体</h2>
+<div id="outline-container-org2a7dcb8" class="outline-2">
+<h2 id="org2a7dcb8"><span class="section-number-2">2</span> 返回结构体</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 使用型别强制转换与打括号组合，返回结构体类别：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-keyword">struct</span> <span class="org-type">bucket</span> {
-        <span class="org-type">int</span> <span class="org-variable-name">array</span>[128];
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">bucket</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[128];
 };
 
-<span class="org-keyword">struct</span> <span class="org-type">slot</span> {
-        <span class="org-type">int</span> <span class="org-variable-name">x</span>;
-        <span class="org-keyword">struct</span> <span class="org-type">bucket</span> *<span class="org-variable-name">bucket</span>;
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">slot</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">bucket</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">bucket</span>;
 };
 
-<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-keyword">struct</span> <span class="org-type">slot</span> <span class="org-function-name">__to_slot</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">v</span>)
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">slot</span><span class="org-whitespace-space"> </span><span class="org-function-name">__to_slot</span>(<span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>)
 {
-        <span class="org-keyword">return</span> (<span class="org-keyword">struct</span> <span class="org-type">slot</span>){v &amp; 3, (<span class="org-keyword">struct</span> <span class="org-type">bucket</span> *)(v &amp; ~3)};
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">slot</span>){v<span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">bucket</span><span class="org-whitespace-space"> </span>*)(v<span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span>~3)};
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
 {
-        <span class="org-keyword">struct</span> <span class="org-type">slot</span> <span class="org-variable-name">sl</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">slot</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sl</span>;
 
-        sl = __to_slot(0x1234567890abcdef);
+<span class="org-whitespace-space">        </span>sl<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>__to_slot(0x1234567890abcdef);
 
-        printf(<span class="org-string">"bucket=%p, x=%x\n"</span>, sl.bucket, sl.x);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"bucket=%p,</span><span class="org-whitespace-space"> </span><span class="org-string">x=%x\n"</span>,<span class="org-whitespace-space"> </span>sl.bucket,<span class="org-whitespace-space"> </span>sl.x);
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org167cff4" class="outline-2">
-<h2 id="org167cff4"><span class="section-number-2">3</span> 内联汇编</h2>
+<div id="outline-container-org186d7c9" class="outline-2">
+<h2 id="org186d7c9"><span class="section-number-2">3</span> 内联汇编</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org5075414" class="outline-3">
-<h3 id="org5075414"><span class="section-number-3">3.1</span> 基本格式</h3>
+<div id="outline-container-org92854f6" class="outline-3">
+<h3 id="org92854f6"><span class="section-number-3">3.1</span> 基本格式</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orgef413f3" class="outline-4">
-<h4 id="orgef413f3"><span class="section-number-4">3.1.1</span> 语法</h4>
+<div id="outline-container-org4a5b357" class="outline-4">
+<h4 id="org4a5b357"><span class="section-number-4">3.1.1</span> 语法</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span>);
+<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly</span><span class="org-whitespace-space"> </span><span class="org-string">code"</span>);
 </pre>
 </div>
 
@@ -145,22 +145,22 @@
 </div>
 </div>
 
-<div id="outline-container-org18dea9e" class="outline-4">
-<h4 id="org18dea9e"><span class="section-number-4">3.1.2</span> 示例</h4>
+<div id="outline-container-orgbf0f7fb" class="outline-4">
+<h4 id="orgbf0f7fb"><span class="section-number-4">3.1.2</span> 示例</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">int</span> <span class="org-variable-name">a</span> = 10, <span class="org-variable-name">b</span> = 20, <span class="org-variable-name">r</span> = 0;
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">a</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>10,<span class="org-whitespace-space"> </span><span class="org-variable-name">b</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>20,<span class="org-whitespace-space"> </span><span class="org-variable-name">r</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
 {
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"movl a, %eax\n\t"</span>
-                     <span class="org-string">"addl b, %eax\n\t"</span>
-                     <span class="org-string">"movl %eax, r\n\t"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"movl</span><span class="org-whitespace-space"> </span><span class="org-string">a,</span><span class="org-whitespace-space"> </span><span class="org-string">%eax\n\t"</span>
+<span class="org-whitespace-space">                     </span><span class="org-string">"addl</span><span class="org-whitespace-space"> </span><span class="org-string">b,</span><span class="org-whitespace-space"> </span><span class="org-string">%eax\n\t"</span>
+<span class="org-whitespace-space">                     </span><span class="org-string">"movl</span><span class="org-whitespace-space"> </span><span class="org-string">%eax,</span><span class="org-whitespace-space"> </span><span class="org-string">r\n\t"</span>);
 
-        printf(<span class="org-string">"%d + %d = %d\n"</span>, a, b, r);
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%d</span><span class="org-whitespace-space"> </span><span class="org-string">+</span><span class="org-whitespace-space"> </span><span class="org-string">%d</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">%d\n"</span>,<span class="org-whitespace-space"> </span>a,<span class="org-whitespace-space"> </span>b,<span class="org-whitespace-space"> </span>r);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -168,15 +168,15 @@
 </div>
 </div>
 
-<div id="outline-container-org246fa1f" class="outline-3">
-<h3 id="org246fa1f"><span class="section-number-3">3.2</span> 扩展格式</h3>
+<div id="outline-container-org4daf410" class="outline-3">
+<h3 id="org4daf410"><span class="section-number-3">3.2</span> 扩展格式</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org3803553" class="outline-4">
-<h4 id="org3803553"><span class="section-number-4">3.2.1</span> 语法</h4>
+<div id="outline-container-org02b6420" class="outline-4">
+<h4 id="org02b6420"><span class="section-number-4">3.2.1</span> 语法</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly code"</span> : output locations : input operands : changed registers);
+<pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly</span><span class="org-whitespace-space"> </span><span class="org-string">code"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>output<span class="org-whitespace-space"> </span>locations<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>input<span class="org-whitespace-space"> </span>operands<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>changed<span class="org-whitespace-space"> </span>registers);
 </pre>
 </div>
 
@@ -188,70 +188,70 @@
 </div>
 </div>
 
-<div id="outline-container-org8ac7937" class="outline-3">
-<h3 id="org8ac7937"><span class="section-number-3">3.3</span> cpu ticks rdstc</h3>
+<div id="outline-container-org6cdeceb" class="outline-3">
+<h3 id="org6cdeceb"><span class="section-number-3">3.3</span> cpu ticks rdstc</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-org2f02275" class="outline-4">
-<h4 id="org2f02275"><span class="section-number-4">3.3.1</span> inline function</h4>
+<div id="outline-container-org3abd743" class="outline-4">
+<h4 id="org3abd743"><span class="section-number-4">3.3.1</span> inline function</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;time.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unistd.h&gt;</span>
 
-<span class="org-keyword">static</span> __always_inline <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-function-name">rdtsc_ordered</span>(<span class="org-type">void</span>)
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span>__always_inline<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-function-name">rdtsc_ordered</span>(<span class="org-type">void</span>)
 {
-        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">low</span>, <span class="org-variable-name">high</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">low</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">high</span>;
 
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (low), <span class="org-string">"=d"</span> (high));
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span><span class="org-whitespace-space"> </span>:::<span class="org-whitespace-space"> </span><span class="org-string">"memory"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(low),<span class="org-whitespace-space"> </span><span class="org-string">"=d"</span><span class="org-whitespace-space"> </span>(high));
 
-        <span class="org-keyword">return</span> low | (high &lt;&lt; 32);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>low<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>(high<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>32);
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
 {
-        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">start</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">end</span>;
 
-        start = rdtsc_ordered();
-        usleep(1000);
-        end = rdtsc_ordered();
+<span class="org-whitespace-space">        </span>start<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc_ordered();
+<span class="org-whitespace-space">        </span>usleep(1000);
+<span class="org-whitespace-space">        </span>end<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc_ordered();
 
-        printf(<span class="org-string">"elapsed=%lu [start=%lu end=%lu]\n"</span>, end - start, start, end);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"elapsed=%lu</span><span class="org-whitespace-space"> </span><span class="org-string">[start=%lu</span><span class="org-whitespace-space"> </span><span class="org-string">end=%lu]\n"</span>,<span class="org-whitespace-space"> </span>end<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>start,<span class="org-whitespace-space"> </span>start,<span class="org-whitespace-space"> </span>end);
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2a9abb8" class="outline-4">
-<h4 id="org2a9abb8"><span class="section-number-4">3.3.2</span> gcc extend macro</h4>
+<div id="outline-container-org2fa5225" class="outline-4">
+<h4 id="org2fa5225"><span class="section-number-4">3.3.2</span> gcc extend macro</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;time.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;time.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unistd.h&gt;</span>
 
-<span class="org-preprocessor">#define</span> <span class="org-function-name">rdtsc_ordered</span>() ({                              \
-        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">low</span>, <span class="org-variable-name">high</span>;                                \
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span> ::: <span class="org-string">"memory"</span>);      \
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span> : <span class="org-string">"=a"</span> (low), <span class="org-string">"=d"</span> (high));        \
-        low | (high &lt;&lt; 32); })
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">rdtsc_ordered</span>()<span class="org-whitespace-tab"> </span>({<span class="org-whitespace-tab">                              </span>\
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">low</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">high</span>;<span class="org-whitespace-tab">                                </span>\
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"mfence\n\tlfence\n\t"</span><span class="org-whitespace-space"> </span>:::<span class="org-whitespace-space"> </span><span class="org-string">"memory"</span>);<span class="org-whitespace-tab">      </span>\
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"rdtsc"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(low),<span class="org-whitespace-space"> </span><span class="org-string">"=d"</span><span class="org-whitespace-space"> </span>(high));<span class="org-whitespace-tab">        </span>\
+<span class="org-whitespace-space">        </span>low<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>(high<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>32);<span class="org-whitespace-space"> </span>})
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
 {
-        <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">start</span>, <span class="org-variable-name">end</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">start</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">end</span>;
 
-        start = rdtsc_ordered();
-        usleep(1000);
-        end = rdtsc_ordered();
+<span class="org-whitespace-space">        </span>start<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc_ordered();
+<span class="org-whitespace-space">        </span>usleep(1000);
+<span class="org-whitespace-space">        </span>end<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc_ordered();
 
-        printf(<span class="org-string">"elapsed=%lu [start=%lu end=%lu]\n"</span>, end - start, start, end);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"elapsed=%lu</span><span class="org-whitespace-space"> </span><span class="org-string">[start=%lu</span><span class="org-whitespace-space"> </span><span class="org-string">end=%lu]\n"</span>,<span class="org-whitespace-space"> </span>end<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>start,<span class="org-whitespace-space"> </span>start,<span class="org-whitespace-space"> </span>end);
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -259,8 +259,8 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgf35fe2c" class="outline-2">
-<h2 id="orgf35fe2c"><span class="section-number-2">4</span> Reference Materials</h2>
+<div id="outline-container-org09cc5bb" class="outline-2">
+<h2 id="org09cc5bb"><span class="section-number-2">4</span> Reference Materials</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>LWN A guide to inline assembly code in GCC</dt><dd><a href="https://lwn.net/Articles/685739/">https://lwn.net/Articles/685739/</a></dd>

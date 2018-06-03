@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Fuss, Futexes and Furwocks: Fast Userlevel Locking in Linux</title>
 <meta name="generator" content="Org mode" />
@@ -22,26 +22,26 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgee3bc91">1. Author</a>
+<li><a href="#org1aa6f18">1. Author</a>
 <ul>
-<li><a href="#orgf39d735">1.1. Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</a></li>
-<li><a href="#org54250f9">1.2. Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</a></li>
-<li><a href="#org02a721d">1.3. Matthew Kirkwood, matthew@hairy.beasts.org</a></li>
+<li><a href="#org9705e52">1.1. Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</a></li>
+<li><a href="#org145fb80">1.2. Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</a></li>
+<li><a href="#orgc8ad72f">1.3. Matthew Kirkwood, matthew@hairy.beasts.org</a></li>
 </ul>
 </li>
-<li><a href="#org0be3c07">2. Abstract</a></li>
-<li><a href="#org99a4a96">3. Introduction</a></li>
-<li><a href="#orgc70ba6d">4. Requirements</a></li>
+<li><a href="#org97aea92">2. Abstract</a></li>
+<li><a href="#orge1f04fd">3. Introduction</a></li>
+<li><a href="#orgd4b58b9">4. Requirements</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgee3bc91" class="outline-2">
-<h2 id="orgee3bc91"><span class="section-number-2">1</span> Author</h2>
+<div id="outline-container-org1aa6f18" class="outline-2">
+<h2 id="org1aa6f18"><span class="section-number-2">1</span> Author</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgf39d735" class="outline-3">
-<h3 id="orgf39d735"><span class="section-number-3">1.1</span> Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</h3>
+<div id="outline-container-org9705e52" class="outline-3">
+<h3 id="org9705e52"><span class="section-number-3">1.1</span> Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>Homepage: <a href="https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1">https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1</a></li>
@@ -49,8 +49,8 @@
 </div>
 </div>
 
-<div id="outline-container-org54250f9" class="outline-3">
-<h3 id="org54250f9"><span class="section-number-3">1.2</span> Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</h3>
+<div id="outline-container-org145fb80" class="outline-3">
+<h3 id="org145fb80"><span class="section-number-3">1.2</span> Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>Blog(may right?): <a href="https://rusty.ozlabs.org/">https://rusty.ozlabs.org/</a></li>
@@ -58,13 +58,13 @@
 </div>
 </div>
 
-<div id="outline-container-org02a721d" class="outline-3">
-<h3 id="org02a721d"><span class="section-number-3">1.3</span> Matthew Kirkwood, matthew@hairy.beasts.org</h3>
+<div id="outline-container-orgc8ad72f" class="outline-3">
+<h3 id="orgc8ad72f"><span class="section-number-3">1.3</span> Matthew Kirkwood, matthew@hairy.beasts.org</h3>
 </div>
 </div>
 
-<div id="outline-container-org0be3c07" class="outline-2">
-<h2 id="org0be3c07"><span class="section-number-2">2</span> Abstract</h2>
+<div id="outline-container-org97aea92" class="outline-2">
+<h2 id="org97aea92"><span class="section-number-2">2</span> Abstract</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Fast userlevel locking is an alternative locking mechanism to the typically
@@ -81,8 +81,8 @@ the "futex" interface.
 </div>
 </div>
 
-<div id="outline-container-org99a4a96" class="outline-2">
-<h2 id="org99a4a96"><span class="section-number-2">3</span> Introduction</h2>
+<div id="outline-container-orge1f04fd" class="outline-2">
+<h2 id="orge1f04fd"><span class="section-number-2">3</span> Introduction</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Linux<sup>TM</sup><sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> has seen significant(重要的) growth as a server operating system
@@ -165,8 +165,8 @@ section 5 we elaborate on current and future efforts and in 6 we conclude.
 </div>
 </div>
 
-<div id="outline-container-orgc70ba6d" class="outline-2">
-<h2 id="orgc70ba6d"><span class="section-number-2">4</span> Requirements</h2>
+<div id="outline-container-orgd4b58b9" class="outline-2">
+<h2 id="orgd4b58b9"><span class="section-number-2">4</span> Requirements</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 In this section we are stating some of the requirements of a fast userlevel

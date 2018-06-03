@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>MCS Command execute results</title>
 <meta name="generator" content="Org mode" />
@@ -22,27 +22,27 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgae7cd56">1. 集群时间设置: time/zone</a></li>
-<li><a href="#org1e936bc">2. 查看和更新: lslicense &amp; chlicense</a></li>
-<li><a href="#org3b67b7e">3. 显示集群属性: lssystem</a></li>
-<li><a href="#org7b3b996">4. 密码维护: setpwdreset</a></li>
-<li><a href="#orgb54ecd6">5. 查看dumps</a></li>
-<li><a href="#org0281260">6. 重新扫瞄发现MDisks</a></li>
-<li><a href="#orgd1aa31f">7. 存储池</a></li>
+<li><a href="#org030d88f">1. 集群时间设置: time/zone</a></li>
+<li><a href="#org5bb15fa">2. 查看和更新: lslicense &amp; chlicense</a></li>
+<li><a href="#org0159d9a">3. 显示集群属性: lssystem</a></li>
+<li><a href="#orga0c87a3">4. 密码维护: setpwdreset</a></li>
+<li><a href="#orga740807">5. 查看dumps</a></li>
+<li><a href="#orgaa553d4">6. 重新扫瞄发现MDisks</a></li>
+<li><a href="#org7b5269b">7. 存储池</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgae7cd56" class="outline-2">
-<h2 id="orgae7cd56"><span class="section-number-2">1</span> 集群时间设置: time/zone</h2>
+<div id="outline-container-org030d88f" class="outline-2">
+<h2 id="org030d88f"><span class="section-number-2">1</span> 集群时间设置: time/zone</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>显示当前时区</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:Cluster_100.2.34.2:superuser&gt;showtimezone
-id  timezone
-211 Asia/Hong_Kong
+id<span class="org-whitespace-space">  </span>timezone
+211<span class="org-whitespace-space"> </span>Asia/Hong_Kong
 </pre>
 </div>
 
@@ -51,16 +51,16 @@ id  timezone
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:Cluster_100.2.34.2:superuser&gt;lstimezones
-id  timezone
-0   Africa/Abidjan
-1   Africa/Accra
-2   Africa/Addis_Ababa
-3   Africa/Algiers
-4   Africa/Asmera
+id<span class="org-whitespace-space">  </span>timezone
+0<span class="org-whitespace-space">   </span>Africa/Abidjan
+1<span class="org-whitespace-space">   </span>Africa/Accra
+2<span class="org-whitespace-space">   </span>Africa/Addis_Ababa
+3<span class="org-whitespace-space">   </span>Africa/Algiers
+4<span class="org-whitespace-space">   </span>Africa/Asmera
 ...
-246 Asia/Shanghai
-247 Asia/Singapore
-248 Asia/Taipei
+246<span class="org-whitespace-space"> </span>Asia/Shanghai
+247<span class="org-whitespace-space"> </span>Asia/Singapore
+248<span class="org-whitespace-space"> </span>Asia/Taipei
 ...
 </pre>
 </div>
@@ -73,7 +73,7 @@ id  timezone
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;svqueryclock
-Mon Sep  4 16:46:37 HKT 2017
+Mon<span class="org-whitespace-space"> </span>Sep<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space"> </span>16:46:37<span class="org-whitespace-space"> </span>HKT<span class="org-whitespace-space"> </span>2017
 </pre>
 </div>
 
@@ -89,39 +89,39 @@ Mon Sep  4 16:46:37 HKT 2017
 <li>设置时间</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell">setsystemtime -time MMDDHHmmYYYY
-<span class="org-comment-delimiter"># </span><span class="org-comment">comment: month day hour minutes year</span>
-<span class="org-comment-delimiter"># </span><span class="org-comment">other: MMDDHHmmYYYY.ss(seconds)</span>
+<pre class="src src-shell">setsystemtime<span class="org-whitespace-space"> </span>-time<span class="org-whitespace-space"> </span>MMDDHHmmYYYY
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">comment:</span><span class="org-whitespace-space"> </span><span class="org-comment">month</span><span class="org-whitespace-space"> </span><span class="org-comment">day</span><span class="org-whitespace-space"> </span><span class="org-comment">hour</span><span class="org-whitespace-space"> </span><span class="org-comment">minutes</span><span class="org-whitespace-space"> </span><span class="org-comment">year</span>
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">other:</span><span class="org-whitespace-space"> </span><span class="org-comment">MMDDHHmmYYYY.ss(seconds)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e936bc" class="outline-2">
-<h2 id="org1e936bc"><span class="section-number-2">2</span> 查看和更新: lslicense &amp; chlicense</h2>
+<div id="outline-container-org5bb15fa" class="outline-2">
+<h2 id="org5bb15fa"><span class="section-number-2">2</span> 查看和更新: lslicense &amp; chlicense</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>lslicense查看当前License(许可证)设置</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lslicense
-used_local 0.01
-used_remote 0.00
-used_virtualization 0.00
-license_local 0
-license_remote 0
-license_virtualization 0
-license_physical_disks 0
-license_physical_local off
-license_physical_remote off
-used_compression_capacity 0.00
-license_compression_capacity 0
-license_compression_enclosures 0
-license_in_tier 0
-license_cloud_enclosures 0
-scu_ratio_flash 1.00
-scu_ratio_enterprise 1.18
-scu_ratio_nearline 4.00
+used_local<span class="org-whitespace-space"> </span>0.01
+used_remote<span class="org-whitespace-space"> </span>0.00
+used_virtualization<span class="org-whitespace-space"> </span>0.00
+license_local<span class="org-whitespace-space"> </span>0
+license_remote<span class="org-whitespace-space"> </span>0
+license_virtualization<span class="org-whitespace-space"> </span>0
+license_physical_disks<span class="org-whitespace-space"> </span>0
+license_physical_local<span class="org-whitespace-space"> </span>off
+license_physical_remote<span class="org-whitespace-space"> </span>off
+used_compression_capacity<span class="org-whitespace-space"> </span>0.00
+license_compression_capacity<span class="org-whitespace-space"> </span>0
+license_compression_enclosures<span class="org-whitespace-space"> </span>0
+license_in_tier<span class="org-whitespace-space"> </span>0
+license_cloud_enclosures<span class="org-whitespace-space"> </span>0
+scu_ratio_flash<span class="org-whitespace-space"> </span>1.00
+scu_ratio_enterprise<span class="org-whitespace-space"> </span>1.18
+scu_ratio_nearline<span class="org-whitespace-space"> </span>4.00
 </pre>
 </div>
 
@@ -129,17 +129,17 @@ scu_ratio_nearline 4.00
 <li>chlicense设置系统License(许可证)</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">HOW TO?</span>
+<pre class="src src-shell"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">HOW</span><span class="org-whitespace-space"> </span><span class="org-comment">TO?</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3b67b7e" class="outline-2">
-<h2 id="org3b67b7e"><span class="section-number-2">3</span> 显示集群属性: lssystem</h2>
+<div id="outline-container-org0159d9a" class="outline-2">
+<h2 id="org0159d9a"><span class="section-number-2">3</span> 显示集群属性: lssystem</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
-<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lssystem -delim :
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lssystem<span class="org-whitespace-space"> </span>-delim<span class="org-whitespace-space"> </span>:
 id:0000000027C27034
 name:C90
 location:local
@@ -156,8 +156,8 @@ total_allocated_extent_capacity:0.00MB
 statistics_status:on
 statistics_frequency:15
 cluster_locale:en_US
-time_zone:211 Asia/Hong_Kong
-code_level:3.1.6.10 (build 133.18.1709012304000)
+time_zone:211<span class="org-whitespace-space"> </span>Asia/Hong_Kong
+code_level:3.1.6.10<span class="org-whitespace-space"> </span>(build<span class="org-whitespace-space"> </span>133.18.1709012304000)
 console_IP:10.151.12.90:443
 id_alias:0000000027C27034
 ac_link_tolerance:300
@@ -215,15 +215,15 @@ email_machine_zip:11111
 email_machine_country:CN
 total_drive_raw_capacity:32.75TB
 compression_destage_mode:off
-local_fc_port_mask:1111111111111111111111111111111111111111111111111111111111111111
-partner_fc_port_mask:1111111111111111111111111111111111111111111111111111111111111111
+local_fc_port_mask:1111111111111111111111111111111111111111111111111111111111111<span class="org-whitespace-line">111</span>
+partner_fc_port_mask:11111111111111111111111111111111111111111111111111111111111<span class="org-whitespace-line">11111</span>
 high_temp_mode:off
 topology:standard
 topology_status:
 rc_auth_method:none
 vdisk_protection_time:15
 vdisk_protection_enabled:no
-product_name:Inspur AS5500G2
+product_name:Inspur<span class="org-whitespace-space"> </span>AS5500G2
 odx:off
 max_replication_delay:0
 partnership_exclusion_threshold:315
@@ -240,156 +240,156 @@ tier_nearline_compressed_data_used:0.00MB
 </div>
 </div>
 
-<div id="outline-container-org7b3b996" class="outline-2">
-<h2 id="org7b3b996"><span class="section-number-2">4</span> 密码维护: setpwdreset</h2>
+<div id="outline-container-orga0c87a3" class="outline-2">
+<h2 id="orga0c87a3"><span class="section-number-2">4</span> 密码维护: setpwdreset</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
-<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;setpwdreset -show
-Password status: [1]
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;setpwdreset<span class="org-whitespace-space"> </span>-show
+Password<span class="org-whitespace-space"> </span>status:<span class="org-whitespace-space"> </span>[1]
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb54ecd6" class="outline-2">
-<h2 id="orgb54ecd6"><span class="section-number-2">5</span> 查看dumps</h2>
+<div id="outline-container-orga740807" class="outline-2">
+<h2 id="orga740807"><span class="section-number-2">5</span> 查看dumps</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>lsdumps</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsdumps
-id filename
-0  reinst.000000.trc
-1  000000.trc
-2  inst.170807.trc
-3  mcs.config.cron.log_6577501-1
-4  mcs.config.cron.sh_6577501-1
-5  mcs.config.cron.xml_6577501-1
-6  dump.6577501-1.170808.083608
-7  dump.6577501-1.170808.104202
-8  inst.170808.trc
-9  inst.170809.trc
-10 mcs.config.cron.sh_6577501-2
-11 mcs.config.cron.log_6577501-2
-12 mcs.config.cron.bak_6577501-2
-13 mcs.config.cron.xml_6577501-2
-14 dump.6577501-1.170811.141924
-15 inst.170811.trc
-16 dump.6577501-1.170815.112234
-17 inst.170816.trc
-18 inst.170818.trc
-19 livedump.keymgr.6577501-1.170821.120041
-20 livedump.ietd.6577501-1.170821.120041
-21 livedump.keymgr.6577501-1.170821.120509
-22 livedump.ietd.6577501-1.170821.120509
-23 dump.6577501-1.170821.120525
-24 dump.6577501-1.170821.120059
-25 livedump.ietd.6577501-1.170821.121154
-26 livedump.keymgr.6577501-1.170821.121154
-27 dump.6577501-1.170821.121210
-28 dump.6577501-1.170821.142111
-29 livedump.keymgr.6577501-1.170821.143206
-30 livedump.ietd.6577501-1.170821.143206
-31 dump.6577501-1.170821.143222
-32 livedump.ietd.6577501-1.170821.145402
-33 livedump.keymgr.6577501-1.170821.145402
-34 livedump.ietd.6577501-1.170821.150054
-35 livedump.keymgr.6577501-1.170821.150054
-36 dump.6577501-1.170821.150158
-37 dump.6577501-1.170821.152314
-38 livedump.ietd.6577501-1.170821.152819
-39 livedump.keymgr.6577501-1.170821.152819
-40 dump.6577501-1.170821.152835
-41 dump.6577501-1.170821.145421
-42 inst.170821.trc
-43 inst.170822.trc
-44 keymgr.6577501-1.trc.old
-45 dump.6577501-1.170824.095831
-46 cloudd.6577501-1.trc.old
-47 dump.6577501-1.170828.103554
-48 livedump.keymgr.6577501-1.170828.135633
-49 livedump.ietd.6577501-1.170828.135633
-50 dump.6577501-1.170828.135656
-51 livedump.ietd.6577501-1.170828.142239
-52 livedump.keymgr.6577501-1.170828.142239
-53 dump.6577501-1.170828.142301
-54 dump.6577501-1.170828.163131
-55 dump.6577501-1.170828.164804
-56 dump.6577501-1.170828.172548
-57 inst.170828.trc
-58 livedump.keymgr.6577501-1.170829.111431
-59 livedump.ietd.6577501-1.170829.111431
-60 ethernet.6577501-1.stats
-61 dump.6577501-1.170829.111449
-62 inst.170829.trc
-63 cl_debug.trc
-64 inst.170830.trc
-65 inst.170831.trc
-66 bios_update.2.log
-67 pex86.2.log
-68 svc_config_push.6577501-1.trc
-69 bios_update.1.log
-70 pex86.1.log
-71 endd.trc.old
-72 inst.170901.trc
-73 fsck_test
-74 pex86.0.log
-75 bios_update.0.log
-76 boot.6577501-1.trc
-77 ec_makevpd.6577501-1.trc
-78 Techport_DHCP_DNS.old.trc
-79 keymgr.kmip.6577501-1.trc
-80 Techport_DHCP_DNS.log
-81 6577501-1.trc.old
-82 rtc.racemqB_log.txt.6577501-1.trc
-83 rtc.racemqA_log.txt.6577501-1.trc
-84 racemqA_log.txt
-85 racemqB_log.txt
-86 ethernet.6577501-1.trc
-87 keymgr.6577501-1.trc
-88 cloudd.6577501-1.trc
-89 endd.trc
-90 6577501-1.trc
+id<span class="org-whitespace-space"> </span>filename
+0<span class="org-whitespace-space">  </span>reinst.000000.trc
+1<span class="org-whitespace-space">  </span>000000.trc
+2<span class="org-whitespace-space">  </span>inst.170807.trc
+3<span class="org-whitespace-space">  </span>mcs.config.cron.log_6577501-1
+4<span class="org-whitespace-space">  </span>mcs.config.cron.sh_6577501-1
+5<span class="org-whitespace-space">  </span>mcs.config.cron.xml_6577501-1
+6<span class="org-whitespace-space">  </span>dump.6577501-1.170808.083608
+7<span class="org-whitespace-space">  </span>dump.6577501-1.170808.104202
+8<span class="org-whitespace-space">  </span>inst.170808.trc
+9<span class="org-whitespace-space">  </span>inst.170809.trc
+10<span class="org-whitespace-space"> </span>mcs.config.cron.sh_6577501-2
+11<span class="org-whitespace-space"> </span>mcs.config.cron.log_6577501-2
+12<span class="org-whitespace-space"> </span>mcs.config.cron.bak_6577501-2
+13<span class="org-whitespace-space"> </span>mcs.config.cron.xml_6577501-2
+14<span class="org-whitespace-space"> </span>dump.6577501-1.170811.141924
+15<span class="org-whitespace-space"> </span>inst.170811.trc
+16<span class="org-whitespace-space"> </span>dump.6577501-1.170815.112234
+17<span class="org-whitespace-space"> </span>inst.170816.trc
+18<span class="org-whitespace-space"> </span>inst.170818.trc
+19<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.120041
+20<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.120041
+21<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.120509
+22<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.120509
+23<span class="org-whitespace-space"> </span>dump.6577501-1.170821.120525
+24<span class="org-whitespace-space"> </span>dump.6577501-1.170821.120059
+25<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.121154
+26<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.121154
+27<span class="org-whitespace-space"> </span>dump.6577501-1.170821.121210
+28<span class="org-whitespace-space"> </span>dump.6577501-1.170821.142111
+29<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.143206
+30<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.143206
+31<span class="org-whitespace-space"> </span>dump.6577501-1.170821.143222
+32<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.145402
+33<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.145402
+34<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.150054
+35<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.150054
+36<span class="org-whitespace-space"> </span>dump.6577501-1.170821.150158
+37<span class="org-whitespace-space"> </span>dump.6577501-1.170821.152314
+38<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170821.152819
+39<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170821.152819
+40<span class="org-whitespace-space"> </span>dump.6577501-1.170821.152835
+41<span class="org-whitespace-space"> </span>dump.6577501-1.170821.145421
+42<span class="org-whitespace-space"> </span>inst.170821.trc
+43<span class="org-whitespace-space"> </span>inst.170822.trc
+44<span class="org-whitespace-space"> </span>keymgr.6577501-1.trc.old
+45<span class="org-whitespace-space"> </span>dump.6577501-1.170824.095831
+46<span class="org-whitespace-space"> </span>cloudd.6577501-1.trc.old
+47<span class="org-whitespace-space"> </span>dump.6577501-1.170828.103554
+48<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170828.135633
+49<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170828.135633
+50<span class="org-whitespace-space"> </span>dump.6577501-1.170828.135656
+51<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170828.142239
+52<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170828.142239
+53<span class="org-whitespace-space"> </span>dump.6577501-1.170828.142301
+54<span class="org-whitespace-space"> </span>dump.6577501-1.170828.163131
+55<span class="org-whitespace-space"> </span>dump.6577501-1.170828.164804
+56<span class="org-whitespace-space"> </span>dump.6577501-1.170828.172548
+57<span class="org-whitespace-space"> </span>inst.170828.trc
+58<span class="org-whitespace-space"> </span>livedump.keymgr.6577501-1.170829.111431
+59<span class="org-whitespace-space"> </span>livedump.ietd.6577501-1.170829.111431
+60<span class="org-whitespace-space"> </span>ethernet.6577501-1.stats
+61<span class="org-whitespace-space"> </span>dump.6577501-1.170829.111449
+62<span class="org-whitespace-space"> </span>inst.170829.trc
+63<span class="org-whitespace-space"> </span>cl_debug.trc
+64<span class="org-whitespace-space"> </span>inst.170830.trc
+65<span class="org-whitespace-space"> </span>inst.170831.trc
+66<span class="org-whitespace-space"> </span>bios_update.2.log
+67<span class="org-whitespace-space"> </span>pex86.2.log
+68<span class="org-whitespace-space"> </span>svc_config_push.6577501-1.trc
+69<span class="org-whitespace-space"> </span>bios_update.1.log
+70<span class="org-whitespace-space"> </span>pex86.1.log
+71<span class="org-whitespace-space"> </span>endd.trc.old
+72<span class="org-whitespace-space"> </span>inst.170901.trc
+73<span class="org-whitespace-space"> </span>fsck_test
+74<span class="org-whitespace-space"> </span>pex86.0.log
+75<span class="org-whitespace-space"> </span>bios_update.0.log
+76<span class="org-whitespace-space"> </span>boot.6577501-1.trc
+77<span class="org-whitespace-space"> </span>ec_makevpd.6577501-1.trc
+78<span class="org-whitespace-space"> </span>Techport_DHCP_DNS.old.trc
+79<span class="org-whitespace-space"> </span>keymgr.kmip.6577501-1.trc
+80<span class="org-whitespace-space"> </span>Techport_DHCP_DNS.log
+81<span class="org-whitespace-space"> </span>6577501-1.trc.old
+82<span class="org-whitespace-space"> </span>rtc.racemqB_log.txt.6577501-1.trc
+83<span class="org-whitespace-space"> </span>rtc.racemqA_log.txt.6577501-1.trc
+84<span class="org-whitespace-space"> </span>racemqA_log.txt
+85<span class="org-whitespace-space"> </span>racemqB_log.txt
+86<span class="org-whitespace-space"> </span>ethernet.6577501-1.trc
+87<span class="org-whitespace-space"> </span>keymgr.6577501-1.trc
+88<span class="org-whitespace-space"> </span>cloudd.6577501-1.trc
+89<span class="org-whitespace-space"> </span>endd.trc
+90<span class="org-whitespace-space"> </span>6577501-1.trc
 </pre>
 </div>
 <ul class="org-ul">
 <li>用prefix指定特定目录</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsdumps -prefix /dumps/audit
-id  filename
-0   auditlog_0_499_20170823155544_0000000026627034
-1   auditlog_500_999_20170823160723_0000000026627034
-2   auditlog_1000_1499_20170823160836_0000000026627034
-3   auditlog_1500_1999_20170823161113_0000000026627034
-4   auditlog_2000_2499_20170823161844_0000000026627034
-5   auditlog_2500_2999_20170823170115_0000000026627034
-6   auditlog_3000_3499_20170823214348_0000000026627034
-7   auditlog_3500_3999_20170823224521_0000000026627034
-8   auditlog_4000_4499_20170824001312_0000000026627034
-9   auditlog_4500_4999_20170824015534_0000000026627034
-10  auditlog_5000_5499_20170824035200_0000000026627034
-11  auditlog_5500_5999_20170824054846_0000000026627034
-12  auditlog_6000_6499_20170824073055_0000000026627034
-13  auditlog_6500_6999_20170824084533_0000000026627034
-14  auditlog_7000_7499_20170824095148_0000000026627034
-15  auditlog_7500_7999_20170824102125_0000000026627034
-16  auditlog_8000_8499_20170824102806_0000000026627034
-17  auditlog_8500_8999_20170824103435_0000000026627034
-18  auditlog_9000_9499_20170824104210_0000000026627034
-19  auditlog_9500_9999_20170824104900_0000000026627034
-20  auditlog_10000_10499_20170824105542_0000000026627034
-21  auditlog_10500_10999_20170824110230_0000000026627034
-22  auditlog_11000_11499_20170824110933_0000000026627034
-23  auditlog_11500_11999_20170824111622_0000000026627034
-24  auditlog_12500_12999_20170824113005_0000000026627034
-25  auditlog_13000_13499_20170824113700_0000000026627034
-26  auditlog_13500_13999_20170824114340_0000000026627034
-27  auditlog_14000_14499_20170824115027_0000000026627034
-28  auditlog_14500_14999_20170824115732_0000000026627034
-29  auditlog_15000_15499_20170824120332_0000000026627034
-30  auditlog_15500_15999_20170824121103_0000000026627034
+<pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsdumps<span class="org-whitespace-space"> </span>-prefix<span class="org-whitespace-space"> </span>/dumps/audit
+id<span class="org-whitespace-space">  </span>filename
+0<span class="org-whitespace-space">   </span>auditlog_0_499_20170823155544_0000000026627034
+1<span class="org-whitespace-space">   </span>auditlog_500_999_20170823160723_0000000026627034
+2<span class="org-whitespace-space">   </span>auditlog_1000_1499_20170823160836_0000000026627034
+3<span class="org-whitespace-space">   </span>auditlog_1500_1999_20170823161113_0000000026627034
+4<span class="org-whitespace-space">   </span>auditlog_2000_2499_20170823161844_0000000026627034
+5<span class="org-whitespace-space">   </span>auditlog_2500_2999_20170823170115_0000000026627034
+6<span class="org-whitespace-space">   </span>auditlog_3000_3499_20170823214348_0000000026627034
+7<span class="org-whitespace-space">   </span>auditlog_3500_3999_20170823224521_0000000026627034
+8<span class="org-whitespace-space">   </span>auditlog_4000_4499_20170824001312_0000000026627034
+9<span class="org-whitespace-space">   </span>auditlog_4500_4999_20170824015534_0000000026627034
+10<span class="org-whitespace-space">  </span>auditlog_5000_5499_20170824035200_0000000026627034
+11<span class="org-whitespace-space">  </span>auditlog_5500_5999_20170824054846_0000000026627034
+12<span class="org-whitespace-space">  </span>auditlog_6000_6499_20170824073055_0000000026627034
+13<span class="org-whitespace-space">  </span>auditlog_6500_6999_20170824084533_0000000026627034
+14<span class="org-whitespace-space">  </span>auditlog_7000_7499_20170824095148_0000000026627034
+15<span class="org-whitespace-space">  </span>auditlog_7500_7999_20170824102125_0000000026627034
+16<span class="org-whitespace-space">  </span>auditlog_8000_8499_20170824102806_0000000026627034
+17<span class="org-whitespace-space">  </span>auditlog_8500_8999_20170824103435_0000000026627034
+18<span class="org-whitespace-space">  </span>auditlog_9000_9499_20170824104210_0000000026627034
+19<span class="org-whitespace-space">  </span>auditlog_9500_9999_20170824104900_0000000026627034
+20<span class="org-whitespace-space">  </span>auditlog_10000_10499_20170824105542_0000000026627034
+21<span class="org-whitespace-space">  </span>auditlog_10500_10999_20170824110230_0000000026627034
+22<span class="org-whitespace-space">  </span>auditlog_11000_11499_20170824110933_0000000026627034
+23<span class="org-whitespace-space">  </span>auditlog_11500_11999_20170824111622_0000000026627034
+24<span class="org-whitespace-space">  </span>auditlog_12500_12999_20170824113005_0000000026627034
+25<span class="org-whitespace-space">  </span>auditlog_13000_13499_20170824113700_0000000026627034
+26<span class="org-whitespace-space">  </span>auditlog_13500_13999_20170824114340_0000000026627034
+27<span class="org-whitespace-space">  </span>auditlog_14000_14499_20170824115027_0000000026627034
+28<span class="org-whitespace-space">  </span>auditlog_14500_14999_20170824115732_0000000026627034
+29<span class="org-whitespace-space">  </span>auditlog_15000_15499_20170824120332_0000000026627034
+30<span class="org-whitespace-space">  </span>auditlog_15500_15999_20170824121103_0000000026627034
 </pre>
 </div>
 <p>
@@ -423,46 +423,46 @@ default is the /dumps directory. Valid directory names:
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;catauditlog
-audit_seq_no timestamp    cluster_user challenge source_panel target_panel ssh_ip_address result res_obj_id action_cmd
-0            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -name C90
-1            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -ntpip 0.0.0.0
-2            170904085119 superuser                                        10.72.221.160  0                 mcsop settimezone -timezone 211
-3            170904085119 superuser                                        10.72.221.160  0                 mcsop chsystem -invemailinterval 7
-4            170904085120 superuser                                        10.72.221.160  0                 mcsop chemail -address 1 -city 1 -contact 1 -country CN -location 1 -
-organization 1 -primary 111111 -reply 1@1.com -state XX -zip 11111
-5            170904085120 superuser                                        10.72.221.160  0                 mcsop chsystem -easysetup no
-6            170904085120 superuser                                        10.72.221.160  0      0          mcsop mkdnsserver -ip 10.150.1.11 -name DNS0
-7            170904085139 superuser                                        10.72.221.160  0      0          mcsop mkcloudaccountaliyunoss -name zreal -bucket new-storage-cs-shan
-ghai -accesskeyid LTAILyUd5jmlvMzf -secretaccesskey <span class="org-comment-delimiter">#### </span><span class="org-comment">-region oss-cn-shanghai -encrypt no</span>
-8            170904085258 superuser                                        10.72.221.160  0                 mcsop rmcloudaccount 0
-9            170904093334 superuser                                        10.165.21.185  0      0          mcsop mkcloudaccountswift -container jia -encrypt no -endpoint http:/
-/10.151.12.38:5000/v2.0 -gui -keystone -password <span class="org-comment-delimiter">#### </span><span class="org-comment">-tenantname demo -username admin</span>
-10           170904093456 superuser                                        10.165.21.185  0      0          mcsop mkmdiskgrp -unit mb -ext 1024 -gui -guiid 0 -intier auto -name
-Pool0 -warning 80%
-11           170904093504 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 0
-12           170904093505 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 2
-13           170904093506 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 7
-14           170904093508 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 8
-15           170904093509 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 11
-16           170904093510 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 5
-17           170904093511 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 1
-18           170904093512 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 3
-19           170904093513 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 4
-20           170904093514 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 9
-21           170904093515 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 6
-22           170904093516 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use candidate 10
-23           170904093527 superuser                                        10.165.21.185  0                 mcsop chdrive -gui -use spare 8
-24           170904093532 superuser                                        10.165.21.185  0      0          mcsop mkarray -drive 0:4:5:6:3:10:9:2:11:7:1 -gui -level raid6 -spare
-goal 1 -strip 256 Pool0
-25           170904093556 superuser                                        10.165.21.185  0      0          mcsop mkvdisk -gui -mdiskgrp 0 -name cl1 -size 1073741824 -unit b
-26           170904094709 superuser                                        10.165.21.185  0      0          mcsop mkhost -force -gui -iogrp 0:1:2:3 -iscsiname iqn.1991-05.com.mi
-crosoft:wang9jia11.home.langchao.com -name localhost-wj -type generic
-27           170904094739 superuser                                        10.165.21.185  0                 mcsop cfgportip -gui -gw 10.151.12.254 -ip 10.151.12.94 -mask 255.255
-.255.0 -node 1 1
-28           170904095356 superuser                                        10.165.21.185  0                 mcsop mkvdiskhostmap -force -gui -host 0 0
-29           170904095647 superuser                                        10.165.21.185  0                 mcsop chvdisk -account 0 -backup cloud -enable -gui 0
-30           170904100428 superuser                                        10.165.21.185  0                 mcsop backupvolume -gui 0
-31           170904100735 superuser                                        10.165.21.185  0                 mcsop backupvolume -gui 0
+audit_seq_no<span class="org-whitespace-space"> </span>timestamp<span class="org-whitespace-space">    </span>cluster_user<span class="org-whitespace-space"> </span>challenge<span class="org-whitespace-space"> </span>source_panel<span class="org-whitespace-space"> </span>target_panel<span class="org-whitespace-space"> </span>ssh_i<span class="org-whitespace-line">p_address</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">result</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">res_obj_id</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">action_cmd</span>
+0<span class="org-whitespace-space">            </span>170904085119<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chsystem</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-name</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">C90</span>
+1<span class="org-whitespace-space">            </span>170904085119<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chsystem</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-ntpip</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0.0.0.0</span>
+2<span class="org-whitespace-space">            </span>170904085119<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">settimezone</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-timezone</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">211</span>
+3<span class="org-whitespace-space">            </span>170904085119<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chsystem</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-invemailinterval</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">7</span>
+4<span class="org-whitespace-space">            </span>170904085120<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chemail</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-address</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-city</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-contact</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-country</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">CN</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-location</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-</span>
+organization<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>-primary<span class="org-whitespace-space"> </span>111111<span class="org-whitespace-space"> </span>-reply<span class="org-whitespace-space"> </span>1@1.com<span class="org-whitespace-space"> </span>-state<span class="org-whitespace-space"> </span>XX<span class="org-whitespace-space"> </span>-zip<span class="org-whitespace-space"> </span>11111
+5<span class="org-whitespace-space">            </span>170904085120<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chsystem</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-easysetup</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">no</span>
+6<span class="org-whitespace-space">            </span>170904085120<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkdnsserver</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-ip</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10.150.1.11</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-name</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">DNS0</span>
+7<span class="org-whitespace-space">            </span>170904085139<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkcloudaccountaliyunoss</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-name</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">zreal</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-bucket</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">new-storage-cs-shan</span>
+ghai<span class="org-whitespace-space"> </span>-accesskeyid<span class="org-whitespace-space"> </span>LTAILyUd5jmlvMzf<span class="org-whitespace-space"> </span>-secretaccesskey<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">####</span><span class="org-whitespace-space"> </span><span class="org-comment">-region</span><span class="org-whitespace-space"> </span><span class="org-comment">oss-cn-shanghai</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">-encrypt</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">no</span></span>
+8<span class="org-whitespace-space">            </span>170904085258<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.72<span class="org-whitespace-line">.221.160</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rmcloudaccount</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
+9<span class="org-whitespace-space">            </span>170904093334<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkcloudaccountswift</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-container</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">jia</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-encrypt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">no</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-endpoint</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">http:/</span>
+/10.151.12.38:5000/v2.0<span class="org-whitespace-space"> </span>-gui<span class="org-whitespace-space"> </span>-keystone<span class="org-whitespace-space"> </span>-password<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">####</span><span class="org-whitespace-space"> </span><span class="org-comment">-tenantname</span><span class="org-whitespace-space"> </span><span class="org-comment">demo</span><span class="org-whitespace-space"> </span><span class="org-comment">-username</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-comment"><span class="org-whitespace-line">admin</span></span>
+10<span class="org-whitespace-space">           </span>170904093456<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkmdiskgrp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-unit</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mb</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-ext</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1024</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-guiid</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-intier</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">auto</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-name</span>
+Pool0<span class="org-whitespace-space"> </span>-warning<span class="org-whitespace-space"> </span>80%
+11<span class="org-whitespace-space">           </span>170904093504<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
+12<span class="org-whitespace-space">           </span>170904093505<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">2</span>
+13<span class="org-whitespace-space">           </span>170904093506<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">7</span>
+14<span class="org-whitespace-space">           </span>170904093508<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">8</span>
+15<span class="org-whitespace-space">           </span>170904093509<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">11</span>
+16<span class="org-whitespace-space">           </span>170904093510<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">5</span>
+17<span class="org-whitespace-space">           </span>170904093511<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span>
+18<span class="org-whitespace-space">           </span>170904093512<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">3</span>
+19<span class="org-whitespace-space">           </span>170904093513<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">4</span>
+20<span class="org-whitespace-space">           </span>170904093514<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">9</span>
+21<span class="org-whitespace-space">           </span>170904093515<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">6</span>
+22<span class="org-whitespace-space">           </span>170904093516<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">candidate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10</span>
+23<span class="org-whitespace-space">           </span>170904093527<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chdrive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-use</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">spare</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">8</span>
+24<span class="org-whitespace-space">           </span>170904093532<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkarray</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-drive</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0:4:5:6:3:10:9:2:11:7:1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-level</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">raid6</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-spare</span>
+goal<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>-strip<span class="org-whitespace-space"> </span>256<span class="org-whitespace-space"> </span>Pool0
+25<span class="org-whitespace-space">           </span>170904093556<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkvdisk</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-mdiskgrp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-name</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cl1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-size</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1073741824</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-unit</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">b</span>
+26<span class="org-whitespace-space">           </span>170904094709<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkhost</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-force</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-iogrp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0:1:2:3</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-iscsiname</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">iqn.1991-05.com.mi</span>
+crosoft:wang9jia11.home.langchao.com<span class="org-whitespace-space"> </span>-name<span class="org-whitespace-space"> </span>localhost-wj<span class="org-whitespace-space"> </span>-type<span class="org-whitespace-space"> </span>generic
+27<span class="org-whitespace-space">           </span>170904094739<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cfgportip</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gw</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10.151.12.254</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-ip</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10.151.12.94</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-mask</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">255.255</span>
+.255.0<span class="org-whitespace-space"> </span>-node<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>1
+28<span class="org-whitespace-space">           </span>170904095356<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mkvdiskhostmap</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-force</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-host</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
+29<span class="org-whitespace-space">           </span>170904095647<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">chvdisk</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-account</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-backup</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cloud</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-enable</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
+30<span class="org-whitespace-space">           </span>170904100428<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">backupvolume</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
+31<span class="org-whitespace-space">           </span>170904100735<span class="org-whitespace-space"> </span>superuser<span class="org-whitespace-space">                                        </span>10.16<span class="org-whitespace-line">5.21.185</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line">                 </span></span><span class="org-whitespace-line">mcsop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">backupvolume</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-gui</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span>
 </pre>
 </div>
 <ul class="org-ul">
@@ -473,19 +473,19 @@ crosoft:wang9jia11.home.langchao.com -name localhost-wj -type generic
 </ul>
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;lsnodecanister
-id name  UPS_serial_number WWNN             status IO_group_id IO_group_name config_node UPS_unique_id hardware iscsi_name                           iscsi_alias panel_name enclosure_id canister_id enclosure_serial_number site_id site_name
-1  node1                   5005076803002010 online 0           io_grp0       yes                       I1M      iqn.2004-12.com.inspur:mcs.c90.node1             01-1       1            1           6577501
+id<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space">  </span>UPS_serial_number<span class="org-whitespace-space"> </span>WWNN<span class="org-whitespace-space">             </span>status<span class="org-whitespace-space"> </span>IO_group_id<span class="org-whitespace-space"> </span>IO_group_name<span class="org-whitespace-space"> </span>con<span class="org-whitespace-line">fig_node</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">UPS_unique_id</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">hardware</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">iscsi_name</span><span class="org-whitespace-space"><span class="org-whitespace-line">                           </span></span><span class="org-whitespace-line">iscsi_alias</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">panel_name</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">enclosure_id</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">canister_id</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">enclosure_serial_number</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">site_id</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">site_name</span>
+1<span class="org-whitespace-space">  </span>node1<span class="org-whitespace-space">                   </span>5005076803002010<span class="org-whitespace-space"> </span>online<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">           </span>io_grp0<span class="org-whitespace-space">       </span>yes<span class="org-whitespace-space"><span class="org-whitespace-line">                       </span></span><span class="org-whitespace-line">I1M</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">iqn.2004-12.com.inspur:mcs.c90.node1</span><span class="org-whitespace-space"><span class="org-whitespace-line">             </span></span><span class="org-whitespace-line">01-1</span><span class="org-whitespace-space"><span class="org-whitespace-line">       </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line">           </span></span><span class="org-whitespace-line">6577501</span>
 
-Inspur_MCS:C90:superuser&gt;lsnodecanister -delim :
-id:name:UPS_serial_number:WWNN:status:IO_group_id:IO_group_name:config_node:UPS_unique_id:hardware:iscsi_name:iscsi_alias:panel_name:enclosure_id:canister_id:enclosure_serial_number:site_id:site_name
-1:node1::5005076803002010:online:0:io_grp0:yes::I1M:iqn.2004-12.com.inspur:mcs.c90.node1::01-1:1:1:6577501::
+Inspur_MCS:C90:superuser&gt;lsnodecanister<span class="org-whitespace-space"> </span>-delim<span class="org-whitespace-space"> </span>:
+id:name:UPS_serial_number:WWNN:status:IO_group_id:IO_group_name:config_node:UPS_<span class="org-whitespace-line">unique_id:hardware:iscsi_name:iscsi_alias:panel_name:enclosure_id:canister_id:enclosure_serial_number:site_id:site_name</span>
+1:node1::5005076803002010:online:0:io_grp0:yes::I1M:iqn.2004-12.com.inspur:mcs.c<span class="org-whitespace-line">90.node1::01-1:1:1:6577501::</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0281260" class="outline-2">
-<h2 id="org0281260"><span class="section-number-2">6</span> 重新扫瞄发现MDisks</h2>
+<div id="outline-container-orgaa553d4" class="outline-2">
+<h2 id="orgaa553d4"><span class="section-number-2">6</span> 重新扫瞄发现MDisks</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>detectmdisk, lsmdiskcandidate, lsdiscoverystatus</li>
@@ -493,15 +493,15 @@ id:name:UPS_serial_number:WWNN:status:IO_group_id:IO_group_name:config_node:UPS_
 <div class="org-src-container">
 <pre class="src src-shell">Inspur_MCS:C90:superuser&gt;detectmdisk
 Inspur_MCS:C90:superuser&gt;lsdiscoverystatus
-id scope     IO_group_id IO_group_name status
-1  sas_iogrp 0           io_grp0       inactive
+id<span class="org-whitespace-space"> </span>scope<span class="org-whitespace-space">     </span>IO_group_id<span class="org-whitespace-space"> </span>IO_group_name<span class="org-whitespace-space"> </span>status
+1<span class="org-whitespace-space">  </span>sas_iogrp<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">           </span>io_grp0<span class="org-whitespace-space">       </span>inactive
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd1aa31f" class="outline-2">
-<h2 id="orgd1aa31f"><span class="section-number-2">7</span> 存储池</h2>
+<div id="outline-container-org7b5269b" class="outline-2">
+<h2 id="org7b5269b"><span class="section-number-2">7</span> 存储池</h2>
 </div>
 </div>
 <div id="postamble" class="status">

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -22,20 +22,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgefad6ff">1. 介绍</a></li>
-<li><a href="#org88a7371">2. 代码分析</a>
+<li><a href="#org7b39ac5">1. 介绍</a></li>
+<li><a href="#org366035c">2. 代码分析</a>
 <ul>
-<li><a href="#org13498b2">2.1. 数据结构</a></li>
-<li><a href="#org55a5f0a">2.2. idr_alloc分析</a></li>
+<li><a href="#orgb4fcef9">2.1. 数据结构</a></li>
+<li><a href="#org6cbccc1">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#org770afd3">3. Reference Material</a></li>
+<li><a href="#org06fc914">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgefad6ff" class="outline-2">
-<h2 id="orgefad6ff"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org7b39ac5" class="outline-2">
+<h2 id="org7b39ac5"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -43,48 +43,48 @@
 </div>
 </div>
 
-<div id="outline-container-org88a7371" class="outline-2">
-<h2 id="org88a7371"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-org366035c" class="outline-2">
+<h2 id="org366035c"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org13498b2" class="outline-3">
-<h3 id="org13498b2"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-orgb4fcef9" class="outline-3">
+<h3 id="orgb4fcef9"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">struct</span> <span class="org-type">idr</span> {
-        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span>  <span class="org-variable-name">idr_rt</span>;
-        <span class="org-type">unsigned</span> <span class="org-type">int</span>            <span class="org-variable-name">idr_next</span>;
+<pre class="src src-C"><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">radix_tree_root</span><span class="org-whitespace-tab">  </span><span class="org-variable-name">idr_rt</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-tab">            </span><span class="org-variable-name">idr_next</span>;
 };
 
-<span class="org-comment-delimiter">// </span><span class="org-comment">from radix-tree.h</span>
-<span class="org-keyword">struct</span> <span class="org-type">radix_tree_root</span> {
-        <span class="org-type">gfp_t</span>                   <span class="org-variable-name">gfp_mask</span>;
-        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span>  <span class="org-type">__rcu</span> *<span class="org-variable-name">rnode</span>;
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">from</span><span class="org-whitespace-space"> </span><span class="org-comment">radix-tree.h</span>
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">radix_tree_root</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">gfp_t</span><span class="org-whitespace-tab">                   </span><span class="org-variable-name">gfp_mask</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">radix_tree_node</span><span class="org-whitespace-tab">  </span><span class="org-type">__rcu</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">rnode</span>;
 };
 
 <span class="org-doc">/**</span>
-<span class="org-doc"> * struct radix_tree_iter - radix tree iterator state</span>
-<span class="org-doc"> *</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@index</span></span></span><span class="org-doc">:      index of current slot</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@next_index</span></span></span><span class="org-doc">: one beyond the last index for this chunk</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@tags</span></span></span><span class="org-doc">:       bit-mask for tag-iterating</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@node</span></span></span><span class="org-doc">:       node that contains current slot</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@shift</span></span></span><span class="org-doc">:      shift for the node that holds our slots</span>
-<span class="org-doc"> *</span>
-<span class="org-doc"> * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a</span>
-<span class="org-doc"> * subinterval of slots contained within one radix tree leaf node.  It is</span>
-<span class="org-doc"> * described by a pointer to its first slot and a struct radix_tree_iter</span>
-<span class="org-doc"> * which holds the chunk's position in the tree and its size.  For tagged</span>
-<span class="org-doc"> * iteration radix_tree_iter also holds the slots' bit-mask for one chosen</span>
-<span class="org-doc"> * radix tree tag.</span>
-<span class="org-doc"> */</span>
-<span class="org-keyword">struct</span> <span class="org-type">radix_tree_iter</span> {
-        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">index</span>;
-        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">next_index</span>;
-        <span class="org-type">unsigned</span> <span class="org-type">long</span>   <span class="org-variable-name">tags</span>;
-        <span class="org-keyword">struct</span> <span class="org-type">radix_tree_node</span> *<span class="org-variable-name">node</span>;
-<span class="org-preprocessor">#ifdef</span> CONFIG_RADIX_TREE_MULTIORDER
-        <span class="org-type">unsigned</span> <span class="org-type">int</span>    <span class="org-variable-name">shift</span>;
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">struct</span><span class="org-whitespace-space"> </span><span class="org-doc">radix_tree_iter</span><span class="org-whitespace-space"> </span><span class="org-doc">-</span><span class="org-whitespace-space"> </span><span class="org-doc">radix</span><span class="org-whitespace-space"> </span><span class="org-doc">tree</span><span class="org-whitespace-space"> </span><span class="org-doc">iterator</span><span class="org-whitespace-space"> </span><span class="org-doc">state</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@index</span></span></span><span class="org-doc">:</span><span class="org-whitespace-tab">      </span><span class="org-doc">index</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">current</span><span class="org-whitespace-space"> </span><span class="org-doc">slot</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@next_index</span></span></span><span class="org-doc">:</span><span class="org-whitespace-tab"> </span><span class="org-doc">one</span><span class="org-whitespace-space"> </span><span class="org-doc">beyond</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">last</span><span class="org-whitespace-space"> </span><span class="org-doc">index</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">this</span><span class="org-whitespace-space"> </span><span class="org-doc">chunk</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@tags</span></span></span><span class="org-doc">:</span><span class="org-whitespace-tab">       </span><span class="org-doc">bit-mask</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">tag-iterating</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@node</span></span></span><span class="org-doc">:</span><span class="org-whitespace-tab">       </span><span class="org-doc">node</span><span class="org-whitespace-space"> </span><span class="org-doc">that</span><span class="org-whitespace-space"> </span><span class="org-doc">contains</span><span class="org-whitespace-space"> </span><span class="org-doc">current</span><span class="org-whitespace-space"> </span><span class="org-doc">slot</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@shift</span></span></span><span class="org-doc">:</span><span class="org-whitespace-tab">      </span><span class="org-doc">shift</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">node</span><span class="org-whitespace-space"> </span><span class="org-doc">that</span><span class="org-whitespace-space"> </span><span class="org-doc">holds</span><span class="org-whitespace-space"> </span><span class="org-doc">our</span><span class="org-whitespace-space"> </span><span class="org-doc">slots</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">This</span><span class="org-whitespace-space"> </span><span class="org-doc">radix</span><span class="org-whitespace-space"> </span><span class="org-doc">tree</span><span class="org-whitespace-space"> </span><span class="org-doc">iterator</span><span class="org-whitespace-space"> </span><span class="org-doc">works</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">terms</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">"chunks"</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">slots.</span><span class="org-whitespace-space">  </span><span class="org-doc">A</span><span class="org-whitespace-space"> </span><span class="org-doc">chunk</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">subinterval</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">slots</span><span class="org-whitespace-space"> </span><span class="org-doc">contained</span><span class="org-whitespace-space"> </span><span class="org-doc">within</span><span class="org-whitespace-space"> </span><span class="org-doc">one</span><span class="org-whitespace-space"> </span><span class="org-doc">radix</span><span class="org-whitespace-space"> </span><span class="org-doc">tree</span><span class="org-whitespace-space"> </span><span class="org-doc">leaf</span><span class="org-whitespace-space"> </span><span class="org-doc">node.</span><span class="org-whitespace-space">  </span><span class="org-doc">It</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">described</span><span class="org-whitespace-space"> </span><span class="org-doc">by</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">pointer</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">its</span><span class="org-whitespace-space"> </span><span class="org-doc">first</span><span class="org-whitespace-space"> </span><span class="org-doc">slot</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">struct</span><span class="org-whitespace-space"> </span><span class="org-doc">radix_tree_iter</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">which</span><span class="org-whitespace-space"> </span><span class="org-doc">holds</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">chunk's</span><span class="org-whitespace-space"> </span><span class="org-doc">position</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">tree</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">its</span><span class="org-whitespace-space"> </span><span class="org-doc">size.</span><span class="org-whitespace-space">  </span><span class="org-doc">For</span><span class="org-whitespace-space"> </span><span class="org-doc">tagged</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">iteration</span><span class="org-whitespace-space"> </span><span class="org-doc">radix_tree_iter</span><span class="org-whitespace-space"> </span><span class="org-doc">also</span><span class="org-whitespace-space"> </span><span class="org-doc">holds</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">slots'</span><span class="org-whitespace-space"> </span><span class="org-doc">bit-mask</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">one</span><span class="org-whitespace-space"> </span><span class="org-doc">chosen</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">radix</span><span class="org-whitespace-space"> </span><span class="org-doc">tree</span><span class="org-whitespace-space"> </span><span class="org-doc">tag.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">radix_tree_iter</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-tab">   </span><span class="org-variable-name">index</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-tab">   </span><span class="org-variable-name">next_index</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-tab">   </span><span class="org-variable-name">tags</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">radix_tree_node</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">node</span>;
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space"> </span>CONFIG_RADIX_TREE_MULTIORDER
+<span class="org-whitespace-space">        </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-tab">    </span><span class="org-variable-name">shift</span>;
 <span class="org-preprocessor">#endif</span>
 };
 </pre>
@@ -92,33 +92,33 @@
 </div>
 </div>
 
-<div id="outline-container-org55a5f0a" class="outline-3">
-<h3 id="org55a5f0a"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-org6cbccc1" class="outline-3">
+<h3 id="org6cbccc1"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
 </p>
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-doc">/**</span>
-<span class="org-doc"> * idr_alloc - allocate an id</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@idr</span></span></span><span class="org-doc">: idr handle</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@ptr</span></span></span><span class="org-doc">: pointer to be associated with the new id</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@start</span></span></span><span class="org-doc">: the minimum id (inclusive)</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@end</span></span></span><span class="org-doc">: the maximum id (exclusive)</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@gfp</span></span></span><span class="org-doc">: memory allocation flags</span>
-<span class="org-doc"> *</span>
-<span class="org-doc"> * Allocates an unused ID in the range [start, end).  Returns -ENOSPC</span>
-<span class="org-doc"> * if there are no unused IDs in that range.</span>
-<span class="org-doc"> *</span>
-<span class="org-doc"> * Note that </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> is treated as max when &lt;= 0.  This is to always allow</span>
-<span class="org-doc"> * using </span><span class="org-doc"><span class="org-constant">@start</span></span><span class="org-doc"> + N as </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-doc"> as long as N is inside integer range.</span>
-<span class="org-doc"> *</span>
-<span class="org-doc"> * Simultaneous modifications to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc"> are not allowed and should be</span>
-<span class="org-doc"> * prevented by the user, usually with a lock.  </span><span class="org-doc"><span class="org-constant">idr_alloc()</span></span><span class="org-doc"> may be called</span>
-<span class="org-doc"> * concurrently with read-only accesses to the </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc">, such as </span><span class="org-doc"><span class="org-constant">idr_find()</span></span><span class="org-doc"> and</span>
-<span class="org-doc"> * </span><span class="org-doc"><span class="org-constant">idr_for_each_entry()</span></span><span class="org-doc">.</span>
-<span class="org-doc"> */</span>
-<span class="org-type">int</span> <span class="org-function-name">idr_alloc</span>(<span class="org-keyword">struct</span> <span class="org-type">idr</span> *<span class="org-variable-name">idr</span>, <span class="org-type">void</span> *<span class="org-variable-name">ptr</span>, <span class="org-type">int</span> <span class="org-variable-name">start</span>, <span class="org-type">int</span> <span class="org-variable-name">end</span>, <span class="org-type">gfp_t</span> <span class="org-variable-name">gfp</span>);
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">idr_alloc</span><span class="org-whitespace-space"> </span><span class="org-doc">-</span><span class="org-whitespace-space"> </span><span class="org-doc">allocate</span><span class="org-whitespace-space"> </span><span class="org-doc">an</span><span class="org-whitespace-space"> </span><span class="org-doc">id</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@idr</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">idr</span><span class="org-whitespace-space"> </span><span class="org-doc">handle</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@ptr</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">pointer</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">associated</span><span class="org-whitespace-space"> </span><span class="org-doc">with</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">new</span><span class="org-whitespace-space"> </span><span class="org-doc">id</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@start</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">minimum</span><span class="org-whitespace-space"> </span><span class="org-doc">id</span><span class="org-whitespace-space"> </span><span class="org-doc">(inclusive)</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@end</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">maximum</span><span class="org-whitespace-space"> </span><span class="org-doc">id</span><span class="org-whitespace-space"> </span><span class="org-doc">(exclusive)</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@gfp</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">memory</span><span class="org-whitespace-space"> </span><span class="org-doc">allocation</span><span class="org-whitespace-space"> </span><span class="org-doc">flags</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">Allocates</span><span class="org-whitespace-space"> </span><span class="org-doc">an</span><span class="org-whitespace-space"> </span><span class="org-doc">unused</span><span class="org-whitespace-space"> </span><span class="org-doc">ID</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">range</span><span class="org-whitespace-space"> </span><span class="org-doc">[start,</span><span class="org-whitespace-space"> </span><span class="org-doc">end).</span><span class="org-whitespace-space">  </span><span class="org-doc">Returns</span><span class="org-whitespace-space"> </span><span class="org-doc">-ENOSPC</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">if</span><span class="org-whitespace-space"> </span><span class="org-doc">there</span><span class="org-whitespace-space"> </span><span class="org-doc">are</span><span class="org-whitespace-space"> </span><span class="org-doc">no</span><span class="org-whitespace-space"> </span><span class="org-doc">unused</span><span class="org-whitespace-space"> </span><span class="org-doc">IDs</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">that</span><span class="org-whitespace-space"> </span><span class="org-doc">range.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">Note</span><span class="org-whitespace-space"> </span><span class="org-doc">that</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">treated</span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc">max</span><span class="org-whitespace-space"> </span><span class="org-doc">when</span><span class="org-whitespace-space"> </span><span class="org-doc">&lt;=</span><span class="org-whitespace-space"> </span><span class="org-doc">0.</span><span class="org-whitespace-space">  </span><span class="org-doc">This</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">always</span><span class="org-whitespace-space"> </span><span class="org-doc">allow</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">using</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@start</span></span><span class="org-whitespace-space"> </span><span class="org-doc">+</span><span class="org-whitespace-space"> </span><span class="org-doc">N</span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@end</span></span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc">long</span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc">N</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">inside</span><span class="org-whitespace-space"> </span><span class="org-doc">integer</span><span class="org-whitespace-space"> </span><span class="org-doc">range.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">Simultaneous</span><span class="org-whitespace-space"> </span><span class="org-doc">modifications</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-whitespace-space"> </span><span class="org-doc">are</span><span class="org-whitespace-space"> </span><span class="org-doc">not</span><span class="org-whitespace-space"> </span><span class="org-doc">allowed</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">should</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">prevented</span><span class="org-whitespace-space"> </span><span class="org-doc">by</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">user,</span><span class="org-whitespace-space"> </span><span class="org-doc">usually</span><span class="org-whitespace-space"> </span><span class="org-doc">with</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">lock.</span><span class="org-whitespace-space">  </span><span class="org-doc"><span class="org-constant">idr_alloc()</span></span><span class="org-whitespace-space"> </span><span class="org-doc">may</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">called</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">concurrently</span><span class="org-whitespace-space"> </span><span class="org-doc">with</span><span class="org-whitespace-space"> </span><span class="org-doc">read-only</span><span class="org-whitespace-space"> </span><span class="org-doc">accesses</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@idr</span></span><span class="org-doc">,</span><span class="org-whitespace-space"> </span><span class="org-doc">such</span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">idr_find()</span></span><span class="org-whitespace-space"> </span><span class="org-doc">and</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">idr_for_each_entry()</span></span><span class="org-doc">.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">idr_alloc</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">idr</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ptr</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">start</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">end</span>,<span class="org-whitespace-space"> </span><span class="org-type">gfp_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">gfp</span>);
 </pre>
 </div>
 </div>
@@ -126,8 +126,8 @@
 </div>
 
 
-<div id="outline-container-org770afd3" class="outline-2">
-<h2 id="org770afd3"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org06fc914" class="outline-2">
+<h2 id="org06fc914"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:29 -->
+<!-- 2018-06-03 Sun 11:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX IDR/IDA算法分析</title>
 <meta name="generator" content="Org mode" />
@@ -31,22 +31,22 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge3be427">1. 介绍</a>
+<li><a href="#orgb5088d6">1. 介绍</a>
 <ul>
-<li><a href="#org40cbcba">1.1. loop示例</a>
+<li><a href="#org7fb0dd6">1.1. loop示例</a>
 <ul>
-<li><a href="#org18a25d2">1.1.1. 静态初始化</a></li>
+<li><a href="#org2df1a59">1.1.1. 静态初始化</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgcc66433">2. References</a></li>
+<li><a href="#org24c343a">2. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge3be427" class="outline-2">
-<h2 id="orge3be427"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgb5088d6" class="outline-2">
+<h2 id="orgb5088d6"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <blockquote>
 <p>
@@ -56,29 +56,29 @@ Small id to pointer translation service avoiding fixed sized tables.
 </blockquote>
 </div>
 
-<div id="outline-container-org40cbcba" class="outline-3">
-<h3 id="org40cbcba"><span class="section-number-3">1.1</span> loop示例</h3>
+<div id="outline-container-org7fb0dd6" class="outline-3">
+<h3 id="org7fb0dd6"><span class="section-number-3">1.1</span> loop示例</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2/source/drivers/block/loop.c">loop.c</a>使用为例阐述：
 </p>
 </div>
-<div id="outline-container-org18a25d2" class="outline-4">
-<h4 id="org18a25d2"><span class="section-number-4">1.1.1</span> 静态初始化</h4>
+<div id="outline-container-org2df1a59" class="outline-4">
+<h4 id="org2df1a59"><span class="section-number-4">1.1.1</span> 静态初始化</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-comment">- idr.h -</span><span class="org-comment-delimiter">*/</span>
-<span class="org-comment-delimiter">/* </span><span class="org-comment">Set the IDR flag and the IDR_FREE tag </span><span class="org-comment-delimiter">*/</span>
-<span class="org-preprocessor">#define</span> <span class="org-variable-name">IDR_RT_MARKER</span>           ((__force <span class="org-type">gfp_t</span>)(3 &lt;&lt; __GFP_BITS_SHIFT))
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">idr.h</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-comment-delimiter">*/</span>
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">Set</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">IDR</span><span class="org-whitespace-space"> </span><span class="org-comment">flag</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">IDR_FREE</span><span class="org-whitespace-space"> </span><span class="org-comment">tag</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">IDR_RT_MARKER</span><span class="org-whitespace-tab">           </span>((__force<span class="org-whitespace-space"> </span><span class="org-type">gfp_t</span>)(3<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>__GFP_BITS_SHIFT))
 
-<span class="org-preprocessor">#define</span> <span class="org-variable-name">IDR_INIT</span>                                                        \
-{                                                                       \
-        .idr_rt = RADIX_TREE_INIT(IDR_RT_MARKER)                        \
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">IDR_INIT</span><span class="org-whitespace-tab">                                                        </span>\
+{<span class="org-whitespace-tab">                                                                       </span>\
+<span class="org-whitespace-space">        </span>.idr_rt<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RADIX_TREE_INIT(IDR_RT_MARKER)<span class="org-whitespace-tab">                        </span>\
 }
-<span class="org-preprocessor">#define</span> <span class="org-function-name">DEFINE_IDR</span>(<span class="org-variable-name">name</span>)        <span class="org-keyword">struct</span> <span class="org-type">idr</span> <span class="org-variable-name">name</span> = IDR_INIT
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">DEFINE_IDR</span>(<span class="org-variable-name">name</span>)<span class="org-whitespace-tab">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span><span class="org-variable-name">name</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>IDR_INIT
 
-<span class="org-comment-delimiter">/*</span><span class="org-comment">- loop.c -</span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span> <span class="org-function-name">DEFINE_IDR</span>(loop_index_idr);
+<span class="org-comment-delimiter">/*</span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">loop.c</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-function-name">DEFINE_IDR</span>(loop_index_idr);
 </pre>
 </div>
 </div>
@@ -86,8 +86,8 @@ loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2
 </div>
 </div>
 
-<div id="outline-container-orgcc66433" class="outline-2">
-<h2 id="orgcc66433"><span class="section-number-2">2</span> References</h2>
+<div id="outline-container-org24c343a" class="outline-2">
+<h2 id="org24c343a"><span class="section-number-2">2</span> References</h2>
 <div class="outline-text-2" id="text-2">
 <dl class="org-dl">
 <dt>LWN A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>

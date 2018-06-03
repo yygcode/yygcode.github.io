@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Disk Testing Data</title>
 <meta name="generator" content="Org mode" />
@@ -22,50 +22,50 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcb28160">1. Test tools</a>
+<li><a href="#org7396dcf">1. Test tools</a>
 <ul>
-<li><a href="#orgbb0e351">1.1. dd</a></li>
-<li><a href="#orga774103">1.2. fio</a></li>
-<li><a href="#org3038a70">1.3. iometer</a></li>
+<li><a href="#orga5658d8">1.1. dd</a></li>
+<li><a href="#org5ca9597">1.2. fio</a></li>
+<li><a href="#org988272c">1.3. iometer</a></li>
 </ul>
 </li>
-<li><a href="#org53da8fc">2. Basic Rules</a></li>
-<li><a href="#org4d6884b">3. SATA HDD</a>
+<li><a href="#orga17d294">2. Basic Rules</a></li>
+<li><a href="#org68cba41">3. SATA HDD</a>
 <ul>
-<li><a href="#org6b2fb71">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
+<li><a href="#org2f31285">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
 <ul>
-<li><a href="#orgcf95531">3.1.1. Disk infomation</a></li>
-<li><a href="#orgb9db51e">3.1.2. dd test</a></li>
-<li><a href="#orgb036f00">3.1.3. FIO</a></li>
+<li><a href="#org5b4055e">3.1.1. Disk infomation</a></li>
+<li><a href="#org09bfe7a">3.1.2. dd test</a></li>
+<li><a href="#org203d6ab">3.1.3. FIO</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org1eba044">4. SAS HDD</a></li>
-<li><a href="#org72f8496">5. SATA SSD</a></li>
-<li><a href="#orgc2f440a">6. SAS SSD</a></li>
-<li><a href="#org84fff09">7. NVMe SSD</a></li>
+<li><a href="#orga08b2fe">4. SAS HDD</a></li>
+<li><a href="#orga443cfb">5. SATA SSD</a></li>
+<li><a href="#org0fb8a2f">6. SAS SSD</a></li>
+<li><a href="#org5b066c9">7. NVMe SSD</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgcb28160" class="outline-2">
-<h2 id="orgcb28160"><span class="section-number-2">1</span> Test tools</h2>
+<div id="outline-container-org7396dcf" class="outline-2">
+<h2 id="org7396dcf"><span class="section-number-2">1</span> Test tools</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgbb0e351" class="outline-3">
-<h3 id="orgbb0e351"><span class="section-number-3">1.1</span> dd</h3>
+<div id="outline-container-orga5658d8" class="outline-3">
+<h3 id="orga5658d8"><span class="section-number-3">1.1</span> dd</h3>
 </div>
-<div id="outline-container-orga774103" class="outline-3">
-<h3 id="orga774103"><span class="section-number-3">1.2</span> fio</h3>
+<div id="outline-container-org5ca9597" class="outline-3">
+<h3 id="org5ca9597"><span class="section-number-3">1.2</span> fio</h3>
 </div>
-<div id="outline-container-org3038a70" class="outline-3">
-<h3 id="org3038a70"><span class="section-number-3">1.3</span> iometer</h3>
+<div id="outline-container-org988272c" class="outline-3">
+<h3 id="org988272c"><span class="section-number-3">1.3</span> iometer</h3>
 </div>
 </div>
 
-<div id="outline-container-org53da8fc" class="outline-2">
-<h2 id="org53da8fc"><span class="section-number-2">2</span> Basic Rules</h2>
+<div id="outline-container-orga17d294" class="outline-2">
+<h2 id="orga17d294"><span class="section-number-2">2</span> Basic Rules</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 访问硬盘时, LBA数值越小(靠近外圈), 块越大, 顺序特征越好, 读写性能越好.
@@ -73,16 +73,16 @@
 </div>
 </div>
 
-<div id="outline-container-org4d6884b" class="outline-2">
-<h2 id="org4d6884b"><span class="section-number-2">3</span> SATA HDD</h2>
+<div id="outline-container-org68cba41" class="outline-2">
+<h2 id="org68cba41"><span class="section-number-2">3</span> SATA HDD</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org6b2fb71" class="outline-3">
-<h3 id="org6b2fb71"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
+<div id="outline-container-org2f31285" class="outline-3">
+<h3 id="org2f31285"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orgcf95531" class="outline-4">
-<h4 id="orgcf95531"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
+<div id="outline-container-org5b4055e" class="outline-4">
+<h4 id="org5b4055e"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-conf">Model Family:     HGST Travelstar 7K1000
@@ -104,67 +104,67 @@ SMART support is: Enabled
 </div>
 </div>
 </div>
-<div id="outline-container-orgb9db51e" class="outline-4">
-<h4 id="orgb9db51e"><span class="section-number-4">3.1.2</span> dd test</h4>
+<div id="outline-container-org09bfe7a" class="outline-4">
+<h4 id="org09bfe7a"><span class="section-number-4">3.1.2</span> dd test</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 简单查看结果可知, 64K性能是512B性能的15倍.
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">bs=512 offset 0</span>
-~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=512 <span class="org-variable-name">count</span>=100K <span class="org-variable-name">iflag</span>=direct
-102400+0 records<span class="org-keyword"> in</span>
-102400+0 records out
-52428800 bytes (52 MB) copied, 6.28613 s, 8.3 MB/s
+<pre class="src src-shell"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">bs=512</span><span class="org-whitespace-space"> </span><span class="org-comment">offset</span><span class="org-whitespace-space"> </span><span class="org-comment">0</span>
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sdb<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=512<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=100K<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+52428800<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(52<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>6.28613<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>8.3<span class="org-whitespace-space"> </span>MB/s
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">bs=512 offset 500GB</span>
-~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=512 <span class="org-variable-name">count</span>=100K <span class="org-variable-name">skip</span>=1G <span class="org-variable-name">iflag</span>=direct
-102400+0 records<span class="org-keyword"> in</span>
-102400+0 records out
-52428800 bytes (52 MB) copied, 6.80958 s, 7.7 MB/s
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">bs=512</span><span class="org-whitespace-space"> </span><span class="org-comment">offset</span><span class="org-whitespace-space"> </span><span class="org-comment">500GB</span>
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sdb<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=512<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=100K<span class="org-whitespace-space"> </span><span class="org-variable-name">skip</span>=1G<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+52428800<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(52<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>6.80958<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>7.7<span class="org-whitespace-space"> </span>MB/s
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 0</span>
-~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">iflag</span>=direct
-10240+0 records<span class="org-keyword"> in</span>
-10240+0 records out
-671088640 bytes (671 MB) copied, 5.20339 s, 129 MB/s
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">bs=64K</span><span class="org-whitespace-space"> </span><span class="org-comment">offset</span><span class="org-whitespace-space"> </span><span class="org-comment">0</span>
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sdb<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=64K<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=10K<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+671088640<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(671<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>5.20339<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>129<span class="org-whitespace-space"> </span>MB/s
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 500GB</span>
-~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">skip</span>=8M <span class="org-variable-name">iflag</span>=direct
-10240+0 records<span class="org-keyword"> in</span>
-10240+0 records out
-671088640 bytes (671 MB) copied, 6.36875 s, 105 MB/s
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">bs=64K</span><span class="org-whitespace-space"> </span><span class="org-comment">offset</span><span class="org-whitespace-space"> </span><span class="org-comment">500GB</span>
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sdb<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=64K<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=10K<span class="org-whitespace-space"> </span><span class="org-variable-name">skip</span>=8M<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+671088640<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(671<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>6.36875<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>105<span class="org-whitespace-space"> </span>MB/s
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">bs=64K offset 896GB</span>
-~$ sudo dd <span class="org-variable-name">if</span>=/dev/sdb <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">bs</span>=64K <span class="org-variable-name">count</span>=10K <span class="org-variable-name">skip</span>=14M <span class="org-variable-name">iflag</span>=direct
-10240+0 records<span class="org-keyword"> in</span>
-10240+0 records out
-671088640 bytes (671 MB) copied, 9.24369 s, 72.6 MB/s
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">bs=64K</span><span class="org-whitespace-space"> </span><span class="org-comment">offset</span><span class="org-whitespace-space"> </span><span class="org-comment">896GB</span>
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sdb<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=64K<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=10K<span class="org-whitespace-space"> </span><span class="org-variable-name">skip</span>=14M<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+10240+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+671088640<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(671<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>9.24369<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>72.6<span class="org-whitespace-space"> </span>MB/s
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb036f00" class="outline-4">
-<h4 id="orgb036f00"><span class="section-number-4">3.1.3</span> FIO</h4>
+<div id="outline-container-org203d6ab" class="outline-4">
+<h4 id="org203d6ab"><span class="section-number-4">3.1.3</span> FIO</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1eba044" class="outline-2">
-<h2 id="org1eba044"><span class="section-number-2">4</span> SAS HDD</h2>
+<div id="outline-container-orga08b2fe" class="outline-2">
+<h2 id="orga08b2fe"><span class="section-number-2">4</span> SAS HDD</h2>
 </div>
 
-<div id="outline-container-org72f8496" class="outline-2">
-<h2 id="org72f8496"><span class="section-number-2">5</span> SATA SSD</h2>
+<div id="outline-container-orga443cfb" class="outline-2">
+<h2 id="orga443cfb"><span class="section-number-2">5</span> SATA SSD</h2>
 </div>
 
-<div id="outline-container-orgc2f440a" class="outline-2">
-<h2 id="orgc2f440a"><span class="section-number-2">6</span> SAS SSD</h2>
+<div id="outline-container-org0fb8a2f" class="outline-2">
+<h2 id="org0fb8a2f"><span class="section-number-2">6</span> SAS SSD</h2>
 </div>
 
-<div id="outline-container-org84fff09" class="outline-2">
-<h2 id="org84fff09"><span class="section-number-2">7</span> NVMe SSD</h2>
+<div id="outline-container-org5b066c9" class="outline-2">
+<h2 id="org5b066c9"><span class="section-number-2">7</span> NVMe SSD</h2>
 </div>
 </div>
 <div id="postamble" class="status">

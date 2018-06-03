@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:29 -->
+<!-- 2018-06-03 Sun 11:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Systemd Introduce and Analysis</title>
 <meta name="generator" content="Org mode" />
@@ -31,57 +31,57 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc0820a5">1. 介绍</a></li>
-<li><a href="#orgaf40301">2. 使用命令</a>
+<li><a href="#org36e8889">1. 介绍</a></li>
+<li><a href="#orgf16ef0b">2. 使用命令</a>
 <ul>
-<li><a href="#org8b93fc8">2.1. 版本：systemctl &#x2013;version</a></li>
-<li><a href="#org874a582">2.2. 主机名称控制：hostnamectl</a>
+<li><a href="#orgf60a207">2.1. 版本：systemctl &#x2013;version</a></li>
+<li><a href="#orgce25f35">2.2. 主机名称控制：hostnamectl</a>
 <ul>
-<li><a href="#org4fadb04">2.2.1. Example</a></li>
-<li><a href="#orgd006d4a">2.2.2. Manpage</a></li>
+<li><a href="#org2ab4952">2.2.1. Example</a></li>
+<li><a href="#org45bbefc">2.2.2. Manpage</a></li>
 </ul>
 </li>
-<li><a href="#orgc6dbe13">2.3. 系统本地化与键盘布局：localectl</a>
+<li><a href="#org72dcf67">2.3. 系统本地化与键盘布局：localectl</a>
 <ul>
-<li><a href="#org0a0e9a6">2.3.1. example</a></li>
-<li><a href="#orgbf93eb9">2.3.2. Manpage</a></li>
+<li><a href="#orgfa4d00c">2.3.1. example</a></li>
+<li><a href="#org7d4219b">2.3.2. Manpage</a></li>
 </ul>
 </li>
-<li><a href="#orgc51a584">2.4. 系统时间和日期：timedatectl</a>
+<li><a href="#orgb488353">2.4. 系统时间和日期：timedatectl</a>
 <ul>
-<li><a href="#orgf989477">2.4.1. example</a></li>
-<li><a href="#orgf4be4e9">2.4.2. help</a></li>
+<li><a href="#org452711c">2.4.1. example</a></li>
+<li><a href="#org416414b">2.4.2. help</a></li>
 </ul>
 </li>
-<li><a href="#org3da8cbe">2.5. 系统登录管理：loginctl</a>
+<li><a href="#orgb08e049">2.5. 系统登录管理：loginctl</a>
 <ul>
-<li><a href="#orgd748263">2.5.1. example</a></li>
-<li><a href="#org6bba433">2.5.2. help</a></li>
+<li><a href="#orgf41ca65">2.5.1. example</a></li>
+<li><a href="#org0995318">2.5.2. help</a></li>
 </ul>
 </li>
-<li><a href="#orgd45a499">2.6. Systemd系统和服务管理：systemctl</a>
+<li><a href="#orge1effb6">2.6. Systemd系统和服务管理：systemctl</a>
 <ul>
-<li><a href="#orge787dc0">2.6.1. example</a>
+<li><a href="#org13fad3e">2.6.1. example</a>
 <ul>
-<li><a href="#orga23975d">2.6.1.1. 显示已知units：systemctl list-units [PATTERN&#x2026;]</a></li>
-<li><a href="#org892bfe6">2.6.1.2. 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</a></li>
-<li><a href="#org6e234d1">2.6.1.3. systemctl candidates: systemctl with two tabs</a></li>
+<li><a href="#orgc80537e">2.6.1.1. 显示已知units：systemctl list-units [PATTERN&#x2026;]</a></li>
+<li><a href="#orga481b6a">2.6.1.2. 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</a></li>
+<li><a href="#org5793e95">2.6.1.3. systemctl candidates: systemctl with two tabs</a></li>
 </ul>
 </li>
-<li><a href="#org1e88d91">2.6.2. help</a></li>
+<li><a href="#org17957bc">2.6.2. help</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga3a2d64">3. 学习笔记</a></li>
-<li><a href="#org8e0aef9">4. 作者</a></li>
-<li><a href="#org2f12d2c">5. References</a></li>
+<li><a href="#orged49116">3. 学习笔记</a></li>
+<li><a href="#orgbe03063">4. 作者</a></li>
+<li><a href="#org595e8b8">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc0820a5" class="outline-2">
-<h2 id="orgc0820a5"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org36e8889" class="outline-2">
+<h2 id="org36e8889"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 一言以蔽之，<a href="https://freedesktop.org/wiki/Software/systemd/">systemd</a>是<a href="https://savannah.nongnu.org/projects/sysvinit">sysvinit</a>的后继，通过并行启动方式，提供更快的系统启动速度。缺点是庞大复杂，不如sysvinit清晰。目前主流发行版本已全部切换到Systemd。
@@ -132,47 +132,47 @@ article</a>. If you are wondering whether systemd is for you, please have a look
 </div>
 </div>
 
-<div id="outline-container-orgaf40301" class="outline-2">
-<h2 id="orgaf40301"><span class="section-number-2">2</span> 使用命令</h2>
+<div id="outline-container-orgf16ef0b" class="outline-2">
+<h2 id="orgf16ef0b"><span class="section-number-2">2</span> 使用命令</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org8b93fc8" class="outline-3">
-<h3 id="org8b93fc8"><span class="section-number-3">2.1</span> 版本：systemctl &#x2013;version</h3>
+<div id="outline-container-orgf60a207" class="outline-3">
+<h3 id="orgf60a207"><span class="section-number-3">2.1</span> 版本：systemctl &#x2013;version</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ systemctl --version
-systemd 215
-+PAM +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ -SECCOMP -APPARMOR
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>--version
+systemd<span class="org-whitespace-space"> </span>215
++PAM<span class="org-whitespace-space"> </span>+AUDIT<span class="org-whitespace-space"> </span>+SELINUX<span class="org-whitespace-space"> </span>+IMA<span class="org-whitespace-space"> </span>+SYSVINIT<span class="org-whitespace-space"> </span>+LIBCRYPTSETUP<span class="org-whitespace-space"> </span>+GCRYPT<span class="org-whitespace-space"> </span>+ACL<span class="org-whitespace-space"> </span>+XZ<span class="org-whitespace-space"> </span>-SECCOMP<span class="org-whitespace-space"> </span>-AP<span class="org-whitespace-line">PARMOR</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org874a582" class="outline-3">
-<h3 id="org874a582"><span class="section-number-3">2.2</span> 主机名称控制：hostnamectl</h3>
+<div id="outline-container-orgce25f35" class="outline-3">
+<h3 id="orgce25f35"><span class="section-number-3">2.2</span> 主机名称控制：hostnamectl</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org4fadb04" class="outline-4">
-<h4 id="org4fadb04"><span class="section-number-4">2.2.1</span> Example</h4>
+<div id="outline-container-org2ab4952" class="outline-4">
+<h4 id="org2ab4952"><span class="section-number-4">2.2.1</span> Example</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ hostnamectl
-   Static hostname: t
-         Icon name: computer-laptop
-           Chassis: laptop
-        Machine ID: 3f8fab35efba44a482161bc965a1d153
-           Boot ID: cdaca32c1ba6410281c5eab7af23957e
-  Operating System: Debian GNU/Linux 8 (jessie)
-            Kernel: Linux 3.16.0-4-amd64
-      Architecture: x86-64
-~$ sudo hostnamectl set-hostname yyy
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>hostnamectl
+<span class="org-whitespace-space">   </span>Static<span class="org-whitespace-space"> </span>hostname:<span class="org-whitespace-space"> </span>t
+<span class="org-whitespace-space">         </span>Icon<span class="org-whitespace-space"> </span>name:<span class="org-whitespace-space"> </span>computer-laptop
+<span class="org-whitespace-space">           </span>Chassis:<span class="org-whitespace-space"> </span>laptop
+<span class="org-whitespace-space">        </span>Machine<span class="org-whitespace-space"> </span>ID:<span class="org-whitespace-space"> </span>3f8fab35efba44a482161bc965a1d153
+<span class="org-whitespace-space">           </span>Boot<span class="org-whitespace-space"> </span>ID:<span class="org-whitespace-space"> </span>cdaca32c1ba6410281c5eab7af23957e
+<span class="org-whitespace-space">  </span>Operating<span class="org-whitespace-space"> </span>System:<span class="org-whitespace-space"> </span>Debian<span class="org-whitespace-space"> </span>GNU/Linux<span class="org-whitespace-space"> </span>8<span class="org-whitespace-space"> </span>(jessie)
+<span class="org-whitespace-space">            </span>Kernel:<span class="org-whitespace-space"> </span>Linux<span class="org-whitespace-space"> </span>3.16.0-4-amd64
+<span class="org-whitespace-space">      </span>Architecture:<span class="org-whitespace-space"> </span>x86-64
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>hostnamectl<span class="org-whitespace-space"> </span>set-hostname<span class="org-whitespace-space"> </span>yyy
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd006d4a" class="outline-4">
-<h4 id="orgd006d4a"><span class="section-number-4">2.2.2</span> Manpage</h4>
+<div id="outline-container-org45bbefc" class="outline-4">
+<h4 id="org45bbefc"><span class="section-number-4">2.2.2</span> Manpage</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <blockquote>
 <p>
@@ -314,28 +314,28 @@ EXIT STATUS
 </div>
 </div>
 
-<div id="outline-container-orgc6dbe13" class="outline-3">
-<h3 id="orgc6dbe13"><span class="section-number-3">2.3</span> 系统本地化与键盘布局：localectl</h3>
+<div id="outline-container-org72dcf67" class="outline-3">
+<h3 id="org72dcf67"><span class="section-number-3">2.3</span> 系统本地化与键盘布局：localectl</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org0a0e9a6" class="outline-4">
-<h4 id="org0a0e9a6"><span class="section-number-4">2.3.1</span> example</h4>
+<div id="outline-container-orgfa4d00c" class="outline-4">
+<h4 id="orgfa4d00c"><span class="section-number-4">2.3.1</span> example</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ localectl
-   System Locale: <span class="org-variable-name">LANG</span>=en_US.UTF-8
-                  <span class="org-variable-name">LANGUAGE</span>=en_US:en
-       VC Keymap: n/a
-      X11 Layout: us
-       X11 Model: pc105
-~$ sudo localectl set-locale <span class="org-variable-name">LANG</span>=zh_CN.utf8
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>localectl
+<span class="org-whitespace-space">   </span>System<span class="org-whitespace-space"> </span>Locale:<span class="org-whitespace-space"> </span><span class="org-variable-name">LANG</span>=en_US.UTF-8
+<span class="org-whitespace-space">                  </span><span class="org-variable-name">LANGUAGE</span>=en_US:en
+<span class="org-whitespace-space">       </span>VC<span class="org-whitespace-space"> </span>Keymap:<span class="org-whitespace-space"> </span>n/a
+<span class="org-whitespace-space">      </span>X11<span class="org-whitespace-space"> </span>Layout:<span class="org-whitespace-space"> </span>us
+<span class="org-whitespace-space">       </span>X11<span class="org-whitespace-space"> </span>Model:<span class="org-whitespace-space"> </span>pc105
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>localectl<span class="org-whitespace-space"> </span>set-locale<span class="org-whitespace-space"> </span><span class="org-variable-name">LANG</span>=zh_CN.utf8
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgbf93eb9" class="outline-4">
-<h4 id="orgbf93eb9"><span class="section-number-4">2.3.2</span> Manpage</h4>
+<div id="outline-container-org7d4219b" class="outline-4">
+<h4 id="org7d4219b"><span class="section-number-4">2.3.2</span> Manpage</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <blockquote>
 <p>
@@ -488,76 +488,76 @@ $SYSTEMD_LESS
 </div>
 </div>
 
-<div id="outline-container-orgc51a584" class="outline-3">
-<h3 id="orgc51a584"><span class="section-number-3">2.4</span> 系统时间和日期：timedatectl</h3>
+<div id="outline-container-orgb488353" class="outline-3">
+<h3 id="orgb488353"><span class="section-number-3">2.4</span> 系统时间和日期：timedatectl</h3>
 <div class="outline-text-3" id="text-2-4">
 </div>
-<div id="outline-container-orgf989477" class="outline-4">
-<h4 id="orgf989477"><span class="section-number-4">2.4.1</span> example</h4>
+<div id="outline-container-org452711c" class="outline-4">
+<h4 id="org452711c"><span class="section-number-4">2.4.1</span> example</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ timedatectl
-      Local time: Fri 2018-03-30 11:11:25 CST
-  Universal time: Fri 2018-03-30 03:11:25 UTC
-        RTC time: Fri 2018-03-30 03:11:25
-       Time zone: Asia/Shanghai (CST, +0800)
-     NTP enabled: yes
-NTP synchronized: yes
- RTC<span class="org-keyword"> in</span> local TZ: no
-      DST active: n/a
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>timedatectl
+<span class="org-whitespace-space">      </span>Local<span class="org-whitespace-space"> </span>time:<span class="org-whitespace-space"> </span>Fri<span class="org-whitespace-space"> </span>2018-03-30<span class="org-whitespace-space"> </span>11:11:25<span class="org-whitespace-space"> </span>CST
+<span class="org-whitespace-space">  </span>Universal<span class="org-whitespace-space"> </span>time:<span class="org-whitespace-space"> </span>Fri<span class="org-whitespace-space"> </span>2018-03-30<span class="org-whitespace-space"> </span>03:11:25<span class="org-whitespace-space"> </span>UTC
+<span class="org-whitespace-space">        </span>RTC<span class="org-whitespace-space"> </span>time:<span class="org-whitespace-space"> </span>Fri<span class="org-whitespace-space"> </span>2018-03-30<span class="org-whitespace-space"> </span>03:11:25
+<span class="org-whitespace-space">       </span>Time<span class="org-whitespace-space"> </span>zone:<span class="org-whitespace-space"> </span>Asia/Shanghai<span class="org-whitespace-space"> </span>(CST,<span class="org-whitespace-space"> </span>+0800)
+<span class="org-whitespace-space">     </span>NTP<span class="org-whitespace-space"> </span>enabled:<span class="org-whitespace-space"> </span>yes
+NTP<span class="org-whitespace-space"> </span>synchronized:<span class="org-whitespace-space"> </span>yes
+<span class="org-whitespace-space"> </span>RTC<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>TZ:<span class="org-whitespace-space"> </span>no
+<span class="org-whitespace-space">      </span>DST<span class="org-whitespace-space"> </span>active:<span class="org-whitespace-space"> </span>n/a
 
-~$ sudo timedatectl set-time HH:MM:SS
-~$ sudo timedatectl set-time YYYY-MM-DD
-~$ sudo timedatectl set-timezone Asia/Shanghai
-~$ timedatectl set-ntp true
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>timedatectl<span class="org-whitespace-space"> </span>set-time<span class="org-whitespace-space"> </span>HH:MM:SS
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>timedatectl<span class="org-whitespace-space"> </span>set-time<span class="org-whitespace-space"> </span>YYYY-MM-DD
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>timedatectl<span class="org-whitespace-space"> </span>set-timezone<span class="org-whitespace-space"> </span>Asia/Shanghai
+~$<span class="org-whitespace-space"> </span>timedatectl<span class="org-whitespace-space"> </span>set-ntp<span class="org-whitespace-space"> </span>true
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf4be4e9" class="outline-4">
-<h4 id="orgf4be4e9"><span class="section-number-4">2.4.2</span> help</h4>
+<div id="outline-container-org416414b" class="outline-4">
+<h4 id="org416414b"><span class="section-number-4">2.4.2</span> help</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <div class="org-src-container">
-<pre class="src src-sh">timedatectl --help
-timedatectl [OPTIONS...] COMMAND ...
+<pre class="src src-sh">timedatectl<span class="org-whitespace-space"> </span>--help
+timedatectl<span class="org-whitespace-space"> </span>[OPTIONS...]<span class="org-whitespace-space"> </span>COMMAND<span class="org-whitespace-space"> </span>...
 
-Query or change system time and date settings.
+Query<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>change<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>date<span class="org-whitespace-space"> </span>settings.
 
-  -h --help                Show this help message
-     --version             Show package version
-     --no-pager            Do not pipe output into a pager
-     --no-ask-password     Do not prompt for password
-  -H --host=[USER@]HOST    Operate on remote host
-  -M --machine=CONTAINER   Operate on local container
-     --adjust-system-clock Adjust system clock when changing local RTC mode
+<span class="org-whitespace-space">  </span>-h<span class="org-whitespace-space"> </span>--help<span class="org-whitespace-space">                </span>Show<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>help<span class="org-whitespace-space"> </span>message
+<span class="org-whitespace-space">     </span>--version<span class="org-whitespace-space">             </span>Show<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>version
+<span class="org-whitespace-space">     </span>--no-pager<span class="org-whitespace-space">            </span>Do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>pipe<span class="org-whitespace-space"> </span>output<span class="org-whitespace-space"> </span>into<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>pager
+<span class="org-whitespace-space">     </span>--no-ask-password<span class="org-whitespace-space">     </span>Do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>prompt<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>password
+<span class="org-whitespace-space">  </span>-H<span class="org-whitespace-space"> </span>--host=[USER@]HOST<span class="org-whitespace-space">    </span>Operate<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>remote<span class="org-whitespace-space"> </span>host
+<span class="org-whitespace-space">  </span>-M<span class="org-whitespace-space"> </span>--machine=CONTAINER<span class="org-whitespace-space">   </span>Operate<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>container
+<span class="org-whitespace-space">     </span>--adjust-system-clock<span class="org-whitespace-space"> </span>Adjust<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>clock<span class="org-whitespace-space"> </span>when<span class="org-whitespace-space"> </span>changing<span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>RTC<span class="org-whitespace-space"> </span>mode
 
 Commands:
-  status                   Show current time settings
-  set-time TIME            Set system time
-  set-timezone ZONE        Set system time zone
-  list-timezones           Show known time zones
-  set-local-rtc BOOL       Control whether RTC is<span class="org-keyword"> in</span> local time
-  set-ntp BOOL             Control whether NTP is enabled
+<span class="org-whitespace-space">  </span>status<span class="org-whitespace-space">                   </span>Show<span class="org-whitespace-space"> </span>current<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>settings
+<span class="org-whitespace-space">  </span>set-time<span class="org-whitespace-space"> </span>TIME<span class="org-whitespace-space">            </span>Set<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>time
+<span class="org-whitespace-space">  </span>set-timezone<span class="org-whitespace-space"> </span>ZONE<span class="org-whitespace-space">        </span>Set<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>zone
+<span class="org-whitespace-space">  </span>list-timezones<span class="org-whitespace-space">           </span>Show<span class="org-whitespace-space"> </span>known<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space"> </span>zones
+<span class="org-whitespace-space">  </span>set-local-rtc<span class="org-whitespace-space"> </span>BOOL<span class="org-whitespace-space">       </span>Control<span class="org-whitespace-space"> </span>whether<span class="org-whitespace-space"> </span>RTC<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>time
+<span class="org-whitespace-space">  </span>set-ntp<span class="org-whitespace-space"> </span>BOOL<span class="org-whitespace-space">             </span>Control<span class="org-whitespace-space"> </span>whether<span class="org-whitespace-space"> </span>NTP<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>enabled
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3da8cbe" class="outline-3">
-<h3 id="org3da8cbe"><span class="section-number-3">2.5</span> 系统登录管理：loginctl</h3>
+<div id="outline-container-orgb08e049" class="outline-3">
+<h3 id="orgb08e049"><span class="section-number-3">2.5</span> 系统登录管理：loginctl</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-orgd748263" class="outline-4">
-<h4 id="orgd748263"><span class="section-number-4">2.5.1</span> example</h4>
+<div id="outline-container-orgf41ca65" class="outline-4">
+<h4 id="orgf41ca65"><span class="section-number-4">2.5.1</span> example</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ loginctl show-user yanyg
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>loginctl<span class="org-whitespace-space"> </span>show-user<span class="org-whitespace-space"> </span>yanyg
 <span class="org-variable-name">UID</span>=1000
 <span class="org-variable-name">GID</span>=1000
 <span class="org-variable-name">Name</span>=yanyg
-<span class="org-variable-name">Timestamp</span>=Fri 2018-03-30 09:57:52 CST
+<span class="org-variable-name">Timestamp</span>=Fri<span class="org-whitespace-space"> </span>2018-03-30<span class="org-whitespace-space"> </span>09:57:52<span class="org-whitespace-space"> </span>CST
 <span class="org-variable-name">TimestampMonotonic</span>=34018185
 <span class="org-variable-name">RuntimePath</span>=/run/user/1000
 <span class="org-variable-name">Service</span>=user@1000.service
@@ -568,315 +568,315 @@ Commands:
 <span class="org-variable-name">IdleSinceHintMonotonic</span>=0
 <span class="org-variable-name">Linger</span>=no
 
-~$ loginctl list-sessions
-   SESSION        UID USER             SEAT
-        c1        119 Debian-gdm       seat0
-         1       1000 yanyg            seat0
+~$<span class="org-whitespace-space"> </span>loginctl<span class="org-whitespace-space"> </span>list-sessions
+<span class="org-whitespace-space">   </span>SESSION<span class="org-whitespace-space">        </span>UID<span class="org-whitespace-space"> </span>USER<span class="org-whitespace-space">             </span>SEAT
+<span class="org-whitespace-space">        </span>c1<span class="org-whitespace-space">        </span>119<span class="org-whitespace-space"> </span>Debian-gdm<span class="org-whitespace-space">       </span>seat0
+<span class="org-whitespace-space">         </span>1<span class="org-whitespace-space">       </span>1000<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">            </span>seat0
 
-2 sessions listed.
+2<span class="org-whitespace-space"> </span>sessions<span class="org-whitespace-space"> </span>listed.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6bba433" class="outline-4">
-<h4 id="org6bba433"><span class="section-number-4">2.5.2</span> help</h4>
+<div id="outline-container-org0995318" class="outline-4">
+<h4 id="org0995318"><span class="section-number-4">2.5.2</span> help</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ loginctl --help
-loginctl [OPTIONS...] {COMMAND} ...
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>loginctl<span class="org-whitespace-space"> </span>--help
+loginctl<span class="org-whitespace-space"> </span>[OPTIONS...]<span class="org-whitespace-space"> </span>{COMMAND}<span class="org-whitespace-space"> </span>...
 
-Send control commands to or query the login manager.
+Send<span class="org-whitespace-space"> </span>control<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>query<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>login<span class="org-whitespace-space"> </span>manager.
 
-  -h --help              Show this help
-     --version           Show package version
-     --no-pager          Do not pipe output into a pager
-     --no-legend         Do not show the headers and footers
-     --no-ask-password   Don<span class="org-string">'t prompt for password</span>
-<span class="org-string">  -H --host=[USER@]HOST  Operate on remote host</span>
-<span class="org-string">  -M --machine=CONTAINER Operate on local container</span>
-<span class="org-string">  -p --property=NAME     Show only properties by this name</span>
-<span class="org-string">  -a --all               Show all properties, including empty ones</span>
-<span class="org-string">  -l --full              Do not ellipsize output</span>
-<span class="org-string">     --kill-who=WHO      Who to send signal to</span>
-<span class="org-string">  -s --signal=SIGNAL     Which signal to send</span>
+<span class="org-whitespace-space">  </span>-h<span class="org-whitespace-space"> </span>--help<span class="org-whitespace-space">              </span>Show<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>help
+<span class="org-whitespace-space">     </span>--version<span class="org-whitespace-space">           </span>Show<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>version
+<span class="org-whitespace-space">     </span>--no-pager<span class="org-whitespace-space">          </span>Do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>pipe<span class="org-whitespace-space"> </span>output<span class="org-whitespace-space"> </span>into<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>pager
+<span class="org-whitespace-space">     </span>--no-legend<span class="org-whitespace-space">         </span>Do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>show<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>headers<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>footers
+<span class="org-whitespace-space">     </span>--no-ask-password<span class="org-whitespace-space">   </span>Don<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">prompt</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">password</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-H</span><span class="org-whitespace-space"> </span><span class="org-string">--host=[USER@]HOST</span><span class="org-whitespace-space">  </span><span class="org-string">Operate</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">remote</span><span class="org-whitespace-space"> </span><span class="org-string">host</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-M</span><span class="org-whitespace-space"> </span><span class="org-string">--machine=CONTAINER</span><span class="org-whitespace-space"> </span><span class="org-string">Operate</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">local</span><span class="org-whitespace-space"> </span><span class="org-string">container</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-p</span><span class="org-whitespace-space"> </span><span class="org-string">--property=NAME</span><span class="org-whitespace-space">     </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">only</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">this</span><span class="org-whitespace-space"> </span><span class="org-string">name</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-a</span><span class="org-whitespace-space"> </span><span class="org-string">--all</span><span class="org-whitespace-space">               </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">properties,</span><span class="org-whitespace-space"> </span><span class="org-string">including</span><span class="org-whitespace-space"> </span><span class="org-string">empty</span><span class="org-whitespace-space"> </span><span class="org-string">ones</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-l</span><span class="org-whitespace-space"> </span><span class="org-string">--full</span><span class="org-whitespace-space">              </span><span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">ellipsize</span><span class="org-whitespace-space"> </span><span class="org-string">output</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--kill-who=WHO</span><span class="org-whitespace-space">      </span><span class="org-string">Who</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">send</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-s</span><span class="org-whitespace-space"> </span><span class="org-string">--signal=SIGNAL</span><span class="org-whitespace-space">     </span><span class="org-string">Which</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">send</span>
 
 <span class="org-string">Commands:</span>
-<span class="org-string">  list-sessions            List sessions</span>
-<span class="org-string">  session-status ID...     Show session status</span>
-<span class="org-string">  show-session [ID...]     Show properties of sessions or the manager</span>
-<span class="org-string">  activate ID              Activate a session</span>
-<span class="org-string">lock-session ID...       Screen lock one or more sessions</span>
-<span class="org-string">unlock-session ID...     Screen unlock one or more sessions</span>
-<span class="org-string">lock-sessions            Screen lock all current sessions</span>
-<span class="org-string">unlock-sessions          Screen unlock all current sessions</span>
-<span class="org-string">terminate-session ID...  Terminate one or more sessions</span>
-<span class="org-string">kill-session ID...       Send signal to processes of a session</span>
-<span class="org-string">list-users               List users</span>
-<span class="org-string">user-status USER...      Show user status</span>
-<span class="org-string">show-user [USER...]      Show properties of users or the manager</span>
-<span class="org-string">enable-linger USER...    Enable linger state of one or more users</span>
-<span class="org-string">disable-linger USER...   Disable linger state of one or more users</span>
-<span class="org-string">terminate-user USER...   Terminate all sessions of one or more users</span>
-<span class="org-string">kill-user USER...        Send signal to processes of a user</span>
-<span class="org-string">list-seats               List seats</span>
-<span class="org-string">seat-status NAME...      Show seat status</span>
-<span class="org-string">show-seat NAME...        Show properties of one or more seats</span>
-<span class="org-string">attach NAME DEVICE...    Attach one or more devices to a seat</span>
-<span class="org-string">flush-devices            Flush all device associations</span>
-<span class="org-string">terminate-seat NAME...   Terminate all sessions on one or more seats</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-sessions</span><span class="org-whitespace-space">            </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-whitespace-space">  </span><span class="org-string">session-status</span><span class="org-whitespace-space"> </span><span class="org-string">ID...</span><span class="org-whitespace-space">     </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">session</span><span class="org-whitespace-space"> </span><span class="org-string">status</span>
+<span class="org-whitespace-space">  </span><span class="org-string">show-session</span><span class="org-whitespace-space"> </span><span class="org-string">[ID...]</span><span class="org-whitespace-space">     </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">manager</span>
+<span class="org-whitespace-space">  </span><span class="org-string">activate</span><span class="org-whitespace-space"> </span><span class="org-string">ID</span><span class="org-whitespace-space">              </span><span class="org-string">Activate</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">session</span>
+<span class="org-string">lock-session</span><span class="org-whitespace-space"> </span><span class="org-string">ID...</span><span class="org-whitespace-space">       </span><span class="org-string">Screen</span><span class="org-whitespace-space"> </span><span class="org-string">lock</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-string">unlock-session</span><span class="org-whitespace-space"> </span><span class="org-string">ID...</span><span class="org-whitespace-space">     </span><span class="org-string">Screen</span><span class="org-whitespace-space"> </span><span class="org-string">unlock</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-string">lock-sessions</span><span class="org-whitespace-space">            </span><span class="org-string">Screen</span><span class="org-whitespace-space"> </span><span class="org-string">lock</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">current</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-string">unlock-sessions</span><span class="org-whitespace-space">          </span><span class="org-string">Screen</span><span class="org-whitespace-space"> </span><span class="org-string">unlock</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">current</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-string">terminate-session</span><span class="org-whitespace-space"> </span><span class="org-string">ID...</span><span class="org-whitespace-space">  </span><span class="org-string">Terminate</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span>
+<span class="org-string">kill-session</span><span class="org-whitespace-space"> </span><span class="org-string">ID...</span><span class="org-whitespace-space">       </span><span class="org-string">Send</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">processes</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">session</span>
+<span class="org-string">list-users</span><span class="org-whitespace-space">               </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">users</span>
+<span class="org-string">user-status</span><span class="org-whitespace-space"> </span><span class="org-string">USER...</span><span class="org-whitespace-space">      </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">user</span><span class="org-whitespace-space"> </span><span class="org-string">status</span>
+<span class="org-string">show-user</span><span class="org-whitespace-space"> </span><span class="org-string">[USER...]</span><span class="org-whitespace-space">      </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">users</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">manager</span>
+<span class="org-string">enable-linger</span><span class="org-whitespace-space"> </span><span class="org-string">USER...</span><span class="org-whitespace-space">    </span><span class="org-string">Enable</span><span class="org-whitespace-space"> </span><span class="org-string">linger</span><span class="org-whitespace-space"> </span><span class="org-string">state</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">users</span>
+<span class="org-string">disable-linger</span><span class="org-whitespace-space"> </span><span class="org-string">USER...</span><span class="org-whitespace-space">   </span><span class="org-string">Disable</span><span class="org-whitespace-space"> </span><span class="org-string">linger</span><span class="org-whitespace-space"> </span><span class="org-string">state</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">users</span>
+<span class="org-string">terminate-user</span><span class="org-whitespace-space"> </span><span class="org-string">USER...</span><span class="org-whitespace-space">   </span><span class="org-string">Terminate</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">users</span>
+<span class="org-string">kill-user</span><span class="org-whitespace-space"> </span><span class="org-string">USER...</span><span class="org-whitespace-space">        </span><span class="org-string">Send</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">processes</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">user</span>
+<span class="org-string">list-seats</span><span class="org-whitespace-space">               </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">seats</span>
+<span class="org-string">seat-status</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">      </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">seat</span><span class="org-whitespace-space"> </span><span class="org-string">status</span>
+<span class="org-string">show-seat</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">        </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">seats</span>
+<span class="org-string">attach</span><span class="org-whitespace-space"> </span><span class="org-string">NAME</span><span class="org-whitespace-space"> </span><span class="org-string">DEVICE...</span><span class="org-whitespace-space">    </span><span class="org-string">Attach</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">devices</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">seat</span>
+<span class="org-string">flush-devices</span><span class="org-whitespace-space">            </span><span class="org-string">Flush</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">device</span><span class="org-whitespace-space"> </span><span class="org-string">associations</span>
+<span class="org-string">terminate-seat</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">   </span><span class="org-string">Terminate</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">sessions</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">seats</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd45a499" class="outline-3">
-<h3 id="orgd45a499"><span class="section-number-3">2.6</span> Systemd系统和服务管理：systemctl</h3>
+<div id="outline-container-orge1effb6" class="outline-3">
+<h3 id="orge1effb6"><span class="section-number-3">2.6</span> Systemd系统和服务管理：systemctl</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-orge787dc0" class="outline-4">
-<h4 id="orge787dc0"><span class="section-number-4">2.6.1</span> example</h4>
+<div id="outline-container-org13fad3e" class="outline-4">
+<h4 id="org13fad3e"><span class="section-number-4">2.6.1</span> example</h4>
 <div class="outline-text-4" id="text-2-6-1">
 </div>
-<div id="outline-container-orga23975d" class="outline-5">
-<h5 id="orga23975d"><span class="section-number-5">2.6.1.1</span> 显示已知units：systemctl list-units [PATTERN&#x2026;]</h5>
+<div id="outline-container-orgc80537e" class="outline-5">
+<h5 id="orgc80537e"><span class="section-number-5">2.6.1.1</span> 显示已知units：systemctl list-units [PATTERN&#x2026;]</h5>
 <div class="outline-text-5" id="text-2-6-1-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ systemctl list-units
-  UNIT                         LOAD   ACTIVE SUB       DESCRIPTION
-  proc-sys-fs-binfmt_misc.automount loaded active running   Arbitrary Executable Fil
-  sys-devices-pci0000:00-0000:00:02.0-drm-card0-card0\x2dLVDS\x2d1-intel_backlight.d
-  sys-devices-pci0000:00-0000:00:14.0-usb3-3\x2d2-3\x2d2:1.0-host6-target6:0:0-6:0:0
-  sys-devices-pci0000:00-0000:00:14.0-usb3-3\x2d2-3\x2d2:1.0-host6-target6:0:0-6:0:0
-  sys-devices-pci0000:00-0000:00:16.3-tty-ttyS0.device loaded active plugged   7 Ser
-  sys-devices-pci0000:00-0000:00:19.0-net-eth0.device loaded active plugged   82579L
-  sys-devices-pci0000:00-0000:00:1a.0-usb1-1\x2d1-1\x2d1.4-1\x2d1.4:1.0-bluetooth-hc
-  sys-devices-pci0000:00-0000:00:1a.0-usb1-1\x2d1-1\x2d1.4-1\x2d1.4:1.0-bluetooth-hc
-  sys-devices-pci0000:00-0000:00:1b.0-sound-card0.device loaded active plugged   7 S
-  sys-devices-pci0000:00-0000:00:1c.1-0000:03:00.0-ieee80211-phy0-rfkill2.device loa
-  sys-devices-pci0000:00-0000:00:1c.1-0000:03:00.0-net-wlan0.device loaded active pl
-  sys-devices-pci0000:00-0000:00:1f.2-ata1-host0-target0:0:0-0:0:0:0-block-sda-sda1.
-  sys-devices-pci0000:00-0000:00:1f.2-ata1-host0-target0:0:0-0:0:0:0-block-sda-sda2.
-~$ systemctl list-units <span class="org-string">'*ssh*'</span>
-UNIT        LOAD   ACTIVE SUB     DESCRIPTION
-ssh.service loaded active running OpenBSD Secure Shell server
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-units
+<span class="org-whitespace-space">  </span>UNIT<span class="org-whitespace-space">                         </span>LOAD<span class="org-whitespace-space">   </span>ACTIVE<span class="org-whitespace-space"> </span>SUB<span class="org-whitespace-space">       </span>DESCRIPTION
+<span class="org-whitespace-space">  </span>proc-sys-fs-binfmt_misc.automount<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>running<span class="org-whitespace-space">   </span>Arbitrary<span class="org-whitespace-space"> </span>Executable<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Fil</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:02.0-drm-card0-card0\x2dLVDS\x2d1-intel_backlig<span class="org-whitespace-line">ht.d</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:14.0-usb3-3\x2d2-3\x2d2:1.0-host6-target6:0:0-6<span class="org-whitespace-line">:0:0</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:14.0-usb3-3\x2d2-3\x2d2:1.0-host6-target6:0:0-6<span class="org-whitespace-line">:0:0</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:16.3-tty-ttyS0.device<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>plugged<span class="org-whitespace-space">   </span>7<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Ser</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:19.0-net-eth0.device<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>plugged<span class="org-whitespace-space">   </span>82<span class="org-whitespace-line">579L</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1a.0-usb1-1\x2d1-1\x2d1.4-1\x2d1.4:1.0-bluetoot<span class="org-whitespace-line">h-hc</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1a.0-usb1-1\x2d1-1\x2d1.4-1\x2d1.4:1.0-bluetoot<span class="org-whitespace-line">h-hc</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1b.0-sound-card0.device<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>plugged<span class="org-whitespace-space">  </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">7</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">S</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1c.1-0000:03:00.0-ieee80211-phy0-rfkill2.device<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">loa</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1c.1-0000:03:00.0-net-wlan0.device<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>activ<span class="org-whitespace-line">e</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pl</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1f.2-ata1-host0-target0:0:0-0:0:0:0-block-sda-s<span class="org-whitespace-line">da1.</span>
+<span class="org-whitespace-space">  </span>sys-devices-pci0000:00-0000:00:1f.2-ata1-host0-target0:0:0-0:0:0:0-block-sda-s<span class="org-whitespace-line">da2.</span>
+~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-units<span class="org-whitespace-space"> </span><span class="org-string">'*ssh*'</span>
+UNIT<span class="org-whitespace-space">        </span>LOAD<span class="org-whitespace-space">   </span>ACTIVE<span class="org-whitespace-space"> </span>SUB<span class="org-whitespace-space">     </span>DESCRIPTION
+ssh.service<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>running<span class="org-whitespace-space"> </span>OpenBSD<span class="org-whitespace-space"> </span>Secure<span class="org-whitespace-space"> </span>Shell<span class="org-whitespace-space"> </span>server
 
-LOAD   = Reflects whether the unit definition was properly loaded.
-ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
-SUB    = The low-level unit activation state, values depend on unit type.
+LOAD<span class="org-whitespace-space">   </span>=<span class="org-whitespace-space"> </span>Reflects<span class="org-whitespace-space"> </span>whether<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>definition<span class="org-whitespace-space"> </span>was<span class="org-whitespace-space"> </span>properly<span class="org-whitespace-space"> </span>loaded.
+ACTIVE<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>high-level<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>activation<span class="org-whitespace-space"> </span>state,<span class="org-whitespace-space"> </span>i.e.<span class="org-whitespace-space"> </span>generalization<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>SUB.
+SUB<span class="org-whitespace-space">    </span>=<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>low-level<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>activation<span class="org-whitespace-space"> </span>state,<span class="org-whitespace-space"> </span>values<span class="org-whitespace-space"> </span>depend<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>type.
 
-1 loaded units listed. Pass --all to see loaded but inactive units, too.
-To show all installed unit files use <span class="org-string">'systemctl list-unit-files'</span>.
+1<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>units<span class="org-whitespace-space"> </span>listed.<span class="org-whitespace-space"> </span>Pass<span class="org-whitespace-space"> </span>--all<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>see<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>but<span class="org-whitespace-space"> </span>inactive<span class="org-whitespace-space"> </span>units,<span class="org-whitespace-space"> </span>too.
+To<span class="org-whitespace-space"> </span>show<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>installed<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>use<span class="org-whitespace-space"> </span><span class="org-string">'systemctl</span><span class="org-whitespace-space"> </span><span class="org-string">list-unit-files'</span>.
 
-~$ systemctl list-units --all
-  UNIT                        LOAD      ACTIVE   SUB       DESCRIPTION
-  proc-sys-fs-binfmt_misc.automount loaded    active   running   Arbitrary Executabl
-  dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X.device loaded
-  dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart1.device
-  dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart2.device
-  dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart3.device
-  dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart4.device
-  dev-disk-by\x2did-ata\x2dST2000LM007\x2d1R8174_WCC12JNZ.device loaded    active
-  dev-disk-by\x2did-ata\x2dST2000LM007\x2d1R8174_WCC12JNZ\x2dpart1.device loaded
-&#9679; var-lock.mount              not-found inactive dead      var-lock.mount
-&#9679; var-run.mount               not-found inactive dead      var-run.mount
-  acpid.path                  loaded    active   running   ACPI Events Check
-  alsa-restore.service        loaded    inactive dead      Restore Sound Card State
+~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-units<span class="org-whitespace-space"> </span>--all
+<span class="org-whitespace-space">  </span>UNIT<span class="org-whitespace-space">                        </span>LOAD<span class="org-whitespace-space">      </span>ACTIVE<span class="org-whitespace-space">   </span>SUB<span class="org-whitespace-space">       </span>DESCRIPTION
+<span class="org-whitespace-space">  </span>proc-sys-fs-binfmt_misc.automount<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space">    </span>active<span class="org-whitespace-space">   </span>running<span class="org-whitespace-space">   </span>Arbitrary<span class="org-whitespace-space"> </span>Execu<span class="org-whitespace-line">tabl</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X.device<span class="org-whitespace-space"> </span>load<span class="org-whitespace-line">ed</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart1.de<span class="org-whitespace-line">vice</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart2.de<span class="org-whitespace-line">vice</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart3.de<span class="org-whitespace-line">vice</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dSamsung_SSD_850_EVO_250GB_S2R7NX0H704812X\x2dpart4.de<span class="org-whitespace-line">vice</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dST2000LM007\x2d1R8174_WCC12JNZ.device<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space">    </span>activ<span class="org-whitespace-line">e</span>
+<span class="org-whitespace-space">  </span>dev-disk-by\x2did-ata\x2dST2000LM007\x2d1R8174_WCC12JNZ\x2dpart1.device<span class="org-whitespace-space"> </span>loaded
+&#9679;<span class="org-whitespace-space"> </span>var-lock.mount<span class="org-whitespace-space">              </span>not-found<span class="org-whitespace-space"> </span>inactive<span class="org-whitespace-space"> </span>dead<span class="org-whitespace-space">      </span>var-lock.mount
+&#9679;<span class="org-whitespace-space"> </span>var-run.mount<span class="org-whitespace-space">               </span>not-found<span class="org-whitespace-space"> </span>inactive<span class="org-whitespace-space"> </span>dead<span class="org-whitespace-space">      </span>var-run.mount
+<span class="org-whitespace-space">  </span>acpid.path<span class="org-whitespace-space">                  </span>loaded<span class="org-whitespace-space">    </span>active<span class="org-whitespace-space">   </span>running<span class="org-whitespace-space">   </span>ACPI<span class="org-whitespace-space"> </span>Events<span class="org-whitespace-space"> </span>Check
+<span class="org-whitespace-space">  </span>alsa-restore.service<span class="org-whitespace-space">        </span>loaded<span class="org-whitespace-space">    </span>inactive<span class="org-whitespace-space"> </span>dead<span class="org-whitespace-space">      </span>Restore<span class="org-whitespace-space"> </span>Sound<span class="org-whitespace-space"> </span>Card<span class="org-whitespace-space"> </span>St<span class="org-whitespace-line">ate</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org892bfe6" class="outline-5">
-<h5 id="org892bfe6"><span class="section-number-5">2.6.1.2</span> 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</h5>
+<div id="outline-container-orga481b6a" class="outline-5">
+<h5 id="orga481b6a"><span class="section-number-5">2.6.1.2</span> 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</h5>
 <div class="outline-text-5" id="text-2-6-1-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ systemctl list-unit-files | wc -l
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-unit-files<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>wc<span class="org-whitespace-space"> </span>-l
 263
 
-~$ systemctl list-unit-files
-UNIT FILE                                  STATE
-proc-sys-fs-binfmt_misc.automount          static
-dev-hugepages.mount                        static
-dev-mqueue.mount                           static
-proc-sys-fs-binfmt_misc.mount              static
-sys-fs-fuse-connections.mount              static
-sys-kernel-config.mount                    static
-sys-kernel-debug.mount                     static
-tmp.mount                                  disabled
-acpid.path                                 enabled
-cups.path                                  enabled
-systemd-ask-password-console.path          static
+~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-unit-files
+UNIT<span class="org-whitespace-space"> </span>FILE<span class="org-whitespace-space">                                  </span>STATE
+proc-sys-fs-binfmt_misc.automount<span class="org-whitespace-space">          </span>static
+dev-hugepages.mount<span class="org-whitespace-space">                        </span>static
+dev-mqueue.mount<span class="org-whitespace-space">                           </span>static
+proc-sys-fs-binfmt_misc.mount<span class="org-whitespace-space">              </span>static
+sys-fs-fuse-connections.mount<span class="org-whitespace-space">              </span>static
+sys-kernel-config.mount<span class="org-whitespace-space">                    </span>static
+sys-kernel-debug.mount<span class="org-whitespace-space">                     </span>static
+tmp.mount<span class="org-whitespace-space">                                  </span>disabled
+acpid.path<span class="org-whitespace-space">                                 </span>enabled
+cups.path<span class="org-whitespace-space">                                  </span>enabled
+systemd-ask-password-console.path<span class="org-whitespace-space">          </span>static
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6e234d1" class="outline-5">
-<h5 id="org6e234d1"><span class="section-number-5">2.6.1.3</span> systemctl candidates: systemctl with two tabs</h5>
+<div id="outline-container-org5793e95" class="outline-5">
+<h5 id="org5793e95"><span class="section-number-5">2.6.1.3</span> systemctl candidates: systemctl with two tabs</h5>
 <div class="outline-text-5" id="text-2-6-1-3">
 <div class="org-src-container">
-<pre class="src src-sh">~$ systemctl
-cancel                 is-active              reload-or-restart
-cat                    is-enabled             reload-or-try-restart
-condreload             is-failed              rescue
-condrestart            isolate                reset-failed
-condstop               kexec                  restart
-daemon-reexec          kill                   set-default
-daemon-reload          link                   set-environment
-default                list-dependencies      show
-delete                 list-jobs              show-environment
-disable                list-sockets           snapshot
-emergency              list-timers            start
-<span class="org-builtin">enable</span>                 list-unit-files        status
-<span class="org-keyword">exit</span>                   list-units             stop
-force-reload           mask                   suspend
-get-default            poweroff               try-restart
-halt                   preset                 unmask
-<span class="org-builtin">help</span>                   reboot                 unset-environment
-hibernate              reenable
-hybrid-sleep           reload
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl
+cancel<span class="org-whitespace-space">                 </span>is-active<span class="org-whitespace-space">              </span>reload-or-restart
+cat<span class="org-whitespace-space">                    </span>is-enabled<span class="org-whitespace-space">             </span>reload-or-try-restart
+condreload<span class="org-whitespace-space">             </span>is-failed<span class="org-whitespace-space">              </span>rescue
+condrestart<span class="org-whitespace-space">            </span>isolate<span class="org-whitespace-space">                </span>reset-failed
+condstop<span class="org-whitespace-space">               </span>kexec<span class="org-whitespace-space">                  </span>restart
+daemon-reexec<span class="org-whitespace-space">          </span>kill<span class="org-whitespace-space">                   </span>set-default
+daemon-reload<span class="org-whitespace-space">          </span>link<span class="org-whitespace-space">                   </span>set-environment
+default<span class="org-whitespace-space">                </span>list-dependencies<span class="org-whitespace-space">      </span>show
+delete<span class="org-whitespace-space">                 </span>list-jobs<span class="org-whitespace-space">              </span>show-environment
+disable<span class="org-whitespace-space">                </span>list-sockets<span class="org-whitespace-space">           </span>snapshot
+emergency<span class="org-whitespace-space">              </span>list-timers<span class="org-whitespace-space">            </span>start
+<span class="org-builtin">enable</span><span class="org-whitespace-space">                 </span>list-unit-files<span class="org-whitespace-space">        </span>status
+<span class="org-keyword">exit</span><span class="org-whitespace-space">                   </span>list-units<span class="org-whitespace-space">             </span>stop
+force-reload<span class="org-whitespace-space">           </span>mask<span class="org-whitespace-space">                   </span>suspend
+get-default<span class="org-whitespace-space">            </span>poweroff<span class="org-whitespace-space">               </span>try-restart
+halt<span class="org-whitespace-space">                   </span>preset<span class="org-whitespace-space">                 </span>unmask
+<span class="org-builtin">help</span><span class="org-whitespace-space">                   </span>reboot<span class="org-whitespace-space">                 </span>unset-environment
+hibernate<span class="org-whitespace-space">              </span>reenable
+hybrid-sleep<span class="org-whitespace-space">           </span>reload
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e88d91" class="outline-4">
-<h4 id="org1e88d91"><span class="section-number-4">2.6.2</span> help</h4>
+<div id="outline-container-org17957bc" class="outline-4">
+<h4 id="org17957bc"><span class="section-number-4">2.6.2</span> help</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ systemctl [OPTIONS...] {COMMAND} ...
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>[OPTIONS...]<span class="org-whitespace-space"> </span>{COMMAND}<span class="org-whitespace-space"> </span>...
 
-Query or send control commands to the systemd manager.
+Query<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>send<span class="org-whitespace-space"> </span>control<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>systemd<span class="org-whitespace-space"> </span>manager.
 
-  -h --help           Show this help
-     --version        Show package version
-     --system         Connect to system manager
-     --user           Connect to user service manager
-  -H --host=[USER@]HOST
-                      Operate on remote host
-  -M --machine=CONTAINER
-                      Operate on local container
-  -t --type=TYPE      List only units of a particular type
-     --state=STATE    List only units with particular LOAD or SUB or ACTIVE state
-  -p --property=NAME  Show only properties by this name
-  -a --all            Show all loaded units/properties, including dead/empty
-                      ones. To list all units installed on the system, use
-                      the <span class="org-string">'list-unit-files'</span> command instead.
-  -l --full           Don<span class="org-string">'t ellipsize unit names on output</span>
-<span class="org-string">  -r --recursive      Show unit list of host and local containers</span>
-<span class="org-string">     --reverse        Show reverse dependencies with '</span>list-dependencies<span class="org-string">'</span>
-<span class="org-string">     --job-mode=MODE  Specify how to deal with already queued jobs, when</span>
-<span class="org-string">                      queueing a new job</span>
-<span class="org-string">     --show-types     When showing sockets, explicitly show their type</span>
-<span class="org-string">  -i --ignore-inhibitors</span>
-<span class="org-string">                      When shutting down or sleeping, ignore inhibitors</span>
-<span class="org-string">     --kill-who=WHO   Who to send signal to</span>
-<span class="org-string">  -s --signal=SIGNAL  Which signal to send</span>
-<span class="org-string">  -q --quiet          Suppress output</span>
-<span class="org-string">     --no-block       Do not wait until operation finished</span>
-<span class="org-string">     --no-wall        Don'</span>t send wall message before halt/power-off/reboot
-     --no-reload      When enabling/disabling unit files, don<span class="org-string">'t reload daemon</span>
-<span class="org-string">                      configuration</span>
-<span class="org-string">     --no-legend      Do not print a legend (column headers and hints)</span>
-<span class="org-string">     --no-pager       Do not pipe output into a pager</span>
-<span class="org-string">     --no-ask-password</span>
-<span class="org-string">                      Do not ask for system passwords</span>
-<span class="org-string">     --global         Enable/disable unit files globally</span>
-<span class="org-string">     --runtime        Enable unit files only temporarily until next reboot</span>
-<span class="org-string">  -f --force          When enabling unit files, override existing symlinks</span>
-<span class="org-string">                      When shutting down, execute action immediately</span>
-<span class="org-string">     --preset-mode=   Specifies whether fully apply presets, or only enable,</span>
-<span class="org-string">                      or only disable</span>
-<span class="org-string">     --root=PATH      Enable unit files in the specified root directory</span>
-<span class="org-string">  -n --lines=INTEGER  Number of journal entries to show</span>
-<span class="org-string">  -o --output=STRING  Change journal output mode (short, short-monotonic,</span>
-<span class="org-string">                      verbose, export, json, json-pretty, json-sse, cat)</span>
-<span class="org-string">     --plain          Print unit dependencies as a list instead of a tree</span>
-<span class="org-string">Unit Commands:</span>
-<span class="org-string">  list-units [PATTERN...]         List loaded units</span>
-<span class="org-string">  list-sockets [PATTERN...]       List loaded sockets ordered by address</span>
-<span class="org-string">  list-timers [PATTERN...]        List loaded timers ordered by next elapse</span>
-<span class="org-string">  start NAME...                   Start (activate) one or more units</span>
-<span class="org-string">  stop NAME...                    Stop (deactivate) one or more units</span>
-<span class="org-string">  reload NAME...                  Reload one or more units</span>
-<span class="org-string">  restart NAME...                 Start or restart one or more units</span>
-<span class="org-string">  try-restart NAME...             Restart one or more units if active</span>
-<span class="org-string">  reload-or-restart NAME...       Reload one or more units if possible,</span>
-<span class="org-string">                                  otherwise start or restart</span>
-<span class="org-string">  reload-or-try-restart NAME...   Reload one or more units if possible,</span>
-<span class="org-string">                                  otherwise restart if active</span>
-<span class="org-string">  isolate NAME                    Start one unit and stop all others</span>
-<span class="org-string">  kill NAME...                    Send signal to processes of a unit</span>
-<span class="org-string">  is-active PATTERN...            Check whether units are active</span>
-<span class="org-string">  is-failed PATTERN...            Check whether units are failed</span>
-<span class="org-string">  status [PATTERN...|PID...]      Show runtime status of one or more units</span>
-<span class="org-string">  show [PATTERN...|JOB...]        Show properties of one or more</span>
-<span class="org-string">                                  units/jobs or the manager</span>
-<span class="org-string">  cat PATTERN...                  Show files and drop-ins of one or more units</span>
-<span class="org-string">  set-property NAME ASSIGNMENT... Sets one or more properties of a unit</span>
-<span class="org-string">  help PATTERN...|PID...          Show manual for one or more units</span>
-<span class="org-string">  reset-failed [PATTERN...]       Reset failed state for all, one, or more</span>
-<span class="org-string">                                  units</span>
-<span class="org-string">  list-dependencies [NAME]        Recursively show units which are required</span>
-<span class="org-string">                                  or wanted by this unit or by which this</span>
-<span class="org-string">                                  unit is required or wanted</span>
+<span class="org-whitespace-space">  </span>-h<span class="org-whitespace-space"> </span>--help<span class="org-whitespace-space">           </span>Show<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>help
+<span class="org-whitespace-space">     </span>--version<span class="org-whitespace-space">        </span>Show<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>version
+<span class="org-whitespace-space">     </span>--system<span class="org-whitespace-space">         </span>Connect<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>manager
+<span class="org-whitespace-space">     </span>--user<span class="org-whitespace-space">           </span>Connect<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>service<span class="org-whitespace-space"> </span>manager
+<span class="org-whitespace-space">  </span>-H<span class="org-whitespace-space"> </span>--host=[USER@]HOST
+<span class="org-whitespace-space">                      </span>Operate<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>remote<span class="org-whitespace-space"> </span>host
+<span class="org-whitespace-space">  </span>-M<span class="org-whitespace-space"> </span>--machine=CONTAINER
+<span class="org-whitespace-space">                      </span>Operate<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>container
+<span class="org-whitespace-space">  </span>-t<span class="org-whitespace-space"> </span>--type=TYPE<span class="org-whitespace-space">      </span>List<span class="org-whitespace-space"> </span>only<span class="org-whitespace-space"> </span>units<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>particular<span class="org-whitespace-space"> </span>type
+<span class="org-whitespace-space">     </span>--state=STATE<span class="org-whitespace-space">    </span>List<span class="org-whitespace-space"> </span>only<span class="org-whitespace-space"> </span>units<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>particular<span class="org-whitespace-space"> </span>LOAD<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>SUB<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>ACTIVE<span class="org-whitespace-space"> </span>stat<span class="org-whitespace-line">e</span>
+<span class="org-whitespace-space">  </span>-p<span class="org-whitespace-space"> </span>--property=NAME<span class="org-whitespace-space">  </span>Show<span class="org-whitespace-space"> </span>only<span class="org-whitespace-space"> </span>properties<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>name
+<span class="org-whitespace-space">  </span>-a<span class="org-whitespace-space"> </span>--all<span class="org-whitespace-space">            </span>Show<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>units/properties,<span class="org-whitespace-space"> </span>including<span class="org-whitespace-space"> </span>dead/empty
+<span class="org-whitespace-space">                      </span>ones.<span class="org-whitespace-space"> </span>To<span class="org-whitespace-space"> </span>list<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>units<span class="org-whitespace-space"> </span>installed<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>system,<span class="org-whitespace-space"> </span>use
+<span class="org-whitespace-space">                      </span>the<span class="org-whitespace-space"> </span><span class="org-string">'list-unit-files'</span><span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>instead.
+<span class="org-whitespace-space">  </span>-l<span class="org-whitespace-space"> </span>--full<span class="org-whitespace-space">           </span>Don<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">ellipsize</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">names</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">output</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-r</span><span class="org-whitespace-space"> </span><span class="org-string">--recursive</span><span class="org-whitespace-space">      </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">list</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">host</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">local</span><span class="org-whitespace-space"> </span><span class="org-string">containers</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--reverse</span><span class="org-whitespace-space">        </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">reverse</span><span class="org-whitespace-space"> </span><span class="org-string">dependencies</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">'</span>list-dependencies<span class="org-string">'</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--job-mode=MODE</span><span class="org-whitespace-space">  </span><span class="org-string">Specify</span><span class="org-whitespace-space"> </span><span class="org-string">how</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">deal</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">already</span><span class="org-whitespace-space"> </span><span class="org-string">queued</span><span class="org-whitespace-space"> </span><span class="org-string">jobs,</span><span class="org-whitespace-space"> </span><span class="org-string">when</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">queueing</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">new</span><span class="org-whitespace-space"> </span><span class="org-string">job</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--show-types</span><span class="org-whitespace-space">     </span><span class="org-string">When</span><span class="org-whitespace-space"> </span><span class="org-string">showing</span><span class="org-whitespace-space"> </span><span class="org-string">sockets,</span><span class="org-whitespace-space"> </span><span class="org-string">explicitly</span><span class="org-whitespace-space"> </span><span class="org-string">show</span><span class="org-whitespace-space"> </span><span class="org-string">their</span><span class="org-whitespace-space"> </span><span class="org-string">type</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-i</span><span class="org-whitespace-space"> </span><span class="org-string">--ignore-inhibitors</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">When</span><span class="org-whitespace-space"> </span><span class="org-string">shutting</span><span class="org-whitespace-space"> </span><span class="org-string">down</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">sleeping,</span><span class="org-whitespace-space"> </span><span class="org-string">ignore</span><span class="org-whitespace-space"> </span><span class="org-string">inhibitors</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--kill-who=WHO</span><span class="org-whitespace-space">   </span><span class="org-string">Who</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">send</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-s</span><span class="org-whitespace-space"> </span><span class="org-string">--signal=SIGNAL</span><span class="org-whitespace-space">  </span><span class="org-string">Which</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">send</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-q</span><span class="org-whitespace-space"> </span><span class="org-string">--quiet</span><span class="org-whitespace-space">          </span><span class="org-string">Suppress</span><span class="org-whitespace-space"> </span><span class="org-string">output</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--no-block</span><span class="org-whitespace-space">       </span><span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">wait</span><span class="org-whitespace-space"> </span><span class="org-string">until</span><span class="org-whitespace-space"> </span><span class="org-string">operation</span><span class="org-whitespace-space"> </span><span class="org-string">finished</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--no-wall</span><span class="org-whitespace-space">        </span><span class="org-string">Don'</span>t<span class="org-whitespace-space"> </span>send<span class="org-whitespace-space"> </span>wall<span class="org-whitespace-space"> </span>message<span class="org-whitespace-space"> </span>before<span class="org-whitespace-space"> </span>halt/power-off/reboot
+<span class="org-whitespace-space">     </span>--no-reload<span class="org-whitespace-space">      </span>When<span class="org-whitespace-space"> </span>enabling/disabling<span class="org-whitespace-space"> </span>unit<span class="org-whitespace-space"> </span>files,<span class="org-whitespace-space"> </span>don<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">reload</span><span class="org-whitespace-space"> </span><span class="org-string">daemon</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">configuration</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--no-legend</span><span class="org-whitespace-space">      </span><span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">print</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">legend</span><span class="org-whitespace-space"> </span><span class="org-string">(column</span><span class="org-whitespace-space"> </span><span class="org-string">headers</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">hints)</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--no-pager</span><span class="org-whitespace-space">       </span><span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">pipe</span><span class="org-whitespace-space"> </span><span class="org-string">output</span><span class="org-whitespace-space"> </span><span class="org-string">into</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">pager</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--no-ask-password</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">ask</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">passwords</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--global</span><span class="org-whitespace-space">         </span><span class="org-string">Enable/disable</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">globally</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--runtime</span><span class="org-whitespace-space">        </span><span class="org-string">Enable</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">only</span><span class="org-whitespace-space"> </span><span class="org-string">temporarily</span><span class="org-whitespace-space"> </span><span class="org-string">until</span><span class="org-whitespace-space"> </span><span class="org-string">next</span><span class="org-whitespace-space"> </span><span class="org-string">reboot</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-f</span><span class="org-whitespace-space"> </span><span class="org-string">--force</span><span class="org-whitespace-space">          </span><span class="org-string">When</span><span class="org-whitespace-space"> </span><span class="org-string">enabling</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files,</span><span class="org-whitespace-space"> </span><span class="org-string">override</span><span class="org-whitespace-space"> </span><span class="org-string">existing</span><span class="org-whitespace-space"> </span><span class="org-string">symlinks</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">When</span><span class="org-whitespace-space"> </span><span class="org-string">shutting</span><span class="org-whitespace-space"> </span><span class="org-string">down,</span><span class="org-whitespace-space"> </span><span class="org-string">execute</span><span class="org-whitespace-space"> </span><span class="org-string">action</span><span class="org-whitespace-space"> </span><span class="org-string">immediately</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--preset-mode=</span><span class="org-whitespace-space">   </span><span class="org-string">Specifies</span><span class="org-whitespace-space"> </span><span class="org-string">whether</span><span class="org-whitespace-space"> </span><span class="org-string">fully</span><span class="org-whitespace-space"> </span><span class="org-string">apply</span><span class="org-whitespace-space"> </span><span class="org-string">presets,</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">only</span><span class="org-whitespace-space"> </span><span class="org-string">enable,</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">only</span><span class="org-whitespace-space"> </span><span class="org-string">disable</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--root=PATH</span><span class="org-whitespace-space">      </span><span class="org-string">Enable</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">specified</span><span class="org-whitespace-space"> </span><span class="org-string">root</span><span class="org-whitespace-space"> </span><span class="org-string">directory</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-n</span><span class="org-whitespace-space"> </span><span class="org-string">--lines=INTEGER</span><span class="org-whitespace-space">  </span><span class="org-string">Number</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">journal</span><span class="org-whitespace-space"> </span><span class="org-string">entries</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">show</span>
+<span class="org-whitespace-space">  </span><span class="org-string">-o</span><span class="org-whitespace-space"> </span><span class="org-string">--output=STRING</span><span class="org-whitespace-space">  </span><span class="org-string">Change</span><span class="org-whitespace-space"> </span><span class="org-string">journal</span><span class="org-whitespace-space"> </span><span class="org-string">output</span><span class="org-whitespace-space"> </span><span class="org-string">mode</span><span class="org-whitespace-space"> </span><span class="org-string">(short,</span><span class="org-whitespace-space"> </span><span class="org-string">short-monotonic,</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">verbose,</span><span class="org-whitespace-space"> </span><span class="org-string">export,</span><span class="org-whitespace-space"> </span><span class="org-string">json,</span><span class="org-whitespace-space"> </span><span class="org-string">json-pretty,</span><span class="org-whitespace-space"> </span><span class="org-string">json-sse,</span><span class="org-whitespace-space"> </span><span class="org-string">cat)</span>
+<span class="org-whitespace-space">     </span><span class="org-string">--plain</span><span class="org-whitespace-space">          </span><span class="org-string">Print</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">dependencies</span><span class="org-whitespace-space"> </span><span class="org-string">as</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">list</span><span class="org-whitespace-space"> </span><span class="org-string">instead</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">tree</span>
+<span class="org-string">Unit</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-units</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">         </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">loaded</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-sockets</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">       </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">loaded</span><span class="org-whitespace-space"> </span><span class="org-string">sockets</span><span class="org-whitespace-space"> </span><span class="org-string">ordered</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">address</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-timers</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">        </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">loaded</span><span class="org-whitespace-space"> </span><span class="org-string">timers</span><span class="org-whitespace-space"> </span><span class="org-string">ordered</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">next</span><span class="org-whitespace-space"> </span><span class="org-string">elapse</span>
+<span class="org-whitespace-space">  </span><span class="org-string">start</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                   </span><span class="org-string">Start</span><span class="org-whitespace-space"> </span><span class="org-string">(activate)</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">stop</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                    </span><span class="org-string">Stop</span><span class="org-whitespace-space"> </span><span class="org-string">(deactivate)</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reload</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                  </span><span class="org-string">Reload</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">restart</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                 </span><span class="org-string">Start</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">restart</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">try-restart</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">             </span><span class="org-string">Restart</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">if</span><span class="org-whitespace-space"> </span><span class="org-string">active</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reload-or-restart</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">       </span><span class="org-string">Reload</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">if</span><span class="org-whitespace-space"> </span><span class="org-string">possible,</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">otherwise</span><span class="org-whitespace-space"> </span><span class="org-string">start</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">restart</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reload-or-try-restart</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">   </span><span class="org-string">Reload</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">if</span><span class="org-whitespace-space"> </span><span class="org-string">possible,</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">otherwise</span><span class="org-whitespace-space"> </span><span class="org-string">restart</span><span class="org-whitespace-space"> </span><span class="org-string">if</span><span class="org-whitespace-space"> </span><span class="org-string">active</span>
+<span class="org-whitespace-space">  </span><span class="org-string">isolate</span><span class="org-whitespace-space"> </span><span class="org-string">NAME</span><span class="org-whitespace-space">                    </span><span class="org-string">Start</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">stop</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">others</span>
+<span class="org-whitespace-space">  </span><span class="org-string">kill</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                    </span><span class="org-string">Send</span><span class="org-whitespace-space"> </span><span class="org-string">signal</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">processes</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span>
+<span class="org-whitespace-space">  </span><span class="org-string">is-active</span><span class="org-whitespace-space"> </span><span class="org-string">PATTERN...</span><span class="org-whitespace-space">            </span><span class="org-string">Check</span><span class="org-whitespace-space"> </span><span class="org-string">whether</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">active</span>
+<span class="org-whitespace-space">  </span><span class="org-string">is-failed</span><span class="org-whitespace-space"> </span><span class="org-string">PATTERN...</span><span class="org-whitespace-space">            </span><span class="org-string">Check</span><span class="org-whitespace-space"> </span><span class="org-string">whether</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">failed</span>
+<span class="org-whitespace-space">  </span><span class="org-string">status</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...|PID...]</span><span class="org-whitespace-space">      </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">runtime</span><span class="org-whitespace-space"> </span><span class="org-string">status</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">show</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...|JOB...]</span><span class="org-whitespace-space">        </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">units/jobs</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">manager</span>
+<span class="org-whitespace-space">  </span><span class="org-string">cat</span><span class="org-whitespace-space"> </span><span class="org-string">PATTERN...</span><span class="org-whitespace-space">                  </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">drop-ins</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">set-property</span><span class="org-whitespace-space"> </span><span class="org-string">NAME</span><span class="org-whitespace-space"> </span><span class="org-string">ASSIGNMENT...</span><span class="org-whitespace-space"> </span><span class="org-string">Sets</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">properties</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span>
+<span class="org-whitespace-space">  </span><span class="org-string">help</span><span class="org-whitespace-space"> </span><span class="org-string">PATTERN...|PID...</span><span class="org-whitespace-space">          </span><span class="org-string">Show</span><span class="org-whitespace-space"> </span><span class="org-string">manual</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reset-failed</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">       </span><span class="org-string">Reset</span><span class="org-whitespace-space"> </span><span class="org-string">failed</span><span class="org-whitespace-space"> </span><span class="org-string">state</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">all,</span><span class="org-whitespace-space"> </span><span class="org-string">one,</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-dependencies</span><span class="org-whitespace-space"> </span><span class="org-string">[NAME]</span><span class="org-whitespace-space">        </span><span class="org-string">Recursively</span><span class="org-whitespace-space"> </span><span class="org-string">show</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">which</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">required</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">wanted</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">this</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">which</span><span class="org-whitespace-space"> </span><span class="org-string">this</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">required</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">wanted</span>
 
-<span class="org-string">Unit File Commands:</span>
-<span class="org-string">  list-unit-files [PATTERN...]    List installed unit files</span>
-<span class="org-string">  enable NAME...                  Enable one or more unit files</span>
-<span class="org-string">  disable NAME...                 Disable one or more unit files</span>
-<span class="org-string">  reenable NAME...                Reenable one or more unit files</span>
-<span class="org-string">  preset NAME...                  Enable/disable one or more unit files</span>
-<span class="org-string">                                  based on preset configuration</span>
-<span class="org-string">  preset-all                      Enable/disable all unit files based on</span>
-<span class="org-string">                                  preset configuration</span>
-<span class="org-string">  is-enabled NAME...              Check whether unit files are enabled</span>
+<span class="org-string">Unit</span><span class="org-whitespace-space"> </span><span class="org-string">File</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-unit-files</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">    </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">installed</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span>
+<span class="org-whitespace-space">  </span><span class="org-string">enable</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                  </span><span class="org-string">Enable</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span>
+<span class="org-whitespace-space">  </span><span class="org-string">disable</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                 </span><span class="org-string">Disable</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reenable</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                </span><span class="org-string">Reenable</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span>
+<span class="org-whitespace-space">  </span><span class="org-string">preset</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                  </span><span class="org-string">Enable/disable</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">based</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">preset</span><span class="org-whitespace-space"> </span><span class="org-string">configuration</span>
+<span class="org-whitespace-space">  </span><span class="org-string">preset-all</span><span class="org-whitespace-space">                      </span><span class="org-string">Enable/disable</span><span class="org-whitespace-space"> </span><span class="org-string">all</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">based</span><span class="org-whitespace-space"> </span><span class="org-string">on</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">preset</span><span class="org-whitespace-space"> </span><span class="org-string">configuration</span>
+<span class="org-whitespace-space">  </span><span class="org-string">is-enabled</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">              </span><span class="org-string">Check</span><span class="org-whitespace-space"> </span><span class="org-string">whether</span><span class="org-whitespace-space"> </span><span class="org-string">unit</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">enabled</span>
 
-<span class="org-string">  mask NAME...                    Mask one or more units</span>
-<span class="org-string">  unmask NAME...                  Unmask one or more units</span>
-<span class="org-string">  link PATH...                    Link one or more units files into</span>
-<span class="org-string">                                  the search path</span>
-<span class="org-string">  get-default                     Get the name of the default target</span>
-<span class="org-string">  set-default NAME                Set the default target</span>
+<span class="org-whitespace-space">  </span><span class="org-string">mask</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                    </span><span class="org-string">Mask</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">unmask</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                  </span><span class="org-string">Unmask</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span>
+<span class="org-whitespace-space">  </span><span class="org-string">link</span><span class="org-whitespace-space"> </span><span class="org-string">PATH...</span><span class="org-whitespace-space">                    </span><span class="org-string">Link</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">units</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">into</span>
+<span class="org-whitespace-space">                                  </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">search</span><span class="org-whitespace-space"> </span><span class="org-string">path</span>
+<span class="org-whitespace-space">  </span><span class="org-string">get-default</span><span class="org-whitespace-space">                     </span><span class="org-string">Get</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">name</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">default</span><span class="org-whitespace-space"> </span><span class="org-string">target</span>
+<span class="org-whitespace-space">  </span><span class="org-string">set-default</span><span class="org-whitespace-space"> </span><span class="org-string">NAME</span><span class="org-whitespace-space">                </span><span class="org-string">Set</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">default</span><span class="org-whitespace-space"> </span><span class="org-string">target</span>
 
-<span class="org-string">Machine Commands:</span>
-<span class="org-string">  list-machines [PATTERN...]      List local containers and host</span>
+<span class="org-string">Machine</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-machines</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">      </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">local</span><span class="org-whitespace-space"> </span><span class="org-string">containers</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">host</span>
 
-<span class="org-string">Job Commands:</span>
-<span class="org-string">  list-jobs [PATTERN...]          List jobs</span>
-<span class="org-string">  cancel [JOB...]                 Cancel all, one, or more jobs</span>
+<span class="org-string">Job</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">list-jobs</span><span class="org-whitespace-space"> </span><span class="org-string">[PATTERN...]</span><span class="org-whitespace-space">          </span><span class="org-string">List</span><span class="org-whitespace-space"> </span><span class="org-string">jobs</span>
+<span class="org-whitespace-space">  </span><span class="org-string">cancel</span><span class="org-whitespace-space"> </span><span class="org-string">[JOB...]</span><span class="org-whitespace-space">                 </span><span class="org-string">Cancel</span><span class="org-whitespace-space"> </span><span class="org-string">all,</span><span class="org-whitespace-space"> </span><span class="org-string">one,</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">jobs</span>
 
-<span class="org-string">Snapshot Commands:</span>
-<span class="org-string">  snapshot [NAME]                 Create a snapshot</span>
-<span class="org-string">  delete NAME...                  Remove one or more snapshots</span>
+<span class="org-string">Snapshot</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">snapshot</span><span class="org-whitespace-space"> </span><span class="org-string">[NAME]</span><span class="org-whitespace-space">                 </span><span class="org-string">Create</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">snapshot</span>
+<span class="org-whitespace-space">  </span><span class="org-string">delete</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">                  </span><span class="org-string">Remove</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">snapshots</span>
 
-<span class="org-string">Environment Commands:</span>
-<span class="org-string">  show-environment                Dump environment</span>
-<span class="org-string">  set-environment NAME=VALUE...   Set one or more environment variables</span>
-<span class="org-string">  unset-environment NAME...       Unset one or more environment variables</span>
-<span class="org-string">  import-environment NAME...      Import all, one or more environment variables</span>
+<span class="org-string">Environment</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">show-environment</span><span class="org-whitespace-space">                </span><span class="org-string">Dump</span><span class="org-whitespace-space"> </span><span class="org-string">environment</span>
+<span class="org-whitespace-space">  </span><span class="org-string">set-environment</span><span class="org-whitespace-space"> </span><span class="org-string">NAME=VALUE...</span><span class="org-whitespace-space">   </span><span class="org-string">Set</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">environment</span><span class="org-whitespace-space"> </span><span class="org-string">variables</span>
+<span class="org-whitespace-space">  </span><span class="org-string">unset-environment</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">       </span><span class="org-string">Unset</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">environment</span><span class="org-whitespace-space"> </span><span class="org-string">variables</span>
+<span class="org-whitespace-space">  </span><span class="org-string">import-environment</span><span class="org-whitespace-space"> </span><span class="org-string">NAME...</span><span class="org-whitespace-space">      </span><span class="org-string">Import</span><span class="org-whitespace-space"> </span><span class="org-string">all,</span><span class="org-whitespace-space"> </span><span class="org-string">one</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">more</span><span class="org-whitespace-space"> </span><span class="org-string">environment</span><span class="org-whitespace-space"> </span><span class="org-string">variables</span>
 
-<span class="org-string">Manager Lifecycle Commands:</span>
-<span class="org-string">  daemon-reload                   Reload systemd manager configuration</span>
-<span class="org-string">  daemon-reexec                   Reexecute systemd manager</span>
+<span class="org-string">Manager</span><span class="org-whitespace-space"> </span><span class="org-string">Lifecycle</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">daemon-reload</span><span class="org-whitespace-space">                   </span><span class="org-string">Reload</span><span class="org-whitespace-space"> </span><span class="org-string">systemd</span><span class="org-whitespace-space"> </span><span class="org-string">manager</span><span class="org-whitespace-space"> </span><span class="org-string">configuration</span>
+<span class="org-whitespace-space">  </span><span class="org-string">daemon-reexec</span><span class="org-whitespace-space">                   </span><span class="org-string">Reexecute</span><span class="org-whitespace-space"> </span><span class="org-string">systemd</span><span class="org-whitespace-space"> </span><span class="org-string">manager</span>
 
-<span class="org-string">System Commands:</span>
-<span class="org-string">  is-system-running               Check whether system is fully running</span>
-<span class="org-string">  default                         Enter system default mode</span>
-<span class="org-string">  rescue                          Enter system rescue mode</span>
-<span class="org-string">  emergency                       Enter system emergency mode</span>
-<span class="org-string">  halt                            Shut down and halt the system</span>
-<span class="org-string">  poweroff                        Shut down and power-off the system</span>
-<span class="org-string">  reboot [ARG]                    Shut down and reboot the system</span>
-<span class="org-string">  kexec                           Shut down and reboot the system with kexec</span>
-<span class="org-string">  exit                            Request user instance exit</span>
-<span class="org-string">  switch-root ROOT [INIT]         Change to a different root file system</span>
-<span class="org-string">  suspend                         Suspend the system</span>
-<span class="org-string">  hibernate                       Hibernate the system</span>
-<span class="org-string">  hybrid-sleep                    Hibernate and suspend the system</span>
+<span class="org-string">System</span><span class="org-whitespace-space"> </span><span class="org-string">Commands:</span>
+<span class="org-whitespace-space">  </span><span class="org-string">is-system-running</span><span class="org-whitespace-space">               </span><span class="org-string">Check</span><span class="org-whitespace-space"> </span><span class="org-string">whether</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">fully</span><span class="org-whitespace-space"> </span><span class="org-string">running</span>
+<span class="org-whitespace-space">  </span><span class="org-string">default</span><span class="org-whitespace-space">                         </span><span class="org-string">Enter</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">default</span><span class="org-whitespace-space"> </span><span class="org-string">mode</span>
+<span class="org-whitespace-space">  </span><span class="org-string">rescue</span><span class="org-whitespace-space">                          </span><span class="org-string">Enter</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">rescue</span><span class="org-whitespace-space"> </span><span class="org-string">mode</span>
+<span class="org-whitespace-space">  </span><span class="org-string">emergency</span><span class="org-whitespace-space">                       </span><span class="org-string">Enter</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">emergency</span><span class="org-whitespace-space"> </span><span class="org-string">mode</span>
+<span class="org-whitespace-space">  </span><span class="org-string">halt</span><span class="org-whitespace-space">                            </span><span class="org-string">Shut</span><span class="org-whitespace-space"> </span><span class="org-string">down</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">halt</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">poweroff</span><span class="org-whitespace-space">                        </span><span class="org-string">Shut</span><span class="org-whitespace-space"> </span><span class="org-string">down</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">power-off</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">reboot</span><span class="org-whitespace-space"> </span><span class="org-string">[ARG]</span><span class="org-whitespace-space">                    </span><span class="org-string">Shut</span><span class="org-whitespace-space"> </span><span class="org-string">down</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">reboot</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">kexec</span><span class="org-whitespace-space">                           </span><span class="org-string">Shut</span><span class="org-whitespace-space"> </span><span class="org-string">down</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">reboot</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">kexec</span>
+<span class="org-whitespace-space">  </span><span class="org-string">exit</span><span class="org-whitespace-space">                            </span><span class="org-string">Request</span><span class="org-whitespace-space"> </span><span class="org-string">user</span><span class="org-whitespace-space"> </span><span class="org-string">instance</span><span class="org-whitespace-space"> </span><span class="org-string">exit</span>
+<span class="org-whitespace-space">  </span><span class="org-string">switch-root</span><span class="org-whitespace-space"> </span><span class="org-string">ROOT</span><span class="org-whitespace-space"> </span><span class="org-string">[INIT]</span><span class="org-whitespace-space">         </span><span class="org-string">Change</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">different</span><span class="org-whitespace-space"> </span><span class="org-string">root</span><span class="org-whitespace-space"> </span><span class="org-string">file</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">suspend</span><span class="org-whitespace-space">                         </span><span class="org-string">Suspend</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">hibernate</span><span class="org-whitespace-space">                       </span><span class="org-string">Hibernate</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
+<span class="org-whitespace-space">  </span><span class="org-string">hybrid-sleep</span><span class="org-whitespace-space">                    </span><span class="org-string">Hibernate</span><span class="org-whitespace-space"> </span><span class="org-string">and</span><span class="org-whitespace-space"> </span><span class="org-string">suspend</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">system</span>
 </pre>
 </div>
 </div>
@@ -884,8 +884,8 @@ Query or send control commands to the systemd manager.
 </div>
 </div>
 
-<div id="outline-container-orga3a2d64" class="outline-2">
-<h2 id="orga3a2d64"><span class="section-number-2">3</span> 学习笔记</h2>
+<div id="outline-container-orged49116" class="outline-2">
+<h2 id="orged49116"><span class="section-number-2">3</span> 学习笔记</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 参考：<a href="systemd.html">systemd学习笔记</a>。
@@ -893,8 +893,8 @@ Query or send control commands to the systemd manager.
 </div>
 </div>
 
-<div id="outline-container-org8e0aef9" class="outline-2">
-<h2 id="org8e0aef9"><span class="section-number-2">4</span> 作者</h2>
+<div id="outline-container-orgbe03063" class="outline-2">
+<h2 id="orgbe03063"><span class="section-number-2">4</span> 作者</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Systemd作者<a href="http://0pointer.net/blog/">Lennart Poettering</a>(<a href="http://0pointer.de/lennart/">Homepage</a>, <a href="https://github.com/poettering">GitHub</a>)。
@@ -1037,8 +1037,8 @@ about this again on a public forum.
 </div>
 </div>
 
-<div id="outline-container-org2f12d2c" class="outline-2">
-<h2 id="org2f12d2c"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org595e8b8" class="outline-2">
+<h2 id="org595e8b8"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>IBM developer works</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html">https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html</a></dd>

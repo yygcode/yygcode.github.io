@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:29 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>How To Write Numerical Code</title>
 <meta name="generator" content="Org mode" />
@@ -22,79 +22,79 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org47f8113">1. Performance Optimization: The basics</a>
+<li><a href="#org8854875">1. Performance Optimization: The basics</a>
 <ul>
-<li><a href="#org272f5dd">1.1. Floating The Hotspots</a></li>
-<li><a href="#org3219ee3">1.2. Timing a Hotspot</a>
+<li><a href="#orgc9674ea">1.1. Floating The Hotspots</a></li>
+<li><a href="#org8bdf695">1.2. Timing a Hotspot</a>
 <ul>
-<li><a href="#org80938c0">1.2.1. Known Problems</a></li>
+<li><a href="#orgfc3f9a2">1.2.1. Known Problems</a></li>
 </ul>
 </li>
-<li><a href="#orgc1aca3a">1.3. Analyzing the Measured Runtime</a></li>
-<li><a href="#org043dbe7">1.4. Exercises</a></li>
+<li><a href="#org848b15f">1.3. Analyzing the Measured Runtime</a></li>
+<li><a href="#org2a9244f">1.4. Exercises</a></li>
 </ul>
 </li>
-<li><a href="#org96819a5">2. Optimization for the Memory Hierarchy</a>
+<li><a href="#orgfb1e4fb">2. Optimization for the Memory Hierarchy</a>
 <ul>
-<li><a href="#orgd0ab866">2.1. Performance-Conscious Programming</a></li>
-<li><a href="#org470c28d">2.2. Cache Optimization</a></li>
-<li><a href="#orgb7f8588">2.3. CPU and Register Level Optimization</a></li>
+<li><a href="#orgddb8788">2.1. Performance-Conscious Programming</a></li>
+<li><a href="#orgbca2465">2.2. Cache Optimization</a></li>
+<li><a href="#org7c91883">2.3. CPU and Register Level Optimization</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org47f8113" class="outline-2">
-<h2 id="org47f8113"><span class="section-number-2">1</span> Performance Optimization: The basics</h2>
+<div id="outline-container-org8854875" class="outline-2">
+<h2 id="org8854875"><span class="section-number-2">1</span> Performance Optimization: The basics</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org272f5dd" class="outline-3">
-<h3 id="org272f5dd"><span class="section-number-3">1.1</span> Floating The Hotspots</h3>
+<div id="outline-container-orgc9674ea" class="outline-3">
+<h3 id="orgc9674ea"><span class="section-number-3">1.1</span> Floating The Hotspots</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>gprof</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">float</span> <span class="org-function-name">func1</span>()
+<span class="org-type">float</span><span class="org-whitespace-space"> </span><span class="org-function-name">func1</span>()
 {
-        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
-        <span class="org-type">float</span> <span class="org-variable-name">ret</span> = 0;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">float</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-        <span class="org-keyword">for</span> (i = 0; i &lt; 1000000; ++i) {
-                ret += (1/i);
-        }
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>1000000;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>(1/i);
+<span class="org-whitespace-space">        </span>}
 
-        <span class="org-keyword">return</span> ret;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
 }
 
-<span class="org-type">float</span> <span class="org-function-name">func2</span>()
+<span class="org-type">float</span><span class="org-whitespace-space"> </span><span class="org-function-name">func2</span>()
 {
-        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
-        <span class="org-type">float</span> <span class="org-variable-name">ret</span> = 0;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">float</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-        <span class="org-keyword">for</span> (i = 0; i &lt; 1000000; ++i) {
-                ret += (1/(i + 1));
-        }
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>1000000;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>(1/(i<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1));
+<span class="org-whitespace-space">        </span>}
 
-        <span class="org-keyword">return</span> ret;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
 }
 
-<span class="org-type">void</span> <span class="org-function-name">func3</span>()
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">func3</span>()
 {
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>()
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>()
 {
-        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
 
-        printf(<span class="org-string">"result: %.2f\n"</span>, func1());
-        printf(<span class="org-string">"result: %.2f\n"</span>, func2());
-        func3();
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"result:</span><span class="org-whitespace-space"> </span><span class="org-string">%.2f\n"</span>,<span class="org-whitespace-space"> </span>func1());
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"result:</span><span class="org-whitespace-space"> </span><span class="org-string">%.2f\n"</span>,<span class="org-whitespace-space"> </span>func2());
+<span class="org-whitespace-space">        </span>func3();
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -103,30 +103,30 @@
 Compile:
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gcc -O0 -g -pg -o hotspot hotspot.c
-~$ gprof hotspot gmon.out
-Flat profile:
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-O0<span class="org-whitespace-space"> </span>-g<span class="org-whitespace-space"> </span>-pg<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hotspot<span class="org-whitespace-space"> </span>hotspot.c
+~$<span class="org-whitespace-space"> </span>gprof<span class="org-whitespace-space"> </span>hotspot<span class="org-whitespace-space"> </span>gmon.out
+Flat<span class="org-whitespace-space"> </span>profile:
 
-Each sample counts as 0.01 seconds.
-  %   cumulative   self              self     total
- <span class="org-keyword">time</span>   seconds   seconds    calls  ms/call  ms/call  name
-101.01      0.03     0.03        1    30.30    30.30  func2
-  0.00      0.03     0.00        1     0.00     0.00  func1
-  0.00      0.03     0.00        1     0.00     0.00  func3
+Each<span class="org-whitespace-space"> </span>sample<span class="org-whitespace-space"> </span>counts<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>0.01<span class="org-whitespace-space"> </span>seconds.
+<span class="org-whitespace-space">  </span>%<span class="org-whitespace-space">   </span>cumulative<span class="org-whitespace-space">   </span>self<span class="org-whitespace-space">              </span>self<span class="org-whitespace-space">     </span>total
+<span class="org-whitespace-space"> </span><span class="org-keyword">time</span><span class="org-whitespace-space">   </span>seconds<span class="org-whitespace-space">   </span>seconds<span class="org-whitespace-space">    </span>calls<span class="org-whitespace-space">  </span>ms/call<span class="org-whitespace-space">  </span>ms/call<span class="org-whitespace-space">  </span>name
+101.01<span class="org-whitespace-space">      </span>0.03<span class="org-whitespace-space">     </span>0.03<span class="org-whitespace-space">        </span>1<span class="org-whitespace-space">    </span>30.30<span class="org-whitespace-space">    </span>30.30<span class="org-whitespace-space">  </span>func2
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">      </span>0.03<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">        </span>1<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">  </span>func1
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">      </span>0.03<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">        </span>1<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">     </span>0.00<span class="org-whitespace-space">  </span>func3
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org3219ee3" class="outline-3">
-<h3 id="org3219ee3"><span class="section-number-3">1.2</span> Timing a Hotspot</h3>
+<div id="outline-container-org8bdf695" class="outline-3">
+<h3 id="org8bdf695"><span class="section-number-3">1.2</span> Timing a Hotspot</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>参考<a href="blogs/linux-benchmark-time.html">Blogs Linux Benchmark Time</a>。</li>
 </ul>
 </div>
 
-<div id="outline-container-org80938c0" class="outline-4">
-<h4 id="org80938c0"><span class="section-number-4">1.2.1</span> Known Problems</h4>
+<div id="outline-container-orgfc3f9a2" class="outline-4">
+<h4 id="orgfc3f9a2"><span class="section-number-4">1.2.1</span> Known Problems</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <ul class="org-ul">
 <li>指令太少时，时钟精度导致时间评估不准确；</li>
@@ -146,21 +146,21 @@ Each sample counts as 0.01 seconds.
 </div>
 </div>
 
-<div id="outline-container-orgc1aca3a" class="outline-3">
-<h3 id="orgc1aca3a"><span class="section-number-3">1.3</span> Analyzing the Measured Runtime</h3>
+<div id="outline-container-org848b15f" class="outline-3">
+<h3 id="org848b15f"><span class="section-number-3">1.3</span> Analyzing the Measured Runtime</h3>
 </div>
 
-<div id="outline-container-org043dbe7" class="outline-3">
-<h3 id="org043dbe7"><span class="section-number-3">1.4</span> Exercises</h3>
+<div id="outline-container-org2a9244f" class="outline-3">
+<h3 id="org2a9244f"><span class="section-number-3">1.4</span> Exercises</h3>
 </div>
 </div>
 
-<div id="outline-container-org96819a5" class="outline-2">
-<h2 id="org96819a5"><span class="section-number-2">2</span> Optimization for the Memory Hierarchy</h2>
+<div id="outline-container-orgfb1e4fb" class="outline-2">
+<h2 id="orgfb1e4fb"><span class="section-number-2">2</span> Optimization for the Memory Hierarchy</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd0ab866" class="outline-3">
-<h3 id="orgd0ab866"><span class="section-number-3">2.1</span> Performance-Conscious Programming</h3>
+<div id="outline-container-orgddb8788" class="outline-3">
+<h3 id="orgddb8788"><span class="section-number-3">2.1</span> Performance-Conscious Programming</h3>
 <div class="outline-text-3" id="text-2-1">
 <table>
 
@@ -200,8 +200,8 @@ Each sample counts as 0.01 seconds.
 </div>
 </div>
 
-<div id="outline-container-org470c28d" class="outline-3">
-<h3 id="org470c28d"><span class="section-number-3">2.2</span> Cache Optimization</h3>
+<div id="outline-container-orgbca2465" class="outline-3">
+<h3 id="orgbca2465"><span class="section-number-3">2.2</span> Cache Optimization</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>Blocking: data in chunks fit respective cache level;</li>
@@ -211,8 +211,8 @@ Each sample counts as 0.01 seconds.
 </div>
 </div>
 
-<div id="outline-container-orgb7f8588" class="outline-3">
-<h3 id="orgb7f8588"><span class="section-number-3">2.3</span> CPU and Register Level Optimization</h3>
+<div id="outline-container-org7c91883" class="outline-3">
+<h3 id="org7c91883"><span class="section-number-3">2.3</span> CPU and Register Level Optimization</h3>
 </div>
 </div>
 </div>

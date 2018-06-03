@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-22 Sun 14:57 -->
+<!-- 2018-06-03 Sun 11:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Binary Tree - 二叉树最大宽度与最大距离</title>
 <meta name="generator" content="Org mode" />
@@ -31,89 +31,89 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcaa7556">1. 问题描述</a>
+<li><a href="#org748ce14">1. 问题描述</a>
 <ul>
 <li><a href="#btree-max-width">1.1. 最大宽度</a></li>
 <li><a href="#btree-max-distance">1.2. 最大距离</a></li>
 </ul>
 </li>
-<li><a href="#org131a19f">2. <span class="todo TODO">TODO</span> 问题求解</a>
+<li><a href="#org0ce7ee5">2. <span class="todo TODO">TODO</span> 问题求解</a>
 <ul>
-<li><a href="#org7b660f3">2.1. 最大宽度用树的广度遍历解决</a></li>
-<li><a href="#orgb7a72f6">2.2. 最大距离是一个最优子结构问题的迭代</a></li>
+<li><a href="#orgf01db62">2.1. 最大宽度用树的广度遍历解决</a></li>
+<li><a href="#orgaf38ac6">2.2. 最大距离是一个最优子结构问题的迭代</a></li>
 </ul>
 </li>
-<li><a href="#orgffe0af3">3. 进一步问题</a></li>
-<li><a href="#org6ef0758">4. References</a></li>
+<li><a href="#org9b9996a">3. 进一步问题</a></li>
+<li><a href="#org7de2f8a">4. References</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orgcaa7556" class="outline-2">
-<h2 id="orgcaa7556"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-org748ce14" class="outline-2">
+<h2 id="org748ce14"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org262b58c" class="outline-3">
-<h3 id="btree-max-width"><a id="org262b58c"></a><span class="section-number-3">1.1</span> 最大宽度</h3>
+<div id="outline-container-orgb4ef98c" class="outline-3">
+<h3 id="btree-max-width"><a id="orgb4ef98c"></a><span class="section-number-3">1.1</span> 最大宽度</h3>
 <div class="outline-text-3" id="text-btree-max-width">
 <p>
 二叉树所有层中节点个数的最大值。例如下图二叉树最大宽度3，在第3层：
 </p>
 <div class="org-src-container">
-<pre class="src src-text">        20
-       /  \
-     15    40
-    /  \     \
-  10    17    45
- /           /
-8          43
+<pre class="src src-text"><span class="org-whitespace-space">        </span>20
+<span class="org-whitespace-space">       </span>/<span class="org-whitespace-space">  </span>\
+<span class="org-whitespace-space">     </span>15<span class="org-whitespace-space">    </span>40
+<span class="org-whitespace-space">    </span>/<span class="org-whitespace-space">  </span>\<span class="org-whitespace-space">     </span>\
+<span class="org-whitespace-space">  </span>10<span class="org-whitespace-space">    </span>17<span class="org-whitespace-space">    </span>45
+<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space">           </span>/
+8<span class="org-whitespace-space">          </span>43
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgac4f309" class="outline-3">
-<h3 id="btree-max-distance"><a id="orgac4f309"></a><span class="section-number-3">1.2</span> 最大距离</h3>
+<div id="outline-container-org56c97e7" class="outline-3">
+<h3 id="btree-max-distance"><a id="org56c97e7"></a><span class="section-number-3">1.2</span> 最大距离</h3>
 <div class="outline-text-3" id="text-btree-max-distance">
 <p>
 二叉树中节点距离是指两个节点之间边的个数。例如下图二叉树最大距离为9，节点对是100
 和2600：
 </p>
 <div class="org-src-container">
-<pre class="src src-text">              3000
-             /    \
-         1000      4000
-        /    \         \
-     600     1500       4800
-    /        /   \
-   300   1300     2000
-  /                  \
-20                   2500
-  \                 /    \
-  100           2300      2800
-                         /
-                       2600
+<pre class="src src-text"><span class="org-whitespace-space">              </span>3000
+<span class="org-whitespace-space">             </span>/<span class="org-whitespace-space">    </span>\
+<span class="org-whitespace-space">         </span>1000<span class="org-whitespace-space">      </span>4000
+<span class="org-whitespace-space">        </span>/<span class="org-whitespace-space">    </span>\<span class="org-whitespace-space">         </span>\
+<span class="org-whitespace-space">     </span>600<span class="org-whitespace-space">     </span>1500<span class="org-whitespace-space">       </span>4800
+<span class="org-whitespace-space">    </span>/<span class="org-whitespace-space">        </span>/<span class="org-whitespace-space">   </span>\
+<span class="org-whitespace-space">   </span>300<span class="org-whitespace-space">   </span>1300<span class="org-whitespace-space">     </span>2000
+<span class="org-whitespace-space">  </span>/<span class="org-whitespace-space">                  </span>\
+20<span class="org-whitespace-space">                   </span>2500
+<span class="org-whitespace-space">  </span>\<span class="org-whitespace-space">                 </span>/<span class="org-whitespace-space">    </span>\
+<span class="org-whitespace-space">  </span>100<span class="org-whitespace-space">           </span>2300<span class="org-whitespace-space">      </span>2800
+<span class="org-whitespace-space">                         </span>/
+<span class="org-whitespace-space">                       </span>2600
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org131a19f" class="outline-2">
-<h2 id="org131a19f"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> 问题求解</h2>
+<div id="outline-container-org0ce7ee5" class="outline-2">
+<h2 id="org0ce7ee5"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> 问题求解</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7b660f3" class="outline-3">
-<h3 id="org7b660f3"><span class="section-number-3">2.1</span> 最大宽度用树的广度遍历解决</h3>
+<div id="outline-container-orgf01db62" class="outline-3">
+<h3 id="orgf01db62"><span class="section-number-3">2.1</span> 最大宽度用树的广度遍历解决</h3>
 </div>
-<div id="outline-container-orgb7a72f6" class="outline-3">
-<h3 id="orgb7a72f6"><span class="section-number-3">2.2</span> 最大距离是一个最优子结构问题的迭代</h3>
+<div id="outline-container-orgaf38ac6" class="outline-3">
+<h3 id="orgaf38ac6"><span class="section-number-3">2.2</span> 最大距离是一个最优子结构问题的迭代</h3>
 </div>
 </div>
 
-<div id="outline-container-orgffe0af3" class="outline-2">
-<h2 id="orgffe0af3"><span class="section-number-2">3</span> 进一步问题</h2>
+<div id="outline-container-org9b9996a" class="outline-2">
+<h2 id="org9b9996a"><span class="section-number-2">3</span> 进一步问题</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>获取二叉树两个节点的距离</li>
@@ -121,8 +121,8 @@
 </div>
 </div>
 
-<div id="outline-container-org6ef0758" class="outline-2">
-<h2 id="org6ef0758"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-org7de2f8a" class="outline-2">
+<h2 id="org7de2f8a"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>leetcode</dt><dd><a href="https://leetcode.com/problems/maximum-width-of-binary-tree/description/">https://leetcode.com/problems/maximum-width-of-binary-tree/description/</a></dd>

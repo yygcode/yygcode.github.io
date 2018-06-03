@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:56 -->
+<!-- 2018-06-03 Sun 11:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>深入理解 GNU GRUB - 02 boot.S 2.1 相关BIOS例程</title>
 <meta name="generator" content="Org mode" />
@@ -31,16 +31,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org57395d1">1. boot.S: GRUB引导第一步</a>
+<li><a href="#orge47af7f">1. boot.S: GRUB引导第一步</a>
 <ul>
-<li><a href="#org434d9af">1.1. 相关BIOS例程</a>
+<li><a href="#orgb092a15">1.1. 相关BIOS例程</a>
 <ul>
-<li><a href="#orga283603">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
-<li><a href="#org5d23248">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
-<li><a href="#org3829417">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
-<li><a href="#orge10941c">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
-<li><a href="#org9e3edc4">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
-<li><a href="#org2f5d14d">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
+<li><a href="#org43ae20e">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
+<li><a href="#orge4a70e1">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
+<li><a href="#orgbbc8d1c">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
+<li><a href="#orge9aa01c">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
+<li><a href="#org856b8ad">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
+<li><a href="#orgb0fea9f">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
 </ul>
 </li>
 </ul>
@@ -49,8 +49,8 @@
 </div>
 </div>
 
-<div id="outline-container-org57395d1" class="outline-2">
-<h2 id="org57395d1"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
+<div id="outline-container-orge47af7f" class="outline-2">
+<h2 id="orge47af7f"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主要工作包括：配置寄存器；设置堆栈；检测引导盘；检测引导盘读取模式；读取另一扇区指令。这个过程用到几个BIOS例程，并且对主引导记录（MBR, Master Boot Record）结构有很大的依赖。因此boot.S我们分作四步进行详细描述：
@@ -65,8 +65,8 @@ boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主
 在本节最后，我们实现一个简单的boot.S，这个boot.S仅仅通过BIOS例程，向终端输出文本。
 </p>
 </div>
-<div id="outline-container-org434d9af" class="outline-3">
-<h3 id="org434d9af"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
+<div id="outline-container-orgb092a15" class="outline-3">
+<h3 id="orgb092a15"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读支持、LBA方式读、CHS参数获取、CHS方式读、磁盘复位。磁盘读取出现LBA/CHS两种模式（其实LBA又分为28-bit、48-bit、64-bit三种），是因为在磁盘的发展历史上，由于对磁盘容量的错误估量，导致容量屏障的出现，而不得不进行接口更改、扩展。历史上出现的容量屏障主要有四次：
@@ -85,8 +85,8 @@ boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读�
 </p>
 </div>
 
-<div id="outline-container-orga283603" class="outline-4">
-<h4 id="orga283603"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
+<div id="outline-container-org43ae20e" class="outline-4">
+<h4 id="org43ae20e"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 检测磁盘扩展读（LBA/CHS）支持情况。详细描述如下。参数：寄存器        描述
@@ -111,23 +111,23 @@ CX        接口支持掩码
 </p>
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">boot_driver</span>:
-<span class="org-keyword">.byte</span> 0x80
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x41</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">$0x55aa</span>, <span class="org-variable-name">%bx</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">chs</span>_mode
-<span class="org-function-name">cmpw</span> <span class="org-keyword">$0xaa55</span>, <span class="org-variable-name">%bx</span>
-<span class="org-function-name">jne</span> <span class="org-keyword">chs</span>_mode
-<span class="org-function-name">andw</span> <span class="org-keyword">$1</span>, <span class="org-variable-name">%cx</span>
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x80
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x41</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x55aa</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%bx</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">chs</span>_mode
+<span class="org-function-name">cmpw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0xaa55</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%bx</span>
+<span class="org-function-name">jne</span><span class="org-whitespace-space"> </span><span class="org-keyword">chs</span>_mode
+<span class="org-function-name">andw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$1</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%cx</span>
 <span class="org-function-name">lba_mode</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do LBA operation</span>
-<span class="org-function-name">Jmp</span> <span class="org-keyword">end</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">LBA</span><span class="org-whitespace-space"> </span><span class="org-comment">operation</span>
+<span class="org-function-name">Jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">chs_mode</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS operation</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS</span><span class="org-whitespace-space"> </span><span class="org-comment">operation</span>
 <span class="org-function-name">end</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Normal Works</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Normal</span><span class="org-whitespace-space"> </span><span class="org-comment">Works</span>
 </pre>
 </div>
 
@@ -137,8 +137,8 @@ CX        接口支持掩码
 </div>
 </div>
 
-<div id="outline-container-org5d23248" class="outline-4">
-<h4 id="org5d23248"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
+<div id="outline-container-orge4a70e1" class="outline-4">
+<h4 id="orge4a70e1"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 LBA模式的读采用打包的数据结构作为参数。参数：寄存器        描述
@@ -167,39 +167,39 @@ AH        返回码
 </p>
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">boot_driver</span>:
-<span class="org-keyword">.byte</span> 0x80
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x80
 <span class="org-function-name">sector_start</span>:
-<span class="org-keyword">.long</span> 2, 0
+<span class="org-keyword">.long</span><span class="org-whitespace-space"> </span>2,<span class="org-whitespace-space"> </span>0
 <span class="org-function-name">sector_num</span>:
-<span class="org-keyword">.word</span> 4
+<span class="org-keyword">.word</span><span class="org-whitespace-space"> </span>4
 <span class="org-function-name">dap</span>:
-<span class="org-comment-delimiter">/* </span><span class="org-comment">reserved 16 bytes to hold dap, or disk address packet */</span>
-. = dap + 0x10
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">reserved</span><span class="org-whitespace-space"> </span><span class="org-comment">16</span><span class="org-whitespace-space"> </span><span class="org-comment">bytes</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">hold</span><span class="org-whitespace-space"> </span><span class="org-comment">dap,</span><span class="org-whitespace-space"> </span><span class="org-comment">or</span><span class="org-whitespace-space"> </span><span class="org-comment">disk</span><span class="org-whitespace-space"> </span><span class="org-comment">address</span><span class="org-whitespace-space"> </span><span class="org-comment">packet</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+.<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dap<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>0x10
 <span class="org-function-name">read_buffer</span>:
-<span class="org-comment-delimiter">/* </span><span class="org-comment">reserved 512*4bytes to save data */</span>
-. = read_buffer + 512*4
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">$dap</span>, <span class="org-variable-name">%si</span>
-<span class="org-function-name">xorw</span> <span class="org-keyword">%ax</span>, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, <span class="org-variable-name">%ds</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, 4(<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x0010</span>, (<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movw</span> <span class="org-keyword">sector</span>_num, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, 2(<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movw</span> <span class="org-keyword">$read</span>_buffer, 6(<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movl</span> <span class="org-keyword">sector</span>_start, <span class="org-variable-name">%eax</span>
-<span class="org-function-name">movl</span> <span class="org-keyword">%eax</span>, 8(<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movl</span> <span class="org-keyword">sector</span>_start+4, <span class="org-variable-name">%eax</span>
-<span class="org-function-name">movl</span> <span class="org-keyword">%eax</span>, 12(<span class="org-variable-name">%si</span>)
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x42</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">lba</span>_fail
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do LBA-read success operations</span>
-<span class="org-function-name">Jmp</span> <span class="org-keyword">end</span>
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">reserved</span><span class="org-whitespace-space"> </span><span class="org-comment">512*4bytes</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">save</span><span class="org-whitespace-space"> </span><span class="org-comment">data</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+.<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>read_buffer<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>512*4
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$dap</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%si</span>
+<span class="org-function-name">xorw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ds</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span>4(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x0010</span>,<span class="org-whitespace-space"> </span>(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">sector</span>_num,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span>2(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$read</span>_buffer,<span class="org-whitespace-space"> </span>6(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movl</span><span class="org-whitespace-space"> </span><span class="org-keyword">sector</span>_start,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-function-name">movl</span><span class="org-whitespace-space"> </span><span class="org-keyword">%eax</span>,<span class="org-whitespace-space"> </span>8(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movl</span><span class="org-whitespace-space"> </span><span class="org-keyword">sector</span>_start+4,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-function-name">movl</span><span class="org-whitespace-space"> </span><span class="org-keyword">%eax</span>,<span class="org-whitespace-space"> </span>12(<span class="org-variable-name">%si</span>)
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x42</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">lba</span>_fail
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">LBA-read</span><span class="org-whitespace-space"> </span><span class="org-comment">success</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">Jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">lba_fail</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do LBA-read fail operations</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">LBA-read</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
 <span class="org-function-name">end</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Normal Works</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Normal</span><span class="org-whitespace-space"> </span><span class="org-comment">Works</span>
 </pre>
 </div>
 
@@ -209,8 +209,8 @@ AH        返回码
 </div>
 </div>
 
-<div id="outline-container-org3829417" class="outline-4">
-<h4 id="org3829417"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
+<div id="outline-container-orgbbc8d1c" class="outline-4">
+<h4 id="orgbbc8d1c"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 获取驱动器CHS参数。如下。参数：寄存器        描述
@@ -233,17 +233,17 @@ CX        逻辑柱面索引最大值和逻辑扇区数逻辑柱面最大索引=
 </p>
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">boot_driver</span>:
-<span class="org-keyword">.byte</span> 0x80
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x08</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">chs</span>_para_fail
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS-para success operations</span>
-<span class="org-function-name">jmp</span> <span class="org-keyword">end</span>
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x80
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x08</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">chs</span>_para_fail
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS-para</span><span class="org-whitespace-space"> </span><span class="org-comment">success</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">chs_para_fail</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS-para fail operation</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS-para</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span><span class="org-whitespace-space"> </span><span class="org-comment">operation</span>
 <span class="org-function-name">end</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Normal Works</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Normal</span><span class="org-whitespace-space"> </span><span class="org-comment">Works</span>
 </pre>
 </div>
 
@@ -253,8 +253,8 @@ CX        逻辑柱面索引最大值和逻辑扇区数逻辑柱面最大索引=
 </div>
 </div>
 
-<div id="outline-container-orge10941c" class="outline-4">
-<h4 id="orge10941c"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
+<div id="outline-container-orge9aa01c" class="outline-4">
+<h4 id="orge9aa01c"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 CHS模式读扇区。需要注意缓冲区没有超出该段寻址范围。参数：寄存器        描述
@@ -281,73 +281,73 @@ CHS读存在7.88GiB容量限制，现在几乎没有硬盘使用这种模式读�
 <div class="org-src-container">
 <pre class="src src-asm">
 <span class="org-function-name">boot_driver</span>:
-<span class="org-keyword">.byte</span> 0x80
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x80
 <span class="org-function-name">cylinder_start</span>:
-<span class="org-keyword">.word</span> 0
+<span class="org-keyword">.word</span><span class="org-whitespace-space"> </span>0
 <span class="org-function-name">head_start</span>:
-<span class="org-keyword">.byte</span> 0
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0
 <span class="org-function-name">sector_start</span>:
-<span class="org-keyword">.byte</span> 1
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>1
 <span class="org-function-name">sector_num</span>:
-<span class="org-keyword">.word</span> 4
+<span class="org-keyword">.word</span><span class="org-whitespace-space"> </span>4
 <span class="org-function-name">chs_sectors</span>:
-<span class="org-keyword">.byte</span> 0
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0
 <span class="org-function-name">chs_heads</span>:
-<span class="org-keyword">.word</span> 0
+<span class="org-keyword">.word</span><span class="org-whitespace-space"> </span>0
 <span class="org-function-name">chs_cylinders</span>:
-<span class="org-keyword">.word</span> 0
+<span class="org-keyword">.word</span><span class="org-whitespace-space"> </span>0
 <span class="org-function-name">read_buffer</span>:
-<span class="org-comment-delimiter">/* </span><span class="org-comment">reserved 512*4bytes to save data */</span>
-. = read_buffer + 512*4
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x08</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">chs</span>_para_fail
-<span class="org-comment-delimiter">/* </span><span class="org-comment">saved the CHS parameters */</span>
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">reserved</span><span class="org-whitespace-space"> </span><span class="org-comment">512*4bytes</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">save</span><span class="org-whitespace-space"> </span><span class="org-comment">data</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+.<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>read_buffer<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>512*4
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x08</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">chs</span>_para_fail
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">saved</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS</span><span class="org-whitespace-space"> </span><span class="org-comment">parameters</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
 <span class="org-comment-delimiter">/*</span>
-<span class="org-comment">  * dh : numbers_of_heads-1, 8-bits</span>
-<span class="org-comment">  * cx : numbers_of_cylinders-1, number_of_sectors</span>
-<span class="org-comment">  */</span>
-<span class="org-function-name">movzbl</span> <span class="org-keyword">%dh</span>, <span class="org-variable-name">%eax</span>
-<span class="org-function-name">incw</span>  <span class="org-keyword">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, chs_head
-<span class="org-function-name">movzbw</span> <span class="org-keyword">%dl</span>, <span class="org-variable-name">%dx</span>
-<span class="org-function-name">shlw</span> <span class="org-keyword">$2</span>, <span class="org-variable-name">%dx</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">%ch</span>, <span class="org-variable-name">%al</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">%dh</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">incw</span> <span class="org-keyword">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, chs_cylinders
-<span class="org-function-name">movzbw</span> <span class="org-keyword">%dl</span>, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">shrw</span> <span class="org-keyword">$2</span>, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, chs_sectors
-<span class="org-comment-delimiter">/* </span><span class="org-comment">CHS read */</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">sectors</span>_start, <span class="org-variable-name">%al</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">%al</span>, <span class="org-variable-name">%cl</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">cylinder</span>_start, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">%al</span>, <span class="org-variable-name">%ch</span>
-<span class="org-function-name">xorb</span> <span class="org-keyword">%al</span>, <span class="org-variable-name">%al</span>
-<span class="org-function-name">shrw</span> <span class="org-keyword">$2</span>, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">orb</span> <span class="org-keyword">%al</span>, <span class="org-variable-name">%cl</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">head</span>_start, <span class="org-variable-name">%al</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">%al</span>, <span class="org-variable-name">%dh</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_drive, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">xorw</span> <span class="org-keyword">%ax</span>, <span class="org-variable-name">%ax</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">%ax</span>, <span class="org-variable-name">%es</span>
-<span class="org-function-name">movw</span> <span class="org-keyword">$read</span>_buffer, <span class="org-variable-name">%bx</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">sector</span>_num, <span class="org-variable-name">%al</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">$2</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">chs</span>_read_fail
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS-read success operations</span>
-<span class="org-function-name">jmp</span> <span class="org-keyword">end</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">dh</span><span class="org-whitespace-space"> </span><span class="org-comment">:</span><span class="org-whitespace-space"> </span><span class="org-comment">numbers_of_heads-1,</span><span class="org-whitespace-space"> </span><span class="org-comment">8-bits</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">cx</span><span class="org-whitespace-space"> </span><span class="org-comment">:</span><span class="org-whitespace-space"> </span><span class="org-comment">numbers_of_cylinders-1,</span><span class="org-whitespace-space"> </span><span class="org-comment">number_of_sectors</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">*/</span>
+<span class="org-function-name">movzbl</span><span class="org-whitespace-space"> </span><span class="org-keyword">%dh</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-function-name">incw</span><span class="org-whitespace-space">  </span><span class="org-keyword">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span>chs_head
+<span class="org-function-name">movzbw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%dl</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dx</span>
+<span class="org-function-name">shlw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$2</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dx</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ch</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%dh</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">incw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span>chs_cylinders
+<span class="org-function-name">movzbw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%dl</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">shrw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$2</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span>chs_sectors
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS</span><span class="org-whitespace-space"> </span><span class="org-comment">read</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">sectors</span>_start,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%al</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%cl</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">cylinder</span>_start,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%al</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ch</span>
+<span class="org-function-name">xorb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%al</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">shrw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$2</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">orb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%al</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%cl</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">head</span>_start,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%al</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dh</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_drive,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">xorw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%es</span>
+<span class="org-function-name">movw</span><span class="org-whitespace-space"> </span><span class="org-keyword">$read</span>_buffer,<span class="org-whitespace-space"> </span><span class="org-variable-name">%bx</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">sector</span>_num,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$2</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">chs</span>_read_fail
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS-read</span><span class="org-whitespace-space"> </span><span class="org-comment">success</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">chs_para_fail</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS-para fail operations</span>
-<span class="org-function-name">jmp</span> <span class="org-keyword">end</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS-para</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">chs_read_fail</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do CHS-read fail operations</span>
-<span class="org-function-name">jmp</span> <span class="org-keyword">end</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">CHS-read</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">end</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Normal Works</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Normal</span><span class="org-whitespace-space"> </span><span class="org-comment">Works</span>
 </pre>
 </div>
 
@@ -357,8 +357,8 @@ CHS读结束后，通过CF判断是否成功。
 </div>
 </div>
 
-<div id="outline-container-org9e3edc4" class="outline-4">
-<h4 id="org9e3edc4"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
+<div id="outline-container-org856b8ad" class="outline-4">
+<h4 id="org856b8ad"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 复位磁盘驱动器。如下。参数：寄存器        描述
@@ -377,17 +377,17 @@ AH        状态
 </p>
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">boot_driver</span>:
-<span class="org-keyword">.byte</span> 0x80
-<span class="org-function-name">xorb</span> <span class="org-keyword">%ah</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">boot</span>_driver, <span class="org-variable-name">%dl</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x13</span>
-<span class="org-function-name">jc</span> <span class="org-keyword">reset</span>_fail
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Disk Reset success operations</span>
-<span class="org-function-name">jmp</span> <span class="org-keyword">end</span>
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x80
+<span class="org-function-name">xorb</span><span class="org-whitespace-space"> </span><span class="org-keyword">%ah</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">boot</span>_driver,<span class="org-whitespace-space"> </span><span class="org-variable-name">%dl</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x13</span>
+<span class="org-function-name">jc</span><span class="org-whitespace-space"> </span><span class="org-keyword">reset</span>_fail
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Disk</span><span class="org-whitespace-space"> </span><span class="org-comment">Reset</span><span class="org-whitespace-space"> </span><span class="org-comment">success</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
+<span class="org-function-name">jmp</span><span class="org-whitespace-space"> </span><span class="org-keyword">end</span>
 <span class="org-function-name">reset_fail</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Disk Reset fail operations</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Disk</span><span class="org-whitespace-space"> </span><span class="org-comment">Reset</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span><span class="org-whitespace-space"> </span><span class="org-comment">operations</span>
 <span class="org-function-name">end</span>:
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do Normal Works</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">Normal</span><span class="org-whitespace-space"> </span><span class="org-comment">Works</span>
 </pre>
 </div>
 <p>
@@ -396,8 +396,8 @@ AH        状态
 </div>
 </div>
 
-<div id="outline-container-org2f5d14d" class="outline-4">
-<h4 id="org2f5d14d"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
+<div id="outline-container-orgb0fea9f" class="outline-4">
+<h4 id="orgb0fea9f"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <p>
 BIOS使用INT 10H图形服务，可以用来设置图形模式、输出字符或字符串、以及基本图形（图形模式下读取/写入像素）。
@@ -416,13 +416,13 @@ BL=Color    输出字符颜色，只对图形终端有效
 </p>
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">char_value</span>:
-<span class="org-keyword">.byte</span> &#8216;A&#8217;
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>&#8216;A&#8217;
 <span class="org-function-name">char_color</span>:
-<span class="org-keyword">.byte</span> 0
-<span class="org-function-name">movb</span> <span class="org-keyword">char</span>_value, <span class="org-variable-name">%al</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">char</span>_color, <span class="org-variable-name">%bl</span>
-<span class="org-function-name">movb</span> <span class="org-keyword">$0x0E</span>, <span class="org-variable-name">%ah</span>
-<span class="org-function-name">int</span> <span class="org-keyword">$0x10</span>
+<span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">char</span>_value,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">char</span>_color,<span class="org-whitespace-space"> </span><span class="org-variable-name">%bl</span>
+<span class="org-function-name">movb</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x0E</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-function-name">int</span><span class="org-whitespace-space"> </span><span class="org-keyword">$0x10</span>
 </pre>
 </div>
 <p>

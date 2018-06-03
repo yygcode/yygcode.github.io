@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Shell编程技术</title>
 <meta name="generator" content="Org mode" />
@@ -28,41 +28,41 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8b2b1c1">1. 介绍</a></li>
-<li><a href="#org4066781">2. Bash</a></li>
-<li><a href="#org0266f5e">3. 调用方式与初始化/Invocation Methods and Inital Scripts</a>
+<li><a href="#org85e7aeb">1. 介绍</a></li>
+<li><a href="#org1e74d83">2. Bash</a></li>
+<li><a href="#org416ef8d">3. 调用方式与初始化/Invocation Methods and Inital Scripts</a>
 <ul>
-<li><a href="#org57ab8eb">3.1. 启动模式与文件</a>
+<li><a href="#org1f0aade">3.1. 启动模式与文件</a>
 <ul>
-<li><a href="#org34fddca">3.1.1. interactive shell</a></li>
-<li><a href="#orgd922e07">3.1.2. login shell</a></li>
-<li><a href="#org9f5316b">3.1.3. run scripts</a></li>
+<li><a href="#org4a0784f">3.1.1. interactive shell</a></li>
+<li><a href="#orgf957f13">3.1.2. login shell</a></li>
+<li><a href="#org6f25cb6">3.1.3. run scripts</a></li>
 </ul>
 </li>
-<li><a href="#orgae9bc3d">3.2. 调试方法</a></li>
-<li><a href="#org270bd46">3.3. 配置</a></li>
+<li><a href="#orgcdbb982">3.2. 调试方法</a></li>
+<li><a href="#orga354109">3.3. 配置</a></li>
 </ul>
 </li>
-<li><a href="#orgc3fe43b">4. 变量</a>
+<li><a href="#org6f5cac9">4. 变量</a>
 <ul>
-<li><a href="#org2a2114b">4.1. 特殊变量</a>
+<li><a href="#org5192019">4.1. 特殊变量</a>
 <ul>
-<li><a href="#org2374aad">4.1.1. $-</a></li>
+<li><a href="#org970b694">4.1.1. $-</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org712e444">5. 参考资料</a></li>
+<li><a href="#org4c4a06f">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8b2b1c1" class="outline-2">
-<h2 id="org8b2b1c1"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org85e7aeb" class="outline-2">
+<h2 id="org85e7aeb"><span class="section-number-2">1</span> 介绍</h2>
 </div>
 
-<div id="outline-container-org4066781" class="outline-2">
-<h2 id="org4066781"><span class="section-number-2">2</span> Bash</h2>
+<div id="outline-container-org1e74d83" class="outline-2">
+<h2 id="org1e74d83"><span class="section-number-2">2</span> Bash</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://www.gnu.org/software/bash/">Bash(GNU Bourne-Again Shell)</a>，<a href="https://en.wikipedia.org/wiki/Brian_Fox_(computer_programmer)">Brian J. Fox</a>在1987年为GNU计划而写，是Linux与MAC
@@ -94,19 +94,19 @@ The improvements offered by Bash include:
 </div>
 </div>
 
-<div id="outline-container-org0266f5e" class="outline-2">
-<h2 id="org0266f5e"><span class="section-number-2">3</span> 调用方式与初始化/Invocation Methods and Inital Scripts</h2>
+<div id="outline-container-org416ef8d" class="outline-2">
+<h2 id="org416ef8d"><span class="section-number-2">3</span> 调用方式与初始化/Invocation Methods and Inital Scripts</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org57ab8eb" class="outline-3">
-<h3 id="org57ab8eb"><span class="section-number-3">3.1</span> 启动模式与文件</h3>
+<div id="outline-container-org1f0aade" class="outline-3">
+<h3 id="org1f0aade"><span class="section-number-3">3.1</span> 启动模式与文件</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Bash启动方式包括interactive、login、run scripts，三种场景执行不同的脚本初始化。当对应的脚本文件不存在时忽略。
 </p>
 </div>
-<div id="outline-container-org34fddca" class="outline-4">
-<h4 id="org34fddca"><span class="section-number-4">3.1.1</span> interactive shell</h4>
+<div id="outline-container-org4a0784f" class="outline-4">
+<h4 id="org4a0784f"><span class="section-number-4">3.1.1</span> interactive shell</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Bash不带参数启动，或者带有-i参数启动。此时设置 <code>PS1</code> ， <code>$-</code> 包含 <i>i</i> 。
@@ -119,8 +119,8 @@ interactive模式下，默认执行/etc/bash.bashrc与~/.bashrc，bash参数&#x2
 </div>
 </div>
 
-<div id="outline-container-orgd922e07" class="outline-4">
-<h4 id="orgd922e07"><span class="section-number-4">3.1.2</span> login shell</h4>
+<div id="outline-container-orgf957f13" class="outline-4">
+<h4 id="orgf957f13"><span class="section-number-4">3.1.2</span> login shell</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Bash以interactive login Shell，或者non-interactive shell用&#x2013;login参数启动时，默认执行/etc/profile, ~/.bash_profile, ~/.bash_login, ~/.profile。bash参数
@@ -129,8 +129,8 @@ Bash以interactive login Shell，或者non-interactive shell用&#x2013;login参�
 </div>
 </div>
 
-<div id="outline-container-org9f5316b" class="outline-4">
-<h4 id="org9f5316b"><span class="section-number-4">3.1.3</span> run scripts</h4>
+<div id="outline-container-org6f25cb6" class="outline-4">
+<h4 id="org6f25cb6"><span class="section-number-4">3.1.3</span> run scripts</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Bash以non-interactive、non-login启动时，搜寻环境变量BASH_ENV，如果环境变量存在，则在扩展后作为文件名去执行。BASH搜索次文件不使用PATH变量，因此需要设置绝对路径，或者在当前目录的相对路径。
@@ -138,8 +138,8 @@ Bash以non-interactive、non-login启动时，搜寻环境变量BASH_ENV，如�
 </div>
 </div>
 </div>
-<div id="outline-container-orgae9bc3d" class="outline-3">
-<h3 id="orgae9bc3d"><span class="section-number-3">3.2</span> 调试方法</h3>
+<div id="outline-container-orgcdbb982" class="outline-3">
+<h3 id="orgcdbb982"><span class="section-number-3">3.2</span> 调试方法</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 启动shell后，用命令 <code>bash --verbose</code> 再次启动bash，观察终端输出。附加可选参数
@@ -151,30 +151,30 @@ Bash以non-interactive、non-login启动时，搜寻环境变量BASH_ENV，如�
 <dt>run-scripts</dt><dd></dd>
 </dl>
 <div class="org-src-container">
-<pre class="src src-sh"><span class="org-builtin">echo</span> <span class="org-string">'echo hello BASH_ENV'</span> &gt; /tmp/bash.env
-<span class="org-builtin">export</span> <span class="org-variable-name">BASH_ENV</span>=/tmp/bash.env
-<span class="org-builtin">echo</span> <span class="org-string">"echo hello bash scripts"</span> &gt; bash.scripts
-bash bash.scripts
+<pre class="src src-sh"><span class="org-builtin">echo</span><span class="org-whitespace-space"> </span><span class="org-string">'echo</span><span class="org-whitespace-space"> </span><span class="org-string">hello</span><span class="org-whitespace-space"> </span><span class="org-string">BASH_ENV'</span><span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/tmp/bash.env
+<span class="org-builtin">export</span><span class="org-whitespace-space"> </span><span class="org-variable-name">BASH_ENV</span>=/tmp/bash.env
+<span class="org-builtin">echo</span><span class="org-whitespace-space"> </span><span class="org-string">"echo</span><span class="org-whitespace-space"> </span><span class="org-string">hello</span><span class="org-whitespace-space"> </span><span class="org-string">bash</span><span class="org-whitespace-space"> </span><span class="org-string">scripts"</span><span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>bash.scripts
+bash<span class="org-whitespace-space"> </span>bash.scripts
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org270bd46" class="outline-3">
-<h3 id="org270bd46"><span class="section-number-3">3.3</span> 配置</h3>
+<div id="outline-container-orga354109" class="outline-3">
+<h3 id="orga354109"><span class="section-number-3">3.3</span> 配置</h3>
 </div>
 </div>
 
-<div id="outline-container-orgc3fe43b" class="outline-2">
-<h2 id="orgc3fe43b"><span class="section-number-2">4</span> 变量</h2>
+<div id="outline-container-org6f5cac9" class="outline-2">
+<h2 id="org6f5cac9"><span class="section-number-2">4</span> 变量</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2a2114b" class="outline-3">
-<h3 id="org2a2114b"><span class="section-number-3">4.1</span> 特殊变量</h3>
+<div id="outline-container-org5192019" class="outline-3">
+<h3 id="org5192019"><span class="section-number-3">4.1</span> 特殊变量</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-org2374aad" class="outline-4">
-<h4 id="org2374aad"><span class="section-number-4">4.1.1</span> $-</h4>
+<div id="outline-container-org970b694" class="outline-4">
+<h4 id="org970b694"><span class="section-number-4">4.1.1</span> $-</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 Shell Flag设置，通过set配置。唯一例外的是i，i在初始化时确定，以interactive启动时设置，不可设置不可清除。例如，set -H设置H，set +H清除。
@@ -184,7 +184,7 @@ Shell Flag设置，通过set配置。唯一例外的是i，i在初始化时确�
 普通启动Shell，查看结果显示：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ echo $<span class="org-variable-name">-</span>
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>echo<span class="org-whitespace-space"> </span>$<span class="org-variable-name">-</span>
 himBs
 </pre>
 </div>
@@ -242,87 +242,87 @@ himBs
 <code>man bash</code> 包含详细描述，搜索 <code>abefhkmnpt</code> 。Shell下执行 <code>help set</code> 查看帮助：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"><span class="org-builtin">set</span>: set [-abefhkmnptuvxBCHP] [-o option-name] [--] [arg ...]
-    Set or unset values of shell options and positional parameters.
+<pre class="src src-sh"><span class="org-builtin">set</span>:<span class="org-whitespace-space"> </span>set<span class="org-whitespace-space"> </span>[-abefhkmnptuvxBCHP]<span class="org-whitespace-space"> </span>[-o<span class="org-whitespace-space"> </span>option-name]<span class="org-whitespace-space"> </span>[--]<span class="org-whitespace-space"> </span>[arg<span class="org-whitespace-space"> </span>...]
+<span class="org-whitespace-space">    </span>Set<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>unset<span class="org-whitespace-space"> </span>values<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>options<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>positional<span class="org-whitespace-space"> </span>parameters.
 
-    Change the value of shell attributes and positional parameters, or
-    display the names and values of shell variables.
+<span class="org-whitespace-space">    </span>Change<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>value<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>attributes<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>positional<span class="org-whitespace-space"> </span>parameters,<span class="org-whitespace-space"> </span>or
+<span class="org-whitespace-space">    </span>display<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>names<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>values<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>variables.
 
-    Options:
-      -a  Mark variables which are modified or created for export.
-      -b  Notify of job termination immediately.
-      -e  Exit immediately if a command exits with a non-zero status.
-      -f  Disable file name generation (globbing)<span class="org-builtin">.</span>
-      -h  Remember the location of commands as they are looked up.
-      -k  All assignment arguments are placed<span class="org-keyword"> in</span> the environment for a
-          <span class="org-builtin">command</span>, not just those that precede the command name.
-      -m  Job control is enabled.
-      -n  Read commands but do not execute them.
-      -o option-name
-          Set the variable corresponding to option-name:
-              allexport    same as -a
-              braceexpand  same as -B
-              emacs        use an emacs-style line editing interface
-              errexit      same as -e
-              errtrace     same as -E
-              functrace    same as -T
-              hashall      same as -h
-              histexpand   same as -H
-              <span class="org-builtin">history</span>      enable command history
-              ignoreeof    the shell will not exit upon reading EOF
-              interactive-comments
-                           allow comments to appear<span class="org-keyword"> in</span> interactive commands
-              keyword      same as -k
-              monitor      same as -m
-              noclobber    same as -C
-              noexec       same as -n
-              noglob       same as -f
-              nolog        currently accepted but ignored
-              notify       same as -b
-              nounset      same as -u
-              onecmd       same as -t
-              physical     same as -P
-              pipefail     the return value of a pipeline is the status of
-                           the last command to exit with a non-zero status,
-                           or zero if no command exited with a non-zero status
-              posix        change the behavior of bash where the default
-                           operation differs from the Posix standard to
-                           match the standard
-              privileged   same as -p
-              verbose      same as -v
-              vi           use a vi-style line editing interface
-              xtrace       same as -x
-      -p  Turned on whenever the real and effective user ids do not match.
-          Disables processing of the $<span class="org-variable-name">ENV</span> file and importing of shell
-          functions.  Turning this option off causes the effective uid and
-          gid to be set to the real uid and gid.
-      -t  Exit after reading and executing one command.
-      -u  Treat unset variables as an error when substituting.
-      -v  Print shell input lines as they are read.
-      -x  Print commands and their arguments as they are executed.
-      -B  the shell will perform brace expansion
-      -C  If set, disallow existing regular files to be overwritten
-          by redirection of output.
-      -E  If set, the ERR trap is inherited by shell functions.
-      -H  Enable ! style history substitution.  This flag is on
-          by default when the shell is interactive.
-      -P  If set, do not resolve symbolic links when executing commands
-          such as cd which change the current directory.
-      -T  If set, the DEBUG and RETURN traps are inherited by shell functions.
-      --  Assign any remaining arguments to the positional parameters.
-          If there are no remaining arguments, the positional parameters
-          are unset.
-      -   Assign any remaining arguments to the positional parameters.
-          The -x and -v options are turned off.
+<span class="org-whitespace-space">    </span>Options:
+<span class="org-whitespace-space">      </span>-a<span class="org-whitespace-space">  </span>Mark<span class="org-whitespace-space"> </span>variables<span class="org-whitespace-space"> </span>which<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>modified<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>created<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>export.
+<span class="org-whitespace-space">      </span>-b<span class="org-whitespace-space">  </span>Notify<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>job<span class="org-whitespace-space"> </span>termination<span class="org-whitespace-space"> </span>immediately.
+<span class="org-whitespace-space">      </span>-e<span class="org-whitespace-space">  </span>Exit<span class="org-whitespace-space"> </span>immediately<span class="org-whitespace-space"> </span>if<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>exits<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>non-zero<span class="org-whitespace-space"> </span>status.
+<span class="org-whitespace-space">      </span>-f<span class="org-whitespace-space">  </span>Disable<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space"> </span>generation<span class="org-whitespace-space"> </span>(globbing)<span class="org-builtin">.</span>
+<span class="org-whitespace-space">      </span>-h<span class="org-whitespace-space">  </span>Remember<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>location<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>they<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>looked<span class="org-whitespace-space"> </span>up.
+<span class="org-whitespace-space">      </span>-k<span class="org-whitespace-space">  </span>All<span class="org-whitespace-space"> </span>assignment<span class="org-whitespace-space"> </span>arguments<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>placed<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>environment<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>a
+<span class="org-whitespace-space">          </span><span class="org-builtin">command</span>,<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>just<span class="org-whitespace-space"> </span>those<span class="org-whitespace-space"> </span>that<span class="org-whitespace-space"> </span>precede<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>name.
+<span class="org-whitespace-space">      </span>-m<span class="org-whitespace-space">  </span>Job<span class="org-whitespace-space"> </span>control<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>enabled.
+<span class="org-whitespace-space">      </span>-n<span class="org-whitespace-space">  </span>Read<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>but<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>execute<span class="org-whitespace-space"> </span>them.
+<span class="org-whitespace-space">      </span>-o<span class="org-whitespace-space"> </span>option-name
+<span class="org-whitespace-space">          </span>Set<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>variable<span class="org-whitespace-space"> </span>corresponding<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>option-name:
+<span class="org-whitespace-space">              </span>allexport<span class="org-whitespace-space">    </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-a
+<span class="org-whitespace-space">              </span>braceexpand<span class="org-whitespace-space">  </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-B
+<span class="org-whitespace-space">              </span>emacs<span class="org-whitespace-space">        </span>use<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span>emacs-style<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>editing<span class="org-whitespace-space"> </span>interface
+<span class="org-whitespace-space">              </span>errexit<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-e
+<span class="org-whitespace-space">              </span>errtrace<span class="org-whitespace-space">     </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-E
+<span class="org-whitespace-space">              </span>functrace<span class="org-whitespace-space">    </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-T
+<span class="org-whitespace-space">              </span>hashall<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-h
+<span class="org-whitespace-space">              </span>histexpand<span class="org-whitespace-space">   </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-H
+<span class="org-whitespace-space">              </span><span class="org-builtin">history</span><span class="org-whitespace-space">      </span>enable<span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>history
+<span class="org-whitespace-space">              </span>ignoreeof<span class="org-whitespace-space">    </span>the<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>will<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>exit<span class="org-whitespace-space"> </span>upon<span class="org-whitespace-space"> </span>reading<span class="org-whitespace-space"> </span>EOF
+<span class="org-whitespace-space">              </span>interactive-comments
+<span class="org-whitespace-space">                           </span>allow<span class="org-whitespace-space"> </span>comments<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>appear<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>interactive<span class="org-whitespace-space"> </span>commands
+<span class="org-whitespace-space">              </span>keyword<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-k
+<span class="org-whitespace-space">              </span>monitor<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-m
+<span class="org-whitespace-space">              </span>noclobber<span class="org-whitespace-space">    </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-C
+<span class="org-whitespace-space">              </span>noexec<span class="org-whitespace-space">       </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-n
+<span class="org-whitespace-space">              </span>noglob<span class="org-whitespace-space">       </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-f
+<span class="org-whitespace-space">              </span>nolog<span class="org-whitespace-space">        </span>currently<span class="org-whitespace-space"> </span>accepted<span class="org-whitespace-space"> </span>but<span class="org-whitespace-space"> </span>ignored
+<span class="org-whitespace-space">              </span>notify<span class="org-whitespace-space">       </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-b
+<span class="org-whitespace-space">              </span>nounset<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-u
+<span class="org-whitespace-space">              </span>onecmd<span class="org-whitespace-space">       </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-t
+<span class="org-whitespace-space">              </span>physical<span class="org-whitespace-space">     </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-P
+<span class="org-whitespace-space">              </span>pipefail<span class="org-whitespace-space">     </span>the<span class="org-whitespace-space"> </span>return<span class="org-whitespace-space"> </span>value<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>pipeline<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>status<span class="org-whitespace-space"> </span>of
+<span class="org-whitespace-space">                           </span>the<span class="org-whitespace-space"> </span>last<span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>exit<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>non-zero<span class="org-whitespace-space"> </span>status,
+<span class="org-whitespace-space">                           </span>or<span class="org-whitespace-space"> </span>zero<span class="org-whitespace-space"> </span>if<span class="org-whitespace-space"> </span>no<span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>exited<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>non-zero<span class="org-whitespace-space"> </span>status
+<span class="org-whitespace-space">              </span>posix<span class="org-whitespace-space">        </span>change<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>behavior<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>bash<span class="org-whitespace-space"> </span>where<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>default
+<span class="org-whitespace-space">                           </span>operation<span class="org-whitespace-space"> </span>differs<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>Posix<span class="org-whitespace-space"> </span>standard<span class="org-whitespace-space"> </span>to
+<span class="org-whitespace-space">                           </span>match<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>standard
+<span class="org-whitespace-space">              </span>privileged<span class="org-whitespace-space">   </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-p
+<span class="org-whitespace-space">              </span>verbose<span class="org-whitespace-space">      </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-v
+<span class="org-whitespace-space">              </span>vi<span class="org-whitespace-space">           </span>use<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>vi-style<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>editing<span class="org-whitespace-space"> </span>interface
+<span class="org-whitespace-space">              </span>xtrace<span class="org-whitespace-space">       </span>same<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>-x
+<span class="org-whitespace-space">      </span>-p<span class="org-whitespace-space">  </span>Turned<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>whenever<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>real<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>effective<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>ids<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>match.
+<span class="org-whitespace-space">          </span>Disables<span class="org-whitespace-space"> </span>processing<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>$<span class="org-variable-name">ENV</span><span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>importing<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>shell
+<span class="org-whitespace-space">          </span>functions.<span class="org-whitespace-space">  </span>Turning<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>option<span class="org-whitespace-space"> </span>off<span class="org-whitespace-space"> </span>causes<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>effective<span class="org-whitespace-space"> </span>uid<span class="org-whitespace-space"> </span>and
+<span class="org-whitespace-space">          </span>gid<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>set<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>real<span class="org-whitespace-space"> </span>uid<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>gid.
+<span class="org-whitespace-space">      </span>-t<span class="org-whitespace-space">  </span>Exit<span class="org-whitespace-space"> </span>after<span class="org-whitespace-space"> </span>reading<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>executing<span class="org-whitespace-space"> </span>one<span class="org-whitespace-space"> </span>command.
+<span class="org-whitespace-space">      </span>-u<span class="org-whitespace-space">  </span>Treat<span class="org-whitespace-space"> </span>unset<span class="org-whitespace-space"> </span>variables<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span>error<span class="org-whitespace-space"> </span>when<span class="org-whitespace-space"> </span>substituting.
+<span class="org-whitespace-space">      </span>-v<span class="org-whitespace-space">  </span>Print<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>input<span class="org-whitespace-space"> </span>lines<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>they<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>read.
+<span class="org-whitespace-space">      </span>-x<span class="org-whitespace-space">  </span>Print<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>their<span class="org-whitespace-space"> </span>arguments<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>they<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>executed.
+<span class="org-whitespace-space">      </span>-B<span class="org-whitespace-space">  </span>the<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>will<span class="org-whitespace-space"> </span>perform<span class="org-whitespace-space"> </span>brace<span class="org-whitespace-space"> </span>expansion
+<span class="org-whitespace-space">      </span>-C<span class="org-whitespace-space">  </span>If<span class="org-whitespace-space"> </span>set,<span class="org-whitespace-space"> </span>disallow<span class="org-whitespace-space"> </span>existing<span class="org-whitespace-space"> </span>regular<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>overwritten
+<span class="org-whitespace-space">          </span>by<span class="org-whitespace-space"> </span>redirection<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>output.
+<span class="org-whitespace-space">      </span>-E<span class="org-whitespace-space">  </span>If<span class="org-whitespace-space"> </span>set,<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>ERR<span class="org-whitespace-space"> </span>trap<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>inherited<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>functions.
+<span class="org-whitespace-space">      </span>-H<span class="org-whitespace-space">  </span>Enable<span class="org-whitespace-space"> </span>!<span class="org-whitespace-space"> </span>style<span class="org-whitespace-space"> </span>history<span class="org-whitespace-space"> </span>substitution.<span class="org-whitespace-space">  </span>This<span class="org-whitespace-space"> </span>flag<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>on
+<span class="org-whitespace-space">          </span>by<span class="org-whitespace-space"> </span>default<span class="org-whitespace-space"> </span>when<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>interactive.
+<span class="org-whitespace-space">      </span>-P<span class="org-whitespace-space">  </span>If<span class="org-whitespace-space"> </span>set,<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>resolve<span class="org-whitespace-space"> </span>symbolic<span class="org-whitespace-space"> </span>links<span class="org-whitespace-space"> </span>when<span class="org-whitespace-space"> </span>executing<span class="org-whitespace-space"> </span>commands
+<span class="org-whitespace-space">          </span>such<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>which<span class="org-whitespace-space"> </span>change<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>current<span class="org-whitespace-space"> </span>directory.
+<span class="org-whitespace-space">      </span>-T<span class="org-whitespace-space">  </span>If<span class="org-whitespace-space"> </span>set,<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>DEBUG<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>RETURN<span class="org-whitespace-space"> </span>traps<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>inherited<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>functions.
+<span class="org-whitespace-space">      </span>--<span class="org-whitespace-space">  </span>Assign<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>remaining<span class="org-whitespace-space"> </span>arguments<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>positional<span class="org-whitespace-space"> </span>parameters.
+<span class="org-whitespace-space">          </span>If<span class="org-whitespace-space"> </span>there<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>no<span class="org-whitespace-space"> </span>remaining<span class="org-whitespace-space"> </span>arguments,<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>positional<span class="org-whitespace-space"> </span>parameters
+<span class="org-whitespace-space">          </span>are<span class="org-whitespace-space"> </span>unset.
+<span class="org-whitespace-space">      </span>-<span class="org-whitespace-space">   </span>Assign<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>remaining<span class="org-whitespace-space"> </span>arguments<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>positional<span class="org-whitespace-space"> </span>parameters.
+<span class="org-whitespace-space">          </span>The<span class="org-whitespace-space"> </span>-x<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>-v<span class="org-whitespace-space"> </span>options<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>turned<span class="org-whitespace-space"> </span>off.
 
-    Using + rather than - causes these flags to be turned off.  The
-    flags can also be used upon invocation of the shell.  The current
-    <span class="org-builtin">set</span> of flags may be found<span class="org-keyword"> in</span> $<span class="org-variable-name">-</span>.  The remaining n ARGs are positional
-    parameters and are assigned,<span class="org-keyword"> in</span> order, to $<span class="org-variable-name">1</span>, $<span class="org-variable-name">2</span>, .. $<span class="org-variable-name">n</span>.  If no
-    ARGs are given, all shell variables are printed.
+<span class="org-whitespace-space">    </span>Using<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>rather<span class="org-whitespace-space"> </span>than<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>causes<span class="org-whitespace-space"> </span>these<span class="org-whitespace-space"> </span>flags<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>turned<span class="org-whitespace-space"> </span>off.<span class="org-whitespace-space">  </span>The
+<span class="org-whitespace-space">    </span>flags<span class="org-whitespace-space"> </span>can<span class="org-whitespace-space"> </span>also<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>used<span class="org-whitespace-space"> </span>upon<span class="org-whitespace-space"> </span>invocation<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>shell.<span class="org-whitespace-space">  </span>The<span class="org-whitespace-space"> </span>current
+<span class="org-whitespace-space">    </span><span class="org-builtin">set</span><span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>flags<span class="org-whitespace-space"> </span>may<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>found<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>$<span class="org-variable-name">-</span>.<span class="org-whitespace-space">  </span>The<span class="org-whitespace-space"> </span>remaining<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>ARGs<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>positional
+<span class="org-whitespace-space">    </span>parameters<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>assigned,<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>order,<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>$<span class="org-variable-name">1</span>,<span class="org-whitespace-space"> </span>$<span class="org-variable-name">2</span>,<span class="org-whitespace-space"> </span>..<span class="org-whitespace-space"> </span>$<span class="org-variable-name">n</span>.<span class="org-whitespace-space">  </span>If<span class="org-whitespace-space"> </span>no
+<span class="org-whitespace-space">    </span>ARGs<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>given,<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>variables<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>printed.
 
-    Exit Status:
-    Returns success unless an invalid option is given.
+<span class="org-whitespace-space">    </span>Exit<span class="org-whitespace-space"> </span>Status:
+<span class="org-whitespace-space">    </span>Returns<span class="org-whitespace-space"> </span>success<span class="org-whitespace-space"> </span>unless<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span>invalid<span class="org-whitespace-space"> </span>option<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>given.
 </pre>
 </div>
 </div>
@@ -330,8 +330,8 @@ himBs
 </div>
 </div>
 
-<div id="outline-container-org712e444" class="outline-2">
-<h2 id="org712e444"><span class="section-number-2">5</span> 参考资料</h2>
+<div id="outline-container-org4c4a06f" class="outline-2">
+<h2 id="org4c4a06f"><span class="section-number-2">5</span> 参考资料</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li><a href="http://tldp.org/LDP/abs/html/">http://tldp.org/LDP/abs/html/</a></li>

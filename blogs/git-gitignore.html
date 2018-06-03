@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-22 Sun 00:56 -->
+<!-- 2018-06-03 Sun 11:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Git - gitignore配置</title>
 <meta name="generator" content="Org mode" />
@@ -31,27 +31,27 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1e163f0">1. gitignore介绍</a>
+<li><a href="#org02de908">1. gitignore介绍</a>
 <ul>
-<li><a href="#orgcd88e64">1.1. gitignore语法规则</a></li>
-<li><a href="#orgdc32c04">1.2. gitignore文件位置</a></li>
+<li><a href="#org7890748">1.1. gitignore语法规则</a></li>
+<li><a href="#orgcc3cc2f">1.2. gitignore文件位置</a></li>
 </ul>
 </li>
 <li><a href="#glob">2. glob介绍</a></li>
-<li><a href="#org20a2b90">3. gitignore(org repo示例)</a>
+<li><a href="#org67ddc13">3. gitignore(org repo示例)</a>
 <ul>
-<li><a href="#orge384e72">3.1. 需求</a></li>
-<li><a href="#org4163f98">3.2. 实现</a></li>
-<li><a href="#org06ba356">3.3. 其他</a></li>
+<li><a href="#org0257fc9">3.1. 需求</a></li>
+<li><a href="#org1e1a989">3.2. 实现</a></li>
+<li><a href="#org514a72b">3.3. 其他</a></li>
 </ul>
 </li>
-<li><a href="#orgbb4aee3">4. 粘贴内容</a>
+<li><a href="#org1eee842">4. 粘贴内容</a>
 <ul>
-<li><a href="#orga64177d">4.1. Git Basics - Recording Changes to the Repository (Copied)</a></li>
+<li><a href="#org742537b">4.1. Git Basics - Recording Changes to the Repository (Copied)</a></li>
 <li><a href="#man">4.2. gitignore man</a></li>
 </ul>
 </li>
-<li><a href="#org41ef80c">5. 参考资料</a></li>
+<li><a href="#org40bd63f">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
@@ -62,8 +62,8 @@ Empty
 
 </div>
 
-<div id="outline-container-org1e163f0" class="outline-2">
-<h2 id="org1e163f0"><span class="section-number-2">1</span> gitignore介绍</h2>
+<div id="outline-container-org02de908" class="outline-2">
+<h2 id="org02de908"><span class="section-number-2">1</span> gitignore介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 我使用<a href="https://git-scm.com/">git</a>管理代码和文本文档，例如，<a href="https://orgmode.org/">emacs org</a> repo。一些文档类型是中间产物，希望
@@ -71,8 +71,8 @@ git不提示untracked，错误的添加此类文档时也希望能忽略并弹�
 </p>
 </div>
 
-<div id="outline-container-orgcd88e64" class="outline-3">
-<h3 id="orgcd88e64"><span class="section-number-3">1.1</span> gitignore语法规则</h3>
+<div id="outline-container-org7890748" class="outline-3">
+<h3 id="org7890748"><span class="section-number-3">1.1</span> gitignore语法规则</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 文档描述gitignore语法规则有五条：
@@ -100,10 +100,10 @@ gitignore规则细化补充如下：
 <li>规则中不含有/的，则当作通配符处理，每个目录迭代检查；</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-text"># ignore all xyz.txt
+<pre class="src src-text">#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>xyz.txt
 xyz.txt
 
-# only ignore xyz.txt in repo root directory
+#<span class="org-whitespace-space"> </span>only<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>xyz.txt<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>repo<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>directory
 /xyz.txt
 </pre>
 </div>
@@ -114,7 +114,7 @@ xyz.txt
 <li>模式中间包含/**/时，**匹配0个或多个目录；比如：</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-text"># match x/y/b, x/w/b, or x/y/z/b
+<pre class="src src-text">#<span class="org-whitespace-space"> </span>match<span class="org-whitespace-space"> </span>x/y/b,<span class="org-whitespace-space"> </span>x/w/b,<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>x/y/z/b
 x/**/b
 </pre>
 </div>
@@ -125,8 +125,8 @@ x/**/b
 </div>
 </div>
 
-<div id="outline-container-orgdc32c04" class="outline-3">
-<h3 id="orgdc32c04"><span class="section-number-3">1.2</span> gitignore文件位置</h3>
+<div id="outline-container-orgcc3cc2f" class="outline-3">
+<h3 id="orgcc3cc2f"><span class="section-number-3">1.2</span> gitignore文件位置</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>$HOME/.config/git/ignore</li>
@@ -137,8 +137,8 @@ x/**/b
 </div>
 </div>
 
-<div id="outline-container-orgf734f0c" class="outline-2">
-<h2 id="glob"><a id="orgf734f0c"></a><span class="section-number-2">2</span> glob介绍</h2>
+<div id="outline-container-orgdceee3d" class="outline-2">
+<h2 id="glob"><a id="orgdceee3d"></a><span class="section-number-2">2</span> glob介绍</h2>
 <div class="outline-text-2" id="text-glob">
 <p>
 glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Glob_(programming)">WIKI</a>下有较为细节描述。简单描述如下：
@@ -154,12 +154,12 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org20a2b90" class="outline-2">
-<h2 id="org20a2b90"><span class="section-number-2">3</span> gitignore(org repo示例)</h2>
+<div id="outline-container-org67ddc13" class="outline-2">
+<h2 id="org67ddc13"><span class="section-number-2">3</span> gitignore(org repo示例)</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orge384e72" class="outline-3">
-<h3 id="orge384e72"><span class="section-number-3">3.1</span> 需求</h3>
+<div id="outline-container-org0257fc9" class="outline-3">
+<h3 id="org0257fc9"><span class="section-number-3">3.1</span> 需求</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>包含所有的.org文件</li>
@@ -170,14 +170,14 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org4163f98" class="outline-3">
-<h3 id="org4163f98"><span class="section-number-3">3.2</span> 实现</h3>
+<div id="outline-container-org1e1a989" class="outline-3">
+<h3 id="org1e1a989"><span class="section-number-3">3.2</span> 实现</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-text"># default ignore all
+<pre class="src src-text">#<span class="org-whitespace-space"> </span>default<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all
 /**/*.*
 
-# do not ignore all org files
+#<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>org<span class="org-whitespace-space"> </span>files
 !/**/*.org
 !/**/css/*.css
 !/**/code/*.c
@@ -186,7 +186,7 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 !/**/img/*.*
 !/**/.gitignore
 
-# ignore all .#*
+#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>.#*
 /**/.#*
 /**/*.*~
 </pre>
@@ -194,8 +194,8 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org06ba356" class="outline-3">
-<h3 id="org06ba356"><span class="section-number-3">3.3</span> 其他</h3>
+<div id="outline-container-org514a72b" class="outline-3">
+<h3 id="org514a72b"><span class="section-number-3">3.3</span> 其他</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 参考<a href="https://github.com/github/gitignore">github ignore</a>。
@@ -204,12 +204,12 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-orgbb4aee3" class="outline-2">
-<h2 id="orgbb4aee3"><span class="section-number-2">4</span> 粘贴内容</h2>
+<div id="outline-container-org1eee842" class="outline-2">
+<h2 id="org1eee842"><span class="section-number-2">4</span> 粘贴内容</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga64177d" class="outline-3">
-<h3 id="orga64177d"><span class="section-number-3">4.1</span> Git Basics - Recording Changes to the Repository (Copied)</h3>
+<div id="outline-container-org742537b" class="outline-3">
+<h3 id="org742537b"><span class="section-number-3">4.1</span> Git Basics - Recording Changes to the Repository (Copied)</h3>
 <div class="outline-text-3" id="text-4-1">
 <dl class="org-dl">
 <dt>URL</dt><dd><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository</a></dd>
@@ -222,7 +222,7 @@ you can create a file listing patterns to match them named .gitignore. Here is
 an example .gitignore file:
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">$ cat .gitignore
+<pre class="src src-sh">$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>.gitignore
 *.[oa]
 *~
 </pre>
@@ -266,30 +266,30 @@ a/b/c/z, and so on.
 Here is another example .gitignore file:
 </p>
 <div class="org-src-container">
-<pre class="src src-text"># ignore all .a files
+<pre class="src src-text">#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>.a<span class="org-whitespace-space"> </span>files
 *.a
 
-# but do track lib.a, even though you're ignoring .a files above
+#<span class="org-whitespace-space"> </span>but<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>track<span class="org-whitespace-space"> </span>lib.a,<span class="org-whitespace-space"> </span>even<span class="org-whitespace-space"> </span>though<span class="org-whitespace-space"> </span>you're<span class="org-whitespace-space"> </span>ignoring<span class="org-whitespace-space"> </span>.a<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>above
 !lib.a
 
-# only ignore the TODO file in the current directory, not subdir/TODO
+#<span class="org-whitespace-space"> </span>only<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>TODO<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>current<span class="org-whitespace-space"> </span>directory,<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>subdir/TODO
 /TODO
 
-# ignore all files in the build/ directory
+#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>build/<span class="org-whitespace-space"> </span>directory
 build/
 
-# ignore doc/notes.txt, but not doc/server/arch.txt
+#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>doc/notes.txt,<span class="org-whitespace-space"> </span>but<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>doc/server/arch.txt
 doc/*.txt
 
-# ignore all .pdf files in the doc/ directory and any of its subdirectories
+#<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>.pdf<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>doc/<span class="org-whitespace-space"> </span>directory<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>its<span class="org-whitespace-space"> </span>subdirectories
 doc/**/*.pdf
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgde5f014" class="outline-3">
-<h3 id="man"><a id="orgde5f014"></a><span class="section-number-3">4.2</span> gitignore man</h3>
+<div id="outline-container-org8eb8272" class="outline-3">
+<h3 id="man"><a id="org8eb8272"></a><span class="section-number-3">4.2</span> gitignore man</h3>
 <div class="outline-text-3" id="text-man">
 <blockquote>
 <p>
@@ -633,8 +633,8 @@ Part of the git(1) suite
 </div>
 </div>
 
-<div id="outline-container-org41ef80c" class="outline-2">
-<h2 id="org41ef80c"><span class="section-number-2">5</span> 参考资料</h2>
+<div id="outline-container-org40bd63f" class="outline-2">
+<h2 id="org40bd63f"><span class="section-number-2">5</span> 参考资料</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>GIT-SCM</dt><dd><a href="https://git-scm.com/docs/gitignore">https://git-scm.com/docs/gitignore</a></dd>

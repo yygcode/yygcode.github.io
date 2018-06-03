@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-04-21 Sat 07:29 -->
+<!-- 2018-06-03 Sun 11:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>strace使用示例</title>
 <meta name="generator" content="Org mode" />
@@ -31,38 +31,38 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org58283de">1. 观察时间分布</a></li>
+<li><a href="#org24870b0">1. 观察时间分布</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org58283de" class="outline-2">
-<h2 id="org58283de"><span class="section-number-2">1</span> 观察时间分布</h2>
+<div id="outline-container-org24870b0" class="outline-2">
+<h2 id="org24870b0"><span class="section-number-2">1</span> 观察时间分布</h2>
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
-<pre class="src src-sh">~# strace -c dd <span class="org-variable-name">if</span>=/dev/sda <span class="org-variable-name">of</span>=/dev/null <span class="org-variable-name">iflag</span>=direct <span class="org-variable-name">count</span>=100k <span class="org-variable-name">bs</span>=4K
-102400+0 records<span class="org-keyword"> in</span>
-102400+0 records out
-419430400 bytes (419 MB) copied, 4.95506 s, 84.6 MB/s
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 94.88    0.006669           0    102403           read
-  5.12    0.000360           0    102403           write
-  0.00    0.000000           0        10         4 open
-  0.00    0.000000           0         9           close
-  0.00    0.000000           0         4           fstat
-  0.00    0.000000           0         1           lseek
-  0.00    0.000000           0        10           mmap
-  0.00    0.000000           0         4           mprotect
-  0.00    0.000000           0         2           munmap
-  0.00    0.000000           0         3           brk
-  0.00    0.000000           0         4           rt_sigaction
-  0.00    0.000000           0         3         3 access
-  0.00    0.000000           0         2           dup2
-  0.00    0.000000           0         1           execve
-  0.00    0.000000           0         1           arch_prctl
------- ----------- ----------- --------- --------- ----------------
-100.00    0.007029                204860         7 total
+<pre class="src src-sh">~#<span class="org-whitespace-space"> </span>strace<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/sda<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=/dev/null<span class="org-whitespace-space"> </span><span class="org-variable-name">iflag</span>=direct<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=100k<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=4K
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span><span class="org-keyword">in</span>
+102400+0<span class="org-whitespace-space"> </span>records<span class="org-whitespace-space"> </span>out
+419430400<span class="org-whitespace-space"> </span>bytes<span class="org-whitespace-space"> </span>(419<span class="org-whitespace-space"> </span>MB)<span class="org-whitespace-space"> </span>copied,<span class="org-whitespace-space"> </span>4.95506<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>84.6<span class="org-whitespace-space"> </span>MB/s
+%<span class="org-whitespace-space"> </span>time<span class="org-whitespace-space">     </span>seconds<span class="org-whitespace-space">  </span>usecs/call<span class="org-whitespace-space">     </span>calls<span class="org-whitespace-space">    </span>errors<span class="org-whitespace-space"> </span>syscall
+------<span class="org-whitespace-space"> </span>-----------<span class="org-whitespace-space"> </span>-----------<span class="org-whitespace-space"> </span>---------<span class="org-whitespace-space"> </span>---------<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space"> </span>94.88<span class="org-whitespace-space">    </span>0.006669<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">    </span>102403<span class="org-whitespace-space">           </span>read
+<span class="org-whitespace-space">  </span>5.12<span class="org-whitespace-space">    </span>0.000360<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">    </span>102403<span class="org-whitespace-space">           </span>write
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">        </span>10<span class="org-whitespace-space">         </span>4<span class="org-whitespace-space"> </span>open
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>9<span class="org-whitespace-space">           </span>close
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>4<span class="org-whitespace-space">           </span>fstat
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>1<span class="org-whitespace-space">           </span>lseek
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">        </span>10<span class="org-whitespace-space">           </span>mmap
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>4<span class="org-whitespace-space">           </span>mprotect
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>2<span class="org-whitespace-space">           </span>munmap
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>3<span class="org-whitespace-space">           </span>brk
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>4<span class="org-whitespace-space">           </span>rt_sigaction
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>3<span class="org-whitespace-space">         </span>3<span class="org-whitespace-space"> </span>access
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>2<span class="org-whitespace-space">           </span>dup2
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>1<span class="org-whitespace-space">           </span>execve
+<span class="org-whitespace-space">  </span>0.00<span class="org-whitespace-space">    </span>0.000000<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">         </span>1<span class="org-whitespace-space">           </span>arch_prctl
+------<span class="org-whitespace-space"> </span>-----------<span class="org-whitespace-space"> </span>-----------<span class="org-whitespace-space"> </span>---------<span class="org-whitespace-space"> </span>---------<span class="org-whitespace-space"> </span>----------------
+100.00<span class="org-whitespace-space">    </span>0.007029<span class="org-whitespace-space">                </span>204860<span class="org-whitespace-space">         </span>7<span class="org-whitespace-space"> </span>total
 </pre>
 </div>
 </div>

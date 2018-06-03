@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:56 -->
+<!-- 2018-06-03 Sun 11:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>STL源码分析之一：迭代器详解</title>
 <meta name="generator" content="Org mode" />
@@ -47,8 +47,8 @@
 在STL中，迭代器是一种行为类似指针的对象，可透过与一般指针一致的接口来完成自己的工作(事实上除了随机迭代器以外，其他迭代器只有比指针更少的操作，但是所有迭代器都有提领操作(*iterator)、成员访问操作(iterator-&gt;member)、前置递增操作(\+\+iterator)、 后置递增操作(iterator++)，是容器和算法的粘合剂。同时透过迭代器，向操作者隐藏了具体数据结构和实现细节。例如，我们要遍历某个容器，可以不必关心其采用的数据结构是数组、链表或者某种图结构，只需要定义一个迭代器，然后按照如下操作：
 </p>
 <div class="org-src-container">
-<pre class="src src-cpp"><span class="org-keyword">for</span>( <span class="org-type">iterator</span> <span class="org-variable-name">iter</span> = container.begin() ;  container.end() != iter ; ++iter )
- &lt;process&gt;(*iter);
+<pre class="src src-cpp"><span class="org-keyword">for</span>(<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">iter</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>container.begin()<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space">  </span>container.end()<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>iter<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>++iter<span class="org-whitespace-space"> </span>)
+<span class="org-whitespace-space"> </span>&lt;process&gt;(*iter);
 </pre>
 </div>
 <p>
@@ -66,32 +66,32 @@
 当不同的迭代器作为参数传递给对应算法时，算法会根据迭代器特性提供最大优化。例如，STL中的distance()对于不同的迭代器，算法不同，分别如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-cpp"><span class="org-keyword">template</span> &lt;<span class="org-keyword">class</span> <span class="org-type">_InputIterator</span>, <span class="org-keyword">class</span> <span class="org-type">_Distance</span>&gt;
-<span class="org-keyword">inline</span> <span class="org-type">void</span> <span class="org-function-name">__distance</span>
-(<span class="org-type">_InputIterator</span> <span class="org-variable-name">__first</span>,
- <span class="org-type">_InputIterator</span> <span class="org-variable-name">__last</span>,
- <span class="org-type">_Distance</span>&amp; <span class="org-variable-name">__n</span>,
- input_iterator_tag)
+<pre class="src src-cpp"><span class="org-keyword">template</span><span class="org-whitespace-space"> </span>&lt;<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_InputIterator</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&gt;
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__distance</span>
+(<span class="org-type">_InputIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__first</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_InputIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__last</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">__n</span>,
+<span class="org-whitespace-space"> </span>input_iterator_tag)
 {
-  <span class="org-keyword">while</span> (__first != __last) { ++__first; ++__n; }
+<span class="org-whitespace-space">  </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(__first<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>__last)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span>++__first;<span class="org-whitespace-space"> </span>++__n;<span class="org-whitespace-space"> </span>}
 }
 
-<span class="org-keyword">template</span> &lt;<span class="org-keyword">class</span> <span class="org-type">_RandomAccessIterator</span>, <span class="org-keyword">class</span> <span class="org-type">_Distance</span>&gt;
-<span class="org-keyword">inline</span> <span class="org-type">void</span> <span class="org-function-name">__distance</span>
-(<span class="org-type">_RandomAccessIterator</span> <span class="org-variable-name">__first</span>,
- <span class="org-type">_RandomAccessIterator</span> <span class="org-variable-name">__last</span>,
- <span class="org-type">_Distance</span>&amp; <span class="org-variable-name">__n</span>,
- random_access_iterator_tag)
+<span class="org-keyword">template</span><span class="org-whitespace-space"> </span>&lt;<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_RandomAccessIterator</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&gt;
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__distance</span>
+(<span class="org-type">_RandomAccessIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__first</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_RandomAccessIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__last</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">__n</span>,
+<span class="org-whitespace-space"> </span>random_access_iterator_tag)
 {
-  __n += __last - __first;
+<span class="org-whitespace-space">  </span>__n<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>__last<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>__first;
 }
-<span class="org-keyword">template</span> &lt;<span class="org-keyword">class</span> <span class="org-type">_InputIterator</span>, <span class="org-keyword">class</span> <span class="org-type">_Distance</span>&gt;
-<span class="org-keyword">inline</span> <span class="org-type">void</span> <span class="org-function-name">distance</span>
-(<span class="org-type">_InputIterator</span> <span class="org-variable-name">__first</span>,
- <span class="org-type">_InputIterator</span> <span class="org-variable-name">__last</span>,
- <span class="org-type">_Distance</span>&amp; <span class="org-variable-name">__n</span>)
+<span class="org-keyword">template</span><span class="org-whitespace-space"> </span>&lt;<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_InputIterator</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&gt;
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">distance</span>
+(<span class="org-type">_InputIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__first</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_InputIterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">__last</span>,
+<span class="org-whitespace-space"> </span><span class="org-type">_Distance</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">__n</span>)
 {
-  __distance(__first, __last, __n, iterator_category(__first));
+<span class="org-whitespace-space">  </span>__distance(__first,<span class="org-whitespace-space"> </span>__last,<span class="org-whitespace-space"> </span>__n,<span class="org-whitespace-space"> </span>iterator_category(__first));
 }
 
 </pre>
@@ -101,11 +101,11 @@
 2.STL中迭代器层次关系
 </p>
 <div class="org-src-container">
-<pre class="src src-cpp"><span class="org-keyword">struct</span> <span class="org-type">output_iterator_tag</span>{}
-<span class="org-keyword">struct</span> <span class="org-type">input_iterator_tag</span>{}
-<span class="org-keyword">struct</span> <span class="org-type">forward_iterator_tag</span> : <span class="org-keyword">public</span> <span class="org-type">input_iterator_tag</span> {};
-<span class="org-keyword">struct</span> <span class="org-type">bidirectional_iterator_tag</span> : <span class="org-keyword">public</span> <span class="org-type">forward_iterator_tag</span>{}
-<span class="org-keyword">struct</span> <span class="org-type">random_accessl_iterator_tag</span> : <span class="org-keyword">public</span> <span class="org-type">bidirectional_iterator_tag</span>{}
+<pre class="src src-cpp"><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">output_iterator_tag</span>{}
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">input_iterator_tag</span>{}
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">forward_iterator_tag</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">input_iterator_tag</span><span class="org-whitespace-space"> </span>{};
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">bidirectional_iterator_tag</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">forward_iterator_tag</span>{}
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">random_accessl_iterator_tag</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">bidirectional_iterator_tag</span>{}
 </pre>
 </div>
 
@@ -482,180 +482,180 @@ a[n]  T的任意类型  *(a+n)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-cpp"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;new&gt;</span>
+<pre class="src src-cpp"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;new&gt;</span>
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#26159;&#38142;&#34920;&#22522;&#26412;&#32467;&#26500;,&#37324;&#38754;&#19981;&#23384;&#20648;&#20219;&#20309;&#19996;&#35199;,&#32431;&#31929;&#20026;&#20102;&#23454;&#29616;&#31639;&#27861;</span>
-<span class="org-keyword">struct</span> <span class="org-type">SListBaseNode</span>
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>
 {
-  <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">s_Next</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">s_Next</span>;
 };
 
-<span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#20989;&#25968;&#22312;prevNode&#33410;&#28857;&#21518;&#38754;&#25554;&#20837;&#26032;&#33410;&#28857; newNode</span>
-<span class="org-keyword">inline</span> <span class="org-type">SListBaseNode</span>* <span class="org-function-name">InsertAfterNode</span>( <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">prevNode</span> , <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">newNode</span> )
+<span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#20989;&#25968;&#22312;prevNode&#33410;&#28857;&#21518;&#38754;&#25554;&#20837;&#26032;&#33410;&#28857;</span><span class="org-whitespace-space"> </span><span class="org-comment">newNode</span>
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">InsertAfterNode</span>(<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">prevNode</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name"><span class="org-whitespace-line">newNode</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">)</span>
 {
-  newNode-&gt;s_Next = prevNode-&gt;s_Next;    <span class="org-comment-delimiter">//</span><span class="org-comment">newNode&#30340;&#19979;&#19968;&#33410;&#28857;&#20026;prevNode&#30340;&#19979;&#19968;&#33410;&#28857;</span>
-  prevNode-&gt;s_Next = newNode;        <span class="org-comment-delimiter">//</span><span class="org-comment">prevNode&#30340;&#19979;&#19968;&#33410;&#28857;&#20026;newNode</span>
-  <span class="org-keyword">return</span> newNode;                <span class="org-comment-delimiter">//</span><span class="org-comment">&#36820;&#22238;newNode,&#23454;&#29616;&#20018;&#25509;&#31639;&#27861;,&#35814;&#32454;&#35265;&#19979;&#38754;&#30340;[&#27880;&#37322;1]</span>
+<span class="org-whitespace-space">  </span>newNode-&gt;s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>prevNode-&gt;s_Next;<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-comment">newNode&#30340;&#19979;&#19968;&#33410;&#28857;&#20026;prevNode&#30340;&#19979;&#19968;&#33410;&#28857;</span>
+<span class="org-whitespace-space">  </span>prevNode-&gt;s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>newNode;<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-comment">prevNode&#30340;&#19979;&#19968;&#33410;&#28857;&#20026;newNode</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>newNode;<span class="org-whitespace-space">                </span><span class="org-comment-delimiter">//</span><span class="org-comment">&#36820;&#22238;newNode,&#23454;&#29616;&#20018;&#25509;&#31639;&#27861;,&#35814;&#32454;&#35265;&#19979;&#38754;&#30340;[&#27880;&#37322;1]</span>
 }
 
 <span class="org-comment-delimiter">/*</span>
-<span class="org-comment">  [&#27880;&#37322;1] : &#36825;&#31867;&#31639;&#27861;&#36820;&#22238;&#30340;&#21407;&#22240;&#26159;&#20026;&#20102;&#23454;&#29616;&#38142;&#25509;&#35843;&#29992;,&#20363;&#22914;:</span>
-<span class="org-comment">  InsertAfterNode( InsertAfterNode(front,newNode1) , newNode2 );</span>
-<span class="org-comment">  &#20877;&#27604;&#22914;c&#24211;&#20989;&#25968;strcpy&#31561;&#37117;&#26159;&#36825;&#20010;&#21407;&#22240;,&#20363;&#22914;:</span>
-<span class="org-comment">  char buff[128];</span>
-<span class="org-comment">  int len = strlen( strcpy(buff,"yanyg") );</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">[&#27880;&#37322;1]</span><span class="org-whitespace-space"> </span><span class="org-comment">:</span><span class="org-whitespace-space"> </span><span class="org-comment">&#36825;&#31867;&#31639;&#27861;&#36820;&#22238;&#30340;&#21407;&#22240;&#26159;&#20026;&#20102;&#23454;&#29616;&#38142;&#25509;&#35843;&#29992;,&#20363;&#22914;:</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">InsertAfterNode(</span><span class="org-whitespace-space"> </span><span class="org-comment">InsertAfterNode(front,newNode1)</span><span class="org-whitespace-space"> </span><span class="org-comment">,</span><span class="org-whitespace-space"> </span><span class="org-comment">newNode2</span><span class="org-whitespace-space"> </span><span class="org-comment">);</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">&#20877;&#27604;&#22914;c&#24211;&#20989;&#25968;strcpy&#31561;&#37117;&#26159;&#36825;&#20010;&#21407;&#22240;,&#20363;&#22914;:</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">char</span><span class="org-whitespace-space"> </span><span class="org-comment">buff[128];</span>
+<span class="org-whitespace-space">  </span><span class="org-comment">int</span><span class="org-whitespace-space"> </span><span class="org-comment">len</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">strlen(</span><span class="org-whitespace-space"> </span><span class="org-comment">strcpy(buff,"yanyg")</span><span class="org-whitespace-space"> </span><span class="org-comment">);</span>
 <span class="org-comment">*/</span>
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#20989;&#25968;&#24471;&#21040;&#33410;&#28857;node&#30340;&#21069;&#19968;&#33410;&#28857;</span>
-<span class="org-keyword">inline</span> <span class="org-type">SListBaseNode</span>* <span class="org-function-name">GetPrevious</span>( <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">front</span> , <span class="org-keyword">const</span> <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">node</span> )
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">GetPrevious</span>(<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">front</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-variable-name"><span class="org-whitespace-line">ode</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">)</span>
 {
-  <span class="org-keyword">for</span> ( ; front &amp;&amp; front-&gt;s_Next != node ; front = front-&gt;s_Next );
-  <span class="org-keyword">return</span> front;
+<span class="org-whitespace-space">  </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>front<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>front-&gt;s_Next<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>node<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>front<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>front-&gt;s_Next<span class="org-whitespace-space"> </span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>front;
 }
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#20989;&#25968;&#26159;&#21069;&#19968;&#20010;&#20989;&#25968;&#30340;const&#29256;&#26412;</span>
-<span class="org-keyword">inline</span> <span class="org-keyword">const</span> <span class="org-type">SListBaseNode</span>* <span class="org-function-name">GetPrevious</span>( <span class="org-keyword">const</span> <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">front</span> , <span class="org-keyword">const</span> <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">node</span> )
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">GetPrevious</span>(<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">front</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SLis</span><span class="org-type"><span class="org-whitespace-line">tBaseNode</span></span><span class="org-whitespace-line">*</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">node</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">)</span>
 {
-  <span class="org-keyword">for</span> ( ; front &amp;&amp; front-&gt;s_Next != node ; front = front-&gt;s_Next );
-  <span class="org-keyword">return</span> front;
+<span class="org-whitespace-space">  </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>front<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>front-&gt;s_Next<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>node<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>front<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>front-&gt;s_Next<span class="org-whitespace-space"> </span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>front;
 }
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#20989;&#25968;&#36870;&#24207;&#38142;&#34920;,&#24182;&#36820;&#22238;&#26368;&#21518;&#19968;&#20010;&#33410;&#28857;</span>
-<span class="org-keyword">inline</span> <span class="org-type">SListBaseNode</span>* <span class="org-function-name">Reverse</span>( <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">node</span> )
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">Reverse</span>(<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>)
 {
-  <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">result</span> = node;
+<span class="org-whitespace-space">  </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">result</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
 
-  node = node-&gt;s_Next;
-  result-&gt;s_Next = 0;
+<span class="org-whitespace-space">  </span>node<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node-&gt;s_Next;
+<span class="org-whitespace-space">  </span>result-&gt;s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-  <span class="org-keyword">while</span> ( node )
-    {
-      <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">next</span> = node-&gt;s_Next;
-      node-&gt;s_Next = result;
-      result = node;
-      node = next;
-    }
+<span class="org-whitespace-space">  </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>node<span class="org-whitespace-space"> </span>)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">      </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">next</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node-&gt;s_Next;
+<span class="org-whitespace-space">      </span>node-&gt;s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>result;
+<span class="org-whitespace-space">      </span>result<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">      </span>node<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>next;
+<span class="org-whitespace-space">    </span>}
 
-  <span class="org-keyword">return</span> result;
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>result;
 }
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#35745;&#31639;node&#20043;&#21518;&#30340;&#33410;&#28857;&#20010;&#25968;</span>
-<span class="org-keyword">inline</span> <span class="org-type">size_t</span> <span class="org-function-name">ListSize</span>( <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">node</span> )
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">ListSize</span>(<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>)
 {
-  <span class="org-type">size_t</span> <span class="org-variable-name">result</span> = 0;
+<span class="org-whitespace-space">  </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">result</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-  <span class="org-keyword">for</span> ( ; 0 != node ; node = node-&gt;s_Next , ++result );
+<span class="org-whitespace-space">  </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>node<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>node<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node-&gt;s_Next<span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span>++result<span class="org-whitespace-space"> </span>);
 
-  <span class="org-keyword">return</span> result;
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>result;
 }
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#36825;&#20010;&#27966;&#29983;&#26159;&#38142;&#34920;&#20855;&#20307;&#23384;&#20648;&#30340;&#23545;&#35937;</span>
-<span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span> <span class="org-type">T</span>&gt;
-<span class="org-keyword">struct</span> <span class="org-type">SListNode</span> : <span class="org-keyword">public</span> <span class="org-type">SListBaseNode</span>
+<span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&gt;
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">SListNode</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>
 {
-  <span class="org-function-name">SListNode</span>():s_Next(0){}
-  <span class="org-function-name">SListNode</span>( <span class="org-keyword">const</span> <span class="org-type">T</span>&amp; <span class="org-variable-name">t</span> ):<span class="org-function-name">s_Data</span>(t){ s_Next = 0; }
-  <span class="org-type">T</span> <span class="org-variable-name">s_Data</span>;
+<span class="org-whitespace-space">  </span><span class="org-function-name">SListNode</span>():s_Next(0){}
+<span class="org-whitespace-space">  </span><span class="org-function-name">SListNode</span>(<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">t</span><span class="org-whitespace-space"> </span>):<span class="org-function-name">s_Data</span>(t){<span class="org-whitespace-space"> </span>s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">T</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s_Data</span>;
 };
 
 <span class="org-comment-delimiter">/************************************************************************</span>
-<span class="org-comment"> *    &#36825;&#37324;&#23454;&#29616;&#19968;&#20010;&#31616;&#21333;&#30340;&#36845;&#20195;&#22120;</span>
-<span class="org-comment"> *    &#22914;&#26524;&#24819;&#21644;stl&#23436;&#32654;&#34701;&#21512;</span>
-<span class="org-comment"> *    &#37027;&#20040;&#38656;&#35201;&#20174;stl&#36845;&#20195;&#22120;&#33795;&#21462;&#26576;&#20123;&#29305;&#24449;&#22411;&#21035;&#20449;&#24687;</span>
-<span class="org-comment"> *    &#22411;&#21035;&#33795;&#21462;&#19981;&#26159;&#26412;&#31687;&#37325;&#28857;,&#19981;&#20877;&#35814;&#32454;&#35770;&#36848;</span>
-<span class="org-comment"> *    &#21333;&#38142;&#34920;&#26159;&#19968;&#20010;forward_iterator</span>
-<span class="org-comment"> *    &#22240;&#27492;&#21482;&#23454;&#29616; iter++/++iter/*iter/iter-&gt;member/==/!=&#20845;&#31181;&#25805;&#20316;</span>
-<span class="org-comment"> ************************************************************************/</span>
-<span class="org-keyword">template</span>&lt;<span class="org-keyword">class</span> <span class="org-type">T</span> , <span class="org-keyword">class</span> <span class="org-type">Ref</span> , <span class="org-keyword">class</span> <span class="org-type">Ptr</span> &gt;
-<span class="org-keyword">struct</span> <span class="org-type">SList_Iterator</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#36825;&#37324;&#23454;&#29616;&#19968;&#20010;&#31616;&#21333;&#30340;&#36845;&#20195;&#22120;</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#22914;&#26524;&#24819;&#21644;stl&#23436;&#32654;&#34701;&#21512;</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#37027;&#20040;&#38656;&#35201;&#20174;stl&#36845;&#20195;&#22120;&#33795;&#21462;&#26576;&#20123;&#29305;&#24449;&#22411;&#21035;&#20449;&#24687;</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#22411;&#21035;&#33795;&#21462;&#19981;&#26159;&#26412;&#31687;&#37325;&#28857;,&#19981;&#20877;&#35814;&#32454;&#35770;&#36848;</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#21333;&#38142;&#34920;&#26159;&#19968;&#20010;forward_iterator</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">    </span><span class="org-comment">&#22240;&#27492;&#21482;&#23454;&#29616;</span><span class="org-whitespace-space"> </span><span class="org-comment">iter++/++iter/*iter/iter-&gt;member/==/!=&#20845;&#31181;&#25805;&#20316;</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">************************************************************************/</span>
+<span class="org-keyword">template</span>&lt;<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">T</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Ref</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Ptr</span><span class="org-whitespace-space"> </span>&gt;
+<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>
 {
-  <span class="org-keyword">typedef</span> <span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-type">T</span>&amp;,<span class="org-type">T</span>*&gt; <span class="org-type">iterator</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-keyword">const</span> <span class="org-type">T</span>&amp;,<span class="org-keyword">const</span> <span class="org-type">T</span>*&gt; <span class="org-type">const_iterator</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-type">Ref</span>,<span class="org-type">Ptr</span>&gt; <span class="org-type">self</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-type">T</span>&amp;,<span class="org-type">T</span>*&gt;<span class="org-whitespace-space"> </span><span class="org-type">iterator</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;,<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>*&gt;<span class="org-whitespace-space"> </span><span class="org-type">const_iterator</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&lt;<span class="org-type">T</span>,<span class="org-type">Ref</span>,<span class="org-type">Ptr</span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">self</span>;
 
-  <span class="org-keyword">typedef</span> <span class="org-type">T</span> <span class="org-type">value_type</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">Ptr</span> <span class="org-type">pointer</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">Ref</span> <span class="org-type">reference</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">SListNode</span>&lt;<span class="org-type">T</span>&gt; <span class="org-type">list_node</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">T</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">Ptr</span><span class="org-whitespace-space"> </span><span class="org-type">pointer</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">Ref</span><span class="org-whitespace-space"> </span><span class="org-type">reference</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SListNode</span>&lt;<span class="org-type">T</span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">list_node</span>;
 
-  <span class="org-function-name">SList_Iterator</span>( <span class="org-type">list_node</span>* <span class="org-variable-name">x</span> ):<span class="org-function-name">s_Node</span>(x){}
-  <span class="org-function-name">SList_Iterator</span>():s_Node(0){}
-  <span class="org-function-name">SList_Iterator</span>( <span class="org-type">const_iterator</span>&amp; <span class="org-variable-name">x</span> ):<span class="org-function-name">s_Node</span>(x.s_Node){}
+<span class="org-whitespace-space">  </span><span class="org-function-name">SList_Iterator</span>(<span class="org-whitespace-space"> </span><span class="org-type">list_node</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>):<span class="org-function-name">s_Node</span>(x){}
+<span class="org-whitespace-space">  </span><span class="org-function-name">SList_Iterator</span>():s_Node(0){}
+<span class="org-whitespace-space">  </span><span class="org-function-name">SList_Iterator</span>(<span class="org-whitespace-space"> </span><span class="org-type">const_iterator</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>):<span class="org-function-name">s_Node</span>(x.s_Node){}
 
-  <span class="org-type">reference</span> <span class="org-keyword">operator</span><span class="org-function-name">*</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> ((<span class="org-type">list_node</span>*)s_Node)-&gt;s_Data; }
-  <span class="org-type">pointer</span> <span class="org-keyword">operator</span><span class="org-function-name">-&gt;</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> &amp;(<span class="org-keyword">operator</span>*()); }
+<span class="org-whitespace-space">  </span><span class="org-type">reference</span><span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">*</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>((<span class="org-type">list_node</span>*)s_Node)-&gt;s_Data;<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">pointer</span><span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">-&gt;</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>&amp;(<span class="org-keyword">operator</span>*());<span class="org-whitespace-space"> </span>}
 
-  <span class="org-type">self</span>&amp; <span class="org-keyword">operator</span><span class="org-function-name">++</span>()
-  {
-    s_Node = s_Node-&gt;s_Next;
-    <span class="org-keyword">return</span> *<span class="org-keyword">this</span>;
-  }
+<span class="org-whitespace-space">  </span><span class="org-type">self</span>&amp;<span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">++</span>()
+<span class="org-whitespace-space">  </span>{
+<span class="org-whitespace-space">    </span>s_Node<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s_Node-&gt;s_Next;
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>*<span class="org-keyword">this</span>;
+<span class="org-whitespace-space">  </span>}
 
-  <span class="org-keyword">const</span> <span class="org-type">self</span> <span class="org-keyword">operator</span><span class="org-function-name">++</span>(<span class="org-type">int</span>)
-  {
-    <span class="org-type">self</span> <span class="org-variable-name">tmp</span>(*<span class="org-keyword">this</span>);
-    s_Node = s_Node-&gt;s_Next;
+<span class="org-whitespace-space">  </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">self</span><span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">++</span>(<span class="org-type">int</span>)
+<span class="org-whitespace-space">  </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">self</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tmp</span>(*<span class="org-keyword">this</span>);
+<span class="org-whitespace-space">    </span>s_Node<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s_Node-&gt;s_Next;
 
-    <span class="org-keyword">return</span> tmp;
-  }
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>tmp;
+<span class="org-whitespace-space">  </span>}
 
-  <span class="org-type">bool</span> <span class="org-keyword">operator</span><span class="org-function-name">==</span>( <span class="org-keyword">const</span> <span class="org-type">SList_Iterator</span>&amp; <span class="org-variable-name">x</span> ){ <span class="org-keyword">return</span> s_Node == x.s_Node; }
-  <span class="org-type">bool</span> <span class="org-keyword">operator</span><span class="org-function-name">!=</span>( <span class="org-keyword">const</span> <span class="org-type">SList_Iterator</span>&amp; <span class="org-variable-name">x</span> ){ <span class="org-keyword">return</span> s_Node != x.s_Node; }
+<span class="org-whitespace-space">  </span><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">==</span>(<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>){<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>s_Node<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>x.s_Node;<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">!=</span>(<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>){<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>s_Node<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>x.s_Node;<span class="org-whitespace-space"> </span>}
 
-  <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">s_Node</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">s_Node</span>;
 };
 
 <span class="org-comment-delimiter">//</span><span class="org-comment">&#21333;&#38142;&#34920;&#31867;&#23454;&#29616;</span>
-<span class="org-keyword">template</span> &lt; <span class="org-keyword">class</span> <span class="org-type">T</span> &gt;
-<span class="org-keyword">class</span> <span class="org-type">SList</span>
+<span class="org-keyword">template</span><span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">T</span><span class="org-whitespace-space"> </span>&gt;
+<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">SList</span>
 {
 <span class="org-keyword">public</span>:
-  <span class="org-keyword">typedef</span> <span class="org-type">T</span> <span class="org-type">value_type</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">value_type</span>* <span class="org-type">pointer</span>;
-  <span class="org-keyword">typedef</span> <span class="org-keyword">const</span> <span class="org-type">value_type</span>* <span class="org-type">const_pointer</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">value_type</span>&amp; <span class="org-type">reference</span>;
-  <span class="org-keyword">typedef</span> <span class="org-keyword">const</span> <span class="org-type">value_type</span>&amp; <span class="org-type">const_reference</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">size_t</span> <span class="org-type">size_type</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">ptrdiff_t</span> <span class="org-type">difference_type</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">T</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>*<span class="org-whitespace-space"> </span><span class="org-type">pointer</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>*<span class="org-whitespace-space"> </span><span class="org-type">const_pointer</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>&amp;<span class="org-whitespace-space"> </span><span class="org-type">reference</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>&amp;<span class="org-whitespace-space"> </span><span class="org-type">const_reference</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-type">size_type</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">ptrdiff_t</span><span class="org-whitespace-space"> </span><span class="org-type">difference_type</span>;
 
-  <span class="org-keyword">typedef</span> <span class="org-type">SList_Iterator</span>&lt; <span class="org-type">T</span> , <span class="org-type">T</span>&amp; , <span class="org-type">T</span>* &gt; <span class="org-type">iterator</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">SList_Iterator</span>&lt; <span class="org-type">T</span>, <span class="org-keyword">const</span> <span class="org-type">T</span>&amp;, <span class="org-keyword">const</span> <span class="org-type">T</span>* &gt; <span class="org-type">const_iterator</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&lt;<span class="org-whitespace-space"> </span><span class="org-type">T</span><span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;<span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span><span class="org-type">T</span>*<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">iterator</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SList_Iterator</span>&lt;<span class="org-whitespace-space"> </span><span class="org-type">T</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>*<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">const_iterator</span>;
 
 
 <span class="org-keyword">private</span>:
-  <span class="org-keyword">typedef</span> <span class="org-type">SListNode</span>&lt;<span class="org-type">T</span>&gt; <span class="org-type">list_node</span>;
-  <span class="org-keyword">typedef</span> <span class="org-type">SListBaseNode</span> <span class="org-type">list_node_base</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SListNode</span>&lt;<span class="org-type">T</span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">list_node</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span><span class="org-whitespace-space"> </span><span class="org-type">list_node_base</span>;
 
-  <span class="org-type">list_node_base</span> <span class="org-variable-name">m_Head</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">list_node_base</span><span class="org-whitespace-space"> </span><span class="org-variable-name">m_Head</span>;
 
 <span class="org-keyword">public</span>:
-  <span class="org-function-name">SList</span>() { m_Head.s_Next = 0; }    <span class="org-comment-delimiter">//</span><span class="org-comment">&#21021;&#22987;&#21270;</span>
-  ~<span class="org-function-name">SList</span>(){ clear(); }        <span class="org-comment-delimiter">//</span><span class="org-comment">&#21024;&#38500;&#20869;&#23384;</span>
+<span class="org-whitespace-space">  </span><span class="org-function-name">SList</span>()<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span>m_Head.s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>}<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-comment">&#21021;&#22987;&#21270;</span>
+<span class="org-whitespace-space">  </span>~<span class="org-function-name">SList</span>(){<span class="org-whitespace-space"> </span>clear();<span class="org-whitespace-space"> </span>}<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-comment">&#21024;&#38500;&#20869;&#23384;</span>
 
-  <span class="org-type">iterator</span> <span class="org-function-name">begin</span>() { <span class="org-keyword">return</span> iterator( (<span class="org-type">list_node</span>*)m_Head.s_Next ); }
-  <span class="org-type">iterator</span> <span class="org-function-name">end</span>() { <span class="org-keyword">return</span> iterator(0); }
-  <span class="org-type">const_iterator</span> <span class="org-function-name">begin</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> const_iterator( (<span class="org-type">list_node</span>*)m_Head.s_Next ); }
-  <span class="org-type">const_iterator</span> <span class="org-function-name">end</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> const_iterator(0); }
-  <span class="org-type">size_t</span> <span class="org-function-name">size</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> ListSize(m_Head.s_Next); }
-  <span class="org-type">size_t</span> <span class="org-function-name">max_size</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> size_t(-1); }
-  <span class="org-type">bool</span> <span class="org-function-name">empty</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> 0 == m_Head.s_Next; }
+<span class="org-whitespace-space">  </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">begin</span>()<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>iterator(<span class="org-whitespace-space"> </span>(<span class="org-type">list_node</span>*)m_Head.s_Next<span class="org-whitespace-space"> </span>);<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">end</span>()<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>iterator(0);<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">const_iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">begin</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>const_iterator(<span class="org-whitespace-space"> </span>(<span class="org-type">list_node</span>*)m_Head.s_Nex<span class="org-whitespace-line">t</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">);</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">const_iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">end</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>const_iterator(0);<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">size</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ListSize(m_Head.s_Next);<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">max_size</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>size_t(-1);<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-function-name">empty</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>m_Head.s_Next;<span class="org-whitespace-space"> </span>}
 
-  <span class="org-type">reference</span> <span class="org-function-name">front</span>() { <span class="org-keyword">return</span> ((<span class="org-type">list_node</span>*)m_Head.s_Next)-&gt;s_Data; }
-  <span class="org-type">const_reference</span> <span class="org-function-name">front</span>() <span class="org-keyword">const</span> { <span class="org-keyword">return</span> ((<span class="org-type">list_node</span>*)m_Head.s_Next)-&gt;s_Data; }
+<span class="org-whitespace-space">  </span><span class="org-type">reference</span><span class="org-whitespace-space"> </span><span class="org-function-name">front</span>()<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>((<span class="org-type">list_node</span>*)m_Head.s_Next)-&gt;s_Data;<span class="org-whitespace-space"> </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">const_reference</span><span class="org-whitespace-space"> </span><span class="org-function-name">front</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>((<span class="org-type">list_node</span>*)m_Head.s_Next)-&gt;s_Data;<span class="org-whitespace-space"> </span>}
 
-  <span class="org-type">void</span> <span class="org-function-name">push_front</span>( <span class="org-keyword">const</span> <span class="org-type">value_type</span>&amp; <span class="org-variable-name">t</span> ) { InsertAfterNode(&amp;m_Head,<span class="org-keyword">new</span> <span class="org-type">list_node</span>(t)); }
-  <span class="org-type">void</span> <span class="org-function-name">pop_front</span>() { <span class="org-type">list_node</span>* <span class="org-variable-name">node</span> = (<span class="org-type">list_node</span>*)(m_Head.s_Next); m_Head.s_Next = node-&gt;s_Next; <span class="org-keyword">delete</span> (<span class="org-type">list_node</span>*)node; }
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">push_front</span>(<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">t</span><span class="org-whitespace-space"> </span>)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span>InsertAfterNode(&amp;m_Head,<span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">list_node</span><span class="org-whitespace-line">(t));</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">pop_front</span>()<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-type">list_node</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-type">list_node</span>*)(m_Head.s_Next);<span class="org-whitespace-space"> </span>m_Head.s_Nex<span class="org-whitespace-line">t</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">node-&gt;s_Next;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">delete</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">(</span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">*)node;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
 
-  <span class="org-type">iterator</span> <span class="org-function-name">previous</span>( <span class="org-type">const_iterator</span> <span class="org-variable-name">pos</span> ) { <span class="org-keyword">return</span> iterator(GetPrevious(m_Head.s_Next,pos)); }
-  <span class="org-type">const_iterator</span> <span class="org-function-name">previous</span>( <span class="org-type">const_iterator</span> <span class="org-variable-name">pos</span> ) <span class="org-keyword">const</span> { <span class="org-keyword">return</span> const_iterator(GetPrevious(m_Head.s_Next,pos)); }
+<span class="org-whitespace-space">  </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">previous</span>(<span class="org-whitespace-space"> </span><span class="org-type">const_iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span><span class="org-whitespace-space"> </span>)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>iterator(GetPrevious(m_Head.s<span class="org-whitespace-line">_Next,pos));</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">const_iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">previous</span>(<span class="org-whitespace-space"> </span><span class="org-type">const_iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span><span class="org-whitespace-space"> </span>)<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>const_iterator(Ge<span class="org-whitespace-line">tPrevious(m_Head.s_Next,pos));</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
 
-  <span class="org-type">iterator</span> <span class="org-function-name">insert</span>( <span class="org-type">iterator</span> <span class="org-variable-name">pos</span>, <span class="org-keyword">const</span> <span class="org-type">value_type</span>&amp; <span class="org-variable-name">x</span> ){ <span class="org-keyword">return</span> iterator((<span class="org-type">list_node</span>*)InsertAfterNode( GetPrevious(&amp;m_Head,pos.s_Node),<span class="org-keyword">new</span> <span class="org-type">list_node</span>(x))); }
-  <span class="org-type">iterator</span> <span class="org-function-name">insert_after</span>( <span class="org-type">iterator</span> <span class="org-variable-name">pos</span>, <span class="org-keyword">const</span> <span class="org-type">value_type</span>&amp; <span class="org-variable-name">x</span> ){ <span class="org-keyword">return</span> iterator( (<span class="org-type">list_node</span>*)InsertAfterNode(pos.s_Node,<span class="org-keyword">new</span> <span class="org-type">list_node</span>(x) ) ); }
-  <span class="org-type">void</span> <span class="org-function-name">erase</span>( <span class="org-type">iterator</span> <span class="org-variable-name">pos</span> ){ <span class="org-type">SListBaseNode</span>* <span class="org-variable-name">temp</span> = GetPrevious(&amp;m_Head,pos.s_Node); temp-&gt;s_Next = pos.s_Node-&gt;s_Next; <span class="org-keyword">delete</span> (<span class="org-type">list_node</span>*)pos.s_Node; }
-  <span class="org-type">void</span> <span class="org-function-name">erase_after</span>( <span class="org-type">iterator</span> <span class="org-variable-name">pos</span> ) { <span class="org-type">iterator</span> <span class="org-variable-name">tmp</span>(pos); ++pos; tmp.s_Node-&gt;s_Next = pos.s_Node-&gt;s_Next; <span class="org-keyword">delete</span> (<span class="org-type">list_node</span>*)pos.s_Node; }
+<span class="org-whitespace-space">  </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">insert</span>(<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>){<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>iterator((<span class="org-type">list_no</span><span class="org-type"><span class="org-whitespace-line">de</span></span><span class="org-whitespace-line">*)InsertAfterNode(</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">GetPrevious(&amp;m_Head,pos.s_Node),</span><span class="org-keyword"><span class="org-whitespace-line">new</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">(x)));</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-function-name">insert_after</span>(<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">value_type</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>){<span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>iterator(<span class="org-whitespace-space"> </span>(<span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">*)InsertAfterNode(pos.s_Node,</span><span class="org-keyword"><span class="org-whitespace-line">new</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">(x)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">);</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">erase</span>(<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span><span class="org-whitespace-space"> </span>){<span class="org-whitespace-space"> </span><span class="org-type">SListBaseNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">temp</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetPrevious(&amp;m_Head,pos.s_No<span class="org-whitespace-line">de);</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">temp-&gt;s_Next</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pos.s_Node-&gt;s_Next;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">delete</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">(</span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">*)pos.s_Node;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">erase_after</span>(<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pos</span><span class="org-whitespace-space"> </span>)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-type">iterator</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tmp</span>(pos);<span class="org-whitespace-space"> </span>++pos;<span class="org-whitespace-space"> </span>tmp.s_Node-&gt;s_Nex<span class="org-whitespace-line">t</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pos.s_Node-&gt;s_Next;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">delete</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">(</span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">*)pos.s_Node;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
 
-  <span class="org-type">void</span> <span class="org-function-name">reverse</span>(){ m_Head.s_Next = Reverse(m_Head.s_Next); }
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">reverse</span>(){<span class="org-whitespace-space"> </span>m_Head.s_Next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Reverse(m_Head.s_Next);<span class="org-whitespace-space"> </span>}
 
-  <span class="org-type">void</span> <span class="org-function-name">clear</span>(){ <span class="org-type">list_node_base</span>* <span class="org-variable-name">node</span>=m_Head.s_Next; <span class="org-keyword">for</span>(;0!=node;node=m_Head.s_Next)m_Head.s_Next=node-&gt;s_Next,<span class="org-keyword">delete</span> (<span class="org-type">list_node</span>*)node; }
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">clear</span>(){<span class="org-whitespace-space"> </span><span class="org-type">list_node_base</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span>=m_Head.s_Next;<span class="org-whitespace-space"> </span><span class="org-keyword">for</span>(;0!=node;node=m_Head.s_N<span class="org-whitespace-line">ext)m_Head.s_Next=node-&gt;s_Next,</span><span class="org-keyword"><span class="org-whitespace-line">delete</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">(</span><span class="org-type"><span class="org-whitespace-line">list_node</span></span><span class="org-whitespace-line">*)node;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">}</span>
 };
 </pre>
 </div>

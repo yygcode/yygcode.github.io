@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-03-22 Thu 23:55 -->
+<!-- 2018-06-03 Sun 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Software Installed Log</title>
 <meta name="generator" content="Org mode" />
@@ -45,20 +45,20 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#autohotkey">1. AutoHotkey</a></li>
-<li><a href="#orgcecf6ab">2. msys2</a>
+<li><a href="#orga5409ce">2. msys2</a>
 <ul>
 <li><a href="#msys2-mingw64">2.1. <span class="done DONE">DONE</span> mingw64</a></li>
 </ul>
 </li>
-<li><a href="#org87342be">3. Emacs</a>
+<li><a href="#org3492151">3. Emacs</a>
 <ul>
-<li><a href="#org8a20579">3.1. <span class="done DONE">DONE</span> Windows</a>
+<li><a href="#org7226387">3.1. <span class="done DONE">DONE</span> Windows</a>
 <ul>
-<li><a href="#org378f8cf">3.1.1. binary install</a></li>
-<li><a href="#org56ee006">3.1.2. Msys2 compile</a></li>
+<li><a href="#org1756f72">3.1.1. binary install</a></li>
+<li><a href="#orgf9f07bf">3.1.2. Msys2 compile</a></li>
 </ul>
 </li>
-<li><a href="#orgbc78e74">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
+<li><a href="#org2f984ca">3.2. <span class="todo TODO">TODO</span> Linux</a></li>
 <li><a href="#emacs-config">3.3. <span class="done DONE">DONE</span> emacs configuration</a></li>
 </ul>
 </li>
@@ -66,8 +66,8 @@
 </div>
 </div>
 
-<div id="outline-container-org59cff86" class="outline-2">
-<h2 id="autohotkey"><a id="org59cff86"></a><span class="section-number-2">1</span> AutoHotkey</h2>
+<div id="outline-container-org553c277" class="outline-2">
+<h2 id="autohotkey"><a id="org553c277"></a><span class="section-number-2">1</span> AutoHotkey</h2>
 <div class="outline-text-2" id="text-autohotkey">
 <ul class="org-ul">
 <li>Useful with favorite quickshot</li>
@@ -77,24 +77,24 @@
 <li>Follow is .ahk example(hotkey.ahk)</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell">; Ctrl+Win+e start emacs
-^#e::Run C:\win-customize\emacs-26.0.90-x86_64\bin\runemacs.exe -fs
-; Ctrl+Win+c start cygwin64
-^#c::Run C:\cygwin64\bin\mintty.exe -
-; Ctrl+Win+m start mingw64
-^#m::Run E:\yanyg-data\msys64\msys2_shell.cmd -mingw64
-; Ctrl+Win+w open work directory
-^#w::Run explorer.exe E:\yanyg-data\work
-; Ctrl+Win+b start win 10 ubuntu bash
-^#b::Run C:\Windows\system32\bash.exe
-; Ctrl+Win+f start Firefox
-^#f::Run C:\Program Files\Mozilla Firefox\firefox.exe
-; Ctrl+Win+g start google chrome
-^#g::Run C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
-; Ctrl+Win+v start vmware-view(VDI)
-^#v::Run C:\Program Files (x86)\VMware\VMware Horizon View Client\vmware-view.exe
+<pre class="src src-shell">;<span class="org-whitespace-space"> </span>Ctrl+Win+e<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>emacs
+^#e::Run<span class="org-whitespace-space"> </span>C:\win-customize\emacs-26.0.90-x86_64\bin\runemacs.exe<span class="org-whitespace-space"> </span>-fs
+;<span class="org-whitespace-space"> </span>Ctrl+Win+c<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>cygwin64
+^#c::Run<span class="org-whitespace-space"> </span>C:\cygwin64\bin\mintty.exe<span class="org-whitespace-space"> </span>-
+;<span class="org-whitespace-space"> </span>Ctrl+Win+m<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>mingw64
+^#m::Run<span class="org-whitespace-space"> </span>E:\yanyg-data\msys64\msys2_shell.cmd<span class="org-whitespace-space"> </span>-mingw64
+;<span class="org-whitespace-space"> </span>Ctrl+Win+w<span class="org-whitespace-space"> </span>open<span class="org-whitespace-space"> </span>work<span class="org-whitespace-space"> </span>directory
+^#w::Run<span class="org-whitespace-space"> </span>explorer.exe<span class="org-whitespace-space"> </span>E:\yanyg-data\work
+;<span class="org-whitespace-space"> </span>Ctrl+Win+b<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>win<span class="org-whitespace-space"> </span>10<span class="org-whitespace-space"> </span>ubuntu<span class="org-whitespace-space"> </span>bash
+^#b::Run<span class="org-whitespace-space"> </span>C:\Windows\system32\bash.exe
+;<span class="org-whitespace-space"> </span>Ctrl+Win+f<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>Firefox
+^#f::Run<span class="org-whitespace-space"> </span>C:\Program<span class="org-whitespace-space"> </span>Files\Mozilla<span class="org-whitespace-space"> </span>Firefox\firefox.exe
+;<span class="org-whitespace-space"> </span>Ctrl+Win+g<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>google<span class="org-whitespace-space"> </span>chrome
+^#g::Run<span class="org-whitespace-space"> </span>C:\Program<span class="org-whitespace-space"> </span>Files<span class="org-whitespace-space"> </span>(x86)\Google\Chrome\Application\chrome.exe
+;<span class="org-whitespace-space"> </span>Ctrl+Win+v<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>vmware-view(VDI)
+^#v::Run<span class="org-whitespace-space"> </span>C:\Program<span class="org-whitespace-space"> </span>Files<span class="org-whitespace-space"> </span>(x86)\VMware\VMware<span class="org-whitespace-space"> </span>Horizon<span class="org-whitespace-space"> </span>View<span class="org-whitespace-space"> </span>Client\vmware-view.ex<span class="org-whitespace-line">e</span>
 
-; swap caps and ctrl for emacs
+;<span class="org-whitespace-space"> </span>swap<span class="org-whitespace-space"> </span>caps<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>ctrl<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>emacs
 Capslock::Ctrl
 Ctrl::Capslock
 </pre>
@@ -102,89 +102,89 @@ Ctrl::Capslock
 </div>
 </div>
 
-<div id="outline-container-orgcecf6ab" class="outline-2">
-<h2 id="orgcecf6ab"><span class="section-number-2">2</span> msys2</h2>
+<div id="outline-container-orga5409ce" class="outline-2">
+<h2 id="orga5409ce"><span class="section-number-2">2</span> msys2</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgfa75d70" class="outline-3">
-<h3 id="msys2-mingw64"><a id="orgfa75d70"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
+<div id="outline-container-org56e990c" class="outline-3">
+<h3 id="msys2-mingw64"><a id="org56e990c"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> mingw64</h3>
 <div class="outline-text-3" id="text-msys2-mingw64">
 <div class="org-src-container">
-<pre class="src src-sh">~$ pacman -Syuu
-:: Synchronizing package databases...
-error: failed retrieving file <span class="org-string">'mingw32.db'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds#################################################################---]  97%
- mingw32                                                                                               366.7 KiB   343K/s 00:01 [#############################################################################] 100%
- mingw32.sig                                                                                            96.0   B  0.00B/s 00:00 [#############################################################################] 100%
- mingw64                                                                                               366.6 KiB  11.6K/s 00:32 [#############################################################################] 100%
- mingw64.sig                                                                                            96.0   B  0.00B/s 00:00 [#############################################################################] 100%
- msys                                                                                                  158.8 KiB  22.3K/s 00:07 [#############################################################################] 100%
- msys.sig                                                                                               96.0   B  0.00B/s 00:00 [#############################################################################] 100%
-:: Starting core system upgrade...
-warning: terminate other MSYS2 programs before proceeding
-resolving dependencies...
-looking for conflicting packages...
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-Syuu
+::<span class="org-whitespace-space"> </span>Synchronizing<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>databases...
+error:<span class="org-whitespace-space"> </span>failed<span class="org-whitespace-space"> </span>retrieving<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span><span class="org-string">'mingw32.db'</span><span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>repo.msys2.org<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>Operation<span class="org-whitespace-space"> </span>too<span class="org-whitespace-space"> </span>s<span class="org-whitespace-line">low.</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Less</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">than</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">bytes/sec</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">transferred</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">the</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">last</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">seconds#################################################################---]</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">97%</span>
+<span class="org-whitespace-space"> </span>mingw32<span class="org-whitespace-space">                                                                        </span><span class="org-whitespace-space"><span class="org-whitespace-line">                       </span></span><span class="org-whitespace-line">366.7</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">343K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:01</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>mingw32.sig<span class="org-whitespace-space">                                                                    </span><span class="org-whitespace-space"><span class="org-whitespace-line">                        </span></span><span class="org-whitespace-line">96.0</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">B</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0.00B/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:00</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>mingw64<span class="org-whitespace-space">                                                                        </span><span class="org-whitespace-space"><span class="org-whitespace-line">                       </span></span><span class="org-whitespace-line">366.6</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">11.6K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:32</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>mingw64.sig<span class="org-whitespace-space">                                                                    </span><span class="org-whitespace-space"><span class="org-whitespace-line">                        </span></span><span class="org-whitespace-line">96.0</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">B</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0.00B/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:00</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>msys<span class="org-whitespace-space">                                                                           </span><span class="org-whitespace-space"><span class="org-whitespace-line">                       </span></span><span class="org-whitespace-line">158.8</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">22.3K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:07</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>msys.sig<span class="org-whitespace-space">                                                                       </span><span class="org-whitespace-space"><span class="org-whitespace-line">                        </span></span><span class="org-whitespace-line">96.0</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">B</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0.00B/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:00</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+::<span class="org-whitespace-space"> </span>Starting<span class="org-whitespace-space"> </span>core<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>upgrade...
+warning:<span class="org-whitespace-space"> </span>terminate<span class="org-whitespace-space"> </span>other<span class="org-whitespace-space"> </span>MSYS2<span class="org-whitespace-space"> </span>programs<span class="org-whitespace-space"> </span>before<span class="org-whitespace-space"> </span>proceeding
+resolving<span class="org-whitespace-space"> </span>dependencies...
+looking<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>conflicting<span class="org-whitespace-space"> </span>packages...
 
-<span class="org-function-name">Packages</span> (5) bash-4.4.012-1  filesystem-2017.05-1  mintty-1~2.8.1-1  msys2-runtime-2.9.0-2  pacman-5.0.1-4
+<span class="org-function-name">Packages</span><span class="org-whitespace-space"> </span>(5)<span class="org-whitespace-space"> </span>bash-4.4.012-1<span class="org-whitespace-space">  </span>filesystem-2017.05-1<span class="org-whitespace-space">  </span>mintty-1~2.8.1-1<span class="org-whitespace-space">  </span>msys2-runti<span class="org-whitespace-line">me-2.9.0-2</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">pacman-5.0.1-4</span>
 
-Total Download Size:   11.52 MiB
-Total Installed Size:  54.80 MiB
-Net Upgrade Size:       3.20 MiB
+Total<span class="org-whitespace-space"> </span>Download<span class="org-whitespace-space"> </span>Size:<span class="org-whitespace-space">   </span>11.52<span class="org-whitespace-space"> </span>MiB
+Total<span class="org-whitespace-space"> </span>Installed<span class="org-whitespace-space"> </span>Size:<span class="org-whitespace-space">  </span>54.80<span class="org-whitespace-space"> </span>MiB
+Net<span class="org-whitespace-space"> </span>Upgrade<span class="org-whitespace-space"> </span>Size:<span class="org-whitespace-space">       </span>3.20<span class="org-whitespace-space"> </span>MiB
 
-:: Proceed with installation? [Y/n] y
-:: Retrieving packages...
-error: failed retrieving file <span class="org-string">'msys2-runtime-2.9.0-2-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds---------------------------------------]   7%
- msys2-runtime-2.9.0-2-x86_64                                                                            2.2 MiB   306K/s 00:07 [#############################################################################] 100%
-error: failed retrieving file <span class="org-string">'bash-4.4.012-1-x86_64.pkg.tar.xz'</span> from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds----------------------------------------------]   0%
- bash-4.4.012-1-x86_64                                                                                1969.4 KiB   442K/s 00:04 [#############################################################################] 100%
- filesystem-2017.05-1-x86_64                                                                            40.0 KiB  45.1K/s 00:01 [#############################################################################] 100%
- mintty-1~2.8.1-1-x86_64                                                                               233.8 KiB  6.32K/s 00:37 [#############################################################################] 100%
-error: failed retrieving file <span class="org-string">'pacman-5.0.1-4-x86_64.pkg.tar.xz'</span> from repo.msys2.org : transfer closed with 6869232 bytes remaining to read-------------------------------------------------------------------]   5%
- pacman-5.0.1-4-x86_64                                                                                   6.6 MiB   200K/s 00:34 [#############################################################################] 100%
-(5/5) checking keys<span class="org-keyword"> in</span> keyring                                                                                                  [#############################################################################] 100%
-(5/5) checking package integrity                                                                                                [#############################################################################] 100%
-(5/5) loading package files                                                                                                     [#############################################################################] 100%
-(5/5) checking for file conflicts                                                                                               [#############################################################################] 100%
-(5/5) checking available disk space                                                                                             [#############################################################################] 100%
-warning: could not get file information for home/
-warning: could not get file information for opt/
-:: Processing package changes...
-(1/5) upgrading msys2-runtime                                                                                                   [#############################################################################] 100%
-(2/5) upgrading bash                                                                                                            [#############################################################################] 100%
-(3/5) upgrading filesystem                                                                                                      [#############################################################################] 100%
-(4/5) upgrading mintty                                                                                                          [#############################################################################] 100%
-(5/5) upgrading pacman                                                                                                          [#############################################################################] 100%
-warning: terminate MSYS2 without returning to shell and check for updates again
-warning: for example close your terminal window instead of calling exit
+::<span class="org-whitespace-space"> </span>Proceed<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>installation?<span class="org-whitespace-space"> </span>[Y/n]<span class="org-whitespace-space"> </span>y
+::<span class="org-whitespace-space"> </span>Retrieving<span class="org-whitespace-space"> </span>packages...
+error:<span class="org-whitespace-space"> </span>failed<span class="org-whitespace-space"> </span>retrieving<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span><span class="org-string">'msys2-runtime-2.9.0-2-x86_64.pkg.tar.xz'</span><span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>rep<span class="org-whitespace-line">o.msys2.org</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Operation</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">too</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">slow.</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Less</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">than</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">bytes/sec</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">transferred</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">the</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">last</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">seconds---------------------------------------]</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">7%</span>
+<span class="org-whitespace-space"> </span>msys2-runtime-2.9.0-2-x86_64<span class="org-whitespace-space">                                                   </span><span class="org-whitespace-space"><span class="org-whitespace-line">                         </span></span><span class="org-whitespace-line">2.2</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">MiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">306K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:07</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+error:<span class="org-whitespace-space"> </span>failed<span class="org-whitespace-space"> </span>retrieving<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span><span class="org-string">'bash-4.4.012-1-x86_64.pkg.tar.xz'</span><span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>repo.msys2<span class="org-whitespace-line">.org</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Operation</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">too</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">slow.</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Less</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">than</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">bytes/sec</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">transferred</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">the</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">last</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">seconds----------------------------------------------]</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">0%</span>
+<span class="org-whitespace-space"> </span>bash-4.4.012-1-x86_64<span class="org-whitespace-space">                                                          </span><span class="org-whitespace-space"><span class="org-whitespace-line">                      </span></span><span class="org-whitespace-line">1969.4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">442K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:04</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>filesystem-2017.05-1-x86_64<span class="org-whitespace-space">                                                    </span><span class="org-whitespace-space"><span class="org-whitespace-line">                        </span></span><span class="org-whitespace-line">40.0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">45.1K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:01</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+<span class="org-whitespace-space"> </span>mintty-1~2.8.1-1-x86_64<span class="org-whitespace-space">                                                        </span><span class="org-whitespace-space"><span class="org-whitespace-line">                       </span></span><span class="org-whitespace-line">233.8</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">KiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">6.32K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:37</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+error:<span class="org-whitespace-space"> </span>failed<span class="org-whitespace-space"> </span>retrieving<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span><span class="org-string">'pacman-5.0.1-4-x86_64.pkg.tar.xz'</span><span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>repo.msys2<span class="org-whitespace-line">.org</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">transfer</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">closed</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">with</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">6869232</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">bytes</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">remaining</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">to</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">read-------------------------------------------------------------------]</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">5%</span>
+<span class="org-whitespace-space"> </span>pacman-5.0.1-4-x86_64<span class="org-whitespace-space">                                                          </span><span class="org-whitespace-space"><span class="org-whitespace-line">                         </span></span><span class="org-whitespace-line">6.6</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">MiB</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">200K/s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">00:34</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>checking<span class="org-whitespace-space"> </span>keys<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>keyring<span class="org-whitespace-space">                                                  </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>checking<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>integrity<span class="org-whitespace-space">                                                </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>loading<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space">                                                     </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>checking<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>conflicts<span class="org-whitespace-space">                                               </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>checking<span class="org-whitespace-space"> </span>available<span class="org-whitespace-space"> </span>disk<span class="org-whitespace-space"> </span>space<span class="org-whitespace-space">                                             </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+warning:<span class="org-whitespace-space"> </span>could<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>get<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>information<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>home/
+warning:<span class="org-whitespace-space"> </span>could<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>get<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>information<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>opt/
+::<span class="org-whitespace-space"> </span>Processing<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>changes...
+(1/5)<span class="org-whitespace-space"> </span>upgrading<span class="org-whitespace-space"> </span>msys2-runtime<span class="org-whitespace-space">                                                   </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(2/5)<span class="org-whitespace-space"> </span>upgrading<span class="org-whitespace-space"> </span>bash<span class="org-whitespace-space">                                                            </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(3/5)<span class="org-whitespace-space"> </span>upgrading<span class="org-whitespace-space"> </span>filesystem<span class="org-whitespace-space">                                                      </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(4/5)<span class="org-whitespace-space"> </span>upgrading<span class="org-whitespace-space"> </span>mintty<span class="org-whitespace-space">                                                          </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+(5/5)<span class="org-whitespace-space"> </span>upgrading<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space">                                                          </span><span class="org-whitespace-space"><span class="org-whitespace-line">                                                </span></span><span class="org-whitespace-line">[#############################################################################]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">100%</span>
+warning:<span class="org-whitespace-space"> </span>terminate<span class="org-whitespace-space"> </span>MSYS2<span class="org-whitespace-space"> </span>without<span class="org-whitespace-space"> </span>returning<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>check<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>updates<span class="org-whitespace-space"> </span>again
+warning:<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>example<span class="org-whitespace-space"> </span>close<span class="org-whitespace-space"> </span>your<span class="org-whitespace-space"> </span>terminal<span class="org-whitespace-space"> </span>window<span class="org-whitespace-space"> </span>instead<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>calling<span class="org-whitespace-space"> </span>exit
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Comments: Now exit by click 'close' in windows task bar. And you may see</span>
-Hangup signal received
-<span class="org-comment-delimiter">## </span><span class="org-comment">Comments:</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">If the mingw64 does not closed, then repeat again or kill by task management.</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Then start again and run pacman -Syuu many times until all packages updated.</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">The final log looks like as:</span>
-~$ $ pacman -Syuu
-:: Synchronizing package databases...
- mingw32 is up to date
- mingw64 is up to date
- msys is up to date
-:: Starting core system upgrade...
- there is nothing to do
-:: Starting full system upgrade...
- there is nothing to do
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Comments:</span><span class="org-whitespace-space"> </span><span class="org-comment">Now</span><span class="org-whitespace-space"> </span><span class="org-comment">exit</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">click</span><span class="org-whitespace-space"> </span><span class="org-comment">'close'</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">windows</span><span class="org-whitespace-space"> </span><span class="org-comment">task</span><span class="org-whitespace-space"> </span><span class="org-comment">bar.</span><span class="org-whitespace-space"> </span><span class="org-comment">And</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">may</span><span class="org-whitespace-space"> </span><span class="org-comment">see</span>
+Hangup<span class="org-whitespace-space"> </span>signal<span class="org-whitespace-space"> </span>received
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Comments:</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">If</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">mingw64</span><span class="org-whitespace-space"> </span><span class="org-comment">does</span><span class="org-whitespace-space"> </span><span class="org-comment">not</span><span class="org-whitespace-space"> </span><span class="org-comment">closed,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">repeat</span><span class="org-whitespace-space"> </span><span class="org-comment">again</span><span class="org-whitespace-space"> </span><span class="org-comment">or</span><span class="org-whitespace-space"> </span><span class="org-comment">kill</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">task</span><span class="org-whitespace-space"> </span><span class="org-comment">management.</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Then</span><span class="org-whitespace-space"> </span><span class="org-comment">start</span><span class="org-whitespace-space"> </span><span class="org-comment">again</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">run</span><span class="org-whitespace-space"> </span><span class="org-comment">pacman</span><span class="org-whitespace-space"> </span><span class="org-comment">-Syuu</span><span class="org-whitespace-space"> </span><span class="org-comment">many</span><span class="org-whitespace-space"> </span><span class="org-comment">times</span><span class="org-whitespace-space"> </span><span class="org-comment">until</span><span class="org-whitespace-space"> </span><span class="org-comment">all</span><span class="org-whitespace-space"> </span><span class="org-comment">packages</span><span class="org-whitespace-space"> </span><span class="org-comment">updated.</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">The</span><span class="org-whitespace-space"> </span><span class="org-comment">final</span><span class="org-whitespace-space"> </span><span class="org-comment">log</span><span class="org-whitespace-space"> </span><span class="org-comment">looks</span><span class="org-whitespace-space"> </span><span class="org-comment">like</span><span class="org-whitespace-space"> </span><span class="org-comment">as:</span>
+~$<span class="org-whitespace-space"> </span>$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-Syuu
+::<span class="org-whitespace-space"> </span>Synchronizing<span class="org-whitespace-space"> </span>package<span class="org-whitespace-space"> </span>databases...
+<span class="org-whitespace-space"> </span>mingw32<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>up<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>date
+<span class="org-whitespace-space"> </span>mingw64<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>up<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>date
+<span class="org-whitespace-space"> </span>msys<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>up<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>date
+::<span class="org-whitespace-space"> </span>Starting<span class="org-whitespace-space"> </span>core<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>upgrade...
+<span class="org-whitespace-space"> </span>there<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>nothing<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>do
+::<span class="org-whitespace-space"> </span>Starting<span class="org-whitespace-space"> </span>full<span class="org-whitespace-space"> </span>system<span class="org-whitespace-space"> </span>upgrade...
+<span class="org-whitespace-space"> </span>there<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>nothing<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>do
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Tips: If you network is not stable and you are annoyed by repeated work, try:</span>
-<span class="org-comment-delimiter">##  </span><span class="org-comment">`while :; do yes | pacman -Syuu; done`</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Tips:</span><span class="org-whitespace-space"> </span><span class="org-comment">If</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">network</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">not</span><span class="org-whitespace-space"> </span><span class="org-comment">stable</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">are</span><span class="org-whitespace-space"> </span><span class="org-comment">annoyed</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">repeated</span><span class="org-whitespace-space"> </span><span class="org-comment">work,</span><span class="org-whitespace-space"> </span><span class="org-comment">try:</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space">  </span><span class="org-comment">`while</span><span class="org-whitespace-space"> </span><span class="org-comment">:;</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">yes</span><span class="org-whitespace-space"> </span><span class="org-comment">|</span><span class="org-whitespace-space"> </span><span class="org-comment">pacman</span><span class="org-whitespace-space"> </span><span class="org-comment">-Syuu;</span><span class="org-whitespace-space"> </span><span class="org-comment">done`</span>
 
-<span class="org-comment-delimiter">## </span><span class="org-comment">Install developer environment (e.g.: emacs): Ref</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">https://sourceforge.net/p/emacsbinw64/wiki/Build%20guideline%20for%20MSYS2-MinGW-w64%20system/</span>
-~$ pacman -S base-devel mingw-w64-x86_64-toolchain <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-xpm-nox mingw-w64-x86_64-libtiff <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-giflib mingw-w64-x86_64-jbigkit <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-libpng mingw-w64-x86_64-libjpeg-turbo <span class="org-sh-escaped-newline">\</span>
-mingw-w64-x86_64-librsvg mingw-w64-x86_64-libxml2 <span class="org-sh-escaped-newline">\</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Install</span><span class="org-whitespace-space"> </span><span class="org-comment">developer</span><span class="org-whitespace-space"> </span><span class="org-comment">environment</span><span class="org-whitespace-space"> </span><span class="org-comment">(e.g.:</span><span class="org-whitespace-space"> </span><span class="org-comment">emacs):</span><span class="org-whitespace-space"> </span><span class="org-comment">Ref</span>
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">https://sourceforge.net/p/emacsbinw64/wiki/Build%20guideline%20for%20MSYS2-Mi</span><span class="org-comment"><span class="org-whitespace-line">nGW-w64%20system/</span></span>
+~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>base-devel<span class="org-whitespace-space"> </span>mingw-w64-x86_64-toolchain<span class="org-whitespace-space"> </span><span class="org-sh-escaped-newline">\</span>
+mingw-w64-x86_64-xpm-nox<span class="org-whitespace-space"> </span>mingw-w64-x86_64-libtiff<span class="org-whitespace-space"> </span><span class="org-sh-escaped-newline">\</span>
+mingw-w64-x86_64-giflib<span class="org-whitespace-space"> </span>mingw-w64-x86_64-jbigkit<span class="org-whitespace-space"> </span><span class="org-sh-escaped-newline">\</span>
+mingw-w64-x86_64-libpng<span class="org-whitespace-space"> </span>mingw-w64-x86_64-libjpeg-turbo<span class="org-whitespace-space"> </span><span class="org-sh-escaped-newline">\</span>
+mingw-w64-x86_64-librsvg<span class="org-whitespace-space"> </span>mingw-w64-x86_64-libxml2<span class="org-whitespace-space"> </span><span class="org-sh-escaped-newline">\</span>
 mingw-w64-x86_64-gnutls
 
-~$ pacman -S git
+~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>git
 
 </pre>
 </div>
@@ -192,16 +192,16 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-org87342be" class="outline-2">
-<h2 id="org87342be"><span class="section-number-2">3</span> Emacs</h2>
+<div id="outline-container-org3492151" class="outline-2">
+<h2 id="org3492151"><span class="section-number-2">3</span> Emacs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org8a20579" class="outline-3">
-<h3 id="org8a20579"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
+<div id="outline-container-org7226387" class="outline-3">
+<h3 id="org7226387"><span class="section-number-3">3.1</span> <span class="done DONE">DONE</span> Windows</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org378f8cf" class="outline-4">
-<h4 id="org378f8cf"><span class="section-number-4">3.1.1</span> binary install</h4>
+<div id="outline-container-org1756f72" class="outline-4">
+<h4 id="org1756f72"><span class="section-number-4">3.1.1</span> binary install</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <ul class="org-ul">
 <li>Download from <a href="https://ftp.gnu.org/gnu/emacs/windows/">stable</a> or <a href="https://alpha.gnu.org/gnu/emacs/pretest/windows/">pretest</a> version(201711 stable 25.3, pretest 26.0.90)</li>
@@ -211,55 +211,55 @@ mingw-w64-x86_64-gnutls
 </div>
 </div>
 
-<div id="outline-container-org56ee006" class="outline-4">
-<h4 id="org56ee006"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
+<div id="outline-container-orgf9f07bf" class="outline-4">
+<h4 id="orgf9f07bf"><span class="section-number-4">3.1.2</span> Msys2 compile</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <ul class="org-ul">
 <li>install <a href="#msys2-mingw64">mingw64</a> first.</li>
 <li>clone your emacs config(see <a href="#emacs-config">emacs-config</a>)</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-sh">~$ git clone git://git.sv.gnu.org/emacs.git
-~$ ./autogen.sh
-~$ <span class="org-variable-name">PKG_CONFIG_PATH</span>=/mingw64/lib/pkgconfig ./configure --without-imagemagick
-~$ make
-~$ make install <span class="org-variable-name">prefix</span>=/c/emacs
-~$ cp /mingw64/bin/{libwinpthread-*.dll,libXpm-noX*.dll,libdbus-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libgomp-*.dll,libgcc_s_seh-*.dll,libglib-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libintl-*.dll,libiconv-*.dll,libgobject-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libffi-*.dll,libgdk_pixbuf-*.dll,libgio-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libgmodule-*.dll,zlib*.dll,librsvg-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libcairo-*.dll,libcroco-*.dll,libpango-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libpangocairo-*.dll,libxml2-*.dll,libfontconfig-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libfreetype-*.dll,libpixman-*.dll,libpng*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libpangoft*.dll,libpangowin32-*.dll,liblzma-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libexpat-*.dll,libharfbuzz-*.dll,libgnutls-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libgnutlsxx-*.dll,libtiff-*.dll,libtiffxx-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libjpeg-*.dll,libgif-*.dll,libbz2-*.dll,libjbig-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libgmp-*.dll,libhogweed-*.dll,libnettle-*.dll} /c/emacs-mingw64/bin
-cp /mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll} /c/emacs-mingw64/bin
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>git://git.sv.gnu.org/emacs.git
+~$<span class="org-whitespace-space"> </span>./autogen.sh
+~$<span class="org-whitespace-space"> </span><span class="org-variable-name">PKG_CONFIG_PATH</span>=/mingw64/lib/pkgconfig<span class="org-whitespace-space"> </span>./configure<span class="org-whitespace-space"> </span>--without-imagemagick
+~$<span class="org-whitespace-space"> </span>make
+~$<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span><span class="org-variable-name">prefix</span>=/c/emacs
+~$<span class="org-whitespace-space"> </span>cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libwinpthread-*.dll,libXpm-noX*.dll,libdbus-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-<span class="org-whitespace-line">mingw64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libgomp-*.dll,libgcc_s_seh-*.dll,libglib-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw6<span class="org-whitespace-line">4/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libintl-*.dll,libiconv-*.dll,libgobject-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64<span class="org-whitespace-line">/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libffi-*.dll,libgdk_pixbuf-*.dll,libgio-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64<span class="org-whitespace-line">/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libgmodule-*.dll,zlib*.dll,librsvg-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64/bin
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libcairo-*.dll,libcroco-*.dll,libpango-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64/<span class="org-whitespace-line">bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libpangocairo-*.dll,libxml2-*.dll,libfontconfig-*.dll}<span class="org-whitespace-space"> </span>/c/emacs<span class="org-whitespace-line">-mingw64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libfreetype-*.dll,libpixman-*.dll,libpng*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64<span class="org-whitespace-line">/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libpangoft*.dll,libpangowin32-*.dll,liblzma-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-min<span class="org-whitespace-line">gw64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libexpat-*.dll,libharfbuzz-*.dll,libgnutls-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-ming<span class="org-whitespace-line">w64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libgnutlsxx-*.dll,libtiff-*.dll,libtiffxx-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw<span class="org-whitespace-line">64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libjpeg-*.dll,libgif-*.dll,libbz2-*.dll,libjbig-*.dll}<span class="org-whitespace-space"> </span>/c/emacs<span class="org-whitespace-line">-mingw64/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libgmp-*.dll,libhogweed-*.dll,libnettle-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64<span class="org-whitespace-line">/bin</span>
+cp<span class="org-whitespace-space"> </span>/mingw64/bin/{libp11-kit-*.dll,libtasn1-*.dll}<span class="org-whitespace-space"> </span>/c/emacs-mingw64/bin
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgbc78e74" class="outline-3">
-<h3 id="orgbc78e74"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
+<div id="outline-container-org2f984ca" class="outline-3">
+<h3 id="org2f984ca"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Linux</h3>
 </div>
-<div id="outline-container-org5192293" class="outline-3">
-<h3 id="emacs-config"><a id="org5192293"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
+<div id="outline-container-org989cced" class="outline-3">
+<h3 id="emacs-config"><a id="org989cced"></a><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> emacs configuration</h3>
 <div class="outline-text-3" id="text-emacs-config">
 <ul class="org-ul">
 <li>clone/update config</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell"><span class="org-comment-delimiter"># </span><span class="org-comment">Public readonly:</span>
-~$ cd ~; git clone http://github.com:yygcode/.emacs.d
-<span class="org-comment-delimiter"># </span><span class="org-comment">Modified privilege:</span>
-~$ cd ~; git clone git@github.com:yygcode/.emacs.d
-<span class="org-comment-delimiter"># </span><span class="org-comment">Update:</span>
-~$ cd ~/.emacs.d/; git pull
+<pre class="src src-shell"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Public</span><span class="org-whitespace-space"> </span><span class="org-comment">readonly:</span>
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>~;<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>http://github.com:yygcode/.emacs.d
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Modified</span><span class="org-whitespace-space"> </span><span class="org-comment">privilege:</span>
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>~;<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>git@github.com:yygcode/.emacs.d
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Update:</span>
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>~/.emacs.d/;<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>pull
 </pre>
 </div>
 <ul class="org-ul">
