@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:38 -->
+<!-- 2018-06-21 Thu 23:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>排序算法</title>
 <meta name="generator" content="Org mode" />
@@ -53,85 +53,85 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7372873">1. 内部排序</a>
+<li><a href="#orge8945ea">1. 内部排序</a>
 <ul>
-<li><a href="#org0b9bb2f">1.1. 插入排序</a>
+<li><a href="#orgacf8f56">1.1. 插入排序</a>
 <ul>
-<li><a href="#org4127038">1.1.1. 计算机编程艺术</a></li>
-<li><a href="#org6db97b0">1.1.2. WIKI</a></li>
-<li><a href="#orge46ea4e">1.1.3. C语言实现</a></li>
+<li><a href="#org790a6c5">1.1.1. 计算机编程艺术</a></li>
+<li><a href="#orgbf0f055">1.1.2. WIKI</a></li>
+<li><a href="#orgbcc9323">1.1.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org3adb54c">1.2. 冒泡排序(交换排序)</a>
+<li><a href="#org9cb62ed">1.2. 冒泡排序(交换排序)</a>
 <ul>
-<li><a href="#orgb70985c">1.2.1. 计算机编程艺术</a></li>
-<li><a href="#org05525e3">1.2.2. WIKI</a></li>
-<li><a href="#org35ef422">1.2.3. C语言实现</a></li>
-<li><a href="#org6e125fc">1.2.4. C语言实现旗标版(性能优化)</a></li>
+<li><a href="#org2b3ed20">1.2.1. 计算机编程艺术</a></li>
+<li><a href="#org549ec94">1.2.2. WIKI</a></li>
+<li><a href="#orgcab275b">1.2.3. C语言实现</a></li>
+<li><a href="#org650cca5">1.2.4. C语言实现旗标版(性能优化)</a></li>
 </ul>
 </li>
-<li><a href="#orga6c7b13">1.3. 选择排序</a>
+<li><a href="#org6c1b9e1">1.3. 选择排序</a>
 <ul>
-<li><a href="#orgdf8fa40">1.3.1. 计算机编程艺术</a></li>
-<li><a href="#org6bb3131">1.3.2. C语言实现</a></li>
+<li><a href="#org4556025">1.3.1. 计算机编程艺术</a></li>
+<li><a href="#org6ae130c">1.3.2. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org832c678">1.4. 合并排序</a>
+<li><a href="#orgec0475b">1.4. 合并排序</a>
 <ul>
-<li><a href="#orgd012c08">1.4.1. 计算机编程艺术</a>
+<li><a href="#orgbb42119">1.4.1. 计算机编程艺术</a>
 <ul>
-<li><a href="#org644865f">1.4.1.1. 有序文件两路合并</a></li>
-<li><a href="#orga54eddb">1.4.1.2. 自然的两路合并排序</a></li>
+<li><a href="#orgc2c9d8f">1.4.1.1. 有序文件两路合并</a></li>
+<li><a href="#org5e8344c">1.4.1.2. 自然的两路合并排序</a></li>
 </ul>
 </li>
-<li><a href="#orga33bf9b">1.4.2. C语言实现</a></li>
+<li><a href="#org39131bb">1.4.2. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#orge206746">1.5. 快速排序</a>
+<li><a href="#org6827239">1.5. 快速排序</a>
 <ul>
-<li><a href="#org5950c48">1.5.1. 算法导论</a></li>
-<li><a href="#org8eb6e41">1.5.2. 优化</a></li>
-<li><a href="#orga84dd18">1.5.3. C语言实现</a></li>
+<li><a href="#orgfa0d8e3">1.5.1. 算法导论</a></li>
+<li><a href="#org17b92a3">1.5.2. 优化</a></li>
+<li><a href="#orgc488503">1.5.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org5a00001">1.6. 堆排序</a>
+<li><a href="#org4ca74a2">1.6. 堆排序</a>
 <ul>
-<li><a href="#orgd48a7db">1.6.1. 算法导论</a>
+<li><a href="#orgddb8274">1.6.1. 算法导论</a>
 <ul>
-<li><a href="#orgf66aa88">1.6.1.1. 堆数据结构</a></li>
-<li><a href="#org6984fe5">1.6.1.2. 保持堆的性质</a></li>
-<li><a href="#org00fa68c">1.6.1.3. 建堆</a></li>
-<li><a href="#orgd175b5b">1.6.1.4. 堆排序</a></li>
+<li><a href="#org7779419">1.6.1.1. 堆数据结构</a></li>
+<li><a href="#org1c6187e">1.6.1.2. 保持堆的性质</a></li>
+<li><a href="#orgaa1b406">1.6.1.3. 建堆</a></li>
+<li><a href="#org9b262fe">1.6.1.4. 堆排序</a></li>
 </ul>
 </li>
-<li><a href="#orge724e8d">1.6.2. 计算机编程艺术</a>
+<li><a href="#org2b8fc99">1.6.2. 计算机编程艺术</a>
 <ul>
-<li><a href="#org970b303">1.6.2.1. 描述</a></li>
-<li><a href="#org67002e7">1.6.2.2. 算法描述</a></li>
+<li><a href="#org47fd0b1">1.6.2.1. 描述</a></li>
+<li><a href="#org201c757">1.6.2.2. 算法描述</a></li>
 </ul>
 </li>
-<li><a href="#orgfc21503">1.6.3. C语言实现</a></li>
+<li><a href="#org2dba9fa">1.6.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org3af7b4b">1.7. 希尔排序</a></li>
-<li><a href="#orgf369a75">1.8. 基数排序</a></li>
-<li><a href="#org160c998">1.9. 桶排序</a></li>
+<li><a href="#org67c0776">1.7. 希尔排序</a></li>
+<li><a href="#orgb809a3e">1.8. 基数排序</a></li>
+<li><a href="#orgb15a273">1.9. 桶排序</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org7372873" class="outline-2">
-<h2 id="org7372873"><span class="section-number-2">1</span> 内部排序</h2>
+<div id="outline-container-orge8945ea" class="outline-2">
+<h2 id="orge8945ea"><span class="section-number-2">1</span> 内部排序</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org0b9bb2f" class="outline-3">
-<h3 id="org0b9bb2f"><span class="section-number-3">1.1</span> 插入排序</h3>
+<div id="outline-container-orgacf8f56" class="outline-3">
+<h3 id="orgacf8f56"><span class="section-number-3">1.1</span> 插入排序</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org4127038" class="outline-4">
-<h4 id="org4127038"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org790a6c5" class="outline-4">
+<h4 id="org790a6c5"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 直接插入排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
@@ -149,8 +149,8 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org6db97b0" class="outline-4">
-<h4 id="org6db97b0"><span class="section-number-4">1.1.2</span> WIKI</h4>
+<div id="outline-container-orgbf0f055" class="outline-4">
+<h4 id="orgbf0f055"><span class="section-number-4">1.1.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <blockquote>
 <ul class="org-ul">
@@ -163,61 +163,61 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-orge46ea4e" class="outline-4">
-<h4 id="orge46ea4e"><span class="section-number-4">1.1.3</span> C语言实现</h4>
+<div id="outline-container-orgbcc9323" class="outline-4">
+<h4 id="orgbcc9323"><span class="section-number-4">1.1.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">sort_insertion</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">insertion</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">starting</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">integer</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">size</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_insertion</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-comment-delimiter">/* </span><span class="org-comment">sort_insertion - sort algorithm by insertion</span>
+<span class="org-comment"> * @array - starting pointer of integer array</span>
+<span class="org-comment"> * @n - size of array @array</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">sort_insertion</span>(<span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>v<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>array[i];
-<span class="org-whitespace-space">                </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">check</span><span class="org-whitespace-space"> </span><span class="org-comment">j</span><span class="org-whitespace-space"> </span><span class="org-comment">&lt;</span><span class="org-whitespace-space"> </span><span class="org-comment">i</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">loop</span><span class="org-whitespace-space"> </span><span class="org-comment">break</span><span class="org-whitespace-space"> </span><span class="org-comment">after</span><span class="org-whitespace-space"> </span><span class="org-comment">j</span><span class="org-whitespace-space"> </span><span class="org-comment">underflow,</span><span class="org-whitespace-space"> </span><span class="org-comment">because</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">we</span><span class="org-whitespace-space"> </span><span class="org-comment">need</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">loop</span><span class="org-whitespace-space"> </span><span class="org-comment">for</span><span class="org-whitespace-space"> </span><span class="org-comment">j</span><span class="org-whitespace-space"> </span><span class="org-comment">==</span><span class="org-whitespace-space"> </span><span class="org-comment">0.</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment-delimiter">*/</span>
-<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>i;<span class="org-whitespace-space"> </span>--j)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(v<span class="org-whitespace-space"> </span>&gt;=<span class="org-whitespace-space"> </span>array[j])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                                </span><span class="org-keyword">break</span>;
-<span class="org-whitespace-space">                        </span>}
-<span class="org-whitespace-space">                        </span>array[j+1]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>array[j];
-<span class="org-whitespace-space">                </span>}
+        <span class="org-keyword">for</span> (i = 1; i &lt; n; ++i) {
+                v = array[i];
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">check j &lt; i then loop break after j underflow, because</span>
+<span class="org-comment">                 * we need do loop for j == 0.</span>
+<span class="org-comment">                 </span><span class="org-comment-delimiter">*/</span>
+                <span class="org-keyword">for</span> (j = i - 1; j &lt; i; --j) {
+                        <span class="org-keyword">if</span> (v &gt;= array[j]) {
+                                <span class="org-keyword">break</span>;
+                        }
+                        array[j+1] = array[j];
+                }
 
-<span class="org-whitespace-space">                </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">correction</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">@array[j+1].</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">j+1</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">corrected</span><span class="org-whitespace-space"> </span><span class="org-comment">position</span><span class="org-whitespace-space"> </span><span class="org-comment">even</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">j</span><span class="org-whitespace-space"> </span><span class="org-comment">underflowed</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment-delimiter">*/</span>
-<span class="org-whitespace-space">                </span>array[j+1]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>v;
-<span class="org-whitespace-space">        </span>}
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">correction is @array[j+1].</span>
+<span class="org-comment">                 * j+1 is corrected position even if j underflowed</span>
+<span class="org-comment">                 </span><span class="org-comment-delimiter">*/</span>
+                array[j+1] = v;
+        }
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_array</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_array</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s:"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%d"</span>,<span class="org-whitespace-space"> </span>array[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s:"</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">" %d"</span>, array[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{250,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>473,<span class="org-whitespace-space"> </span>128,<span class="org-whitespace-space"> </span>852,<span class="org-whitespace-space"> </span>367,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>542,<span class="org-whitespace-space"> </span>250};
-<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {250, 178, 473, 128, 852, 367, 178, 542, 250};
+        <span class="org-keyword">const</span> <span class="org-type">size_t</span> <span class="org-variable-name">n</span> = <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
 
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"before</span><span class="org-whitespace-space"> </span><span class="org-string">sort"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>sort_insertion(array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"after</span><span class="org-whitespace-space">  </span><span class="org-string">sort"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
+        print_array(<span class="org-string">"before sort"</span>, array, n);
+        sort_insertion(array, n);
+        print_array(<span class="org-string">"after  sort"</span>, array, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -225,12 +225,12 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org3adb54c" class="outline-3">
-<h3 id="org3adb54c"><span class="section-number-3">1.2</span> 冒泡排序(交换排序)</h3>
+<div id="outline-container-org9cb62ed" class="outline-3">
+<h3 id="org9cb62ed"><span class="section-number-3">1.2</span> 冒泡排序(交换排序)</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgb70985c" class="outline-4">
-<h4 id="orgb70985c"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org2b3ed20" class="outline-4">
+<h4 id="org2b3ed20"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 冒泡排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
@@ -247,8 +247,8 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-org05525e3" class="outline-4">
-<h4 id="org05525e3"><span class="section-number-4">1.2.2</span> WIKI</h4>
+<div id="outline-container-org549ec94" class="outline-4">
+<h4 id="org549ec94"><span class="section-number-4">1.2.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <blockquote>
 <ul class="org-ul">
@@ -287,121 +287,121 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-org35ef422" class="outline-4">
-<h4 id="org35ef422"><span class="section-number-4">1.2.3</span> C语言实现</h4>
+<div id="outline-container-orgcab275b" class="outline-4">
+<h4 id="orgcab275b"><span class="section-number-4">1.2.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">b</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span> *<span class="org-variable-name">a</span>, <span class="org-type">int</span> *<span class="org-variable-name">b</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*a;
-<span class="org-whitespace-space">        </span>*a<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*b;
-<span class="org-whitespace-space">        </span>*b<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>v;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span> = *a;
+        *a = *b;
+        *b = v;
 }
 
-<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">sort_bubble</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">bubbling</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">starting</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">integer</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">size</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_bubble</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-comment-delimiter">/* </span><span class="org-comment">sort_bubble - sort algorithm by bubbling</span>
+<span class="org-comment"> * @array - starting pointer of integer array</span>
+<span class="org-comment"> * @n - size of array @array</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">sort_bubble</span>(<span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>i;<span class="org-whitespace-space"> </span>++j)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(array[j]<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>array[j+1])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                                </span>swap_int_nocheck(array+j,<span class="org-whitespace-space"> </span>array+j+1);
-<span class="org-whitespace-space">                        </span>}
-<span class="org-whitespace-space">                </span>}
-<span class="org-whitespace-space">        </span>}
+        <span class="org-keyword">for</span> (i = 1; i &lt; n; ++i) {
+                <span class="org-keyword">for</span> (j = 0; j &lt; n - i; ++j) {
+                        <span class="org-keyword">if</span> (array[j] &gt; array[j+1]) {
+                                swap_int_nocheck(array+j, array+j+1);
+                        }
+                }
+        }
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_array</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_array</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s:"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%d"</span>,<span class="org-whitespace-space"> </span>array[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s:"</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">" %d"</span>, array[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{250,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>473,<span class="org-whitespace-space"> </span>128,<span class="org-whitespace-space"> </span>852,<span class="org-whitespace-space"> </span>367,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>542,<span class="org-whitespace-space"> </span>250};
-<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {250, 178, 473, 128, 852, 367, 178, 542, 250};
+        <span class="org-keyword">const</span> <span class="org-type">size_t</span> <span class="org-variable-name">n</span> = <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
 
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"before</span><span class="org-whitespace-space"> </span><span class="org-string">sort_bubble"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>sort_bubble(array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"after</span><span class="org-whitespace-space">  </span><span class="org-string">sort_bubble"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
+        print_array(<span class="org-string">"before sort_bubble"</span>, array, n);
+        sort_bubble(array, n);
+        print_array(<span class="org-string">"after  sort_bubble"</span>, array, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6e125fc" class="outline-4">
-<h4 id="org6e125fc"><span class="section-number-4">1.2.4</span> C语言实现旗标版(性能优化)</h4>
+<div id="outline-container-org650cca5" class="outline-4">
+<h4 id="org650cca5"><span class="section-number-4">1.2.4</span> C语言实现旗标版(性能优化)</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">b</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span> *<span class="org-variable-name">a</span>, <span class="org-type">int</span> *<span class="org-variable-name">b</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*a;
-<span class="org-whitespace-space">        </span>*a<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*b;
-<span class="org-whitespace-space">        </span>*b<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>v;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span> = *a;
+        *a = *b;
+        *b = v;
 }
 
-<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">sort_bubble</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">bubbling</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">starting</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">integer</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">size</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_bubble</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-comment-delimiter">/* </span><span class="org-comment">sort_bubble - sort algorithm by bubbling</span>
+<span class="org-comment"> * @array - starting pointer of integer array</span>
+<span class="org-comment"> * @n - size of array @array</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">sort_bubble</span>(<span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">t</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">t</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(n)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>t<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
-<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(array[i]<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>array[i+1])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                                </span>swap_int_nocheck(array+i,<span class="org-whitespace-space"> </span>array+i+1);
-<span class="org-whitespace-space">                                </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">we</span><span class="org-whitespace-space"> </span><span class="org-comment">use</span><span class="org-whitespace-space"> </span><span class="org-comment">i+1</span><span class="org-whitespace-space"> </span><span class="org-comment">because</span><span class="org-whitespace-space"> </span><span class="org-comment">starting-index</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">0</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-whitespace-space">                                </span>t<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1;
-<span class="org-whitespace-space">                        </span>}
-<span class="org-whitespace-space">                </span>}
-<span class="org-whitespace-space">                </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">update</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">@t</span><span class="org-whitespace-space"> </span><span class="org-comment">because</span><span class="org-whitespace-space"> </span><span class="org-comment">@t</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">last</span><span class="org-whitespace-space"> </span><span class="org-comment">swapped</span><span class="org-whitespace-space"> </span><span class="org-comment">pair</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">will</span><span class="org-whitespace-space"> </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">0</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">break</span><span class="org-whitespace-space"> </span><span class="org-comment">outter</span><span class="org-whitespace-space"> </span><span class="org-comment">loop</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">no</span><span class="org-whitespace-space"> </span><span class="org-comment">swap</span><span class="org-whitespace-space"> </span><span class="org-comment">happened.</span>
-<span class="org-whitespace-space">                 </span><span class="org-comment-delimiter">*/</span>
-<span class="org-whitespace-space">                </span>n<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>t;
-<span class="org-whitespace-space">        </span>}
+        <span class="org-keyword">while</span> (n) {
+                t = 0;
+                <span class="org-keyword">for</span> (i = 0; i &lt; n - 1; ++i) {
+                        <span class="org-keyword">if</span> (array[i] &gt; array[i+1]) {
+                                swap_int_nocheck(array+i, array+i+1);
+                                <span class="org-comment-delimiter">/* </span><span class="org-comment">we use i+1 because starting-index is 0 </span><span class="org-comment-delimiter">*/</span>
+                                t = i + 1;
+                        }
+                }
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">update @n to @t because @t is the last swapped pair</span>
+<span class="org-comment">                 * @n will set to 0 to break outter loop if no swap happened.</span>
+<span class="org-comment">                 </span><span class="org-comment-delimiter">*/</span>
+                n = t;
+        }
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_array</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_array</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s:"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%d"</span>,<span class="org-whitespace-space"> </span>array[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s:"</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">" %d"</span>, array[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{250,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>473,<span class="org-whitespace-space"> </span>128,<span class="org-whitespace-space"> </span>852,<span class="org-whitespace-space"> </span>367,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>542,<span class="org-whitespace-space"> </span>250};
-<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {250, 178, 473, 128, 852, 367, 178, 542, 250};
+        <span class="org-keyword">const</span> <span class="org-type">size_t</span> <span class="org-variable-name">n</span> = <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
 
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"before</span><span class="org-whitespace-space"> </span><span class="org-string">sort_bubble</span><span class="org-whitespace-space"> </span><span class="org-string">flagged"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>sort_bubble(array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"after</span><span class="org-whitespace-space">  </span><span class="org-string">sort_bubble</span><span class="org-whitespace-space"> </span><span class="org-string">flagged"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
+        print_array(<span class="org-string">"before sort_bubble flagged"</span>, array, n);
+        sort_bubble(array, n);
+        print_array(<span class="org-string">"after  sort_bubble flagged"</span>, array, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -409,12 +409,12 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-orga6c7b13" class="outline-3">
-<h3 id="orga6c7b13"><span class="section-number-3">1.3</span> 选择排序</h3>
+<div id="outline-container-org6c1b9e1" class="outline-3">
+<h3 id="org6c1b9e1"><span class="section-number-3">1.3</span> 选择排序</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
-<div id="outline-container-orgdf8fa40" class="outline-4">
-<h4 id="orgdf8fa40"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org4556025" class="outline-4">
+<h4 id="org4556025"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <p>
 直接选择排序: 适当重新安排记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>；在完成排序后，它们的键码将是有序的K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。排序是以上边指出的方法为基础，但改为首选最大最大元素，紧接着选择第二个最大的，等等，这样做证明是更为方便的。
@@ -429,65 +429,65 @@ R<sub>N</sub>都处于它们的最后位置处）。
 </div>
 </div>
 
-<div id="outline-container-org6bb3131" class="outline-4">
-<h4 id="org6bb3131"><span class="section-number-4">1.3.2</span> C语言实现</h4>
+<div id="outline-container-org6ae130c" class="outline-4">
+<h4 id="org6ae130c"><span class="section-number-4">1.3.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">b</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">swap_int_nocheck</span>(<span class="org-type">int</span> *<span class="org-variable-name">a</span>, <span class="org-type">int</span> *<span class="org-variable-name">b</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*a;
-<span class="org-whitespace-space">        </span>*a<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*b;
-<span class="org-whitespace-space">        </span>*b<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>v;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span> = *a;
+        *a = *b;
+        *b = v;
 }
 
-<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">sort_selection</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">selecting</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">starting</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">integer</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">size</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_selection</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-comment-delimiter">/* </span><span class="org-comment">sort_selection - sort algorithm by selecting</span>
+<span class="org-comment"> * @array - starting pointer of integer array</span>
+<span class="org-comment"> * @n - size of array @array</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">sort_selection</span>(<span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">t</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">t</span>;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>v<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>array[i];
-<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i+1;<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++j)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(v<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>array[j])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                                </span>v<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>array[j];
-<span class="org-whitespace-space">                                </span>t<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>j;
-<span class="org-whitespace-space">                        </span>}
-<span class="org-whitespace-space">                </span>}
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                v = array[i];
+                <span class="org-keyword">for</span> (j = i+1; j &lt; n; ++j) {
+                        <span class="org-keyword">if</span> (v &gt; array[j]) {
+                                v = array[j];
+                                t = j;
+                        }
+                }
 
-<span class="org-whitespace-space">                </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array[t]</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">maximum</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(v<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>array[i])<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span>swap_int_nocheck(array+i,<span class="org-whitespace-space"> </span>array+t);
-<span class="org-whitespace-space">                </span>}
-<span class="org-whitespace-space">        </span>}
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">@array[t] is the maximum </span><span class="org-comment-delimiter">*/</span>
+                <span class="org-keyword">if</span> (v != array[i]) {
+                        swap_int_nocheck(array+i, array+t);
+                }
+        }
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_array</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_array</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s:"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%d"</span>,<span class="org-whitespace-space"> </span>array[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s:"</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">" %d"</span>, array[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{250,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>473,<span class="org-whitespace-space"> </span>128,<span class="org-whitespace-space"> </span>852,<span class="org-whitespace-space"> </span>367,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>542,<span class="org-whitespace-space"> </span>250};
-<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {250, 178, 473, 128, 852, 367, 178, 542, 250};
+        <span class="org-keyword">const</span> <span class="org-type">size_t</span> <span class="org-variable-name">n</span> = <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
 
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"before</span><span class="org-whitespace-space"> </span><span class="org-string">sort_selection"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>sort_selection(array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"after</span><span class="org-whitespace-space">  </span><span class="org-string">sort_selection"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
+        print_array(<span class="org-string">"before sort_selection"</span>, array, n);
+        sort_selection(array, n);
+        print_array(<span class="org-string">"after  sort_selection"</span>, array, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -495,16 +495,16 @@ R<sub>N</sub>都处于它们的最后位置处）。
 </div>
 </div>
 
-<div id="outline-container-org832c678" class="outline-3">
-<h3 id="org832c678"><span class="section-number-3">1.4</span> 合并排序</h3>
+<div id="outline-container-orgec0475b" class="outline-3">
+<h3 id="orgec0475b"><span class="section-number-3">1.4</span> 合并排序</h3>
 <div class="outline-text-3" id="text-1-4">
 </div>
-<div id="outline-container-orgd012c08" class="outline-4">
-<h4 id="orgd012c08"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
+<div id="outline-container-orgbb42119" class="outline-4">
+<h4 id="orgbb42119"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-4-1">
 </div>
-<div id="outline-container-org644865f" class="outline-5">
-<h5 id="org644865f"><span class="section-number-5">1.4.1.1</span> 有序文件两路合并</h5>
+<div id="outline-container-orgc2c9d8f" class="outline-5">
+<h5 id="orgc2c9d8f"><span class="section-number-5">1.4.1.1</span> 有序文件两路合并</h5>
 <div class="outline-text-5" id="text-1-4-1-1">
 <p>
 两路合并：本算法把有序文件x<sub>1</sub>&le;x<sub>2</sub>&le;&#x2026;&le;x<sub>m</sub>和
@@ -525,8 +525,8 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orga54eddb" class="outline-5">
-<h5 id="orga54eddb"><span class="section-number-5">1.4.1.2</span> 自然的两路合并排序</h5>
+<div id="outline-container-org5e8344c" class="outline-5">
+<h5 id="org5e8344c"><span class="section-number-5">1.4.1.2</span> 自然的两路合并排序</h5>
 <div class="outline-text-5" id="text-1-4-1-2">
 <p>
 自然的两路合并排序: 使用两个存储区域，对记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>排序，
@@ -535,140 +535,140 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orga33bf9b" class="outline-4">
-<h4 id="orga33bf9b"><span class="section-number-4">1.4.2</span> C语言实现</h4>
+<div id="outline-container-org39131bb" class="outline-4">
+<h4 id="org39131bb"><span class="section-number-4">1.4.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-4-2">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;errno.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdlib.h&gt;</span>
-<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;errno.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_array</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_array</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s:"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%d"</span>,<span class="org-whitespace-space"> </span>array[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s:"</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">" %d"</span>, array[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">sort_merge</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">merging</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">starting</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">integer</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">@n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">size</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">array</span><span class="org-whitespace-space"> </span><span class="org-comment">@array</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_merge</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">array</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-comment-delimiter">/* </span><span class="org-comment">sort_merge - sort algorithm by merging</span>
+<span class="org-comment"> * @array - starting pointer of integer array</span>
+<span class="org-comment"> * @n - size of array @array</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-function-name">sort_merge</span>(<span class="org-type">int</span> *<span class="org-variable-name">array</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">t</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">step</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">dest</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">b</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">s1</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">e1</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">s2</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">e2</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">dd</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">ds</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">t</span>, <span class="org-variable-name">step</span>;
+        <span class="org-type">int</span> <span class="org-variable-name">v</span>, *<span class="org-variable-name">dest</span>, *<span class="org-variable-name">a</span>, *<span class="org-variable-name">b</span>, *<span class="org-variable-name">s1</span>, *<span class="org-variable-name">e1</span>, *<span class="org-variable-name">s2</span>, *<span class="org-variable-name">e2</span>, *<span class="org-variable-name">dd</span>, *<span class="org-variable-name">ds</span>;
 
-<span class="org-whitespace-space">        </span>dest<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(<span class="org-keyword">sizeof</span>(*dest)*n*2);
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>dest)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>fprintf(stderr,<span class="org-whitespace-space"> </span><span class="org-string">"could</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">alloc</span><span class="org-whitespace-space"> </span><span class="org-string">mem</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">merge\n"</span>);
-<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ENOMEM;
-<span class="org-whitespace-space">        </span>}
+        dest = malloc(<span class="org-keyword">sizeof</span>(*dest)*n*2);
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>dest) {
+                fprintf(stderr, <span class="org-string">"could not alloc mem for merge\n"</span>);
+                <span class="org-keyword">return</span> ENOMEM;
+        }
 
-<span class="org-whitespace-space">        </span>memcpy(dest,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span><span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*array));
-<span class="org-whitespace-space">        </span>ds<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dest;
+        memcpy(dest, array, <span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*array));
+        ds = dest;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(step<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>step<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>step<span class="org-whitespace-space"> </span>*=<span class="org-whitespace-space"> </span>2)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>dd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(ds<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>dest<span class="org-whitespace-space"> </span>?<span class="org-whitespace-space"> </span>dest<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>dest);
+        <span class="org-keyword">for</span> (step = 1; step &lt; n; step *= 2) {
+                dd = (ds == dest ? dest + n : dest);
 
-<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>step*2)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span>s1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>ds<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>i;
-<span class="org-whitespace-space">                        </span>e1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s1<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>step;
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(e1<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>ds<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n)
-<span class="org-whitespace-space">                                </span>e1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>ds<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n;
-<span class="org-whitespace-space">                        </span>s2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>e1;
-<span class="org-whitespace-space">                        </span>e2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s2<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>step;
-<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(e2<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>ds<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n)
-<span class="org-whitespace-space">                                </span>e2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>ds<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n;
+                <span class="org-keyword">for</span> (i = 0; i &lt; n; i += step*2) {
+                        s1 = ds + i;
+                        e1 = s1 + step;
+                        <span class="org-keyword">if</span> (e1 &gt; ds + n)
+                                e1 = ds + n;
+                        s2 = e1;
+                        e2 = s2 + step;
+                        <span class="org-keyword">if</span> (e2 &gt; ds + n)
+                                e2 = ds + n;
 
-<span class="org-whitespace-space">                        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s1<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e1<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>s2<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e2)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(*s1<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>*s2)
-<span class="org-whitespace-space">                                        </span>*dd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s1++;
-<span class="org-whitespace-space">                                </span><span class="org-keyword">else</span>
-<span class="org-whitespace-space">                                        </span>*dd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s2++;
-<span class="org-whitespace-space">                                </span>++dd;
-<span class="org-whitespace-space">                        </span>}
+                        <span class="org-keyword">while</span> (s1 &lt; e1 &amp;&amp; s2 &lt; e2) {
+                                <span class="org-keyword">if</span> (*s1 &lt; *s2)
+                                        *dd = *s1++;
+                                <span class="org-keyword">else</span>
+                                        *dd = *s2++;
+                                ++dd;
+                        }
 
-<span class="org-whitespace-space">                        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s1<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e1)
-<span class="org-whitespace-space">                                </span>*dd++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s1++;
-<span class="org-whitespace-space">                        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s2<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e2)
-<span class="org-whitespace-space">                                </span>*dd++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s2++;
-<span class="org-whitespace-space">                </span>}
+                        <span class="org-keyword">while</span> (s1 &lt; e1)
+                                *dd++ = *s1++;
+                        <span class="org-keyword">while</span> (s2 &lt; e2)
+                                *dd++ = *s2++;
+                }
 
-<span class="org-whitespace-space">                </span>ds<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>n;
-<span class="org-whitespace-space">        </span>}
+                ds = dd - n;
+        }
 
-<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">data</span><span class="org-whitespace-space"> </span><span class="org-comment">copy</span><span class="org-whitespace-space"> </span><span class="org-comment">back</span>
-<span class="org-whitespace-space">        </span>memcpy(array,<span class="org-whitespace-space"> </span>ds,<span class="org-whitespace-space"> </span><span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*array));
-<span class="org-whitespace-space">        </span>free(dest);
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-comment-delimiter">// </span><span class="org-comment">data copy back</span>
+        memcpy(array, ds, <span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*array));
+        free(dest);
+        <span class="org-keyword">return</span> 0;
 }
 
-<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__sort_merge_recursive</span>(<span class="org-type">int</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">help</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-type">void</span> <span class="org-function-name">__sort_merge_recursive</span>(<span class="org-type">int</span>* <span class="org-variable-name">arr</span>, <span class="org-type">int</span> *<span class="org-variable-name">help</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">part1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n/2,<span class="org-whitespace-space"> </span><span class="org-variable-name">part2</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">s1</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">e1</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">s2</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">e2</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">d</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">part1</span> = n/2, <span class="org-variable-name">part2</span>;
+        <span class="org-type">int</span> *<span class="org-variable-name">s1</span>, *<span class="org-variable-name">e1</span>, *<span class="org-variable-name">s2</span>, *<span class="org-variable-name">e2</span>, *<span class="org-variable-name">d</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(n<span class="org-whitespace-space"> </span>&lt;=1)
-<span class="org-whitespace-space">                </span><span class="org-keyword">return</span>;
+        <span class="org-keyword">if</span> (n &lt;=1)
+                <span class="org-keyword">return</span>;
 
-<span class="org-whitespace-space">        </span>part2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>part1<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>(n%2);
-<span class="org-whitespace-space">        </span>__sort_merge_recursive(arr,<span class="org-whitespace-space"> </span>help,<span class="org-whitespace-space"> </span>part1);
-<span class="org-whitespace-space">        </span>__sort_merge_recursive(arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>part1,<span class="org-whitespace-space"> </span>help,<span class="org-whitespace-space"> </span>part2);
+        part2 = part1 + (n%2);
+        __sort_merge_recursive(arr, help, part1);
+        __sort_merge_recursive(arr + part1, help, part2);
 
-<span class="org-whitespace-space">        </span>s1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>arr;
-<span class="org-whitespace-space">        </span>e1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s1<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>part1;
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(e1<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n)
-<span class="org-whitespace-space">                </span>e1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n;
-<span class="org-whitespace-space">        </span>s2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>e1;
-<span class="org-whitespace-space">        </span>e2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s2<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>part2;
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(e2<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n)
-<span class="org-whitespace-space">                </span>e1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n;
+        s1 = arr;
+        e1 = s1 + part1;
+        <span class="org-keyword">if</span> (e1 &gt; arr + n)
+                e1 = arr + n;
+        s2 = e1;
+        e2 = s2 + part2;
+        <span class="org-keyword">if</span> (e2 &gt; arr + n)
+                e1 = arr + n;
 
-<span class="org-whitespace-space">        </span>d<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>help;
-<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s1<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e1<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>s2<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e2)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(*s1<span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>*s2)
-<span class="org-whitespace-space">                        </span>*d<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s1++;
-<span class="org-whitespace-space">                </span><span class="org-keyword">else</span>
-<span class="org-whitespace-space">                        </span>*d<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s2++;
-<span class="org-whitespace-space">                </span>++d;
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s1<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e1)
-<span class="org-whitespace-space">                </span>*d++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s1++;
-<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(s2<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>e2)
-<span class="org-whitespace-space">                </span>*d++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*s2++;
+        d = help;
+        <span class="org-keyword">while</span> (s1 &lt; e1 &amp;&amp; s2 &lt; e2) {
+                <span class="org-keyword">if</span> (*s1 &lt;= *s2)
+                        *d = *s1++;
+                <span class="org-keyword">else</span>
+                        *d = *s2++;
+                ++d;
+        }
+        <span class="org-keyword">while</span> (s1 &lt; e1)
+                *d++ = *s1++;
+        <span class="org-keyword">while</span> (s2 &lt; e2)
+                *d++ = *s2++;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)
-<span class="org-whitespace-space">                </span>arr[i]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>help[i];
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i)
+                arr[i] = help[i];
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">sort_merge_recursive</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-type">int</span> <span class="org-function-name">sort_merge_recursive</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">help</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(<span class="org-keyword">sizeof</span>(*help)*n);
+        <span class="org-type">int</span> *<span class="org-variable-name">help</span> = malloc(<span class="org-keyword">sizeof</span>(*help)*n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>help)
-<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ENOMEM;
-<span class="org-whitespace-space">        </span>__sort_merge_recursive(arr,<span class="org-whitespace-space"> </span>help,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>free(help);
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>help)
+                <span class="org-keyword">return</span> ENOMEM;
+        __sort_merge_recursive(arr, help, n);
+        free(help);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{250,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>473,<span class="org-whitespace-space"> </span>128,<span class="org-whitespace-space"> </span>852,<span class="org-whitespace-space"> </span>367,<span class="org-whitespace-space"> </span>178,<span class="org-whitespace-space"> </span>542,<span class="org-whitespace-space"> </span>250};
-<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
+        <span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {250, 178, 473, 128, 852, 367, 178, 542, 250};
+        <span class="org-keyword">const</span> <span class="org-type">size_t</span> <span class="org-variable-name">n</span> = <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]);
 
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"before</span><span class="org-whitespace-space"> </span><span class="org-string">sort_merge"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>sort_merge_recursive(array,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>print_array(<span class="org-string">"after</span><span class="org-whitespace-space">  </span><span class="org-string">sort_merge"</span>,<span class="org-whitespace-space"> </span>array,<span class="org-whitespace-space"> </span>n);
+        print_array(<span class="org-string">"before sort_merge"</span>, array, n);
+        sort_merge_recursive(array, n);
+        print_array(<span class="org-string">"after  sort_merge"</span>, array, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -676,12 +676,12 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orge206746" class="outline-3">
-<h3 id="orge206746"><span class="section-number-3">1.5</span> 快速排序</h3>
+<div id="outline-container-org6827239" class="outline-3">
+<h3 id="org6827239"><span class="section-number-3">1.5</span> 快速排序</h3>
 <div class="outline-text-3" id="text-1-5">
 </div>
-<div id="outline-container-org5950c48" class="outline-4">
-<h4 id="org5950c48"><span class="section-number-4">1.5.1</span> 算法导论</h4>
+<div id="outline-container-orgfa0d8e3" class="outline-4">
+<h4 id="orgfa0d8e3"><span class="section-number-4">1.5.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-5-1">
 <p>
 利用分治思想实现。分三步处理：
@@ -699,8 +699,8 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org8eb6e41" class="outline-4">
-<h4 id="org8eb6e41"><span class="section-number-4">1.5.2</span> 优化</h4>
+<div id="outline-container-org17b92a3" class="outline-4">
+<h4 id="org17b92a3"><span class="section-number-4">1.5.2</span> 优化</h4>
 <div class="outline-text-4" id="text-1-5-2">
 <p>
 快排预期时间复杂度$O(nlgn)$，但如果数组已经是有序的，则会退化为$O(n^2)$。考虑随机化或中位化，但这个过程会引入一次数据交换，可能导致快排退化为非稳定排序。稳定的排序算法，是指关键字相同的记录，经过排序后相对次序保持不变。
@@ -708,86 +708,86 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orga84dd18" class="outline-4">
-<h4 id="orga84dd18"><span class="section-number-4">1.5.3</span> C语言实现</h4>
+<div id="outline-container-orgc488503" class="outline-4">
+<h4 id="orgc488503"><span class="section-number-4">1.5.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-5-3">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{108,<span class="org-whitespace-space"> </span>159,<span class="org-whitespace-space"> </span>124,<span class="org-whitespace-space"> </span>829,<span class="org-whitespace-space"> </span>520,<span class="org-whitespace-space"> </span>751,<span class="org-whitespace-space"> </span>328,<span class="org-whitespace-space"> </span>592,<span class="org-whitespace-space"> </span>650,<span class="org-whitespace-space"> </span>813};
+<span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {108, 159, 124, 829, 520, 751, 328, 592, 650, 813};
 
-<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">PR_ARR</span>(<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">arr</span>)<span class="org-whitespace-tab">        </span>print_arr(str,<span class="org-whitespace-space"> </span>arr,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(arr)/<span class="org-keyword">sizeof</span>(arr[0]))
+<span class="org-preprocessor">#define</span> <span class="org-function-name">PR_ARR</span>(<span class="org-variable-name">str</span>, <span class="org-variable-name">arr</span>)        print_arr(str, arr, <span class="org-keyword">sizeof</span>(arr)/<span class="org-keyword">sizeof</span>(arr[0]))
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_arr</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_arr</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s</span><span class="org-whitespace-space"> </span><span class="org-string">arr</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"%3d</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>arr[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s arr = "</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">"%3d "</span>, arr[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">swap_no_check</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">b</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">swap_no_check</span>(<span class="org-type">int</span> *<span class="org-variable-name">a</span>, <span class="org-type">int</span> *<span class="org-variable-name">b</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">t</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*a;
-<span class="org-whitespace-space">        </span>*a<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*b;
-<span class="org-whitespace-space">        </span>*b<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>t;
+        <span class="org-type">int</span> <span class="org-variable-name">t</span> = *a;
+        *a = *b;
+        *b = t;
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">partition</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">low</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">high</span>)
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">size_t</span> <span class="org-function-name">partition</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">low</span>, <span class="org-type">size_t</span> <span class="org-variable-name">high</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>;
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>;
+        <span class="org-type">int</span> <span class="org-variable-name">x</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>low<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>low,<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>arr[high];<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>high;<span class="org-whitespace-space"> </span>++j)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(arr[j]<span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>x)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                        </span>++i;
-<span class="org-whitespace-space">                        </span>swap_no_check(arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>i,<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>j);
-<span class="org-whitespace-space">                </span>}
-<span class="org-whitespace-space">        </span>}
+        <span class="org-keyword">for</span> (i = low - 1, j = low, x = arr[high]; j &lt; high; ++j) {
+                <span class="org-keyword">if</span> (arr[j] &lt;= x) {
+                        ++i;
+                        swap_no_check(arr + i, arr + j);
+                }
+        }
 
-<span class="org-whitespace-space">        </span>++i;
-<span class="org-whitespace-space">        </span>swap_no_check(arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>i,<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>high);
+        ++i;
+        swap_no_check(arr + i, arr + high);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>i;
+        <span class="org-keyword">return</span> i;
 }
 
 <span class="org-comment-delimiter">/*</span>
-<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">interval:</span><span class="org-whitespace-space"> </span><span class="org-comment">[low,</span><span class="org-whitespace-space"> </span><span class="org-comment">high]</span>
-<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__quick_sort</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">low</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">high</span>)
+<span class="org-comment"> * interval: [low, high]</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">__quick_sort</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">low</span>, <span class="org-type">size_t</span> <span class="org-variable-name">high</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">mid</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(low<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>high)/2,<span class="org-whitespace-space"> </span><span class="org-variable-name">q</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">mid</span> = (low + high)/2, <span class="org-variable-name">q</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(low<span class="org-whitespace-space"> </span>&gt;=<span class="org-whitespace-space"> </span>high)
-<span class="org-whitespace-space">                </span><span class="org-keyword">return</span>;
+        <span class="org-keyword">if</span> (low &gt;= high)
+                <span class="org-keyword">return</span>;
 
-<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">swap</span><span class="org-whitespace-space"> </span><span class="org-comment">mid</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">tail</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">performance</span><span class="org-whitespace-space"> </span><span class="org-comment">risk</span><span class="org-whitespace-space"> </span><span class="org-comment">off</span>
-<span class="org-whitespace-space">        </span>swap_no_check(arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>mid,<span class="org-whitespace-space"> </span>arr<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>high);
+        <span class="org-comment-delimiter">// </span><span class="org-comment">swap mid and tail to performance risk off</span>
+        swap_no_check(arr + mid, arr + high);
 
-<span class="org-whitespace-space">        </span>q<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>partition(arr,<span class="org-whitespace-space"> </span>low,<span class="org-whitespace-space"> </span>high);
+        q = partition(arr, low, high);
 
-<span class="org-whitespace-space">        </span>__quick_sort(arr,<span class="org-whitespace-space"> </span>low,<span class="org-whitespace-space"> </span>q);
-<span class="org-whitespace-space">        </span>__quick_sort(arr,<span class="org-whitespace-space"> </span>q<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span>high);
+        __quick_sort(arr, low, q);
+        __quick_sort(arr, q + 1, high);
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">quick_sort</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">void</span> <span class="org-function-name">quick_sort</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(n)
-<span class="org-whitespace-space">                </span>__quick_sort(arr,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1);
+        <span class="org-keyword">if</span> (n)
+                __quick_sort(arr, 0, n - 1);
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span>PR_ARR(<span class="org-string">"before"</span>,<span class="org-whitespace-space"> </span>array);
+        PR_ARR(<span class="org-string">"before"</span>, array);
 
-<span class="org-whitespace-space">        </span>quick_sort(array,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]));
+        quick_sort(array, <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]));
 
-<span class="org-whitespace-space">        </span>PR_ARR(<span class="org-string">"after</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>array);
+        PR_ARR(<span class="org-string">"after "</span>, array);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -795,16 +795,16 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org5a00001" class="outline-3">
-<h3 id="org5a00001"><span class="section-number-3">1.6</span> 堆排序</h3>
+<div id="outline-container-org4ca74a2" class="outline-3">
+<h3 id="org4ca74a2"><span class="section-number-3">1.6</span> 堆排序</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-orgd48a7db" class="outline-4">
-<h4 id="orgd48a7db"><span class="section-number-4">1.6.1</span> 算法导论</h4>
+<div id="outline-container-orgddb8274" class="outline-4">
+<h4 id="orgddb8274"><span class="section-number-4">1.6.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-6-1">
 </div>
-<div id="outline-container-orgf66aa88" class="outline-5">
-<h5 id="orgf66aa88"><span class="section-number-5">1.6.1.1</span> 堆数据结构</h5>
+<div id="outline-container-org7779419" class="outline-5">
+<h5 id="org7779419"><span class="section-number-5">1.6.1.1</span> 堆数据结构</h5>
 <div class="outline-text-5" id="text-1-6-1-1">
 <p>
 堆数据结构是一组数组对象，可以被视为一颗完全二叉树。除最后一层外，树的每一层都是填满的，且最后一层从左向右填充。对于给定的任意下标，其左子树为2*i，右子树为2*i+1。考虑C数组起始下标为0，左子树为2*i + 1，右子树为2*(i+1)。
@@ -813,8 +813,8 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-org6984fe5" class="outline-5">
-<h5 id="org6984fe5"><span class="section-number-5">1.6.1.2</span> 保持堆的性质</h5>
+<div id="outline-container-org1c6187e" class="outline-5">
+<h5 id="org1c6187e"><span class="section-number-5">1.6.1.2</span> 保持堆的性质</h5>
 <div class="outline-text-5" id="text-1-6-1-2">
 <p>
 对于一个数组A和下标i，对其调用max-heapify时，要求左子树left[i]和右子树right[i]
@@ -823,8 +823,8 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-org00fa68c" class="outline-5">
-<h5 id="org00fa68c"><span class="section-number-5">1.6.1.3</span> 建堆</h5>
+<div id="outline-container-orgaa1b406" class="outline-5">
+<h5 id="orgaa1b406"><span class="section-number-5">1.6.1.3</span> 建堆</h5>
 <div class="outline-text-5" id="text-1-6-1-3">
 <p>
 自底向上地对数组A执行max-heapify。因为在最开始，对叶子节点执行max-heapify时，不存在左子树和右子树，因此满足最大堆，此后逐渐减小索引i调用max-heapify，堆性质得以满足。当i为0时，则整个数组满足最大堆，数组第一个元素是数组中的最大元素。
@@ -832,8 +832,8 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-orgd175b5b" class="outline-5">
-<h5 id="orgd175b5b"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
+<div id="outline-container-org9b262fe" class="outline-5">
+<h5 id="org9b262fe"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
 <div class="outline-text-5" id="text-1-6-1-4">
 <p>
 先建堆，此后将第1个元素（最大元素）与数组最后一个元素交换，并使得数组大小减1，以此迭代直到数组大小为1，此时整个数组是有序的。
@@ -842,12 +842,12 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-orge724e8d" class="outline-4">
-<h4 id="orge724e8d"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
+<div id="outline-container-org2b8fc99" class="outline-4">
+<h4 id="org2b8fc99"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-6-2">
 </div>
-<div id="outline-container-org970b303" class="outline-5">
-<h5 id="org970b303"><span class="section-number-5">1.6.2.1</span> 描述</h5>
+<div id="outline-container-org47fd0b1" class="outline-5">
+<h5 id="org47fd0b1"><span class="section-number-5">1.6.2.1</span> 描述</h5>
 <div class="outline-text-5" id="text-1-6-2-1">
 <p>
 5.2.3节《选择排序》中树选择节讨论堆排序。堆排序：一个由键K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>组成的文件称为一个堆，如果：
@@ -864,8 +864,8 @@ K<sub>1</sub> = max{K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>}。
 </div>
 </div>
 
-<div id="outline-container-org67002e7" class="outline-5">
-<h5 id="org67002e7"><span class="section-number-5">1.6.2.2</span> 算法描述</h5>
+<div id="outline-container-org201c757" class="outline-5">
+<h5 id="org201c757"><span class="section-number-5">1.6.2.2</span> 算法描述</h5>
 <div class="outline-text-5" id="text-1-6-2-2">
 <p>
 算法H（堆排序，弗洛伊德）：重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后它们的键将处于有序状态：K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。首先重新排列输入文件构成一个堆，然后重复移动堆的顶节点，把它传送到正确位置。假定N&ge;2。
@@ -891,78 +891,78 @@ FIXME: &lt;Unfinished&gt;
 </div>
 </div>
 
-<div id="outline-container-orgfc21503" class="outline-4">
-<h4 id="orgfc21503"><span class="section-number-4">1.6.3</span> C语言实现</h4>
+<div id="outline-container-org2dba9fa" class="outline-4">
+<h4 id="org2dba9fa"><span class="section-number-4">1.6.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-6-3">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">array</span>[]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{108,<span class="org-whitespace-space"> </span>159,<span class="org-whitespace-space"> </span>124,<span class="org-whitespace-space"> </span>829,<span class="org-whitespace-space"> </span>520,<span class="org-whitespace-space"> </span>751,<span class="org-whitespace-space"> </span>328};
+<span class="org-type">int</span> <span class="org-variable-name">array</span>[] = {108, 159, 124, 829, 520, 751, 328};
 
-<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">PR_ARR</span>(<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">arr</span>)<span class="org-whitespace-tab">        </span>print_arr(str,<span class="org-whitespace-space"> </span>arr,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(arr)/<span class="org-keyword">sizeof</span>(arr[0]))
+<span class="org-preprocessor">#define</span> <span class="org-function-name">PR_ARR</span>(<span class="org-variable-name">str</span>, <span class="org-variable-name">arr</span>)        print_arr(str, arr, <span class="org-keyword">sizeof</span>(arr)/<span class="org-keyword">sizeof</span>(arr[0]))
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_arr</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">str</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">print_arr</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">str</span>, <span class="org-keyword">const</span> <span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s</span><span class="org-whitespace-space"> </span><span class="org-string">arr</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>str);
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>printf(<span class="org-string">"%3d</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>arr[i]);
-<span class="org-whitespace-space">        </span>}
-<span class="org-whitespace-space">        </span>printf(<span class="org-string">"\n"</span>);
+        printf(<span class="org-string">"%s arr = "</span>, str);
+        <span class="org-keyword">for</span> (i = 0; i &lt; n; ++i) {
+                printf(<span class="org-string">"%3d "</span>, arr[i]);
+        }
+        printf(<span class="org-string">"\n"</span>);
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">max_heapify</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">max_heapify</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">i</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">l</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(i&lt;&lt;1)<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span><span class="org-variable-name">r</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(i+1)&lt;&lt;1,<span class="org-whitespace-space"> </span><span class="org-variable-name">max</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+        <span class="org-type">size_t</span> <span class="org-variable-name">l</span> = (i&lt;&lt;1) + 1, <span class="org-variable-name">r</span> = (i+1)&lt;&lt;1, <span class="org-variable-name">max</span> = i;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(l<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>arr[l]<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>arr[i])
-<span class="org-whitespace-space">                </span>max<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l;
+        <span class="org-keyword">if</span> (l &lt; n &amp;&amp; arr[l] &gt; arr[i])
+                max = l;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(r<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>arr[r]<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>arr[max])
-<span class="org-whitespace-space">                </span>max<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>r;
+        <span class="org-keyword">if</span> (r &lt; n &amp;&amp; arr[r] &gt; arr[max])
+                max = r;
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(max<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>arr[i]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[max];
-<span class="org-whitespace-space">                </span>arr[max]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[i];
-<span class="org-whitespace-space">                </span>arr[i]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[max];
-<span class="org-whitespace-space">                </span>max_heapify(arr,<span class="org-whitespace-space"> </span>max,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>}
+        <span class="org-keyword">if</span> (max != i) {
+                arr[i] ^= arr[max];
+                arr[max] ^= arr[i];
+                arr[i] ^= arr[max];
+                max_heapify(arr, max, n);
+        }
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">build_max_heapify</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">build_max_heapify</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(n/2);
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span> = (n/2);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">do</span><span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>--i;
-<span class="org-whitespace-space">                </span>max_heapify(arr,<span class="org-whitespace-space"> </span>i,<span class="org-whitespace-space"> </span>n);
-<span class="org-whitespace-space">        </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n);<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">overflow</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">do</span> {
+                --i;
+                max_heapify(arr, i, n);
+        } <span class="org-keyword">while</span> (i &lt; n); <span class="org-comment-delimiter">/* </span><span class="org-comment">overflow </span><span class="org-comment-delimiter">*/</span>
 }
 
-<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">heap_sort</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arr</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">heap_sort</span>(<span class="org-type">int</span> *<span class="org-variable-name">arr</span>, <span class="org-type">size_t</span> <span class="org-variable-name">n</span>)
 {
-<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+        <span class="org-type">size_t</span> <span class="org-variable-name">i</span>;
 
-<span class="org-whitespace-space">        </span>build_max_heapify(arr,<span class="org-whitespace-space"> </span>n);
+        build_max_heapify(arr, n);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>--i)<span class="org-whitespace-space"> </span>{
-<span class="org-whitespace-space">                </span>arr[0]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[i];
-<span class="org-whitespace-space">                </span>arr[i]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[0];
-<span class="org-whitespace-space">                </span>arr[0]<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>arr[i];
-<span class="org-whitespace-space">                </span>max_heapify(arr,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>--n);
-<span class="org-whitespace-space">        </span>}
+        <span class="org-keyword">for</span> (i = n - 1; i != 0; --i) {
+                arr[0] ^= arr[i];
+                arr[i] ^= arr[0];
+                arr[0] ^= arr[i];
+                max_heapify(arr, 0, --n);
+        }
 }
 
-<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
 {
-<span class="org-whitespace-space">        </span>PR_ARR(<span class="org-string">"before"</span>,<span class="org-whitespace-space"> </span>array);
+        PR_ARR(<span class="org-string">"before"</span>, array);
 
-<span class="org-whitespace-space">        </span>heap_sort(array,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]));
+        heap_sort(array, <span class="org-keyword">sizeof</span>(array)/<span class="org-keyword">sizeof</span>(array[0]));
 
-<span class="org-whitespace-space">        </span>PR_ARR(<span class="org-string">"after"</span>,<span class="org-whitespace-space"> </span>array);
+        PR_ARR(<span class="org-string">"after"</span>, array);
 
-<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+        <span class="org-keyword">return</span> 0;
 }
 </pre>
 </div>
@@ -970,19 +970,21 @@ FIXME: &lt;Unfinished&gt;
 </div>
 </div>
 
-<div id="outline-container-org3af7b4b" class="outline-3">
-<h3 id="org3af7b4b"><span class="section-number-3">1.7</span> 希尔排序</h3>
+<div id="outline-container-org67c0776" class="outline-3">
+<h3 id="org67c0776"><span class="section-number-3">1.7</span> 希尔排序</h3>
+<div class="outline-text-3" id="text-1-7">
 </div>
-<div id="outline-container-orgf369a75" class="outline-3">
-<h3 id="orgf369a75"><span class="section-number-3">1.8</span> 基数排序</h3>
+</div>
+<div id="outline-container-orgb809a3e" class="outline-3">
+<h3 id="orgb809a3e"><span class="section-number-3">1.8</span> 基数排序</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 FIXME:
 </p>
 </div>
 </div>
-<div id="outline-container-org160c998" class="outline-3">
-<h3 id="org160c998"><span class="section-number-3">1.9</span> 桶排序</h3>
+<div id="outline-container-orgb15a273" class="outline-3">
+<h3 id="orgb15a273"><span class="section-number-3">1.9</span> 桶排序</h3>
 </div>
 </div>
 </div>
