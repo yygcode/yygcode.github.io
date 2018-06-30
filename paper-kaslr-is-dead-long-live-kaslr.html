@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-06-21 Thu 23:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>KASLR is Dead: Long Live KASLR</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">KASLR is Dead: Long Live KASLR</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgeb2f272">1. Author</a>
+<ul>
+<li><a href="#org70b0108">1.1. Daniel Gruss</a></li>
+<li><a href="#orge038297">1.2. Moritz Lipp</a></li>
+<li><a href="#org81f0736">1.3. Michael Schwarz</a></li>
+<li><a href="#org60aae00">1.4. Richard Fellner</a></li>
+<li><a href="#orgba055de">1.5. Clementine Maurice</a></li>
+<li><a href="#org5ce6fa0">1.6. Stefan Mangard</a></li>
+</ul>
+</li>
+<li><a href="#orgb1f1eac">2. Abstract</a></li>
+<li><a href="#orga2cd78b">3. Introduction</a></li>
+<li><a href="#orgfdd2803">4. Background</a>
+<ul>
+<li><a href="#orgff7fe21">4.1. Virtual Address Space</a></li>
+<li><a href="#orge2ae3d7">4.2. CPU Caches</a></li>
+<li><a href="#org6ae61e6">4.3. Microarchitectural Attacks on Kernel Address Informationo</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgeb2f272" class="outline-2">
+<h2 id="orgeb2f272"><span class="section-number-2">1</span> Author</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org70b0108" class="outline-3">
+<h3 id="org70b0108"><span class="section-number-3">1.1</span> Daniel Gruss</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<a href="https://gruss.cc/">https://gruss.cc/</a>
+</p>
+<blockquote>
+<p>
+I'm an infosec researcher working as a postdoc in the Secure Systems group at
+the Graz University of Technology, Institute of Applied Information Processing
+and Communications (see my profile there), where I also obtained my PhD in June
+</p>
+<ol class="org-ol">
+<li>In summer 2016 I've been an intern at Microsoft Research Cambridge. In my</li>
+</ol>
+<p>
+research I explore software-based microarchitectural attacks and operating
+system features.
+</p>
+
+<p>
+I teach undergraduate courses (Operating Systems, System-Level Programming) and
+graduate courses (Embedded Security, Security Aspects in Software Development).
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orge038297" class="outline-3">
+<h3 id="orge038297"><span class="section-number-3">1.2</span> Moritz Lipp</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<a href="https://mlq.me/">https://mlq.me/</a>
+</p>
+<blockquote>
+<p>
+I am an PhD student at in the Secure Systems group at the Institute of Applied
+Information Processing and Communications at Graz University of Technology. I am
+the founder of pwmt.org, an open-source community creating functional and
+simplistic applications and libraries. I am interested in microarchitectural
+side-channel attacks and apiculture.
+</p>
+
+<p>
+If you have any questions or just want to get in touch, feel free to contact me!
+</p>
+</blockquote>
+<p>
+查看PWMT：<a href="https://pwmt.org/about/">https://pwmt.org/about/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org81f0736" class="outline-3">
+<h3 id="org81f0736"><span class="section-number-3">1.3</span> Michael Schwarz</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+<a href="https://misc0110.net/web/">https://misc0110.net/web/</a>
+</p>
+<blockquote>
+<p>
+I am an infosec Ph.D. student at Graz University of Technology. I am part of the
+Secure Systems group at the Institute of Applied Information Processing and
+Communications.
+</p>
+
+<p>
+As part of the university's CTF team I frequently participate in CTFs.
+</p>
+
+<p>
+During the semester I teach Systems Programming, Operating Systems and Security
+Aspects in Software Development.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org60aae00" class="outline-3">
+<h3 id="org60aae00"><span class="section-number-3">1.4</span> Richard Fellner</h3>
+</div>
+<div id="outline-container-orgba055de" class="outline-3">
+<h3 id="orgba055de"><span class="section-number-3">1.5</span> Clementine Maurice</h3>
+</div>
+<div id="outline-container-org5ce6fa0" class="outline-3">
+<h3 id="org5ce6fa0"><span class="section-number-3">1.6</span> Stefan Mangard</h3>
+</div>
+</div>
+
+<div id="outline-container-orgb1f1eac" class="outline-2">
+<h2 id="orgb1f1eac"><span class="section-number-2">2</span> Abstract</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Modern operating system kernels employ address space layout randomization (ASLR)
+to prevent control-flow hijacking(劫持) attacks and code-injection attacks.
+While kernel security relies fundamentally on preventing access to address
+information, recent attacks have shown that the hardware directly leaks this
+information. Strictly splitting kernel space and user space has recently been
+proposed(被提议的) as a theoretical concept to close these side channels.
+However, this is not trivially possible due to architectural restrictions of the
+x86 platform.
+</p>
+
+<p>
+In this paper we present KAISER, a system that overcomes limitations of x86 and
+provides practical kernel address isolation. We implemented our proof-of-concept
+on top of the Linux kernel, closing all hardware side channels on kernel address
+information. KAISER enforces a strict kernel and user space isolation such that
+the hardware does not hold any information about kernel addresses while running
+in user mode. We show that KAISER protects against double page fault attacks,
+prefetch side-channel attacks, and TSX-based side-channel attacks. Finally, we
+demonstrate that KAISER has a runtime overhead of only 0:28%.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga2cd78b" class="outline-2">
+<h2 id="orga2cd78b"><span class="section-number-2">3</span> Introduction</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Like user programs, kernel code contains software bugs which can be exploited
+to undermine([ʌndə'maɪn], vt. 破坏) the system security. Modern operating
+systems use hardware features to make the exploitation([eksplɒɪ'teɪʃ(ə)n], 利用)
+of kernel bugs more difficult. These protection mechanisms include making code
+non-writable and data non-executable. Moreover, accesses from kernel space to
+user space require additional indirection and cannot be performed through user
+space pointers directly anymore (SMAP/SMEP). However, kernel bugs can be
+exploited within the kernel boundaries. To make these attacks harder, address
+space layout randomization (ASLR) can be used to make some kernel addresses or
+even all kernel addresses unpredictable for an attacker. Consequently, powerful
+attacks relying on the knowledge of virtual addresses, such as
+return-oriented-programming (ROP) attacks, become infeasible [14,17,19]. It is
+crucial for kernel ASLR to withhold any address information from user space
+programs. In order to eliminate address information leakage, the
+virtual-to-physical address information has been made unavailable to user
+programs [13].
+</p>
+<blockquote>
+<p>
+[yanyg关联信息] 内核stack随机化技术：
+<a href="https://lwn.net/Articles/584225/">https://lwn.net/Articles/584225/</a>
+<a href="https://lwn.net/Articles/723331/">https://lwn.net/Articles/723331/</a>
+<a href="https://lwn.net/Articles/279934/">https://lwn.net/Articles/279934/</a>
+<a href="https://lwn.net/Articles/692208/">https://lwn.net/Articles/692208/</a>
+</p>
+</blockquote>
+
+<p>
+Knowledge of virtual or physical address information can be exploited to
+bypass KASLR [7, 22], bypass SMEP and SMAP [11], perform side-channel attacks
+[6,15,18], Rowhammer attacks [5,12,20], and to attack system memory encryption
+[2]. To prevent attacks, system interfaces leaking the virtual-to-physical
+mapping have recently been fixed [13]. However, hardware side channels might
+not easily be fixed without changing the hardware. Specifically side-channel
+attacks targeting the page translation caches provide information about virtual
+and physical addresses to the user space. Hund et al. [7] described an attack
+exploiting double page faults, Gruss et al. [6] described an attack exploiting
+software prefetch instructions,1 and Jang et al. [10] described an attack
+exploiting Intel TSX (hardware transactional memory). These attacks show that
+current KASLR implementations have fatal flaws, subsequently KASLR has been
+proclaimed dead by many researchers [3, 6, 10].
+</p>
+
+<p>
+Gruss et al. [6] and Jang et al. [10] proposed to unmap the kernel address
+space in the user space and vice versa. However, this is non-trivial on modern
+x86 hardware. First, modifying page table structures on context switches is not
+possible due to the highly parallelized nature of today's multi-core systems,
+e.g., simply unmapping the kernel would inhibit parallel execution of multiple
+system calls. Second, x86 requires several locations to be valid for both user
+space and kernel space during context switches, which are hard to identify in
+large operating systems. Third, switching or modifying address spaces incurs
+translation lookaside buffer (TLB) flushes [8]. Jang et al. [10] suspected that
+switching address spaces may have a severe performance impact, making it
+impractical(不切实际的).
+</p>
+
+<p>
+In this paper, we present KAISER, a highly-efficient practical system for kernel
+address isolation, implemented on top of a regular Ubuntu Linux. KAISER uses a
+shadow address space paging structure to separate kernel space and user space.
+The lower half of the shadow address space is synchronized between both paging
+structures. Thus, multiple threads work in parallel on the two address spaces if
+they are in user space or kernel space respectively. KAISER eliminates the usage
+of global bits in order to avoid explicit TLB flushes upon context switches.
+Furthermore, it exploits optimizations in current hardware that allow switching
+address spaces without performing a full TLB flush. Hence, the performance
+impact of KAISER is only 0:28%.
+</p>
+
+<p>
+KAISER reduces the number of overlapping pages between user and kernel address
+space to the absolute minimum required to run on modern x86 systems. We evaluate
+all microarchitectural side-channel attacks on kernel address information that
+are applicable to recent Intel architectures. We show that KAISER successfully
+eliminates the leakage in all cases.
+</p>
+
+<p>
+<b>Contributions</b>. The contributions of this work are:
+</p>
+<ul class="org-ul">
+<li>KAISER is the first practical system for kernel address isolation. It
+introduces shadow address spaces to utilize modern CPU features efficiently
+avoiding frequent TLB flushes. We show how all challenges to make kernel
+address isolation practical can be overcome.</li>
+<li>Our open-source proof-of-concept(概念验证) implementation in the Linux kernel
+shows that KAISER can easily be deployed on commodity systems, i.e., a
+fullfledged Ubuntu Linux system.</li>
+<li>After KASLR has already been considered dead by many researchers, KAISER
+fully restores the former efficacy(['efɪkəsɪ] 功耗，效力) of KASLR with a
+runtime overhead of only 0.28%.</li>
+</ul>
+
+<p>
+<b>Outline</b>. The remainder of the paper is organized as follows. In Section 2, we
+provide background on kernel protection mechanisms and side-channel attacks.
+In Section 3, we describe the design and implementation of KAISER. In Sec-
+tion 4, we evaluate the efficacy of KAISER and its performance impact. In
+Section 5, we discuss future work. We conclude in Section 6.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfdd2803" class="outline-2">
+<h2 id="orgfdd2803"><span class="section-number-2">4</span> Background</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgff7fe21" class="outline-3">
+<h3 id="orgff7fe21"><span class="section-number-3">4.1</span> Virtual Address Space</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Virtual addressing is the foundation of memory isolation between different
+processes as well as processes and the kernel. Virtual addresses are translated
+to physical addresses through a multi-level translation table stored in physical
+memory. A CPU register holds the physical address of the active top-level
+translation table. Upon a context switch, the register is updated to the
+physical address of the top-level translation table of the next process.
+Consequently, processes cannot access all physical memory but only the memory
+that is mapped to virtual addresses. Furthermore, the translation tables entries
+define properties of the corresponding virtual memory region, e.g., read-only,
+user-accessible, non-executable.
+</p>
+
+<p>
+On modern Intel x86-64 processors, the top-level translation table is the page
+map level 4 (PML4). Its physical address is stored in the CR3 register of the
+CPU. The PML4 divides the 48-bit virtual address space into 512 PML4 entries,
+each covering a memory region of 512 GB. Each subsequent level sub-divides one
+block of the upper layer into 512 smaller regions until 4 kB pages are mapped
+using page tables (PTs) on the last level. The CPU has multiple levels of caches
+for address translation table entries, the so-called TLBs. They speed up address
+translation and privilege checks. The kernel address space is typically a
+defined region in the virtual address space, e.g., the upper half of the address
+space.
+</p>
+
+<p>
+Similar translation tables exist on modern ARM (Cortex-A) processors too, with
+small differences in size and property bits. One significant difference to
+x86-64 is that ARM CPUs have two registers to store physical addresses of
+translation tables (TTBR0 and TTBR1). Typically, one is used to map the user
+address space (lower half) whereas the other is used to map the kernel address
+space (upper half). Gruss et al. [6] speculated that this might be one of the
+reasons why the attack does not work on ARM processors. As x86-64 has only one
+translation-table register (CR3), it is used for both user and kernel address
+space. Consequently, to perform privilege checks upon a memory access, the
+actual page translation tables have to be checked.
+</p>
+
+<p>
+<b>Control-Flow Attacks</b>. Modern Intel processors protect against code injection
+attacks through non-executable bits. Furthermore, code execution and data
+accesses on user space memory are prevented in kernel mode by the CPU features
+supervisor-mode access prevention (SMAP) and supervisor-mode execution
+prevention (SMEP). However, it is still possible to exploit bugs by redirecting
+the code execution to existing code. Solar Designer [23] showed that a non-
+executable stack in user programs can be circumvented([sɜːkəm'vent], 绕行) by
+jumping to existing functions within libc. Kemerlis et al. [11] presented the
+ret2dir attack which redirects a hijacked control flow in the kernel to
+arbitrary locations using the kernel physical direct mapping. Return-oriented
+programming (ROP) [21] is a generalization of such attacks. In ROP attacks,
+multiple code fragments &#x2013; so-called gadgets &#x2013; are chained together to build an
+exploit. Gadgets are not entire functions, but typically consist of one or more
+useful instructions followed by a return instruction.
+</p>
+
+<p>
+To mitigate(['mɪtɪgeɪt]，减轻，缓和) control-flow-hijacking attacks, modern
+operating systems randomize the virtual address space. Address space layout
+randomization (ASLR) ensures that every process has a new randomized virtual
+address space, preventing an attacker from knowing or guessing addresses.
+Similarly, the kernel has a randomized virtual address space every time it is
+booted. As Kernel ASLR makes addresses unpredictable, it protects against ROP
+attacks.
+</p>
+<blockquote>
+<p>
+使用sysctl，或者直接写入/proc/sys/kernel/randomize_va_space，进行地址随机化开关控制。
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orge2ae3d7" class="outline-3">
+<h3 id="orge2ae3d7"><span class="section-number-3">4.2</span> CPU Caches</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Caches are small memory buffers inside the CPU, storing frequently used data.
+Modern Intel CPUs have multiple levels of set-associative caches. The last-level
+cache (LLC) is shared among all cores. Executing code or accessing data on one
+core has immediate consequences for all other cores.
+Address translation tables are stored in physical memory. They are cached
+in regular data caches [8] but also in special caches such as the translation
+lookaside buffers. Figure 1 illustrates how the address translation caches are
+used for address resolution.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6ae61e6" class="outline-3">
+<h3 id="org6ae61e6"><span class="section-number-3">4.3</span> Microarchitectural Attacks on Kernel Address Informationo</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Until recently, Linux provided information on virtual and physical addresses
+to any unprivileged user program through operating system interfaces. As this
+information facilitates mounting microarchitectural attacks, the interfaces are
+now restricted [13]. However, due to the way the processor works, side channels
+through address translation caches [4, 6, 7, 10] and the branch-target buffer[3]
+leak parts of this information.
+</p>
+
+<p>
+Address Translation Caches. Hund et al. [7] described a double page fault
+attack, where an unprivileged attacker tries to access an inaccessible kernel
+memory location, triggering a page fault. After the page fault interrupt is
+handled by the operating system, the control is handed back to an error handler
+in the user program. The attacker measures the execution time of the page fault
+interrupt. If the memory location is valid, regardless of whether it is
+accessible or not, address translation table entries are copied into the
+corresponding address translation caches. The attacker then tries to access the
+same inaccessible memory location again. If the memory location is valid, the
+address translation is already cached and the page fault interrupt will take
+less time. Thus, the attacker learns whether a memory location is valid or not,
+even if it is not accessible from the user space.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/paper-kaslr-is-dead-long-live-kaslr.html';
+    this.page.identifier = 'paper-kaslr-is-dead-long-live-kaslr.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

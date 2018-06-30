@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-21 Thu 23:16 -->
+<!-- 2018-07-01 Sun 03:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>GCC使用手记</title>
 <meta name="generator" content="Org mode" />
@@ -60,7 +60,17 @@
 <li><a href="#org61e3e43">1.4. weak</a></li>
 </ul>
 </li>
-<li><a href="#org0c31e16">2. References</a></li>
+<li><a href="#org115b8d2">2. Debug Skills/调试技巧</a>
+<ul>
+<li><a href="#org29fa226">2.1. -Wl,-wrap</a>
+<ul>
+<li><a href="#org37b2d0f">2.1.1. Usage: Wrap system or customized library functions</a></li>
+<li><a href="#orga312619">2.1.2. Example for wrap library malloc and free</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org0c31e16">3. References</a></li>
 </ul>
 </div>
 </div>
@@ -363,9 +373,76 @@ builtin-expect-probability
 <h3 id="org61e3e43"><span class="section-number-3">1.4</span> weak</h3>
 </div>
 </div>
-<div id="outline-container-org0c31e16" class="outline-2">
-<h2 id="org0c31e16"><span class="section-number-2">2</span> References</h2>
+<div id="outline-container-org115b8d2" class="outline-2">
+<h2 id="org115b8d2"><span class="section-number-2">2</span> Debug Skills/调试技巧</h2>
 <div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org29fa226" class="outline-3">
+<h3 id="org29fa226"><span class="section-number-3">2.1</span> -Wl,-wrap</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org37b2d0f" class="outline-4">
+<h4 id="org37b2d0f"><span class="section-number-4">2.1.1</span> Usage: Wrap system or customized library functions</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<ul class="org-ul">
+<li>For function func, define __wrap_func and extern __real_func;</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga312619" class="outline-4">
+<h4 id="orga312619"><span class="section-number-4">2.1.2</span> Example for wrap library malloc and free</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+
+<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">mcount</span> = 0;
+
+<span class="org-keyword">extern</span> <span class="org-type">void</span> * <span class="org-function-name">__real_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>);
+<span class="org-keyword">extern</span> <span class="org-type">void</span>  <span class="org-function-name">__real_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>);
+
+<span class="org-type">void</span> *<span class="org-function-name">__wrap_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>)
+{
+        <span class="org-type">void</span> *<span class="org-variable-name">ptr</span> = __real_malloc(size);
+
+        <span class="org-keyword">if</span> (ptr)
+                ++mcount;
+
+        printf(<span class="org-string">"wrap malloc ptr=%p, size=%zu, count=%lu\n"</span>, ptr, size, mcount);
+
+        <span class="org-keyword">return</span> ptr;
+}
+
+<span class="org-type">void</span> <span class="org-function-name">__wrap_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>)
+{
+        __real_free(ptr);
+        <span class="org-keyword">if</span> (ptr)
+                --mcount;
+        printf(<span class="org-string">"wrap free   ptr=%p, count=%lu\n"</span>, ptr, mcount);
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> *<span class="org-variable-name">pi</span>;
+
+        pi = malloc(<span class="org-keyword">sizeof</span>(*pi)*10);
+        memset(pi, 0, <span class="org-keyword">sizeof</span>(*pi)*10);
+        free(pi);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c31e16" class="outline-2">
+<h2 id="org0c31e16"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>Builtin_expect</dt><dd><a href="http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html">http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html</a></dd>
 <dt>IBM Developerworks Linux内核中GCC特性</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/">https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/</a></dd>
