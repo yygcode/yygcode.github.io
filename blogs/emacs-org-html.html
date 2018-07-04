@@ -3,9 +3,9 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-04 Wed 22:28 -->
+<!-- 2018-06-21 Thu 23:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>Write PPT and Beamer with Emacs Org</title>
+<title>Emacs Org 编辑文档导出为 HTML</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <link rel="stylesheet" type="text/css" href="../r/org-code.css" />
@@ -13,6 +13,28 @@
 <script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
 <script type="text/javascript" src="../r/bootstrap.min.js"></script>
 <script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -26,22 +48,41 @@
 </div>
 </div>
 <div id="content">
-<h1 class="title">Write PPT and Beamer with Emacs Org</h1>
+<h1 class="title">Emacs Org 编辑文档导出为 HTML</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge6b75d4">1. 参考资料</a></li>
+<li><a href="#orgb941b3b">1. 说明</a></li>
+<li><a href="#orgc72852e">2. 公式编辑</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge6b75d4" class="outline-2">
-<h2 id="orge6b75d4"><span class="section-number-2">1</span> 参考资料</h2>
+<div id="outline-container-orgb941b3b" class="outline-2">
+<h2 id="orgb941b3b"><span class="section-number-2">1</span> 说明</h2>
 <div class="outline-text-2" id="text-1">
-<dl class="org-dl">
-<dt>Youtube</dt><dd><a href="https://www.youtube.com/embed/Ho6nMWGtepY">https://www.youtube.com/embed/Ho6nMWGtepY</a></dd>
-</dl>
+<p>
+使用Emacs一年+，主要是使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc72852e" class="outline-2">
+<h2 id="orgc72852e"><span class="section-number-2">2</span> 公式编辑</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Org mode支持包含LaTeX数学公式。HTML export时，Org可以使用<a href="https://www.mathjax.org/">MathJax</a>或transcode转为图片。
+</p>
+\begin{equation}
+x=\sqrt{b}
+\end{equation}
+
+
+<p>
+If \(a^2=b\) and \( b=2 \), then the solution must be
+either \[ a=+\sqrt{2} \] or \[ a=-\sqrt{2} \].
+</p>
 </div>
 </div>
 </div>
@@ -49,8 +90,8 @@
 <div id="disqus_thread" class="disqus container"></div>
 <script>
   var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/emacs-org-ppt-beamer.html';
-    this.page.identifier = 'emacs-org-ppt-beamer.html';
+    this.page.url = 'http://ycode.org/blogs/emacs-org-html.html';
+    this.page.identifier = 'emacs-org-html.html';
   };
 
   (function() {

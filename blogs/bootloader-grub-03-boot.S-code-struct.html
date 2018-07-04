@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-07-04 Wed 22:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>深入理解 GNU GRUB - 02 boot.S MBR结构与boot.S代码结构</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">深入理解 GNU GRUB - 02 boot.S MBR结构与boot.S代码结构</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org49d44c6">1. MBR结构</a></li>
+<li><a href="#org16e35c2">2. boot.S代码结构</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org49d44c6" class="outline-2">
+<h2 id="org49d44c6"><span class="section-number-2">1</span> MBR结构</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+历史悠久的MBR结构自从IBM兼容PC出现以来一直就没变过（但是为支持2TiB以上硬盘而出现的GUID/EFI结构将更改MBR结构）。MBR结构分为三部分，分别是引导指令、分区表
+DPT (Disk Partition Table)、幻数Magic (Magic=0x55AA)。其中引导指令占用446字节（0~0x1BD），DPT占用64字节（0x1BE~0x1FD），Magic占用2字节。
+</p>
+
+<p>
+Magic值总是等于0x55AA，用来标记MBR的有效性。大多数BIOS检测Magic值判断是否为可引导设备，但是也有些BIOS使用另外的字段检测。在所有的小端设备上（例如80x86机器），在写入时需要设置为0xAA55。
+</p>
+
+<p>
+DPT是硬盘分区表（Disk Partition Table）的缩写。MBR支持4个基本分区项，每个分区项占用16字节。可以将其中一个基本分区项标记为扩展分区（逻辑分区），扩展分区的第一个扇区称为EBR (Extended Boot Record) ，和MBR有类似的结构，但是只能利用两个基本分区项，其中一个用来划分分区，另一个指向新的EBR，这样就可以实现更多的分区。每个分区项的布局完全一致，如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&#20559;&#31227;&#37327;        &#23383;&#33410;&#25968;        &#25551;&#36848;
+0x00        1        &#20998;&#21306;&#29366;&#24577;&#65292;
+0x80&#20026;&#21487;&#24341;&#23548;&#20998;&#21306;
+0x00&#20026;&#19981;&#21487;&#24341;&#23548;&#20998;&#21306;
+&#20854;&#20182;&#20540;&#26080;&#25928;
+0x01        3        &#35813;&#20998;&#21306;&#31532;&#19968;&#20010;&#25159;&#21306;CHS&#22320;&#22336;&#65292;&#26684;&#24335;&#35265;&#31245;&#21518;&#25551;&#36848;
+0x04        1        &#20998;&#21306;&#25991;&#20214;&#31995;&#32479;&#26684;&#24335;&#65292;&#27604;&#22914;NTFS/FAT32/Linux&#31561;
+0x05        3        &#35813;&#20998;&#21306;&#26368;&#21518;&#19968;&#20010;&#25159;&#21306;CHS&#22320;&#22336;&#65292;&#26684;&#24335;&#35265;&#31245;&#21518;&#25551;&#36848;
+0x08        4        &#35813;&#20998;&#21306;&#31532;&#19968;&#20010;&#25159;&#21306;&#30340;&#32477;&#23545;LBA&#22320;&#22336;
+                          &#34920;&#31034;&#20174;&#30913;&#30424;&#24320;&#22987;&#21040;&#35813;&#20998;&#21306;&#30340;&#25159;&#21306;&#25968;
+0x0C        4        &#35813;&#20998;&#21306;&#30340;&#25159;&#21306;&#25968;&#37327;
+
+3&#23383;&#33410;&#30340;CHS&#22320;&#22336;&#32467;&#26500;&#22914;&#19979;&#65306;
+&#20559;&#31227;&#37327;            &#25551;&#36848;
+0x00            &#30913;&#22836;
+0x01            &#20302;6&#20301;&#34920;&#31034;&#25159;&#21306;&#65292;&#39640;2&#20301;&#34920;&#31034;&#26609;&#38754;&#30340;9~10&#20301;
+0x04            &#26609;&#38754;&#30340;&#20302;8&#20301;
+</pre>
+</div>
+
+<p>
+对于CHS结构还有疑问者，查阅2.1.4的CHS模式读可加强理解。因为CHS寻址有7.88GiB
+限制，现在的硬盘一般都是用LBA寻址，因此分区表中有用的字段是状态字段（0x00）、分区格式（0x03）、扇区偏移量（0x08~0x0B）和扇区数量（0x0C~0x0x0F）。我在虚拟机上测试过，清零硬盘分区的起始CHS地址和结束CHS地址不会导致错误。
+446字节的引导指令负责加载另外的磁盘数据，进而引导整个系统。而这也正是boot.S所完成的功能。1.3节的内容大概介绍了加载磁盘数据的过程，而后文的boot.S代码结构分析和详细注释展示具体的实现过程。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org16e35c2" class="outline-2">
+<h2 id="org16e35c2"><span class="section-number-2">2</span> boot.S代码结构</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+boot.S生成512字节的机器码，其中0x0~0x1BD (0~445) 共446字节是磁盘（硬盘/软盘）均可能用到的指令；0x1BE~0x1FD (446~510) 共64字节指令是软盘读取需要的指令，完成软盘驱动器复位、读取；0x1F~0x1FF (511~512) 是标识字段为0x 55AA（小端上需要表述为0xAA55）。
+</p>
+
+<p>
+GRUB安装程序判断存储媒介是硬盘或软盘。如果是硬盘，写入0x0~0x1BD和0x1FE~0x1FF两个字段。如果是软盘则写入整个MBR（512字节）。下面先简单介绍代码对指令位置的安排，其中0x7C**是指MBR加载到内存后对应指令所在的内存地址。
+</p>
+
+<p>
+boot.S首先是一个跳转指令和一个空指令，占用3字节空间（0x7C00~0x7C03）。
+</p>
+
+<p>
+之后保留一字节空间（0x7C04），后续代码保存BIOS调用探测到的读模式（LBA/CHS）到这里。执行到GRUB的第二步时还会使用这里保存的读模式标记。
+</p>
+
+<p>
+之后是BIOS参数块BPB (BIOS parameter block)所在空间，共保留0x56（0x7C04~0x7C59）字节，当前只用到开始的16字节。BPB首字节（0x7C04）用来保存BIOS调用探测到的读模式（LBA/CHS），执行到GRUB的第二步时还会使用这里保存的读模式标记。
+</p>
+
+<p>
+接下来的16字节（0x7C05~0x7C14）用作BIOS LBA读调用的DAP（参见2.1.2），这16个字节是和CHS参数块是复用的，如果是CHS，则用作保存BIOS调用获取的驱动器CHS参数，后来的CHS读扇区用它判定扇区是否越界。
+</p>
+
+<p>
+之后是2字节的跳转指令（0x7C5A~0x7C5B），加载完毕后跳向此处执行，因为jmp不支持立即数，因此保存在这里，值为0x8000。
+</p>
+
+<p>
+之后是8字节的GRUB内核起始扇区LBA地址（0x7C5C~0x7C63），注意顺序，首先是低4字节，然后是高4字节。默认值为低4字节0x01，高4字节0x00，即磁盘的第二个绝对扇区。
+</p>
+
+<p>
+之后是一字节的驱动器（0x7C64），默认设置为0xFF，安装时候改写成正确的引导驱动器，如果代码中探测到依然是0xFF，则会赋默认驱动器0x80（第一块硬盘编号）。
+</p>
+
+<p>
+之后关闭中断，检测磁盘驱动器，设置寄存器，设置堆栈，打开中断，使用BIOS例程判断读取模式，读取磁盘数据，保存读取模式（保存到mode即0x7C04位置），最后设置正确的寄存器，然后跳转到第二步执行。
+</p>
+
+<p>
+0x1BE~0x1FD是只针对软盘读取的指令。这些指令不会安装到硬盘MBR（硬盘上这里是DPT区域，写入
+DPT会破坏分区）。0x1FE~0x1FF保存标识数0xAA55（0x1FE值为0x55，0x1FF值为0xAA，注意0xAA55
+是针对小端序处理器的）。下面是编译（未安装）的grub-1.98/boot.S的二进制码：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">0X7C00 EB 63 90 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C50 00 00 00 00 00 00 00 00 00 00 00 80 01 00 00 00
+0X7C60 00 00 00 00 FF FA EB 07 F6 C2 80 75 02 B2 80 EA
+0X7C70 74 7C 00 00 31 C0 8E D8 8E D0 BC 00 20 FB A0 64
+0X7C80 7C 3C FF 74 02 88 C2 52 BE 88 7D E8 24 01 BE 05
+0X7C90 7C F6 C2 80 74 48 B4 41 BB AA 55 CD 13 5A 52 72
+0X7CA0 3D 81 FB 55 AA 75 37 83 E1 01 74 32 31 C0 89 44
+0X7CB0 04 40 88 44 FF 89 44 02 C7 04 10 00 66 8B 1E 5C
+0X7CC0 7C 66 89 5C 08 66 8B 1E 60 7C 66 89 5C 0C C7 44
+0X7CD0 06 00 70 B4 42 CD 13 72 05 BB 00 70 EB 73 B4 08
+0X7CE0 CD 13 73 0A F6 C2 80 0F 84 D8 00 E9 82 00 66 0F
+0X7CF0 B6 C6 88 64 FF 40 66 89 44 04 0F B6 D1 C1 E2 02
+0X7D00 88 E8 88 F4 40 89 44 08 0F B6 C2 C0 E8 02 66 89
+0X7D10 04 66 A1 60 7C 66 09 C0 75 4E 66 A1 5C 7C 66 31
+0X7D20 D2 66 F7 34 88 D1 31 D2 66 F7 74 04 3B 44 08 7D
+0X7D30 37 FE C1 88 C5 30 C0 C1 E8 02 08 C1 88 D0 5A 88
+0X7D40 C6 BB 00 70 8E C3 31 DB B8 01 02 CD 13 72 29 8C
+0X7D50 C3 60 1E B9 00 01 8E DB 31 F6 BF 00 80 8E C6 FC
+0X7D60 F3 A5 1F 61 FF 26 5A 7C BE 8E 7D E8 44 00 EB 0E
+0X7D70 BE 93 7D E8 3C 00 EB 06 BE 9D 7D E8 34 00 BE A2
+0X7D80 7D E8 2E 00 CD 18 EB FE 47 52 55 42 20 00 47 65
+0X7D90 6F 6D 00 48 61 72 64 20 44 69 73 6B 00 52 65 61
+0X7DA0 64 00 20 45 72 72 6F 72 0D 0A 00 BB 01 00 B4 0E
+0X7DB0 CD 10 AC 3C 00 75 F4 C3 00 00 00 00 00 00 24 12
+0X7DC0 0F 09 00 BE BD 7D 31 C0 CD 13 46 8A 0C 80 F9 00
+0X7DD0 75 0F BE DA 7D E8 DA FF EB A4 46 6C 6F 70 70 79
+0X7DE0 00 BB 00 70 B8 01 02 B5 00 B6 00 CD 13 72 D7 B6
+0X7DF0 01 B5 4F E9 F8 FE 00 00 00 00 00 00 00 00 55 AA
+</pre>
+</div>
+
+<p>
+下面是安装以后的MBR内内容：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">0X7C00 EB 63 90 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7C50 00 00 00 00 00 00 00 00 00 00 00 80 01 00 00 00
+0X7C60 00 00 00 00 FF FA EB 07 F6 C2 80 75 02 B2 80 EA
+0X7C70 74 7C 00 00 31 C0 8E D8 8E D0 BC 00 20 FB A0 64
+0X7C80 7C 3C FF 74 02 88 C2 52 BE 88 7D E8 24 01 BE 05
+0X7C90 7C F6 C2 80 74 48 B4 41 BB AA 55 CD 13 5A 52 72
+0X7CA0 3D 81 FB 55 AA 75 37 83 E1 01 74 32 31 C0 89 44
+0X7CB0 04 40 88 44 FF 89 44 02 C7 04 10 00 66 8B 1E 5C
+0X7CC0 7C 66 89 5C 08 66 8B 1E 60 7C 66 89 5C 0C C7 44
+0X7CD0 06 00 70 B4 42 CD 13 72 05 BB 00 70 EB 73 B4 08
+0X7CE0 CD 13 73 0A F6 C2 80 0F 84 D8 00 E9 82 00 66 0F
+0X7CF0 B6 C6 88 64 FF 40 66 89 44 04 0F B6 D1 C1 E2 02
+0X7D00 88 E8 88 F4 40 89 44 08 0F B6 C2 C0 E8 02 66 89
+0X7D10 04 66 A1 60 7C 66 09 C0 75 4E 66 A1 5C 7C 66 31
+0X7D20 D2 66 F7 34 88 D1 31 D2 66 F7 74 04 3B 44 08 7D
+0X7D30 37 FE C1 88 C5 30 C0 C1 E8 02 08 C1 88 D0 5A 88
+0X7D40 C6 BB 00 70 8E C3 31 DB B8 01 02 CD 13 72 29 8C
+0X7D50 C3 60 1E B9 00 01 8E DB 31 F6 BF 00 80 8E C6 FC
+0X7D60 F3 A5 1F 61 FF 26 5A 7C BE 8E 7D E8 44 00 EB 0E
+0X7D70 BE 93 7D E8 3C 00 EB 06 BE 9D 7D E8 34 00 BE A2
+0X7D80 7D E8 2E 00 CD 18 EB FE 47 52 55 42 20 00 47 65
+0X7D90 6F 6D 00 48 61 72 64 20 44 69 73 6B 00 52 65 61
+0X7DA0 64 00 20 45 72 72 6F 72 0D 0A 00 BB 01 00 B4 0E
+0X7DB0 CD 10 AC 3C 00 75 F4 C3 55 6D 01 00 00 00 80 20
+0X7DC0 21 00 83 B2 02 30 00 08 00 00 00 E8 0B 00 00 D2
+0X7DD0 21 30 05 FE FF FF FE F7 0B 00 02 00 F4 01 00 00
+0X7DE0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0X7DF0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 55 AA
+</pre>
+</div>
+
+<p>
+对照可以看出，DPT部分是有差异的，这是因为boot.S编译后的指令码中这部分是软盘复位和读指令，而硬盘MBR中保存DPT。正如同前文所述，我尝试把DPT中CHS地址相关的部分给置
+0后，测试GRUB仍然正常工作（偏移量是）。
+</p>
+
+<p>
+另外一个差异是0x7DB8~0x7DBE空间的6个字节，boot.S注释说是为了兼容Windows NT，因为
+Windows NT在这里插入了一个幻数，我尝试把这6个字节（偏移量0x1B8~0x1BD）置0，经测试
+GRUB是可以正常工作的。
+</p>
+
+<p>
+8字节的GRUB内核安装扇区也一样，是因为我的虚拟机的GRUB内核确实安装在第二个扇区，如果是和Windows共存的双系统安装，这8字节可能会有所差异（需要指向实际的安装扇区）。
+MBR中Windows NT幻数和DPT中CHS地址部分清的指令如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~# dd <span class="org-variable-name">if</span>=/dev/zero <span class="org-variable-name">of</span>=/dev/sda <span class="org-variable-name">seek</span>=440 <span class="org-variable-name">count</span>=6 <span class="org-variable-name">bs</span>=1
+~# dd <span class="org-variable-name">if</span>=/dev/zero <span class="org-variable-name">of</span>=/dev/sda <span class="org-variable-name">seek</span>=447 <span class="org-variable-name">count</span>=3 <span class="org-variable-name">bs</span>=1
+~# dd <span class="org-variable-name">if</span>=/dev/zero <span class="org-variable-name">of</span>=/dev/sda <span class="org-variable-name">seek</span>=463 <span class="org-variable-name">count</span>=3 <span class="org-variable-name">bs</span>=1
+~# dd <span class="org-variable-name">if</span>=/dev/zero <span class="org-variable-name">of</span>=/dev/sda <span class="org-variable-name">seek</span>=451 <span class="org-variable-name">count</span>=3 <span class="org-variable-name">bs</span>=1
+~# dd <span class="org-variable-name">if</span>=/dev/zero <span class="org-variable-name">of</span>=/dev/sda <span class="org-variable-name">seek</span>=467 <span class="org-variable-name">count</span>=3 <span class="org-variable-name">bs</span>=1
+</pre>
+</div>
+<p>
+上述指令清零Windows NT兼容幻数，以及硬盘第一基本分区、第二基本分区的起始和结束CHS
+地址。如果你使用多系统（Windows/Linux/Etc.）请谨慎运行。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/bootloader-grub-03-boot.S-code-struct.html';
+    this.page.identifier = 'bootloader-grub-03-boot.S-code-struct.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

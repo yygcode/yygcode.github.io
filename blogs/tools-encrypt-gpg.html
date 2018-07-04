@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-06-21 Thu 23:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>加密工具 - GPG入门</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">加密工具 - GPG入门</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge156126">1. GPG是什么</a></li>
+<li><a href="#org334b05f">2. 安装</a>
+<ul>
+<li><a href="#orgaab9daf">2.1. Debian</a></li>
+<li><a href="#orgdae92f7">2.2. msys</a></li>
+<li><a href="#org7f3e9da">2.3. 源码安装</a></li>
+</ul>
+</li>
+<li><a href="#orgab49784">3. 使用介绍</a>
+<ul>
+<li><a href="#org4e04882">3.1. 生成密钥</a></li>
+<li><a href="#org22a41e6">3.2. 密钥管理</a>
+<ul>
+<li><a href="#org747c1cc">3.2.1. 密钥列表</a></li>
+<li><a href="#org5482820">3.2.2. 删除密钥</a></li>
+<li><a href="#orgdcfb20d">3.2.3. 导出公钥</a></li>
+<li><a href="#org418be19">3.2.4. 上传公钥</a></li>
+<li><a href="#org3d03ecd">3.2.5. 导入公钥</a></li>
+<li><a href="#orgef1837d">3.2.6. 导入私钥</a></li>
+</ul>
+</li>
+<li><a href="#orgebbf187">3.3. 签名与签名验证</a></li>
+<li><a href="#org6be7dae">3.4. 加密解密</a></li>
+<li><a href="#orgeb7b12b">3.5. 加密同时签名</a></li>
+</ul>
+</li>
+<li><a href="#org7ea092c">4. 其他</a>
+<ul>
+<li><a href="#org1624cee">4.1. 私钥备份保护</a></li>
+</ul>
+</li>
+<li><a href="#org200abd1">5. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+近期产品中需要导入一个组件锁定策略。使用到GnuPG，记录如下：
+</p>
+
+<div id="outline-container-orge156126" class="outline-2">
+<h2 id="orge156126"><span class="section-number-2">1</span> GPG是什么</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://zh.wikipedia.org/zh-cn/GnuPG">GPG</a>即<a href="https://gnupg.org/">GnuPG</a>(the GNU Privacy Guard, GNU加密保护)，是一款开源加密软件，遵循
+<a href="https://www.ietf.org/rfc/rfc4880.txt">RFC4880</a>(OpenPGP标准)。如下是主页介绍：
+</p>
+<blockquote>
+<p>
+GnuPG is a complete and free implementation of the OpenPGP standard as defined
+by <a href="https://www.ietf.org/rfc/rfc4880.txt">RFC4880</a> (also known as PGP). GnuPG allows you to encrypt and sign your data
+and communications; it features a versatile(通用的) key management system, along
+with access modules for all kinds of public key directories. GnuPG, also known
+as GPG, is a command line tool with features for easy integration with other
+applications. A wealth of <a href="https://gnupg.org/software/frontends.html">frontend applications</a> and <a href="https://gnupg.org/software/libraries.html">libraries</a> are available.
+GnuPG also provides support for S/MIME and Secure Shell (ssh).
+</p>
+
+<p>
+Since its introduction in 1997, GnuPG is <a href="https://www.gnu.org/philosophy/free-sw.html">Free Software</a> (meaning that it respects
+your freedom). It can be freely used, modified and distributed under the terms
+of the <a href="https://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.
+</p>
+
+<p>
+The current version of GnuPG is 2.2.8. See the <a href="https://gnupg.org/download/index.html">download</a> page for other
+maintained versions.
+</p>
+
+<p>
+<a href="https://www.gpg4win.org/">Gpg4win</a> is a Windows version of GnuPG featuring a context menu tool, a crypto
+manager, and an Outlook plugin to send and receive standard PGP/MIME mails.
+The current version of Gpg4win is 3.1.1.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org334b05f" class="outline-2">
+<h2 id="org334b05f"><span class="section-number-2">2</span> 安装</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgaab9daf" class="outline-3">
+<h3 id="orgaab9daf"><span class="section-number-3">2.1</span> Debian</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo apt-get install gnupg
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdae92f7" class="outline-3">
+<h3 id="orgdae92f7"><span class="section-number-3">2.2</span> msys</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-sh">~$ pacman -S gnupg
+<span class="org-comment-delimiter"># </span><span class="org-comment">or you can search candidates includes key gnupg by command:</span>
+~$ pacman -Ss gnupg
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f3e9da" class="outline-3">
+<h3 id="org7f3e9da"><span class="section-number-3">2.3</span> 源码安装</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+使用Git获取源码：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ git clone git://git.gnupg.org/gnupg.git
+</pre>
+</div>
+
+<p>
+或者下载源码包：<a href="https://gnupg.org/download/index.html">https://gnupg.org/download/index.html</a>
+</p>
+
+<p>
+编译安装：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ ./autogen.sh
+*** Activating trailing whitespace git pre-commit hook. ***
+    For more information see this thread:
+      https://mail.gnome.org/archives/desktop-devel-list/2009-May/msg00084.html
+    To deactivate this pre-commit hook again move .git/hooks/pre-commit
+    and .git/hooks/pre-commit.sample out of the way.
+&#8216;.git/hooks/pre-commit.sample&#8217; -&gt; &#8216;.git/hooks/pre-commit&#8217;
+autogen.sh: *** Adding GIT filter.cleanpo.clean configuration.
+*** Activating commit log message check hook. ***
+&#8216;build-aux/git-hooks/commit-msg&#8217; -&gt; &#8216;.git/hooks/commit-msg&#8217;
+autogen.sh: Running aclocal -I m4 ...
+autogen.sh: Running autoheader...
+autogen.sh: Running automake --gnu ...
+autogen.sh: Running autoconf ...
+autogen.sh: You may now run:
+  ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
+~$ ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
+~$ sudo make install
+</pre>
+</div>
+<p>
+如果系统太老，库版本兼容性不满足报错，建议直接安装二进制，或下载较老版本gnupg，或者尝试升级操作系统。例如：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
+...
+configure:
+***
+*** You need libassuan to build this program.
+*** This library is for example available at
+***   https://gnupg.org/ftp/gcrypt/libassuan/
+*** (at least version 2.5.0 (API 2) is required)<span class="org-builtin">.</span>
+configure: error:
+***
+*** Required libraries not found. Please consult the above messages
+*** and install them before running configure again.
+***
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab49784" class="outline-2">
+<h2 id="orgab49784"><span class="section-number-2">3</span> 使用介绍</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org4e04882" class="outline-3">
+<h3 id="org4e04882"><span class="section-number-3">3.1</span> 生成密钥</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --gen-key
+</pre>
+</div>
+<p>
+Linux下版本\texttt{--gen-key}部分参数是默认的，使用如下命令对所有选项进行设置：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --full-generate-key
+</pre>
+</div>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --full-generate-key
+<span class="org-function-name">gpg</span> (GnuPG) 2.1.18; Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 4096
+Requested keysize is 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires<span class="org-keyword"> in</span> n days
+      &lt;n&gt;w = key expires<span class="org-keyword"> in</span> n weeks
+      &lt;n&gt;m = key expires<span class="org-keyword"> in</span> n months
+      &lt;n&gt;y = key expires<span class="org-keyword"> in</span> n years
+Key is valid for? (0) 0
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: test
+Name must be at least 5 characters long
+Real name: gpgtest
+Email address: gpgtest@gmail.com
+Comment: GPG test for blog
+You selected this USER-ID:
+    <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
+
+<span class="org-function-name">Change</span> (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (<span class="org-builtin">type</span> on the keyboard, move the mouse, utilize the
+                   disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (<span class="org-builtin">type</span> on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+
+gpg: key 82159169CFBF69E6 marked as ultimately trusted
+gpg: revocation certificate stored as <span class="org-string">'/home/yanyg/.gnupg/openpgp-revocs.d/4F2F97E03BFBF466032ADFB382159169CFBF69E6.rev'</span>
+public and secret key created and signed.
+
+pub   rsa4096 2018-06-11 [SC]
+      4F2F97E03BFBF466032ADFB382159169CFBF69E6
+      4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid                      gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub   rsa4096 2018-06-11 [E]
+</pre>
+</div>
+<p>
+其中需要选择/输入的内容包括：密钥种类、密钥长度、有效期、真实姓名、邮件地址等。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org22a41e6" class="outline-3">
+<h3 id="org22a41e6"><span class="section-number-3">3.2</span> 密钥管理</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org747c1cc" class="outline-4">
+<h4 id="org747c1cc"><span class="section-number-4">3.2.1</span> 密钥列表</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+其中 <i>gpgtest</i> 是新生成的。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --list-keys
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   2  signed:   1  trust: 0-, 0q, 0n, 0m, 0f, 2u
+gpg: depth: 1  valid:   1  signed:   0  trust: 1-, 0q, 0n, 0m, 0f, 0u
+gpg: next trustdb check due at 2020-06-09
+/home/yanyg/.gnupg/pubring.kbx
+------------------------------
+pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]
+      D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+uid           [ultimate] yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>
+sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]
+
+pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]
+      321A80E17CFEB82B9913E30F43886FD7AC849DDB
+uid           [  full  ] root1 <a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a>
+sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]
+
+pub   rsa4096 2018-06-11 [SC]
+      4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid           [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub   rsa4096 2018-06-11 [E]
+~$ gpg --list-keys --keyid-format short
+pub   rsa4096/CFBF69E6 2018-06-11 [SC]
+      4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid         [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub   rsa4096/2EF4FC4B 2018-06-11 [E]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5482820" class="outline-4">
+<h4 id="org5482820"><span class="section-number-4">3.2.2</span> 删除密钥</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --delete-key [UID]
+</pre>
+</div>
+<p>
+/UID/可以是用户名（比如gpgtest）、邮箱（比如gpgtest@gmail.com）、或者Hash
+值（比如CFBF69E6）。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdcfb20d" class="outline-4">
+<h4 id="orgdcfb20d"><span class="section-number-4">3.2.3</span> 导出公钥</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">binary pub key</span>
+~$ gpg --output gpgtest.pub --export gpgtest
+<span class="org-comment-delimiter"># </span><span class="org-comment">ascii pub key</span>
+~$ gpg --armor --output gpgtest.pub --export gpgtest
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org418be19" class="outline-4">
+<h4 id="org418be19"><span class="section-number-4">3.2.4</span> 上传公钥</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --keyserver certserver.pgp.com --send-key 82159169CFBF69E6
+</pre>
+</div>
+<p>
+其中/key/不能使用UID，需要使用指纹，至少需要long格式指纹，来自下面命令：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">gpg --list-key --keyid-format long gpgtest
+pub   rsa4096/82159169CFBF69E6 2018-06-11 [SC]
+      4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid                 [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub   rsa4096/9D5CD5E32EF4FC4B 2018-06-11 [E]
+</pre>
+</div>
+<p>
+/man/页描述为"Fingerprints may be used instead of key IDs."
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3d03ecd" class="outline-4">
+<h4 id="org3d03ecd"><span class="section-number-4">3.2.5</span> 导入公钥</h4>
+<div class="outline-text-4" id="text-3-2-5">
+<p>
+导入：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~# gpg --import gpgtest.pub
+gpg: key 82159169CFBF69E6: public key <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+</pre>
+</div>
+
+<p>
+设置可信：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~# gpg --edit-key gpgtest
+gpg&gt; help
+quit        quit this menu
+save        save and quit
+<span class="org-builtin">help</span>        show this help
+fpr         show key fingerprint
+grip        show the keygrip
+list        list key and user IDs
+uid         select user ID N
+key         select subkey N
+check       check signatures
+sign        sign selected user IDs [* see below for related commands]
+lsign       sign selected user IDs locally
+tsign       sign selected user IDs with a trust signature
+nrsign      sign selected user IDs with a non-revocable signature
+deluid      delete selected user IDs
+delkey      delete selected subkeys
+delsig      delete signatures from the selected user IDs
+pref        list preferences (expert)
+showpref    list preferences (verbose)
+trust       change the ownertrust
+revsig      revoke signatures on the selected user IDs
+<span class="org-builtin">enable</span>      enable key
+disable     disable key
+showphoto   show selected photo IDs
+clean       compact unusable user IDs and remove unusable signatures from key
+minimize    compact unusable user IDs and remove all signatures from key
+
+* The <span class="org-string">'sign'</span> command may be prefixed with an <span class="org-string">'l'</span> for local signatures (lsign),
+  a <span class="org-string">'t'</span> for trust signatures (tsign), an <span class="org-string">'nr'</span> for non-revocable signatures
+  (nrsign), or any combination thereof (ltsign, tnrsign, etc.)<span class="org-builtin">.</span>
+
+gpg&gt; trust
+pub  rsa4096/82159169CFBF69E6
+     created: 2018-06-11  expires: never       usage: SC
+     trust: unknown       validity: unknown
+sub  rsa4096/9D5CD5E32EF4FC4B
+     created: 2018-06-11  expires: never       usage: E
+[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+
+Please decide how far you trust this user to correctly verify other users<span class="org-string">' keys</span>
+<span class="org-string">(by looking at passports, checking fingerprints from different sources, etc.)</span>
+
+<span class="org-string">  1 = I don'</span>t know or won<span class="org-string">'t say</span>
+<span class="org-string">  2 = I do NOT trust</span>
+<span class="org-string">  3 = I trust marginally</span>
+<span class="org-string">  4 = I trust fully</span>
+<span class="org-string">  5 = I trust ultimately</span>
+<span class="org-string">  m = back to the main menu</span>
+
+<span class="org-string">Your decision? 4</span>
+
+<span class="org-string">pub  rsa4096/82159169CFBF69E6</span>
+<span class="org-string">     created: 2018-06-11  expires: never       usage: SC</span>
+<span class="org-string">     trust: full          validity: unknown</span>
+<span class="org-string">sub  rsa4096/9D5CD5E32EF4FC4B</span>
+<span class="org-string">     created: 2018-06-11  expires: never       usage: E</span>
+<span class="org-string">[ unknown] (1). gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">Please note that the shown key validity is not necessarily correct</span>
+<span class="org-string">unless you restart the program.</span>
+
+<span class="org-string">gpg&gt; save</span>
+<span class="org-string">Key not changed so no update needed.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgef1837d" class="outline-4">
+<h4 id="orgef1837d"><span class="section-number-4">3.2.6</span> 导入私钥</h4>
+<div class="outline-text-4" id="text-3-2-6">
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --export-secret-keys gpgtest &gt; gpgtest.priv
+<span class="org-comment-delimiter"># </span><span class="org-comment">Change to another account</span>
+~# gpg --allow-secret-key-import --import gpgtest.priv
+<span class="org-comment-delimiter"># </span><span class="org-comment">change trust to 5</span>
+gpg --edit-key gpgtest
+<span class="org-function-name">gpg</span> (GnuPG) 2.1.18; Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+sec  rsa4096/82159169CFBF69E6
+     created: 2018-06-11  expires: never       usage: SC
+     trust: full          validity: unknown
+ssb  rsa4096/9D5CD5E32EF4FC4B
+     created: 2018-06-11  expires: never       usage: E
+[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+
+gpg&gt; trust
+sec  rsa4096/82159169CFBF69E6
+     created: 2018-06-11  expires: never       usage: SC
+     trust: full          validity: unknown
+ssb  rsa4096/9D5CD5E32EF4FC4B
+     created: 2018-06-11  expires: never       usage: E
+[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+
+Please decide how far you trust this user to correctly verify other users<span class="org-string">' keys</span>
+<span class="org-string">(by looking at passports, checking fingerprints from different sources, etc.)</span>
+
+<span class="org-string">  1 = I don'</span>t know or won<span class="org-string">'t say</span>
+<span class="org-string">  2 = I do NOT trust</span>
+<span class="org-string">  3 = I trust marginally</span>
+<span class="org-string">  4 = I trust fully</span>
+<span class="org-string">  5 = I trust ultimately</span>
+<span class="org-string">  m = back to the main menu</span>
+
+<span class="org-string">Your decision? 5</span>
+<span class="org-string">Do you really want to set this key to ultimate trust? (y/N) y</span>
+<span class="org-string">sec  rsa4096/82159169CFBF69E6</span>
+<span class="org-string">     created: 2018-06-11  expires: never       usage: SC</span>
+<span class="org-string">     trust: ultimate      validity: unknown</span>
+<span class="org-string">ssb  rsa4096/9D5CD5E32EF4FC4B</span>
+<span class="org-string">     created: 2018-06-11  expires: never       usage: E</span>
+<span class="org-string">[ unknown] (1). gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">Please note that the shown key validity is not necessarily correct</span>
+<span class="org-string">unless you restart the program.</span>
+
+<span class="org-string">gpg&gt; save</span>
+<span class="org-string">Key not changed so no update needed.</span>
+<span class="org-string">~# gpg --list-keys</span>
+<span class="org-string">gpg: checking the trustdb</span>
+<span class="org-string">gpg: marginals needed: 3  completes needed: 1  trust model: pgp</span>
+<span class="org-string">gpg: depth: 0  valid:   2  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 2u</span>
+<span class="org-string">gpg: next trustdb check due at 2020-06-09</span>
+<span class="org-string">/root/.gnupg/pubring.kbx</span>
+<span class="org-string">------------------------</span>
+<span class="org-string">pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]</span>
+<span class="org-string">      321A80E17CFEB82B9913E30F43886FD7AC849DDB</span>
+<span class="org-string">uid           [ultimate] root1 <a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a></span>
+<span class="org-string">sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]</span>
+
+<span class="org-string">pub   rsa4096 2018-06-11 [SC]</span>
+<span class="org-string">      4F2F97E03BFBF466032ADFB382159169CFBF69E6</span>
+<span class="org-string">uid           [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">sub   rsa4096 2018-06-11 [E]</span>
+</pre>
+</div>
+<p>
+修改后信任模式从unknown改为ultimate。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgebbf187" class="outline-3">
+<h3 id="orgebbf187"><span class="section-number-3">3.3</span> 签名与签名验证</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+对文件进行签名：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">generate test files</span>
+~$ dd <span class="org-variable-name">if</span>=/dev/urandom <span class="org-variable-name">of</span>=test.data <span class="org-variable-name">bs</span>=1K <span class="org-variable-name">count</span>=4
+~$ ls -lh test.data
+-rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
+~$ gpg --local-user gpgtest --sign test.data
+~$ ls -lh test.data*
+-rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
+-rw-r--r-- 1 yanyg yanyg 4.7K Jun 11 14:34 test.data.gpg
+gpg --verify test.data.gpg
+gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
+gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
+gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
+~$ echo $<span class="org-variable-name">?</span>
+0
+</pre>
+</div>
+
+<p>
+针对特定 <i>key</i> 进行签名验证：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --output gpgtest.gpg --export gpgtest
+~$ gpg --no-default-keyring --keyring $<span class="org-variable-name">PWD</span>/gpgtest.gpg --verify test.data.gpg
+gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
+gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
+gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
+~$ echo $<span class="org-variable-name">?</span>
+0
+~$ gpg --no-default-keyring --keyring $<span class="org-variable-name">PWD</span>/yanyg.gpg --verify test.data.gpg
+gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
+gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
+gpg: Can<span class="org-string">'t check signature: No public key</span>
+<span class="org-string">~$ echo $?</span>
+<span class="org-string">2</span>
+</pre>
+</div>
+<p>
+<i>&#x2013;keyring</i> 参数需要使用绝对路径，否则报告找不到密钥。
+</p>
+
+<p>
+<i>&#x2013;sign</i> 签名采用二进制存储，如果想保存为纯文本，使用参数 <i>&#x2013;cleansign</i> ：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ echo <span class="org-string">"plain text"</span> &gt;&gt; test.txt
+~$ gpg --clearsign test.txt
+~$ ls -lh test.txt*
+-rw-r--r-- 1 yanyg yanyg  11 Jun 11 14:45 test.txt
+-rw-r--r-- 1 yanyg yanyg 548 Jun 11 14:45 test.txt.asc
+~$ cat test.txt.asc
+cat test.txt.asc
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+plain text
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEE0BqO3vjy8KO1xif3Ux7dTb+fD1sFAlseGooACgkQUx7dTb+f
+D1v/DQgAnn75lyOmcX4TJFMj2FV8J2JVjY8Hbp71jMO68x9j1Kao8pemvMMXC87w
+zi80ZfQbiMImpRZG90ObF/8NHkDT/uqcg4yqHnTbfpmMvlTvUcX6AbOBqINC4WG9
+89P8JelyfiA/3x5asow3iL2HBITtCEVoYKtwrMJSgfFHd9q/CJjdAx67O0hakzEZ
+i1E94rBslfguzO8mRlqvj7b8vEWdGJpXtCPTLhgNKg1Grx9vOhAfhLHl3Vgb+PKB
+bVl1EZ2CTBuVk4ruNWBlS0FUo5+gAolicYoNT4v4uDy7AXjKY6dIs9qsbmKBbNN0
+<span class="org-variable-name">lXAROEL0pBiIOtYkx531LfwfX69bkg</span>==
+=VsDH
+-----END PGP SIGNATURE-----
+</pre>
+</div>
+
+<p>
+一般建议签名与文件分离：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --local-user gpgtest --detach-sign test.data
+~$ ls -lh test.data*
+-rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
+-rw-r--r-- 1 yanyg yanyg 4.7K Jun 11 14:34 test.data.gpg
+-rw-r--r-- 1 yanyg yanyg  585 Jun 11 14:47 test.data.sig
+~$ gpg --verify test.data.sig test.data
+gpg: Signature made Mon 11 Jun 2018 02:47:22 PM CST
+gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
+gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
+<span class="org-comment-delimiter"># </span><span class="org-comment">Give wrong file:</span>
+~$ gpg --verify test.data.sig  test.txt
+gpg: Signature made Mon 11 Jun 2018 02:47:22 PM CST
+gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
+gpg: BAD signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
+</pre>
+</div>
+
+<p>
+ASCII格式签名分离：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --armor --detach-sign test.txt
+File <span class="org-string">'test.txt.asc'</span> exists. Overwrite? (y/N) y
+yanyg@pc:~/org$ cat test.txt.asc
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEE0BqO3vjy8KO1xif3Ux7dTb+fD1sFAlseG20ACgkQUx7dTb+f
+D1sCpgf/d7gh5oaQ50K6CeL6VnFNL54olDcVIaGd6Trjz0smCYuszmVZ2s2j7C0d
+ScZkNVQW9yGHj7QURF8HiFfHU44bLvSSkE7H7sS4lhPI1x1EFRNziyeyL4tCQVNj
+/muhyDMgAEJ+I8YBsTew5bAT3c7+EyvKACOP0HUqN0ePJFHBeN4hjzeQ+L2Tr6k4
+rUETZPmRmYbEKS0Sn85J2ztQbKbHQr5VQ11UmdIsGHIM4tZuf57BBXoD0QCzPzJg
+OQBs4tQZfPsC1rfVZgg8GgxhVcfCRRNOO/vtz+aiVgzIf+IIRAQnnVvj2lkpVi2E
+IuSb+9CDA/f4W2VFUka8xFg/h2EBvw==
+=YAAi
+-----END PGP SIGNATURE-----
+~$ gpg --verify test.txt.asc test.txt
+gpg: Signature made Mon 11 Jun 2018 02:49:17 PM CST
+gpg:                using RSA key D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+gpg: Good signature from <span class="org-string">"yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span> [ultimate]
+~$ gpg --verify test.txt.asc test.data
+gpg: Signature made Mon 11 Jun 2018 02:49:17 PM CST
+gpg:                using RSA key D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+gpg: BAD signature from <span class="org-string">"yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span> [ultimate]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6be7dae" class="outline-3">
+<h3 id="org6be7dae"><span class="section-number-3">3.4</span> 加密解密</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+使用 <i>&#x2013;encrypt</i> 参数加密， <i>&#x2013;decrypt</i> 参数解密：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --recipient gpgtest --output test.txt.enc --encrypt test.txt
+~$ ls -lh test.txt test.txt.enc
+-rw-r--r-- 1 yanyg yanyg  11 Jun 11 14:45 test.txt
+-rw-r--r-- 1 yanyg yanyg 607 Jun 11 14:53 test.txt.enc
+~$ gpg --decrypt test.txt.enc
+gpg: encrypted with 4096-bit RSA key, ID 9D5CD5E32EF4FC4B, created 2018-06-11
+      <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
+plain text
+~$ gpg --quiet --decrypt test.txt.enc
+plain text
+</pre>
+</div>
+
+<p>
+在当前版本中， <i>&#x2013;secret-keyring</i> 已经标记为废弃的，私钥必须导入之后才可使用：
+</p>
+<blockquote>
+<p>
+man:
+&#x2013;secret-keyring file
+         This is an obsolete option and ignored.  All secret keys are stored in
+         the ‘private-keys-v1.d’ directory  below  the  GnuPG  home directory.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --export-secret-keys gpgtest &gt; gpgtest.priv
+<span class="org-comment-delimiter"># </span><span class="org-comment">change to root</span>
+~# gpg --allow-secret-key-import --import gpgtest.priv
+gpg: key 82159169CFBF69E6: public key <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> imported
+gpg: key 82159169CFBF69E6: secret key imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
+~# gpg --quiet --decrypt test.txt.enc
+plain text
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeb7b12b" class="outline-3">
+<h3 id="orgeb7b12b"><span class="section-number-3">3.5</span> 加密同时签名</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+使用本地私钥签名，使用接收者公钥加密：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ gpg --local-user gpgtest --recipient root1 --output my.enc --sign --encrypt my.txt
+<span class="org-comment-delimiter"># </span><span class="org-comment">Change to root to verify &amp; decrypt</span>
+~# gpg --quiet --decrypt my.enc
+</pre>
+</div>
+<p>
+接收者需要有发送者的公钥进行签名验证，私钥进行解密。可能会发生告警，此时需要设置
+<i>key</i> 为可信的。
+</p>
+
+<p>
+加密同时采用分离签名(<i>&#x2013;detach-sign</i>)，无法进行解密验证。或者我未找到正确组合参数。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7ea092c" class="outline-2">
+<h2 id="org7ea092c"><span class="section-number-2">4</span> 其他</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org1624cee" class="outline-3">
+<h3 id="org1624cee"><span class="section-number-3">4.1</span> 私钥备份保护</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>没有完美的方法</li>
+<li>设置健壮的密码</li>
+<li>保存到本地GIT或拷贝到安全、私有介质上</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org200abd1" class="outline-2">
+<h2 id="org200abd1"><span class="section-number-2">5</span> References</h2>
+<div class="outline-text-2" id="text-5">
+<dl class="org-dl">
+<dt>阮一峰GPG入门教程</dt><dd><a href="http://www.ruanyifeng.com/blog/2013/07/gpg.html">http://www.ruanyifeng.com/blog/2013/07/gpg.html</a></dd>
+<dt>GnuPG home</dt><dd><a href="https://gnupg.org/">https://gnupg.org/</a></dd>
+<dt>GnuPG Manuals</dt><dd><a href="https://www.gnupg.org/documentation/manuals.html">https://www.gnupg.org/documentation/manuals.html</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/tools-encrypt-gpg.html';
+    this.page.identifier = 'tools-encrypt-gpg.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

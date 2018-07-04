@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-07-04 Wed 22:22 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux GCC编译 &#x2013; 起步</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Linux GCC编译 &#x2013; 起步</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf0ef1f4">1. 说明</a></li>
+<li><a href="#orgc053e0a">2. 安装</a></li>
+<li><a href="#org5dcfc0f">3. C编程中的文件后缀名介绍</a></li>
+<li><a href="#org49d0325">4. hello.c的编译过程</a>
+<ul>
+<li><a href="#org644c1e6">4.1. 直接生成可执行程序</a></li>
+<li><a href="#org99bb042">4.2. 生成预处理后的文件 hello.i</a></li>
+<li><a href="#org449a512">4.3. 生成汇编语言文件 hello.s</a></li>
+<li><a href="#org02cfc88">4.4. 生成目标文件 hello.o</a></li>
+<li><a href="#orgf17d251">4.5. 采用中间级文件生成可执行程序</a></li>
+</ul>
+</li>
+<li><a href="#orgc849af8">5. 静态库的生成</a>
+<ul>
+<li><a href="#org4028699">5.1. 编译指令</a></li>
+</ul>
+</li>
+<li><a href="#org5f05a38">6. 动态库的生成</a></li>
+<li><a href="#orgfce8b5f">7. 结束语</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf0ef1f4" class="outline-2">
+<h2 id="orgf0ef1f4"><span class="section-number-2">1</span> 说明</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+本文最早发布在CSDN：<a href="https://blog.csdn.net/cppgp/article/details/3457718">https://blog.csdn.net/cppgp/article/details/3457718</a>
+本文适用于Linux下开发初学者。本文初步讲解在Linux下如何使用GCC编译程序、简单生成静态库及动态库。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc053e0a" class="outline-2">
+<h2 id="orgc053e0a"><span class="section-number-2">2</span> 安装</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Debian系统安装：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$ sudo apt-get install gcc
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5dcfc0f" class="outline-2">
+<h2 id="org5dcfc0f"><span class="section-number-2">3</span> C编程中的文件后缀名介绍</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>.a 静态库（打包文件）</li>
+<li>.c 未经过预处理的C源码</li>
+<li>.h C头文件</li>
+<li>.i 经过预处理的C源码</li>
+<li>.o 编译之后产生的目标文件</li>
+<li>.s 生成的汇编语言代码</li>
+<li>.so 动态库（动态链接库）</li>
+</ul>
+
+<p>
+解释：
+*.a是我们在编译过后用ar打包生成的静态库；
+<b>.c一般使我们自己编辑的代码，是我们劳动的结晶；
+*.h一般是我们手工生成的接口文件，如果愿意，也可在</b>.c完成后用GCC的选项-aux-info帮我们生成；
+*.i是经过预处理后的源码，是由GCC在选项-E编译下自动生成的文件；
+*.o是编译后产生的目标文件；
+*.s是GCC在选项-S编译下生成的汇编语言代码，对于性能要求很高的程序可以先生成汇编语言文件并对汇编做优化，然后用优化后的汇编生成目标文件并链接；
+*.so是动态库，通过GCC的-fpic -shared选项生成。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org49d0325" class="outline-2">
+<h2 id="org49d0325"><span class="section-number-2">4</span> hello.c的编译过程</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * hello.c</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-type">int</span>  <span class="org-function-name">main</span>()
+{
+        printf(<span class="org-string">"hello, world!/n"</span>);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org644c1e6" class="outline-3">
+<h3 id="org644c1e6"><span class="section-number-3">4.1</span> 直接生成可执行程序</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -o hello hello.c
+$ ./hello
+hello, world!
+
+&#22914;&#19979;&#32534;&#35793;&#26041;&#24335;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc hello.c -o hello
+$ ./hello
+hello, world!
+
+&#22914;&#19979;&#32534;&#35793;&#26041;&#24335;&#26377;&#21035;&#20110;&#20197;&#19978;&#32534;&#35793;&#26041;&#26696;&#65288;&#20855;&#20307;&#26597;&#25214;ELF&#21644;a.out&#25991;&#20214;&#26684;&#24335;&#24046;&#21035;&#30340;&#32593;&#32476;&#36164;&#26009;&#65292;&#23545;&#20110;&#27492;&#22788;&#32467;&#26524;&#26159;&#26080;&#20219;&#20309;&#21306;&#21035;&#30340;&#65289;&#65306;
+$ gcc hello.c
+$ ./a.out
+hello, world!
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org99bb042" class="outline-3">
+<h3 id="org99bb042"><span class="section-number-3">4.2</span> 生成预处理后的文件 hello.i</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -E hello.c -o hello.i
+$ ls
+a.out  hello  hello.c  hello.i
+hello.i &#23601;&#26159;&#26032;&#29983;&#25104;&#30340;&#25991;&#20214;
+
+&#22914;&#19979;&#35821;&#21477;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc -E -o hello.i hello.c
+
+&#22914;&#26524;&#19981;&#35774;&#23450;&#36755;&#20986;&#25991;&#20214;&#65292;&#21017;&#25171;&#21360;&#21040;&#26631;&#20934;&#32456;&#31471;&#65292;&#27492;&#26102;&#25105;&#20204;&#21487;&#20197;&#29992; less &#26597;&#30475;&#65306;
+$ gcc -E hello.c | less
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "hello.c"</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "&lt;built-in&gt;"</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "&lt;command line&gt;"</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "hello.c"</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "/usr/include/stdio.h" 1 3 4</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">28 "/usr/include/stdio.h" 3 4</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 "/usr/include/features.h" 1 3 4</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">329 "/usr/include/features.h" 3 4</span>
+..............................
+
+&#25110;&#32773;&#25191;&#34892;&#65306;
+$ gcc -E hello.c -o hello.i
+$ vi hello.i
+  1 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "hello.c"</span>
+  2 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "&lt;built-in&gt;"</span>
+  3 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "&lt;command line&gt;"</span>
+  4 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "hello.c"</span>
+  5 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "/usr/include/stdio.h" 1 3 4</span>
+  6 <span class="org-comment-delimiter"># </span><span class="org-comment">28 "/usr/include/stdio.h" 3 4</span>
+  7 <span class="org-comment-delimiter"># </span><span class="org-comment">1 "/usr/include/features.h" 1 3 4</span>
+  8 <span class="org-comment-delimiter"># </span><span class="org-comment">329 "/usr/include/features.h" 3 4</span>
+
+.......... &lt;&#20013;&#38388;&#37096;&#20998;&#30053;&gt; ..................
+
+929 <span class="org-comment-delimiter"># </span><span class="org-comment">844 "/usr/include/stdio.h" 3 4</span>
+930
+931 <span class="org-comment-delimiter"># </span><span class="org-comment">2 "hello.c" 2</span>
+932
+933 int main()
+934 {
+935         printf(<span class="org-string">"hello, world!/n"</span>);
+936
+937         return 0;
+938 }
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org449a512" class="outline-3">
+<h3 id="org449a512"><span class="section-number-3">4.3</span> 生成汇编语言文件 hello.s</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -S hello.c -o hello.s
+$ ls
+a.out  hello  hello.c  hello.i  hello.s
+hello.s&#23601;&#26159;&#26032;&#29983;&#25104;&#30340;&#25991;&#20214;
+
+&#22914;&#19979;&#35821;&#21477;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc -S -o hello.s hello.c
+
+&#22914;&#19979;&#35821;&#21477;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc -S hello.c
+
+&#20063;&#21487;&#20197;&#37319;&#29992;&#21069;&#19968;&#27493;&#39588;&#20135;&#29983;&#30340;&#20013;&#38388;&#25991;&#20214;&#29983;&#25104;&#27719;&#32534;&#25991;&#20214;&#65306;
+$ gcc -S hello.i -o hello.s
+$ gcc -S -o hello.s hello.i
+$ gcc -S hello.i
+
+
+&#29983;&#25104;&#30340;&#27719;&#32534;&#37096;&#20998;&#20195;&#30721;&#22914;&#19979;&#65306;
+$ vi hello.s
+  1         .file   <span class="org-string">"hello.c"</span>
+  2         .section        .rodata
+  3 .LC0:
+  4         .string <span class="org-string">"hello, world!"</span>
+  5         .text
+  6 .globl main
+  7         .type   main, @<span class="org-keyword">function</span>
+  8 main:
+  9         leal    4(%esp), %ecx
+ 10         andl    $<span class="org-variable-name">-</span>16, %esp
+ 11         pushl   -4(%ecx)
+ 12         pushl   %ebp
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org02cfc88" class="outline-3">
+<h3 id="org02cfc88"><span class="section-number-3">4.4</span> 生成目标文件 hello.o</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -c hello.c -o hello.o
+$ ls
+a.out  hello  hello.c  hello.i  hello.o  hello.s
+hello.o&#23601;&#26159;&#26032;&#29983;&#25104;&#30340;&#30446;&#26631;&#25991;&#20214;&#65306;
+
+&#22914;&#19979;&#35821;&#21477;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc -c -o hello.o hello.c
+
+&#22914;&#19979;&#35821;&#21477;&#32467;&#26524;&#30456;&#21516;&#65306;
+$ gcc -c hello.c
+
+&#20063;&#21487;&#20197;&#37319;&#29992;&#21069;&#38754;&#27493;&#39588;&#20135;&#29983;&#30340;&#20013;&#38388;&#25991;&#20214;hello.i&#25110;hello.s&#26469;&#29983;&#25104;&#30446;&#26631;&#25991;&#20214;&#65306;
+$ gcc -c hello.i
+$ gcc -c hello.s
+
+&#25105;&#20204;&#21487;&#20197;&#29992; objdump &#26597;&#30475; hello.o &#30340;&#20108;&#36827;&#21046;&#30721;&#65306;
+$ objdump -s hello.o
+
+hello.o:     file format elf32-i386
+
+Contents of section .text:
+ 0000 8d4c2404 83e4f0ff 71fc5589 e55183ec  .L$.....q.U..Q..
+ 0010 04c70424 00000000 e8fcffff ffb80000  ...$............
+ 0020 000083c4 04595d8d 61fcc3             .....Y].a..
+Contents of section .rodata:
+ 0000 68656c6c 6f2c2077 6f726c64 2100      hello, world!.
+Contents of section .comment:
+ 0000 00474343 3a202847 4e552920 342e312e  .GCC: (GNU) 4.1.
+ 0010 31203230 30373031 30352028 52656420  1 20070105 (Red
+ 0020 48617420 342e312e 312d3532 2900      Hat 4.1.1-52)<span class="org-builtin">.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf17d251" class="outline-3">
+<h3 id="orgf17d251"><span class="section-number-3">4.5</span> 采用中间级文件生成可执行程序</h3>
+<div class="outline-text-3" id="text-4-5">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -o hello hello.i
+$ ./hello
+hello, world!
+
+$ gcc -o hello hello.s
+$ ./hello
+hello, world!
+
+$ gcc -o hello hello.o
+$ ./hello
+hello, world!
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc849af8" class="outline-2">
+<h2 id="orgc849af8"><span class="section-number-2">5</span> 静态库的生成</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+linux下静态库的生成比较方便。在生成目标文件后用 ar 打包即可。在中大型项目中一个模块一般会做成一个静态库，以方便管理、提高编译、链接效率。
+</p>
+
+<p>
+本小节的展示针对 main.c、func1.c、func2.c三个文件.
+</p>
+
+<p>
+main.c:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * main.c</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-keyword">extern</span> <span class="org-type">int</span> <span class="org-function-name">func1</span>();
+<span class="org-keyword">extern</span> <span class="org-type">int</span> <span class="org-function-name">func2</span>();
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>()
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+
+        i = func1();
+        printf(<span class="org-string">"func1 return = %d/n"</span>,i);
+
+        i = func2();
+        printf(<span class="org-string">"func2 return = %d/n"</span>,i);
+
+        <span class="org-keyword">return</span> 0;
+}
+
+</pre>
+</div>
+
+<p>
+func1.c:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * func1.c</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-type">int</span> <span class="org-function-name">func1</span>()
+{
+        <span class="org-keyword">return</span> 100;
+}
+</pre>
+</div>
+
+<p>
+func2.c:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * func2.c</span>
+<span class="org-comment"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-type">int</span> <span class="org-function-name">func2</span>()
+{
+        <span class="org-keyword">return</span> 200;
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4028699" class="outline-3">
+<h3 id="org4028699"><span class="section-number-3">5.1</span> 编译指令</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-sh">$ gcc -c func1.c
+$ gcc -c func2.c
+$ ls
+func1.c  func1.o  func2.c  func2.o  main.c
+
+func1.o &#21644; func2.o &#26159;&#25105;&#20204;&#29983;&#25104;&#30340;&#30446;&#26631;&#25991;&#20214;&#12290;&#25171;&#21253;&#25351;&#20196;&#22914;&#19979;&#65306;
+$ ar -r libfunc.a func1.o func2.o
+
+&#25105;&#20204;&#26597;&#30475; libfunc.a &#20013;&#30340;&#25991;&#20214;&#65306;
+$ ar -t libfunc.a
+func1.o
+func2.o
+
+&#29616;&#22312;&#29992;&#38745;&#24577;&#24211;&#21644; main.c &#20849;&#21516;&#29983;&#25104;&#30446;&#26631;&#31243;&#24207;&#65306;
+$ gcc -o main main.c libfunc.a
+$ ./main
+func1 return = 100
+func2 return = 200
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5f05a38" class="outline-2">
+<h2 id="org5f05a38"><span class="section-number-2">6</span> 动态库的生成</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+linux下动态库的生成通过GCC选项实现。案例程序和静态库中的相同。以下是操作指令：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&#39318;&#20808;&#25105;&#20204;&#29983;&#25104;&#30446;&#26631;&#25991;&#20214;&#65292;&#20294;&#26159;&#38656;&#35201;&#21152;&#32534;&#35793;&#22120;&#36873;&#39033; -fpic &#21644;&#38142;&#25509;&#22120;&#36873;&#39033; -shared
+$ gcc -fpic -c func1.c
+$ gcc -fpic -c func2.c
+$ gcc -shared -o libfunc.so func1.o func2.o
+$ ls
+func1.c  func1.o  func2.c  func2.o  libfunc.so  main.c
+libfunc.so&#23601;&#26159;&#25105;&#20204;&#29983;&#25104;&#30340;&#30446;&#26631;&#21160;&#24577;&#24211;&#12290;&#25105;&#20204;&#29992;&#21160;&#24577;&#24211;&#21644; main.c &#29983;&#25104;&#30446;&#26631;&#31243;&#24207;&#65306;
+$ gcc -o main main.c -L. -lfunc
+&#27880;&#24847;&#65292;&#25105;&#20204;&#29992; -L. -lfunc &#20316;&#20026;&#32534;&#35793;&#36873;&#39033;&#12290;-L. &#34920;&#20174;&#24403;&#21069;&#30446;&#24405;&#26597;&#25214;&#38656;&#35201;&#30340;&#21160;&#24577;&#24211;&#65292;-lfunc &#26159;&#21160;&#24577;&#24211;&#30340;&#35843;&#29992;&#35268;&#21017;&#12290;
+Linux&#31995;&#32479;&#19979;&#30340;&#21160;&#24577;&#24211;&#21629;&#21517;&#26041;&#24335;&#26159; lib*.so&#65292;&#32780;&#22312;&#38142;&#25509;&#26102;&#34920;&#31034;&#20301; -l* &#65292; *&#26159;&#33258;&#24049;&#36215;&#30340;&#24211;&#21517;&#12290;&#19979;&#38754;&#25105;&#20204;&#36816;&#34892;&#23427;&#65306;
+$ ./main
+./main: error while loading shared libraries: libfunc.so: cannot open shared object file: No such file or directory
+&#25552;&#31034;&#19968;&#20010;&#38169;&#35823;&#65292;&#25351;&#31034;&#26080;&#27861;&#25214;&#21040;&#21160;&#24577;&#24211;&#12290;&#22312;linux&#19979;&#26368;&#26041;&#20415;&#30340;&#35299;&#20915;&#26041;&#26696;&#26159;&#25335;&#36125;libfunc.so&#21040;&#32477;&#23545;&#30446;&#24405; /lib &#19979;&#12290;
+&#20294;&#26159;&#21482;&#26377;&#36229;&#32423;&#29992;&#25143;&#25165;&#26377;&#36825;&#20010;&#26435;&#38480;&#12290;&#21478;&#22806;&#19968;&#20010;&#26041;&#26696;&#26159;&#26356;&#25913;&#29615;&#22659;&#21464;&#37327; LD_LIBRARY_PATH&#12290;&#22914;&#19979;&#65306;
+$ $ export <span class="org-variable-name">LD_LIBRARY_PATH</span>=<span class="org-sh-quoted-exec">`pwd`</span>
+$ ./main
+func1 return = 100
+func2 return = 200
+&#36816;&#34892;&#25104;&#21151;&#12290;&#29616;&#22312;&#25105;&#20204;&#26356;&#25913;&#21160;&#24577;&#24211;&#30340;&#20989;&#25968;&#32780;&#19981;&#37325;&#26032;&#38142;&#25509;&#12290;&#22914;&#19979;&#65306;
+&#26356;&#25913; func1.c &#20026;&#65306;
+int func1()
+{
+        <span class="org-keyword">return</span> 101;
+}
+&#26356;&#25913; func2.c &#20026;&#65306;
+int func2()
+{
+        <span class="org-keyword">return</span> 202;
+}
+&#37325;&#26032;&#29983;&#25104;&#24211;&#65306;
+$ gcc -fpic -shared func1.c func2.c -o libfunc.so
+$ ./main
+func1 return = 101
+func2 return = 202
+&#21487;&#20197;&#30475;&#20986;&#65292;&#21160;&#24577;&#24211;&#24050;&#32463;&#26356;&#26032;&#20102;&#12290;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfce8b5f" class="outline-2">
+<h2 id="orgfce8b5f"><span class="section-number-2">7</span> 结束语</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+本文简单介绍了linux下如何使用gcc进行编译程序、以及简单的静态、动态库的生成。
+</p>
+
+<p>
+静态库提供了一种打包管理方案，而动态库使程序局部更新成为了可能，更重要的是，当有多份实例存在时，动态库可减小内存的消耗（只占用一份代码空间）。
+</p>
+
+<p>
+对本系列知识感兴趣者可继续跟踪阅读后续文章：库的版本管理、GCC的编译选项、Makefile
+与自动化编译。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-gcc-startup.html';
+    this.page.identifier = 'linux-gcc-startup.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

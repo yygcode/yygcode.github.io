@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-07-04 Wed 22:22 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux GCC编程技巧 &#x2013; Wrap拦截标准库与系统函数</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Linux GCC编程技巧 &#x2013; Wrap拦截标准库与系统函数</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org71bc6a8">1. 使用wrap拦截系统函数</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org71bc6a8" class="outline-2">
+<h2 id="org71bc6a8"><span class="section-number-2">1</span> 使用wrap拦截系统函数</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+下例使用wrap包装malloc，我们可以添加一些统计，来确认是否有内存泄漏问题。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+
+<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">mcount</span> = 0;
+
+<span class="org-keyword">extern</span> <span class="org-type">void</span> * <span class="org-function-name">__real_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>);
+<span class="org-keyword">extern</span> <span class="org-type">void</span>  <span class="org-function-name">__real_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>);
+
+<span class="org-type">void</span> *<span class="org-function-name">__wrap_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>)
+{
+        <span class="org-type">void</span> *<span class="org-variable-name">ptr</span> = __real_malloc(size);
+
+        <span class="org-keyword">if</span> (ptr)
+                ++mcount;
+
+        printf(<span class="org-string">"wrap malloc ptr=%p, size=%zu, count=%lu\n"</span>, ptr, size, mcount);
+
+        <span class="org-keyword">return</span> ptr;
+}
+
+<span class="org-type">void</span> <span class="org-function-name">__wrap_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>)
+{
+        __real_free(ptr);
+        <span class="org-keyword">if</span> (ptr)
+                --mcount;
+        printf(<span class="org-string">"wrap free   ptr=%p, count=%lu\n"</span>, ptr, mcount);
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> *<span class="org-variable-name">pi</span>;
+
+        pi = malloc(<span class="org-keyword">sizeof</span>(*pi)*10);
+        memset(pi, 0, <span class="org-keyword">sizeof</span>(*pi)*10);
+        free(pi);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-gcc-tips.html';
+    this.page.identifier = 'linux-gcc-tips.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
