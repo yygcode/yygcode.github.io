@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-07-15 Sun 12:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgfbd5c79">1. 描述</a></li>
+<li><a href="#org8887dda">2. signal</a></li>
+<li><a href="#orgeb0cb09">3. assert</a></li>
+<li><a href="#org0ab4c83">4. 实例代码</a></li>
+<li><a href="#org6de9951">5. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfbd5c79" class="outline-2">
+<h2 id="orgfbd5c79"><span class="section-number-2">1</span> 描述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+进程执行某些异常指令（比如除0或非法内存访问），或者其他进程或进程自己通过kill
+调用向进程发送信号时，操作系统强制进程对信号作出处理。进程启动时操作系统设置默认的信号处理函数，通过signal、sigaction函数进程可以更改信号处理策略。Linux
+系统提供有64种信号，使用kill -l可查看：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t:~$ kill -l
+ 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+ 6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+11) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+16) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+26) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+31) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX
+</pre>
+</div>
+
+<p>
+不同信号默认行为不同，<a href="https://linux.die.net/man/7/signal">Man 7 Sginal</a>对此有完整描述，如下是可能的处理策略：
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">行为</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Term</td>
+<td class="org-left">进程退出</td>
+</tr>
+
+<tr>
+<td class="org-left">Ign</td>
+<td class="org-left">忽略</td>
+</tr>
+
+<tr>
+<td class="org-left">Core</td>
+<td class="org-left">生成Core文件，需要同时设置ulimit -c</td>
+</tr>
+
+<tr>
+<td class="org-left">Stop</td>
+<td class="org-left">进程停止运行</td>
+</tr>
+
+<tr>
+<td class="org-left">Cont</td>
+<td class="org-left">进程继续运行</td>
+</tr>
+</tbody>
+</table>
+<p>
+并非所有信号均可Ign或Cont，部分信号在处理后，操作系统会强制进程退出，比如SIGKILL
+或SIGSEGV信号。SIGKILL信号即不能被捕获，也不能被忽略。进程常见的信号包括终端挂起(SIGHUP)、键盘中断(SIGINT)、非法地址访问(SIGSEGV)、总线错误(SIGBUS)、杀死进程(SIGKILL)。
+</p>
+
+<p>
+默认的信号处理函数在退出时，通常不能给出足够的信息帮助快速定位问题。同时，主动防御的编程技术中，在关键点会插入assert确保软件符合预期。无论信号或者assert，在退出时如能打印当前进程的调用栈，对于快速分析问题均有较大帮助。
+</p>
+
+<p>
+本文描述进程在退出前（无论因信号或assert），打印调用栈的方法。预期实现如下几个目标：
+</p>
+<ul class="org-ul">
+<li>准确记录调用栈，帮助快速定位分析问题；</li>
+<li>能提供-g编译的二进制文件时，记录调用栈对应文件名、代码行；</li>
+<li>支持多线程，退出时记录每个线程的调用栈；</li>
+<li>如果进程已设置信号处理函数，在记录调用栈后调用；</li>
+<li>结束后还原系统默认信号处理函数，并再次触发信号。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8887dda" class="outline-2">
+<h2 id="org8887dda"><span class="section-number-2">2</span> signal</h2>
+</div>
+
+<div id="outline-container-orgeb0cb09" class="outline-2">
+<h2 id="orgeb0cb09"><span class="section-number-2">3</span> assert</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+assert是主动防御机制，用于检测不可能发生的情况，记录信息包括assert所在的文件名、函数名、代码行与调用栈。考虑可扩展，允许提供回调函数，辅助打印更多信息。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span> <span class="org-variable-name">_GNU_SOURCE</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;dlfcn.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdint.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;signal.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;ucontext.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unwind.h&gt;</span>
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">sig_err</span>(<span class="org-variable-name">str</span>) write(STDERR_FILENO, (str), strlen(str))
+<span class="org-preprocessor">#define</span> <span class="org-function-name">sig_out</span>(<span class="org-variable-name">str</span>) write(STDERR_FILENO, (str), strlen(str))
+
+<span class="org-keyword">static</span> <span class="org-type">int</span> <span class="org-variable-name">pr_reg</span> = 1;
+
+<span class="org-type">char</span> *<span class="org-function-name">func_name</span>(<span class="org-type">void</span> *<span class="org-variable-name">addr</span>, <span class="org-type">char</span> *<span class="org-variable-name">buf</span>)
+{
+        <span class="org-type">Dl_info</span> <span class="org-variable-name">di</span>;
+        <span class="org-keyword">const</span> <span class="org-type">void</span> *<span class="org-variable-name">name</span> = <span class="org-string">"_end"</span>;
+
+        <span class="org-keyword">if</span> (0 == dladdr(addr, &amp;di)) { <span class="org-comment-delimiter">// </span><span class="org-comment">error</span>
+                <span class="org-keyword">return</span> <span class="org-string">"nil"</span>;
+        }
+
+        <span class="org-keyword">if</span> (di.dli_sname) {
+                name = di.dli_sname;
+        }
+
+        sprintf(buf, <span class="org-string">"%s+%lx, base-offset %lx (%p)"</span>,
+                name, addr - di.dli_saddr,
+                addr - di.dli_fbase, di.dli_saddr);
+
+        <span class="org-keyword">return</span> buf;
+}
+
+<span class="org-type">_Unwind_Reason_Code</span> <span class="org-function-name">read_stacktrace</span>(<span class="org-keyword">struct</span> <span class="org-type">_Unwind_Context</span> *<span class="org-variable-name">uc</span>, <span class="org-type">void</span> *<span class="org-variable-name">p</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-variable-name">used</span> = 0;
+        <span class="org-type">char</span> <span class="org-variable-name">buf</span>[1024], <span class="org-variable-name">fname</span>[256];
+        <span class="org-type">uint64_t</span> <span class="org-variable-name">regs</span>[16], <span class="org-variable-name">r</span>;
+        <span class="org-type">void</span> **<span class="org-variable-name">rt</span>, *<span class="org-variable-name">caller</span> = (<span class="org-type">void</span>*)_Unwind_GetIP(uc);
+
+        <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>caller)
+                <span class="org-keyword">return</span> _URC_END_OF_STACK;
+
+        rt = (<span class="org-type">void</span>**)uc;
+        <span class="org-keyword">for</span> (r = 0; r &lt; 16; ++r) {
+                <span class="org-keyword">if</span> (rt[r] != <span class="org-constant">NULL</span>)
+                        regs[r] = _Unwind_GetGR(uc, r);
+                <span class="org-keyword">else</span>
+                        regs[r] = 0xCCCCCCCCEEEEEEEEUL;
+        }
+
+        <span class="org-keyword">if</span> (pr_reg) {
+                pr_reg = 0;
+                used = snprintf(buf + used, 1024 - used, <span class="org-string">"Regs:\n\t"</span>);
+                <span class="org-keyword">for</span> (r = 0; r &lt; 16; ++ r) {
+                        n = snprintf(buf + used, 1024 - used, <span class="org-string">" %#018lx"</span>, regs[r]);
+                        used += n;
+                        <span class="org-keyword">if</span> ((r+1)%4 == 0) {
+                                snprintf(buf + used, 1024 - used, <span class="org-string">"\n\t"</span>);
+                                used += 2;
+                        }
+                }
+                n = snprintf(buf + used, 1024-used, <span class="org-string">"\n"</span>);
+                used += n;
+        }
+        n = snprintf(buf + used, 1024 - used, <span class="org-string">"Caller: %p(%s)\n"</span>,
+                     caller, func_name(caller, fname));
+        used += n;
+        <span class="org-comment-delimiter">//</span><span class="org-comment">snprintf(buf + used, 1024 - used, "RIP=%lx, RBP=%lx, RSP=%lx\n",</span>
+        <span class="org-comment-delimiter">//       </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RIP],</span>
+        <span class="org-comment-delimiter">//       </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RBP],</span>
+        <span class="org-comment-delimiter">//       </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RSP]);</span>
+
+        sig_out(buf);
+
+        <span class="org-keyword">return</span> _URC_NO_REASON;
+}
+
+<span class="org-type">void</span> <span class="org-function-name">stacktrace</span>()
+{
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">in multithread environment, may be you add tid here </span><span class="org-comment-delimiter">*/</span>
+        _Unwind_Backtrace(read_stacktrace, 0);
+}
+
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">void</span> <span class="org-function-name">__assert_stack</span>(<span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">expr</span>, <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">file</span>,
+                                  <span class="org-keyword">const</span> <span class="org-type">char</span> *<span class="org-variable-name">func</span>, <span class="org-type">size_t</span> <span class="org-variable-name">line</span>,
+                                  <span class="org-type">void</span> (*<span class="org-function-name">cb</span>)(<span class="org-type">void</span>*), <span class="org-type">void</span> *<span class="org-variable-name">arg</span>)
+{
+        <span class="org-type">ucontext_t</span> <span class="org-variable-name">uc</span>;
+
+        fprintf(stderr, <span class="org-string">"Assert expr: %s [%s, %s, %zu]\n"</span>,
+                expr, file, func, line);
+
+        getcontext(&amp;uc);
+        stacktrace();
+
+        <span class="org-keyword">if</span> (cb)
+                cb(arg);
+
+        exit(1);
+}
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">__assert_string_expr</span>(<span class="org-variable-name">expr</span>)      #expr
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">assert_stack</span>(<span class="org-variable-name">expr</span>, <span class="org-variable-name">callback</span>, <span class="org-variable-name">arg</span>)       ({                      \
+                <span class="org-keyword">if</span> (expr)                                               \
+                        __assert_stack(#expr, __FILE__, __func__,       \
+                                       __LINE__, callback, arg);        \
+                (<span class="org-type">void</span>)<span class="org-constant">NULL</span>; })
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span> = 50, <span class="org-variable-name">j</span> = 100;
+        assert_stack(<span class="org-type">i</span>*2 == j, <span class="org-constant">NULL</span>, <span class="org-constant">NULL</span>);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0ab4c83" class="outline-2">
+<h2 id="org0ab4c83"><span class="section-number-2">4</span> 实例代码</h2>
+</div>
+
+<div id="outline-container-org6de9951" class="outline-2">
+<h2 id="org6de9951"><span class="section-number-2">5</span> References</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-debug-c-dump.html';
+    this.page.identifier = 'linux-debug-c-dump.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
