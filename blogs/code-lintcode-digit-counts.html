@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-08-14 Tue 00:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Code - Lintcode Digit Counts问题成绩排名第一</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Code - Lintcode Digit Counts问题成绩排名第一</h1>
+<p>
+领扣刷题，Digit Counts成绩排名第一，记录下。具体算法说明后补。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">class</span> <span class="org-type">Solution</span> {
+<span class="org-keyword">public</span>:
+    <span class="org-comment-delimiter">/**</span>
+<span class="org-comment">     * @param k: An integer</span>
+<span class="org-comment">     * @param n: An integer</span>
+<span class="org-comment">     * @return: An integer denote the count of digit k in 1..n</span>
+<span class="org-comment">     */</span>
+    <span class="org-type">int</span> <span class="org-function-name">digitCounts</span>(<span class="org-type">int</span> <span class="org-variable-name">k</span>, <span class="org-type">int</span> <span class="org-variable-name">n</span>) {
+        <span class="org-comment-delimiter">// </span><span class="org-comment">write your code here</span>
+        <span class="org-type">int</span> <span class="org-variable-name">xd</span>, <span class="org-variable-name">xbase</span>, <span class="org-variable-name">dbase</span> = 1, <span class="org-variable-name">div</span> = 10, <span class="org-variable-name">c</span> = 0, <span class="org-variable-name">k0penalty</span> = 0;
+
+        <span class="org-keyword">if</span> (n%10 &gt;= k)
+                c += 1;
+
+        <span class="org-keyword">while</span>(div &lt;= n) {
+                xd = n%(<span class="org-type">div</span>*10);
+                xd /= div;
+                xbase = div/10*dbase;
+
+                c += xd*xbase;
+                <span class="org-keyword">if</span> (xd &gt; k)
+                        c += div;
+                <span class="org-keyword">else</span> <span class="org-keyword">if</span> (xd == k)
+                        c += (n%div) + 1;
+
+                k0penalty += div;
+                div *= 10;
+                ++dbase;
+        }
+
+        <span class="org-keyword">if</span> (k == 0)
+                c -= k0penalty;
+
+        <span class="org-keyword">return</span> c;
+    }
+};
+</pre>
+</div>
+
+<p>
+C实现和测试：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">countk</span>(<span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-type">int</span> <span class="org-variable-name">k</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">v</span>, <span class="org-variable-name">c</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt;= n; ++i) {
+                v = i;
+                <span class="org-keyword">do</span> {
+                        <span class="org-keyword">if</span> (v%10 == k)
+                                ++c;
+                        v /= 10;
+                } <span class="org-keyword">while</span> (v);
+        }
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">countk2</span>(<span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-type">int</span> <span class="org-variable-name">k</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">xd</span>, <span class="org-variable-name">xbase</span>, <span class="org-variable-name">dbase</span> = 1, <span class="org-variable-name">div</span> = 10, <span class="org-variable-name">c</span> = 0, <span class="org-variable-name">k0penalty</span> = 0;
+
+        <span class="org-comment-delimiter">/*</span>
+<span class="org-comment">         * Algorithms Description:</span>
+<span class="org-comment">         </span><span class="org-comment-delimiter">*/</span>
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">units digit (lowest digit) </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">if</span> (n%10 &gt;= k)
+                c += 1;
+
+        <span class="org-keyword">while</span>(div &lt;= n) {
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">xd is the x's digits. e.g.: units, tens, hundreds, ... </span><span class="org-comment-delimiter">*/</span>
+                xd = n%(div*10);
+                xd /= div;
+                xbase = div/10*dbase;
+
+                c += xd*xbase;
+                <span class="org-keyword">if</span> (xd &gt; k)
+                        c += div;
+                <span class="org-keyword">else</span> <span class="org-keyword">if</span> (xd == k)
+                        c += (n%div) + 1;
+
+                k0penalty += div; <span class="org-comment-delimiter">/* </span><span class="org-comment">just used if @k == 0 </span><span class="org-comment-delimiter">*/</span>
+                div *= 10;
+                ++dbase;
+        }
+
+        <span class="org-keyword">if</span> (k == 0)
+                c -= k0penalty;
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">k</span>, <span class="org-variable-name">c</span>, <span class="org-variable-name">c2</span> = countk2(12, 1);
+        <span class="org-type">int</span> <span class="org-variable-name">ta</span>[] = {0, 5, 10, 48, 94, 100, 102, 108, 110, 111, 115};
+        <span class="org-type">int</span> <span class="org-variable-name">ka</span>[] = {2, 0};
+
+        <span class="org-keyword">if</span> (c2 != 5) {
+                fprintf(stderr, <span class="org-string">"countk(12, 1) expects 5, calc is %d\n"</span>, c2);
+                <span class="org-keyword">return</span> 1;
+        }
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 100000; ++i) {
+                <span class="org-keyword">for</span> (k = 0; k &lt;= 9; ++k) {
+                        c = countk2(i, k);
+                        c2 = countk2(i, k);
+                        <span class="org-keyword">if</span> (c != c2) {
+                                fprintf(stderr,
+                                        <span class="org-string">"error: n(%d) k(%d) c(%d) c2(%d)\n"</span>,
+                                        i, k, c, c2);
+                                <span class="org-keyword">return</span> 1;
+                        }
+                }
+        }
+
+        c = countk2(224, 2);
+        fprintf(stdout, <span class="org-string">"countk(224, 2) is %d\n"</span>, c);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/code-lintcode-digit-counts.html';
+    this.page.identifier = 'code-lintcode-digit-counts.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

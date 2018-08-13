@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-15 Sun 22:07 -->
+<!-- 2018-08-14 Tue 00:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>GCC内联汇编</title>
 <meta name="generator" content="Org mode" />
@@ -14,6 +14,28 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -24,7 +46,20 @@
 <ul>
 <li><a href="#org253337a">1. 什么是内联汇编</a></li>
 <li><a href="#orgea2439d">2. 为什么使用内联汇编</a></li>
-<li><a href="#org2bef366">3. 内联汇编语法格式</a></li>
+<li><a href="#org2bef366">3. 内联汇编语法格式</a>
+<ul>
+<li><a href="#org70ba052">3.1. Basic Asm</a></li>
+<li><a href="#org446cfb8">3.2. Extend Asm</a>
+<ul>
+<li><a href="#orgc04f616">3.2.1. volatile</a></li>
+<li><a href="#org0a9d8dc">3.2.2. goto</a></li>
+<li><a href="#org5d9f25e">3.2.3. AssemblerTemplate</a></li>
+</ul>
+</li>
+<li><a href="#org47316aa">3.3. Output Operands</a></li>
+<li><a href="#org74b2e61">3.4. Input Operands</a></li>
+</ul>
+</li>
 <li><a href="#org0fc0b61">4. 内联汇编示例</a></li>
 <li><a href="#org0650745">5. References</a></li>
 </ul>
@@ -33,13 +68,925 @@
 
 <div id="outline-container-org253337a" class="outline-2">
 <h2 id="org253337a"><span class="section-number-2">1</span> 什么是内联汇编</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+通过C标准或编译器特有的语法规则，用汇编语言编写函数，称为内联汇编(Inline
+Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="https://gcc.gnu.org/onlinedocs/gcc/Alternate-Keywords.html#Alternate-Keywords">参见这里</a>）。
+</p>
 </div>
+</div>
+
 <div id="outline-container-orgea2439d" class="outline-2">
 <h2 id="orgea2439d"><span class="section-number-2">2</span> 为什么使用内联汇编</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+使用内联汇编基于两个原因：
+</p>
+<ul class="org-ul">
+<li>性能：通过精准控制汇编实现，提供更好的性能</li>
+<li>功能：部分功能只能通过汇编语言实现，比如不使用系统调用获取时间戳(Intel RDTSC)</li>
+</ul>
 </div>
+</div>
+
 <div id="outline-container-org2bef366" class="outline-2">
 <h2 id="org2bef366"><span class="section-number-2">3</span> 内联汇编语法格式</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+完整的清单请查看<a href="https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C">GCC Mnaual - For Using Assembly Language with C</a>。
+</p>
 </div>
+<div id="outline-container-org70ba052" class="outline-3">
+<h3 id="org70ba052"><span class="section-number-3">3.1</span> Basic Asm</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] ( AssemblerInstruction )
+</pre>
+</div>
+<p>
+可选的volatile没有任何作用，因为所有basic asm都是隐含volatile的。
+</p>
+
+<p>
+AssemblerInstruction是字符串形式的汇编码，GCC不解析basic asm汇编字符串含义。如果有多条汇编指令，请添加分隔符，一般是"\n\t"。
+</p>
+
+<p>
+通常建议使用extended asm，它能够生成更小、更安全、更快速的代码。但如果想在文件级别使用内联汇编（比如定义汇编宏或修改汇编指令），必须使用basic asm，因为
+extended asm只能在C函数内部使用。
+</p>
+
+<p>
+如果需要使用C语言中的数据，建议使用extend asm。GCC文档描述如何将basic asm转换为
+extend asm，<a href="https://gcc.gnu.org/wiki/ConvertBasicAsmToExtended">参考这里</a>。
+</p>
+
+<p>
+GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇编中定义符号，可能导致编译错误。
+</p>
+
+<p>
+一个简单的basic asm例子：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span> <span class="org-function-name">DebugBreak</span>() <span class="org-keyword">asm</span>(<span class="org-string">"int $3"</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-variable-name">sum</span> = 0;
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-keyword">asm</span>(<span class="org-string">"movl $100, sum\n\t"</span>);
+        printf(<span class="org-string">"sum=%d\n"</span>, sum);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org446cfb8" class="outline-3">
+<h3 id="org446cfb8"><span class="section-number-3">3.2</span> Extend Asm</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] ( AssemblerTemplate
+                 : OutputOperands
+                 [ : InputOperands
+                 [ : Clobbers ] ])
+
+<span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] <span class="org-keyword">goto</span> ( AssemblerTemplate
+                      :
+                      : InputOperands
+                      : Clobbers
+                      : GotoLabels)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc04f616" class="outline-4">
+<h4 id="orgc04f616"><span class="section-number-4">3.2.1</span> volatile</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+volatile和C语言中的一致，如果汇编指令产生边界效应，需要添加volatile禁止优化。如下示例：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdint.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">uint64_t</span> <span class="org-function-name">nv_rdtsc</span>(<span class="org-type">void</span>)
+{
+        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts</span>;
+
+        <span class="org-keyword">asm</span> (<span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
+             <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
+             <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
+             : <span class="org-string">"=a"</span> (rts)
+             :
+             : <span class="org-string">"rdx"</span>);
+
+        <span class="org-keyword">return</span> rts;
+}
+
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">uint64_t</span> <span class="org-function-name">rdtsc</span>(<span class="org-type">void</span>)
+{
+        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts</span>;
+
+        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> (<span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
+                      <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
+                      <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
+                      : <span class="org-string">"=a"</span> (rts)
+                      :
+                      : <span class="org-string">"rdx"</span>);
+
+        <span class="org-keyword">return</span> rts;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts1</span>, <span class="org-variable-name">rts2</span>, <span class="org-variable-name">rts3</span>;
+
+        rts1 = nv_rdtsc();
+        usleep(10);
+        rts2 = nv_rdtsc();
+        usleep(20);
+        rts3 = nv_rdtsc();
+
+        printf(<span class="org-string">"rts = %lu, %lu, %lu\n"</span>, rts1, rts2, rts3);
+
+        rts1 = rdtsc();
+        usleep(10);
+        rts2 = rdtsc();
+        usleep(20);
+        rts3 = rdtsc();
+        printf(<span class="org-string">"rts = %lu, %lu, %lu\n"</span>, rts1, rts2, rts3);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+Manual说明：
+</p>
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile</a></li>
+</ul>
+
+<p>
+GCC’s optimizers sometimes discard asm statements if they determine there is no
+need for the output variables. Also, the optimizers may move code out of loops
+if they believe that the code will always return the same result (i.e. none of
+its input values change between calls). Using the volatile qualifier disables
+these optimizations. asm statements that have no output operands, including asm
+goto statements, are implicitly volatile.
+</p>
+
+<p>
+This i386 code demonstrates a case that does not use (or require) the volatile
+qualifier. If it is performing assertion checking, this code uses asm to perform
+the validation. Otherwise, dwRes is unreferenced by any code. As a result, the
+optimizers can discard the asm statement, which in turn removes the need for the
+entire DoCheck routine. By omitting the volatile qualifier when it isn’t needed
+you allow the optimizers to produce the most efficient code possible.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span> <span class="org-function-name">DoCheck</span>(<span class="org-type">uint32_t</span> <span class="org-variable-name">dwSomeValue</span>)
+{
+   <span class="org-type">uint32_t</span> <span class="org-variable-name">dwRes</span>;
+
+   <span class="org-comment-delimiter">// </span><span class="org-comment">Assumes dwSomeValue is not zero.</span>
+   <span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1,%0"</span>
+     : <span class="org-string">"=r"</span> (dwRes)
+     : <span class="org-string">"r"</span> (dwSomeValue)
+     : <span class="org-string">"cc"</span>);
+
+   assert(dwRes &gt; 3);
+}
+</pre>
+</div>
+
+<p>
+The next example shows a case where the optimizers can recognize that the input
+(dwSomeValue) never changes during the execution of the function and can
+therefore move the asm outside the loop to produce more efficient code. Again,
+using volatile disables this type of optimization.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span> <span class="org-function-name">do_print</span>(<span class="org-type">uint32_t</span> <span class="org-variable-name">dwSomeValue</span>)
+{
+   <span class="org-type">uint32_t</span> <span class="org-variable-name">dwRes</span>;
+
+   <span class="org-keyword">for</span> (<span class="org-type">uint32_t</span> <span class="org-variable-name">x</span>=0; x &lt; 5; x++)
+   {
+      <span class="org-comment-delimiter">// </span><span class="org-comment">Assumes dwSomeValue is not zero.</span>
+      <span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1,%0"</span>
+        : <span class="org-string">"=r"</span> (dwRes)
+        : <span class="org-string">"r"</span> (dwSomeValue)
+        : <span class="org-string">"cc"</span>);
+
+      printf(<span class="org-string">"%u: %u %u\n"</span>, x, dwSomeValue, dwRes);
+   }
+}
+</pre>
+</div>
+
+<p>
+The following example demonstrates a case where you need to use the volatile
+qualifier. It uses the x86 rdtsc instruction, which reads the computer’s
+time-stamp counter. Without the volatile qualifier, the optimizers might assume
+that the asm block will always return the same value and therefore optimize away
+the second call.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">uint64_t</span> <span class="org-variable-name">msr</span>;
+
+<span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> ( <span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
+        <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
+        <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
+        : <span class="org-string">"=a"</span> (msr)
+        :
+        : <span class="org-string">"rdx"</span>);
+
+printf(<span class="org-string">"msr: %llx\n"</span>, msr);
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">Do other work...</span>
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">Reprint the timestamp</span>
+<span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> ( <span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
+        <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
+        <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
+        : <span class="org-string">"=a"</span> (msr)
+        :
+        : <span class="org-string">"rdx"</span>);
+
+printf(<span class="org-string">"msr: %llx\n"</span>, msr);
+</pre>
+</div>
+
+<p>
+GCC’s optimizers do not treat this code like the non-volatile code in the
+earlier examples. They do not move it out of loops or omit it on the assumption
+that the result from a previous call is still valid.
+</p>
+
+<p>
+Note that the compiler can move even volatile asm instructions relative to other
+code, including across jump instructions. For example, on many targets there is
+a system register that controls the rounding mode of floating-point operations.
+Setting it with a volatile asm, as in the following PowerPC example, does not
+work reliably.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mtfsf 255, %0"</span> : : <span class="org-string">"f"</span> (fpenv));
+sum = x + y;
+</pre>
+</div>
+
+<p>
+The compiler may move the addition back before the volatile asm. To make it work
+as expected, add an artificial dependency to the asm by referencing a variable
+in the subsequent code, for example:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> (<span class="org-string">"mtfsf 255,%1"</span> : <span class="org-string">"=X"</span> (sum) : <span class="org-string">"f"</span> (fpenv));
+sum = x + y;
+</pre>
+</div>
+
+<p>
+Under certain circumstances, GCC may duplicate (or remove duplicates of) your
+assembly code when optimizing. This can lead to unexpected duplicate symbol
+errors during compilation if your asm code defines symbols or labels. Using ‘%=’
+(see AssemblerTemplate) may help resolve this problem.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org0a9d8dc" class="outline-4">
+<h4 id="org0a9d8dc"><span class="section-number-4">3.2.2</span> goto</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+允许汇编指令跳转到C语言定义的GotoLabels任一个，多个GotoLabels用逗号分割。允许
+goto跳转的汇编块不允许包含输出。如下代码示例显示了内联跳转。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">void</span> <span class="org-function-name">func</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>)
+{
+        <span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (<span class="org-string">"cmpl $1,%0\n\t"</span>
+                  <span class="org-string">"je %l[Label1]\n\t"</span>
+                  <span class="org-string">"cmpl $2, %0\n\t"</span>
+                  <span class="org-string">"je %l[Label2]\n\t"</span>
+                  : <span class="org-comment-delimiter">/* </span><span class="org-comment">no outputs </span><span class="org-comment-delimiter">*/</span>
+                  : <span class="org-string">"r"</span>(i)
+                  : <span class="org-comment-delimiter">/* </span><span class="org-comment">no clobber </span><span class="org-comment-delimiter">*/</span>
+                  : Label1, Label2
+                 );
+
+        printf(<span class="org-string">"asm no goto\n"</span>);
+        <span class="org-keyword">return</span>;
+
+<span class="org-constant">Label1</span>:
+        printf(<span class="org-string">"asm goto Label1\n"</span>);
+        <span class="org-keyword">return</span>;
+
+<span class="org-constant">Label2</span>:
+        printf(<span class="org-string">"asm goto Label2\n"</span>);
+        <span class="org-keyword">return</span>;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        func(0);
+        func(1);
+        func(2);
+        func(3);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+注意上述示例中，根据gcc规则，常数必须是cmpl的第一个参数。
+</p>
+
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#GotoLabels">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#GotoLabels</a></li>
+</ul>
+
+<p>
+asm goto allows assembly code to jump to one or more C labels. The GotoLabels
+section in an asm goto statement contains a comma-separated list of all C labels
+to which the assembler code may jump. GCC assumes that asm execution falls
+through to the next statement (if this is not the case, consider using the
+__builtin_unreachable intrinsic after the asm statement). Optimization of asm
+goto may be improved by using the hot and cold label attributes (see
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Label-Attributes.html#Label-Attributes">Label Attributes</a>).
+</p>
+
+<p>
+An asm goto statement cannot have outputs. This is due to an internal
+restriction of the compiler: control transfer instructions cannot have outputs.
+If the assembler code does modify anything, use the "memory" clobber to force
+the optimizers to flush all register values to memory and reload them if
+necessary after the asm statement.
+</p>
+
+<p>
+Also note that an asm goto statement is always implicitly considered volatile.
+</p>
+
+<p>
+To reference a label in the assembler template, prefix it with ‘%l’ (lowercase
+‘L’) followed by its (zero-based) position in GotoLabels plus the number of
+input operands. For example, if the asm has three inputs and references two
+labels, refer to the first label as ‘%l3’ and the second as ‘%l4’).
+</p>
+
+<p>
+Alternately, you can reference labels using the actual C label name enclosed in
+brackets. For example, to reference a label named carry, you can use
+‘%l[carry]’. The label must still be listed in the GotoLabels section when using
+this approach.
+</p>
+
+<p>
+Here is an example of asm goto for i386:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (
+    <span class="org-string">"btl %1, %0\n\t"</span>
+    <span class="org-string">"jc %l2"</span>
+    : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
+    : <span class="org-string">"r"</span> (p1), <span class="org-string">"r"</span> (p2)
+    : <span class="org-string">"cc"</span>
+    : carry);
+
+<span class="org-keyword">return</span> 0;
+
+<span class="org-constant">carry</span>:
+<span class="org-keyword">return</span> 1;
+</pre>
+</div>
+
+<p>
+The following example shows an asm goto that uses a memory clobber.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">int</span> <span class="org-function-name">frob</span>(<span class="org-type">int</span> <span class="org-variable-name">x</span>)
+{
+  <span class="org-type">int</span> <span class="org-variable-name">y</span>;
+  <span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (<span class="org-string">"frob %%r5, %1; jc %l[error]; mov (%2), %%r5"</span>
+            : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
+            : <span class="org-string">"r"</span>(x), <span class="org-string">"r"</span>(&amp;y)
+            : <span class="org-string">"r5"</span>, <span class="org-string">"memory"</span>
+            : error);
+  <span class="org-keyword">return</span> y;
+<span class="org-constant">error</span>:
+  <span class="org-keyword">return</span> -1;
+}
+</pre>
+</div>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org5d9f25e" class="outline-4">
+<h4 id="org5d9f25e"><span class="section-number-4">3.2.3</span> AssemblerTemplate</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#AssemblerTemplate">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#AssemblerTemplate</a></li>
+</ul>
+
+<p>
+An assembler template is a literal string containing assembler instructions. The
+compiler replaces tokens in the template that refer to inputs, outputs, and goto
+labels, and then outputs the resulting string to the assembler. The string can
+contain any instructions recognized by the assembler, including directives. GCC
+does not parse the assembler instructions themselves and does not know what they
+mean or even whether they are valid assembler input. However, it does count the
+statements (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html#Size-of-an-asm">Size of an asm</a>).
+</p>
+
+<p>
+You may place multiple assembler instructions together in a single asm string,
+separated by the characters normally used in assembly code for the system. A
+combination that works in most places is a newline to break the line, plus a tab
+character to move to the instruction field (written as ‘\n\t’). Some assemblers
+allow semicolons as a line separator. However, note that some assembler dialects
+use semicolons to start a comment.
+</p>
+
+<p>
+Do not expect a sequence of asm statements to remain perfectly consecutive after
+compilation, even when you are using the volatile qualifier. If certain
+instructions need to remain consecutive in the output, put them in a single
+multi-instruction asm statement.
+</p>
+
+<p>
+Accessing data from C programs without using input/output operands (such as by
+using global symbols directly from the assembler template) may not work as
+expected. Similarly, calling functions directly from an assembler template
+requires a detailed understanding of the target assembler and ABI.
+</p>
+
+<p>
+Since GCC does not parse the assembler template, it has no visibility of any
+symbols it references. This may result in GCC discarding those symbols as
+unreferenced unless they are also listed as input, output, or goto operands.
+</p>
+
+<ol class="org-ol">
+<li>Special format strings</li>
+</ol>
+<p>
+In addition to the tokens described by the input, output, and goto operands,
+these tokens have special meanings in the assembler template:
+</p>
+
+<p>
+‘%%’
+    Outputs a single ‘%’ into the assembler code.
+</p>
+
+<p>
+‘%=’
+    Outputs a number that is unique to each instance of the asm statement in the
+    entire compilation. This option is useful when creating local labels and
+    referring to them multiple times in a single template that generates
+    multiple assembler instructions.
+</p>
+
+<p>
+‘%{’‘%|’‘%}’
+    Outputs ‘{’, ‘|’, and ‘}’ characters (respectively) into the assembler code.
+    When unescaped, these characters have special meaning to indicate multiple
+    assembler dialects, as described below.
+</p>
+
+<ol class="org-ol">
+<li>Multiple assembler dialects in asm templates</li>
+</ol>
+<p>
+On targets such as x86, GCC supports multiple assembler dialects. The -masm
+option controls which dialect GCC uses as its default for inline assembler. The
+target-specific documentation for the -masm option contains the list of
+supported dialects, as well as the default dialect if the option is not
+specified. This information may be important to understand, since assembler code
+that works correctly when compiled using one dialect will likely fail if
+compiled using another. See <a href="https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html#x86-Options">x86 Options</a>.
+</p>
+
+<p>
+If your code needs to support multiple assembler dialects (for example, if you
+are writing public headers that need to support a variety of compilation
+options), use constructs of this form:
+</p>
+
+<p>
+{ dialect0 | dialect1 | dialect2&#x2026; }
+This construct outputs dialect0 when using dialect #0 to compile the code,
+dialect1 for dialect #1, etc. If there are fewer alternatives within the braces
+than the number of dialects the compiler supports, the construct outputs
+nothing.
+</p>
+
+<p>
+For example, if an x86 compiler supports two dialects (‘att’, ‘intel’), an
+assembler template such as this:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-string">"bt{l %[Offset],%[Base] | %[Base],%[Offset]}; jc %l2"</span>
+</pre>
+</div>
+
+<p>
+is equivalent to one of
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-string">"btl %[Offset],%[Base] ; jc %l2"</span>   <span class="org-comment-delimiter">/* </span><span class="org-comment">att dialect */</span>
+<span class="org-string">"bt %[Base],%[Offset]; jc %l2"</span>     <span class="org-comment-delimiter">/* </span><span class="org-comment">intel dialect */</span>
+</pre>
+</div>
+
+<p>
+Using that same compiler, this code:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-string">"xchg{l}\t{%%}ebx, %1"</span>
+</pre>
+</div>
+
+<p>
+corresponds to either
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-string">"xchgl\t%%ebx, %1"</span>                 <span class="org-comment-delimiter">/* </span><span class="org-comment">att dialect */</span>
+<span class="org-string">"xchg\tebx, %1"</span>                    <span class="org-comment-delimiter">/* </span><span class="org-comment">intel dialect */</span>
+</pre>
+</div>
+
+<p>
+There is no support for nesting dialect alternatives.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org47316aa" class="outline-3">
+<h3 id="org47316aa"><span class="section-number-3">3.3</span> Output Operands</h3>
+<div class="outline-text-3" id="text-3-3">
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#OutputOperands">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#OutputOperands</a></li>
+</ul>
+
+<p>
+An asm statement has zero or more output operands indicating the names of C
+variables modified by the assembler code.
+</p>
+
+<p>
+In this i386 example, old (referred to in the template string as %0) and *Base
+(as %1) are outputs and Offset (%2) is an input:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">bool</span> <span class="org-variable-name">old</span>;
+
+<span class="org-keyword">__asm__</span> (<span class="org-string">"btsl %2,%1\n\t"</span> <span class="org-comment-delimiter">// </span><span class="org-comment">Turn on zero-based bit #Offset in Base.</span>
+         <span class="org-string">"sbb %0,%0"</span>      <span class="org-comment-delimiter">// </span><span class="org-comment">Use the CF to calculate old.</span>
+   : <span class="org-string">"=r"</span> (old), <span class="org-string">"+rm"</span> (*Base)
+   : <span class="org-string">"Ir"</span> (Offset)
+   : <span class="org-string">"cc"</span>);
+
+<span class="org-keyword">return</span> old;
+</pre>
+</div>
+
+<p>
+Operands are separated by commas. Each operand has this format:
+</p>
+<div class="org-src-container">
+<pre class="src src-C">[ [asmSymbolicName] ] constraint (cvariablename)
+</pre>
+</div>
+
+<p>
+asmSymbolicName<br />
+Specifies a symbolic name for the operand. Reference the name in the
+assembler template by enclosing it in square brackets (i.e. ‘%[Value]’).
+The scope of the name is the asm statement that contains the definition.
+Any valid C variable name is acceptable, including names already defined in
+the surrounding code. No two operands within the same asm statement can use
+the same symbolic name.
+</p>
+
+<p>
+When not using an asmSymbolicName, use the (zero-based) position of the
+operand in the list of operands in the assembler template. For example if
+there are three output operands, use ‘%0’ in the template to refer to the
+first, ‘%1’ for the second, and ‘%2’ for the third.
+</p>
+
+
+<p>
+constraint<br />
+A string constant specifying constraints on the placement of the operand; See
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Constraints.html#Constraints">Constraints</a>, for details.
+</p>
+
+<p>
+Output constraints must begin with either ‘=’ (a variable overwriting an
+existing value) or ‘+’ (when reading and writing). When using ‘=’, do not assume
+the location contains the existing value on entry to the asm, except when the
+operand is tied to an input; see Input Operands.
+</p>
+
+<p>
+After the prefix, there must be one or more additional constraints (see
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Constraints.html#Constraints">Constraints</a>) that describe where the value resides. Common constraints include
+‘r’ for register and ‘m’ for memory. When you list more than one possible
+location (for example, "=rm"), the compiler chooses the most efficient one based
+on the current context. If you list as many alternates as the asm statement
+allows, you permit the optimizers to produce the best possible code. If you must
+use a specific register, but your Machine Constraints do not provide sufficient
+control to select the specific register you want, local register variables may
+provide a solution (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html#Local-Register-Variables">Local Register Variables</a>).
+</p>
+
+<p>
+cvariablename<br />
+Specifies a C lvalue expression to hold the output, typically a variable name.
+The enclosing parentheses are a required part of the syntax.
+</p>
+
+<p>
+When the compiler selects the registers to use to represent the output operands,
+it does not use any of the clobbered registers (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Clobbers-and-Scratch-Registers">Clobbers and Scratch Registers</a>).
+</p>
+
+<p>
+Output operand expressions must be lvalues. The compiler cannot check whether
+the operands have data types that are reasonable for the instruction being
+executed. For output expressions that are not directly addressable (for example
+a bit-field), the constraint must allow a register. In that case, GCC uses the
+register as the output of the asm, and then stores that register into the output.
+</p>
+
+<p>
+Operands using the ‘+’ constraint modifier count as two operands (that is, both
+as input and output) towards the total maximum of 30 operands per asm statement.
+</p>
+
+<p>
+Use the ‘&amp;’ constraint modifier (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Modifiers.html#Modifiers">Modifiers</a>) on all output operands that
+must not overlap an input. Otherwise, GCC may allocate the output operand in the
+same register as an unrelated input operand, on the assumption that the
+assembler code consumes its inputs before producing outputs. This assumption may
+be false if the assembler code actually consists of more than one instruction.
+</p>
+
+<p>
+The same problem can occur if one output parameter (a) allows a register
+constraint and another output parameter (b) allows a memory constraint. The code
+generated by GCC to access the memory address in b can contain registers which
+might be shared by a, and GCC considers those registers to be inputs to the asm.
+As above, GCC assumes that such input registers are consumed before any outputs
+are written. This assumption may result in incorrect behavior if the asm writes
+to a before using b. Combining the ‘&amp;’ modifier with the register constraint on
+a ensures that modifying a does not affect the address referenced by b.
+Otherwise, the location of b is undefined if a is modified before using b.
+</p>
+
+<p>
+asm supports operand modifiers on operands (for example ‘%k2’ instead of simply
+‘%2’). Typically these qualifiers are hardware dependent. The list of supported
+modifiers for x86 is found at x86 Operand modifiers.
+</p>
+
+<p>
+If the C code that follows the asm makes no use of any of the output operands,
+use volatile for the asm statement to prevent the optimizers from discarding the
+asm statement as unneeded (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile">Volatile</a>).
+</p>
+
+<p>
+This code makes no use of the optional asmSymbolicName. Therefore it references
+the first output operand as %0 (were there a second, it would be %1, etc). The
+number of the first input operand is one greater than that of the last output
+operand. In this i386 example, that makes Mask referenced as %1:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">Mask</span> = 1234;
+<span class="org-type">uint32_t</span> <span class="org-variable-name">Index</span>;
+
+<span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1, %0"</span>
+     : <span class="org-string">"=r"</span> (Index)
+     : <span class="org-string">"r"</span> (Mask)
+     : <span class="org-string">"cc"</span>);
+</pre>
+</div>
+
+<p>
+That code overwrites the variable Index (‘=’), placing the value in a register
+(‘r’). Using the generic ‘r’ constraint instead of a constraint for a specific
+register allows the compiler to pick the register to use, which can result in
+more efficient code. This may not be possible if an assembler instruction
+requires a specific register.
+</p>
+
+<p>
+The following i386 example uses the asmSymbolicName syntax. It produces the same
+result as the code above, but some may consider it more readable or more
+maintainable since reordering index numbers is not necessary when adding or
+removing operands. The names aIndex and aMask are only used in this example to
+emphasize which names get used where. It is acceptable to reuse the names Index
+and Mask.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">Mask</span> = 1234;
+<span class="org-type">uint32_t</span> <span class="org-variable-name">Index</span>;
+
+<span class="org-keyword">asm</span> (<span class="org-string">"bsfl %[aMask], %[aIndex]"</span>
+     : [aIndex] <span class="org-string">"=r"</span> (Index)
+     : [aMask] <span class="org-string">"r"</span> (Mask)
+     : <span class="org-string">"cc"</span>);
+
+</pre>
+</div>
+
+<p>
+Here are some more examples of output operands.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">c</span> = 1;
+<span class="org-type">uint32_t</span> <span class="org-variable-name">d</span>;
+<span class="org-type">uint32_t</span> *<span class="org-variable-name">e</span> = &amp;c;
+
+<span class="org-keyword">asm</span> (<span class="org-string">"mov %[e], %[d]"</span>
+     : [d] <span class="org-string">"=rm"</span> (d)
+     : [e] <span class="org-string">"rm"</span> (*e));
+</pre>
+</div>
+
+<p>
+Here, d may either be in a register or in memory. Since the compiler might
+already have the current value of the uint32_t location pointed to by e in a
+register, you can enable it to choose the best location for d by specifying both
+constraints.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org74b2e61" class="outline-3">
+<h3 id="org74b2e61"><span class="section-number-3">3.4</span> Input Operands</h3>
+<div class="outline-text-3" id="text-3-4">
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#InputOperands">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#InputOperands</a></li>
+</ul>
+
+<p>
+Input operands make values from C variables and expressions available to the
+assembly code.
+</p>
+
+<p>
+Operands are separated by commas. Each operand has this format:
+</p>
+<div class="org-src-container">
+<pre class="src src-C">[ [asmSymbolicName] ] constraint (cexpression)
+</pre>
+</div>
+
+<p>
+asmSymbolicName<br />
+Specifies a symbolic name for the operand. Reference the name in the assembler
+template by enclosing it in square brackets (i.e. ‘%[Value]’). The scope of the
+name is the asm statement that contains the definition. Any valid C variable
+name is acceptable, including names already defined in the surrounding code. No
+two operands within the same asm statement can use the same symbolic name.
+</p>
+
+<p>
+When not using an asmSymbolicName, use the (zero-based) position of the operand
+in the list of operands in the assembler template. For example if there are two
+output operands and three inputs, use ‘%2’ in the template to refer to the first
+input operand, ‘%3’ for the second, and ‘%4’ for the third.
+</p>
+
+<p>
+constraint<br />
+A string constant specifying constraints on the placement of the operand; See
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Constraints.html#Constraints">Constraints</a>, for details.
+</p>
+
+<p>
+Input constraint strings may not begin with either ‘=’ or ‘+’. When you list
+more than one possible location (for example, ‘"irm"’), the compiler chooses the
+most efficient one based on the current context. If you must use a specific
+register, but your Machine Constraints do not provide sufficient control to
+select the specific register you want, local register variables may provide a
+solution (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html#Local-Register-Variables">Local Register Variables</a>).
+</p>
+
+<p>
+Input constraints can also be digits (for example, "0"). This indicates that the
+specified input must be in the same place as the output constraint at the
+(zero-based) index in the output constraint list. When using asmSymbolicName
+syntax for the output operands, you may use these names (enclosed in brackets
+‘[]’) instead of digits.
+</p>
+
+<p>
+cexpression<br />
+This is the C variable or expression being passed to the asm statement as input.
+The enclosing parentheses are a required part of the syntax.
+</p>
+
+<p>
+When the compiler selects the registers to use to represent the input operands,
+it does not use any of the clobbered registers (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Clobbers-and-Scratch-Registers">Clobbers and Scratch Registers</a>).
+</p>
+
+<p>
+If there are no output operands but there are input operands, place two
+consecutive colons where the output operands would go:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">__asm__</span> (<span class="org-string">"some instructions"</span>
+         : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
+         : <span class="org-string">"r"</span> (Offset / 8));
+</pre>
+</div>
+
+<p>
+Warning: Do not modify the contents of input-only operands (except for inputs
+tied to outputs). The compiler assumes that on exit from the asm statement these
+operands contain the same values as they had before executing the statement. It
+is not possible to use clobbers to inform the compiler that the values in these
+inputs are changing. One common work-around is to tie the changing input
+variable to an output variable that never gets used. Note, however, that if the
+code that follows the asm statement makes no use of any of the output operands,
+the GCC optimizers may discard the asm statement as unneeded (see <a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile">Volatile</a>).
+</p>
+
+<p>
+asm supports operand modifiers on operands (for example ‘%k2’ instead of simply
+‘%2’). Typically these qualifiers are hardware dependent. The list of supported
+modifiers for x86 is found at <a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers">x86 Operand modifiers</a>.
+</p>
+
+<p>
+In this example using the fictitious combine instruction, the constraint "0" for
+input operand 1 says that it must occupy the same location as output operand 0.
+Only input operands may use numbers in constraints, and they must each refer to
+an output operand. Only a number (or the symbolic assembler name) in the
+constraint can guarantee that one operand is in the same place as another. The
+mere fact that foo is the value of both operands is not enough to guarantee that
+they are in the same place in the generated assembler code.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> (<span class="org-string">"combine %2, %0"</span>
+     : <span class="org-string">"=r"</span> (foo)
+     : <span class="org-string">"0"</span> (foo), <span class="org-string">"g"</span> (bar));
+</pre>
+</div>
+
+<p>
+Here is an example using symbolic names.
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">asm</span> (<span class="org-string">"cmoveq %1, %2, %[result]"</span>
+     : [result] <span class="org-string">"=r"</span>(result)
+     : <span class="org-string">"r"</span> (test), <span class="org-string">"r"</span> (new), <span class="org-string">"[result]"</span> (old));
+</pre>
+</div>
+</blockquote>
+
+<p>
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#AssemblerTemplate">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#AssemblerTemplate</a>
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Extended-Asm</a>
+</p>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org0fc0b61" class="outline-2">
 <h2 id="org0fc0b61"><span class="section-number-2">4</span> 内联汇编示例</h2>
 </div>
@@ -47,8 +994,9 @@
 <h2 id="org0650745"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
-<dt>Professional Assembly Language</dt><dd></dd>
-
+<dt>GCC Manual</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html</a></dd>
+<dt>Books</dt><dd>Professional Assembly Language/汇编语言程序设计</dd>
+<dt>HOWTO</dt><dd><a href="https://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html">https://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html</a></dd>
 <dt>Linux中X86的内联汇编</dt><dd></dd>
 </dl>
 <p>

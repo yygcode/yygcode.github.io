@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-01 Sun 03:59 -->
+<!-- 2018-08-14 Tue 00:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>GCC使用手记</title>
 <meta name="generator" content="Org mode" />
@@ -368,7 +368,110 @@ builtin-expect-probability
 
 <div id="outline-container-org680a46f" class="outline-3">
 <h3 id="org680a46f"><span class="section-number-3">1.3</span> __builtin_constant_p</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+GCC内置函数__builtin_constant_p(expr)用来检测expr是否为编译期常数，为编译期常数返回1，否则返回0。可基于检测结果决定是否使用常量表达式优化。
+</p>
+
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html</a></li>
+</ul>
+
+<p>
+Built-in Function: int __builtin_constant_p (exp)<br />
+You can use the built-in function __builtin_constant_p to determine if a value
+is known to be constant at compile time and hence that GCC can perform
+constant-folding on expressions involving that value. The argument of the
+function is the value to test. The function returns the integer 1 if the
+argument is known to be a compile-time constant and 0 if it is not known to be a
+compile-time constant. A return of 0 does not indicate that the value is not a
+constant, but merely that GCC cannot prove it is a constant with the specified
+value of the -O option.
+</p>
+
+<p>
+You typically use this function in an embedded application where memory is a
+critical resource. If you have some complex calculation, you may want it to be
+folded if it involves constants, but need to call a function if it does not. For
+example:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span> <span class="org-function-name">Scale_Value</span>(<span class="org-variable-name">X</span>)                          \
+        (__builtin_constant_p (X)               \
+         ? ((X) * SCALE + OFFSET) : Scale (X))
+</pre>
 </div>
+
+<p>
+You may use this built-in function in either a macro or an inline function.
+However, if you use it in an inlined function and pass an argument of the
+function as the argument to the built-in, GCC never returns 1 when you call the
+inline function with a string constant or compound literal (see
+<a href="https://gcc.gnu.org/onlinedocs/gcc/Compound-Literals.html#Compound-Literals">Compound Literals</a>) and does not return 1 when you pass a constant numeric value
+to the inline function unless you specify the -O option.
+</p>
+
+<p>
+You may also use __builtin_constant_p in initializers for static data. For
+instance, you can write
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span> <span class="org-keyword">const</span> <span class="org-type">int</span> <span class="org-variable-name">table</span>[] = {
+        __builtin_constant_p (EXPRESSION) ? (EXPRESSION) : -1,
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">&#8230; </span><span class="org-comment-delimiter">*/</span>
+};
+</pre>
+</div>
+
+<p>
+This is an acceptable initializer even if EXPRESSION is not a constant
+expression, including the case where __builtin_constant_p returns 1 because
+EXPRESSION can be folded to a constant but EXPRESSION contains operands that are
+not otherwise permitted in a static initializer (for example, 0 &amp;&amp; foo ()). GCC
+must be more conservative about evaluating the built-in in this case, because it
+has no opportunity to perform optimization.
+</p>
+</blockquote>
+
+<p>
+示例如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-keyword">const</span> <span class="org-type">int</span> <span class="org-variable-name">val</span> = 10;
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">iscc</span> = 0;
+
+        <span class="org-keyword">if</span> (__builtin_constant_p(val))
+                iscc = 1;
+        <span class="org-keyword">else</span>
+                iscc = 0;
+
+        printf(<span class="org-string">"iscc=%d\n"</span>, iscc);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+Linux Kernel较多了使用此特性：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/* </span><span class="org-comment">Copy from arch/x86/boot/bitops.h </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span> <span class="org-function-name">test_bit</span>(<span class="org-variable-name">nr</span>,<span class="org-variable-name">addr</span>)                       \
+        (__builtin_constant_p(nr) ?             \
+         constant_test_bit((nr),(addr)) :       \
+         variable_test_bit((nr),(addr)))
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org61e3e43" class="outline-3">
 <h3 id="org61e3e43"><span class="section-number-3">1.4</span> weak</h3>
 </div>
@@ -444,6 +547,7 @@ builtin-expect-probability
 <h2 id="org0c31e16"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
+<dt>gcc docs</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html</a></dd>
 <dt>Builtin_expect</dt><dd><a href="http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html">http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html</a></dd>
 <dt>IBM Developerworks Linux内核中GCC特性</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/">https://www.ibm.com/developerworks/cn/linux/l-gcc-hacks/</a></dd>
 </dl>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-08-14 Tue 00:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Linux内核copy_to_user/copy_from_user用户态地址分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Linux内核copy_to_user/copy_from_user用户态地址分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org85dbf69">1. copy_to_user分析</a></li>
+<li><a href="#orgc440058">2. References</a></li>
+</ul>
+</div>
+</div>
+<blockquote>
+<p>
+偶有一天，老吴抛出一个问题：用kmalloc分配一块内存，能否将其用于copy_to_user的用户态地址？
+</p>
+
+<p>
+多年前跟踪过copy_to_user、ioctl系列函数，记得类似函数进行有效检查、允许缺页中断与堆栈溢出，之后执行强制地址转换使用，其他就无差异了。聊时答复kmalloc直接使用即可，与老吴聊之后，总觉得不踏实，之后写了一个简单程序测试：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">char</span> *<span class="org-variable-name">p</span> = (<span class="org-type">char</span>*)kmalloc(128, GFP_USER);
+<span class="org-keyword">if</span> (p) {
+        strncpy(p, <span class="org-string">"Check Copy To User"</span>, 12);
+        n = copy_to_user(p, <span class="org-string">"KKKK"</span>, 4);
+        p[12] = <span class="org-string">'\0'</span>;
+}
+</pre>
+</div>
+
+<p>
+编译模块加载，并打印字符串p的结果。程序未报错，但是KKKK未能拷贝。后与培聊，答复之前版本ioctl直接使用最后一个参数传递的arg是正常的，但最近版本工作异常了。
+</p>
+
+<p>
+本文分析copy_to_user、copy_from_user、ioctl的具体实现，并分析相关防范技术。
+</p>
+
+<p>
+后续技术答复要谨慎进行。
+</p>
+</blockquote>
+
+<div id="outline-container-org85dbf69" class="outline-2">
+<h2 id="org85dbf69"><span class="section-number-2">1</span> copy_to_user分析</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">static</span> __always_inline <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-type">__must_check</span>
+<span class="org-function-name">copy_to_user</span>(<span class="org-type">void</span> <span class="org-variable-name">__user</span> *to, <span class="org-keyword">const</span> <span class="org-type">void</span> *<span class="org-variable-name">from</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">n</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">sz</span> = __compiletime_object_size(from);
+
+        kasan_check_read(from, n);
+        might_fault();
+
+        <span class="org-keyword">if</span> (likely(sz &lt; 0 || sz &gt;= n)) {
+                check_object_size(from, n, <span class="org-constant">true</span>);
+                n = _copy_to_user(to, from, n);
+        } <span class="org-keyword">else</span> <span class="org-keyword">if</span> (<span class="org-negation-char">!</span>__builtin_constant_p(n))
+                copy_user_overflow(sz, n);
+        <span class="org-keyword">else</span>
+                __bad_copy_user();
+
+        <span class="org-keyword">return</span> n;
+}
+
+<span class="org-preprocessor">#ifdef</span> INLINE_COPY_TO_USER
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">unsigned</span> <span class="org-type">long</span>
+<span class="org-function-name">_copy_to_user</span>(<span class="org-type">void</span> <span class="org-variable-name">__user</span> *to, <span class="org-keyword">const</span> <span class="org-type">void</span> *<span class="org-variable-name">from</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">n</span>)
+{
+        <span class="org-keyword">if</span> (access_ok(VERIFY_WRITE, to, n))
+                n = raw_copy_to_user(to, from, n);
+        <span class="org-keyword">return</span> n;
+}
+<span class="org-preprocessor">#else</span>
+<span class="org-keyword">extern</span> <span class="org-type">unsigned</span> <span class="org-type">long</span>
+<span class="org-function-name">_copy_to_user</span>(<span class="org-type">void</span> <span class="org-variable-name">__user</span> *, <span class="org-keyword">const</span> <span class="org-type">void</span> *, <span class="org-type">unsigned</span> <span class="org-type">long</span>);
+<span class="org-preprocessor">#endif</span>
+
+<span class="org-preprocessor">#if</span><span class="org-negation-char"><span class="org-preprocessor">n</span></span><span class="org-preprocessor">def</span> INLINE_COPY_TO_USER
+<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-function-name">_copy_to_user</span>(<span class="org-type">void</span> *<span class="org-variable-name">to</span>, <span class="org-keyword">const</span> <span class="org-type">void</span> <span class="org-variable-name">__user</span> *from, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">n</span>)
+{
+        <span class="org-keyword">if</span> (likely(access_ok(VERIFY_WRITE, to, n)))
+                n = raw_copy_to_user(to, from, n);
+        <span class="org-keyword">return</span> n;
+}
+<span class="org-function-name">EXPORT_SYMBOL</span>(_copy_to_user);
+<span class="org-preprocessor">#endif</span>
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">access_ok</span>(<span class="org-variable-name">type</span>, <span class="org-variable-name">addr</span>, <span class="org-variable-name">size</span>)                                     \
+({                                                                      \
+        WARN_ON_IN_IRQ();                                               \
+        likely(<span class="org-negation-char">!</span>__range_not_ok(addr, size, user_addr_max()));           \
+})
+
+<span class="org-preprocessor">#define</span> <span class="org-function-name">__range_not_ok</span>(<span class="org-variable-name">addr</span>, <span class="org-variable-name">size</span>, <span class="org-variable-name">limit</span>)                               \
+({                                                                      \
+        __chk_user_ptr(addr);                                           \
+        __chk_range_not_ok((<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-type">__force</span>)(addr), size, limit); \
+})
+
+<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">bool</span> <span class="org-function-name">__chk_range_not_ok</span>(<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">addr</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">size</span>, <span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">limit</span>)
+{
+        <span class="org-comment-delimiter">/*</span>
+<span class="org-comment">         * If we have used "sizeof()" for the size,</span>
+<span class="org-comment">         * we know it won't overflow the limit (but</span>
+<span class="org-comment">         * it might overflow the 'addr', so it's</span>
+<span class="org-comment">         * important to subtract the size from the</span>
+<span class="org-comment">         * limit, not add it to the address).</span>
+<span class="org-comment">         </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">if</span> (__builtin_constant_p(size))
+                <span class="org-keyword">return</span> unlikely(addr &gt; limit - size);
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">Arbitrary sizes? Be careful about overflow </span><span class="org-comment-delimiter">*/</span>
+        addr += size;
+        <span class="org-keyword">if</span> (unlikely(addr &lt; size))
+                <span class="org-keyword">return</span> <span class="org-constant">true</span>;
+        <span class="org-keyword">return</span> unlikely(addr &gt; limit);
+}
+</pre>
+</div>
+
+<p>
+<code>__chk_user_ptr</code> 只有在__CHECKER__
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc440058" class="outline-2">
+<h2 id="orgc440058"><span class="section-number-2">2</span> References</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>LWN x86: Supervisor Mode Access Prevention</dt><dd><a href="https://lwn.net/Articles/517251/">https://lwn.net/Articles/517251/</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/linux-kernel-copy-to-from-user.html';
+    this.page.identifier = 'linux-kernel-copy-to-from-user.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

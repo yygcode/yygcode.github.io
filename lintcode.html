@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2018-08-14 Tue 00:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>LintCode</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">LintCode</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6cb8a35">1. Algorithms</a>
+<ul>
+<li><a href="#org0802d77">1.1. 1.</a>
+<ul>
+<li><a href="#org21d2c3f">1.1.1. Description</a></li>
+<li><a href="#org6794e22">1.1.2. Answer1</a></li>
+</ul>
+</li>
+<li><a href="#org0c083a8">1.2. 2. Trailing Zeros</a>
+<ul>
+<li><a href="#org3b8f3f0">1.2.1. Description</a></li>
+<li><a href="#org36bb3a1">1.2.2. Answer1</a></li>
+<li><a href="#org81cffcb">1.2.3. Answer2</a></li>
+</ul>
+</li>
+<li><a href="#org0f2456f">1.3. 3. Digit Counts</a>
+<ul>
+<li><a href="#org9cc2cf1">1.3.1. Description</a></li>
+<li><a href="#org2c3ee59">1.3.2. Answer1</a></li>
+<li><a href="#org5528755">1.3.3. Answer2</a></li>
+</ul>
+</li>
+<li><a href="#org1f4a76d">1.4. 86. Binary Search Tree Iterator</a>
+<ul>
+<li><a href="#org1499001">1.4.1. Description</a></li>
+<li><a href="#org0a8f280">1.4.2. Answer1: usage O(h) by stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6cb8a35" class="outline-2">
+<h2 id="org6cb8a35"><span class="section-number-2">1</span> Algorithms</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org0802d77" class="outline-3">
+<h3 id="org0802d77"><span class="section-number-3">1.1</span> 1.</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org21d2c3f" class="outline-4">
+<h4 id="org21d2c3f"><span class="section-number-4">1.1.1</span> Description</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<ul class="org-ul">
+<li>URL: <a href="https://lintcode.com/problem/a-b-problem/description">https://lintcode.com/problem/a-b-problem/description</a></li>
+<li>Description</li>
+</ul>
+
+<p>
+Write a function that add two numbers A and B.
+</p>
+
+<p>
+There is no need to read data from standard input stream. Both parameters are
+given in function aplusb, you job is to calculate the sum and return it.
+</p>
+
+<ul class="org-ul">
+<li>Clarification
+<ul class="org-ul">
+<li>Are a and b both 32-bit integers? Yes.</li>
+<li>Can I use bit operation? Sure you can.</li>
+</ul></li>
+
+<li>Example
+<ul class="org-ul">
+<li>Given a=1 and b=2 return 3.</li>
+</ul></li>
+
+<li>Challenge
+<ul class="org-ul">
+<li>Of course you can just return a + b to get accepted. But Can you challenge not do it like that?(You should not use + or any arithmetic operators.)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6794e22" class="outline-4">
+<h4 id="org6794e22"><span class="section-number-4">1.1.2</span> Answer1</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+如果直接使用+实现，本题没有意义，考虑使用位算法（异或、与、或、非）。
+</p>
+
+<p>
+考虑二进制加法的四种情况：
+</p>
+<ul class="org-ul">
+<li>0+0=0</li>
+<li>0+1=1</li>
+<li>1+0=1</li>
+<li>1+1=0</li>
+</ul>
+
+<p>
+其结果与按位异或相同，但需要单独考虑进位情况：对应位都为1时，向高位进1。考虑按位取与，结果保留全部为1的位，左移一位后与之前加法结果相加，迭代进行直到进位部分为0。递归版本实现如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">do_sum</span>(<span class="org-type">int</span> <span class="org-variable-name">a</span>, <span class="org-type">int</span> <span class="org-variable-name">b</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">sum</span>, <span class="org-variable-name">carry</span>;
+
+        <span class="org-keyword">if</span> (b == 0)
+                <span class="org-keyword">return</span> a;
+
+        sum = a^b;
+        carry = (a&amp;b)&lt;&lt;1;
+
+        <span class="org-keyword">return</span> do_sum(sum, carry);
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">sum</span> = do_sum(13579, 24689), <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">k</span>;
+
+        printf(<span class="org-string">"sum=%d\n"</span>, sum);
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 10000; ++i) {
+                <span class="org-keyword">for</span> (j = 0; j &lt; 10000; ++j) {
+                        <span class="org-keyword">if</span> (i +j != do_sum(i, j)) {
+                                fprintf(stderr, <span class="org-string">"BUG: i(%d)+j(%d)=sum(%d, %d)"</span>,
+                                        i, j, i + j, do_sum(i, j));
+                        }
+                }
+        }
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+从递归版本优化为迭代版本：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">do_sum2</span>(<span class="org-type">int</span> <span class="org-variable-name">a</span>, <span class="org-type">int</span> <span class="org-variable-name">b</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">old</span>;
+
+        <span class="org-keyword">do</span> {
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">reuse variable @a for sum and @b for carry </span><span class="org-comment-delimiter">*/</span>
+                old = a;
+                a = a^b;
+                b = (old&amp;b)&lt;&lt;1;
+        } <span class="org-keyword">while</span> (b);
+
+        <span class="org-keyword">return</span> a;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">sum</span> = do_sum2(13579, 24689), <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>;
+
+        printf(<span class="org-string">"sum=%d\n"</span>, sum);
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 10000; ++i) {
+                <span class="org-keyword">for</span> (j = 0; j &lt; 10000; ++j) {
+                        <span class="org-keyword">if</span> (i +j != do_sum2(i, j)) {
+                                fprintf(stderr, <span class="org-string">"BUG: i(%d)+j(%d)=sum(%d, %d)"</span>,
+                                        i, j, i + j, do_sum2(i, j));
+                        }
+                }
+        }
+
+        <span class="org-keyword">return</span> 0;
+}
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c083a8" class="outline-3">
+<h3 id="org0c083a8"><span class="section-number-3">1.2</span> 2. Trailing Zeros</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-org3b8f3f0" class="outline-4">
+<h4 id="org3b8f3f0"><span class="section-number-4">1.2.1</span> Description</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li>URL: <a href="https://lintcode.com/problem/trailing-zeros/description">https://lintcode.com/problem/trailing-zeros/description</a></li>
+
+<li>Description</li>
+</ul>
+
+<p>
+Write an algorithm which computes the number of trailing zeros in n factorial.
+</p>
+
+<ul class="org-ul">
+<li>Example</li>
+</ul>
+
+<p>
+11! = 39916800, so the out should be 2
+</p>
+
+<ul class="org-ul">
+<li>Challenge</li>
+<li>O(log N) time</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org36bb3a1" class="outline-4">
+<h4 id="org36bb3a1"><span class="section-number-4">1.2.2</span> Answer1</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+计算n阶乘作为被模数，初始化10为模数求余，如果为0则10倍模数，直到结果不为0。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">long</span> <span class="org-type">long</span> <span class="org-function-name">trailingzeros</span>(<span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">n</span>)
+{
+        <span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">m</span> = 10, <span class="org-variable-name">c</span> = 0, <span class="org-variable-name">f</span> = n;
+
+        <span class="org-keyword">if</span> (0 == n)
+                <span class="org-keyword">return</span> 0;
+
+        <span class="org-keyword">for</span> (c = 1; c &lt; n; ++c)
+                f = f*c;
+
+        c = 0;
+
+        <span class="org-keyword">while</span> (0 == (f%m)) {
+                ++c;
+                m *= 10;
+        }
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">r</span> = trailingzeros(11);
+
+        <span class="org-keyword">if</span> (r != 2) {
+                fprintf(stderr, <span class="org-string">"Expect 11! = 2, r=%lld\n"</span>, r);
+                <span class="org-keyword">return</span> 1;
+        }
+
+        fprintf(stdout, <span class="org-string">"11! trailingzeros = %lld\n"</span>, r);
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org81cffcb" class="outline-4">
+<h4 id="org81cffcb"><span class="section-number-4">1.2.3</span> Answer2</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+时间复杂度为O(N)，挑战为O(log N)，优化点在于n!。这是已知的数学公式，参见
+<a href="https://en.wikipedia.org/wiki/Legendre%27s_formula">Legendre's formula</a>定理，<a href="https://math.stackexchange.com/questions/111385/derive-a-formula-to-find-the-number-of-trailing-zeroes-in-n">StackExchange</a>有更详细的解释，从数学公式可知，n!中尾部0的个数等于 $&sum;<sub>1</sub>^&infin;\frac{n}{5^i}$。实现如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">long</span> <span class="org-type">long</span> <span class="org-function-name">trailingzeros2</span>(<span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">n</span>)
+{
+        <span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">c</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 5; n &gt;= i; i *= 5) {
+                c += n/i;
+        }
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">long</span> <span class="org-type">long</span> <span class="org-variable-name">r</span> = trailingzeros2(11);
+
+        <span class="org-keyword">if</span> (r != 2) {
+                fprintf(stderr, <span class="org-string">"Expect 11! = 2, r=%lld\n"</span>, r);
+                <span class="org-keyword">return</span> 1;
+        }
+
+        fprintf(stdout, <span class="org-string">"11! trailingzeros = %lld\n"</span>, r);
+
+        <span class="org-keyword">return</span> 0;
+}
+
+</pre>
+</div>
+
+<p>
+也可参考<a href="https://www.geeksforgeeks.org/count-trailing-zeroes-factorial-number/">GeeksForGeeks</a>实现。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0f2456f" class="outline-3">
+<h3 id="org0f2456f"><span class="section-number-3">1.3</span> 3. Digit Counts</h3>
+<div class="outline-text-3" id="text-1-3">
+</div>
+<div id="outline-container-org9cc2cf1" class="outline-4">
+<h4 id="org9cc2cf1"><span class="section-number-4">1.3.1</span> Description</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<ul class="org-ul">
+<li>URL: <a href="https://lintcode.com/problem/digit-counts/description">https://lintcode.com/problem/digit-counts/description</a></li>
+
+<li>Description
+<ul class="org-ul">
+<li>Count the number of k's between 0 and n. k can be 0 - 9.</li>
+</ul></li>
+
+<li>Example</li>
+</ul>
+
+<p>
+if n = 12, k = 1 in
+</p>
+
+<p>
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+</p>
+
+<p>
+we have FIVE 1's (1, 10, 11, 12)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2c3ee59" class="outline-4">
+<h4 id="org2c3ee59"><span class="section-number-4">1.3.2</span> Answer1</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+最简单的方式是暴力搜索：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">countk</span>(<span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-type">int</span> <span class="org-variable-name">k</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">v</span>, <span class="org-variable-name">c</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt;= n; ++i) {
+                v = i;
+                <span class="org-keyword">do</span> {
+                        <span class="org-keyword">if</span> (v%10 == k)
+                                ++c;
+                        v /= 10;
+                } <span class="org-keyword">while</span> (v);
+        }
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">c</span> = countk(12, 1);
+
+        <span class="org-keyword">if</span> (c != 5) {
+                fprintf(stderr, <span class="org-string">"countk(12, 1) expects 5, calc is %d\n"</span>, c);
+                <span class="org-keyword">return</span> 1;
+        }
+
+        c = countk(224, 2);
+        fprintf(stdout, <span class="org-string">"countk(224, 2) is %d\n"</span>, c);
+
+        c = countk(9, 0);
+        fprintf(stdout, <span class="org-string">"countk(9, 0) is %d\n"</span>, c);
+
+        c = countk(99, 0);
+        fprintf(stdout, <span class="org-string">"countk(99, 0) is %d\n"</span>, c);
+
+        c = countk(999, 0);
+        fprintf(stdout, <span class="org-string">"countk(999, 0) is %d\n"</span>, c);
+
+        c = countk(9999, 0);
+        fprintf(stdout, <span class="org-string">"countk(9999, 0) is %d\n"</span>, c);
+
+        c = countk(99999, 0);
+        fprintf(stdout, <span class="org-string">"countk(99999, 0) is %d\n"</span>, c);
+
+        c = countk(999999, 0);
+        fprintf(stdout, <span class="org-string">"countk(999999, 0) is %d\n"</span>, c);
+
+        c = countk(9999999, 0);
+        fprintf(stdout, <span class="org-string">"countk(9999999, 0) is %d\n"</span>, c);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+<p>
+countk(224, 2) is 73
+countk(9, 0) is 1
+countk(99, 0) is 10
+countk(999, 0) is 190
+countk(9999, 0) is 2890
+countk(99999, 0) is 38890
+countk(999999, 0) is 488890
+countk(9999999, 0) is 5888890
+countk(224, 2) is 73
+countk(9, 0) is 1
+countk(99, 0) is 10
+countk(999, 0) is 190
+countk(9999, 0) is 2890
+countk(99999, 0) is 38890
+countk(999999, 0) is 488890
+countk(224, 2) is 73
+countk(9, 0) is 1
+countk(99, 0) is 10
+countk(999, 0) is 190
+countk(9999, 0) is 2890
+countk(99999, 0) is 38890
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5528755" class="outline-4">
+<h4 id="org5528755"><span class="section-number-4">1.3.3</span> Answer2</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+这中间有很多数字是无效的、不必要去扫描的。无论k(0&le; k&le; 9)为何值，考虑[0,10)
+范围，只有一个k；考虑[10,100)个位上一定有9个k，而十位上有10个k；考虑[100,1000)
+范围，分解为9个[10,100)，并单独考量最高位。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">countk</span>(<span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-type">int</span> <span class="org-variable-name">k</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">v</span>, <span class="org-variable-name">c</span> = 0;
+
+        <span class="org-keyword">for</span> (i = 0; i &lt;= n; ++i) {
+                v = i;
+                <span class="org-keyword">do</span> {
+                        <span class="org-keyword">if</span> (v%10 == k)
+                                ++c;
+                        v /= 10;
+                } <span class="org-keyword">while</span> (v);
+        }
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">countk2</span>(<span class="org-type">int</span> <span class="org-variable-name">n</span>, <span class="org-type">int</span> <span class="org-variable-name">k</span>)
+{
+        <span class="org-type">int</span> <span class="org-variable-name">xd</span>, <span class="org-variable-name">xbase</span>, <span class="org-variable-name">dbase</span> = 1, <span class="org-variable-name">div</span> = 10, <span class="org-variable-name">c</span> = 0, <span class="org-variable-name">k0penalty</span> = 0;
+
+        <span class="org-comment-delimiter">/*</span>
+<span class="org-comment">         * Algorithms Description:</span>
+<span class="org-comment">         </span><span class="org-comment-delimiter">*/</span>
+
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">units digit (lowest digit) </span><span class="org-comment-delimiter">*/</span>
+        <span class="org-keyword">if</span> (n%10 &gt;= k)
+                c += 1;
+
+        <span class="org-keyword">while</span>(div &lt;= n) {
+                <span class="org-comment-delimiter">/* </span><span class="org-comment">xd is the x's digits. e.g.: units, tens, hundreds, ... </span><span class="org-comment-delimiter">*/</span>
+                xd = n%(div*10);
+                xd /= div;
+                xbase = div/10*dbase;
+
+                c += xd*xbase;
+                <span class="org-keyword">if</span> (xd &gt; k)
+                        c += div;
+                <span class="org-keyword">else</span> <span class="org-keyword">if</span> (xd == k)
+                        c += (n%div) + 1;
+
+                k0penalty += div; <span class="org-comment-delimiter">/* </span><span class="org-comment">just used if @k == 0 </span><span class="org-comment-delimiter">*/</span>
+                div *= 10;
+                ++dbase;
+        }
+
+        <span class="org-keyword">if</span> (k == 0)
+                c -= k0penalty;
+
+        <span class="org-keyword">return</span> c;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+{
+        <span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-variable-name">j</span>, <span class="org-variable-name">k</span>, <span class="org-variable-name">c</span>, <span class="org-variable-name">c2</span> = countk2(12, 1);
+        <span class="org-type">int</span> <span class="org-variable-name">ta</span>[] = {0, 5, 10, 48, 94, 100, 102, 108, 110, 111, 115};
+        <span class="org-type">int</span> <span class="org-variable-name">ka</span>[] = {2, 0};
+
+        <span class="org-keyword">if</span> (c2 != 5) {
+                fprintf(stderr, <span class="org-string">"countk(12, 1) expects 5, calc is %d\n"</span>, c2);
+                <span class="org-keyword">return</span> 1;
+        }
+
+        <span class="org-keyword">for</span> (i = 0; i &lt; 100000; ++i) {
+                <span class="org-keyword">for</span> (k = 0; k &lt;= 9; ++k) {
+                        c = countk2(i, k);
+                        c2 = countk2(i, k);
+                        <span class="org-keyword">if</span> (c != c2) {
+                                fprintf(stderr,
+                                        <span class="org-string">"error: n(%d) k(%d) c(%d) c2(%d)\n"</span>,
+                                        i, k, c, c2);
+                                <span class="org-keyword">return</span> 1;
+                        }
+                }
+        }
+
+        c = countk2(224, 2);
+        fprintf(stdout, <span class="org-string">"countk(224, 2) is %d\n"</span>, c);
+
+        <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+<p>
+countk(224, 2) is 73
+countk(224, 2) is 73
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1f4a76d" class="outline-3">
+<h3 id="org1f4a76d"><span class="section-number-3">1.4</span> 86. Binary Search Tree Iterator</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-org1499001" class="outline-4">
+<h4 id="org1499001"><span class="section-number-4">1.4.1</span> Description</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<ul class="org-ul">
+<li>URL: <a href="https://www.lintcode.com/problem/binary-search-tree-iterator/description">https://www.lintcode.com/problem/binary-search-tree-iterator/description</a></li>
+
+<li>Description</li>
+</ul>
+
+<p>
+Design an iterator over a binary search tree with the following rules:
+</p>
+
+<p>
+Elements are visited in ascending order (i.e. an in-order traversal)
+next() and hasNext() queries run in O(1) time in average.
+</p>
+
+<p>
+Have you met this question in a real interview?
+</p>
+
+<ul class="org-ul">
+<li>Example</li>
+</ul>
+
+<p>
+For the following binary search tree, in-order traversal by using iterator is [1, 6, 10, 11, 12]
+</p>
+<p class="verse">
+&#xa0;&#xa0;&#xa0;10<br />
+&#xa0;/    \<br />
+1      11<br />
+&#xa0;\       \<br />
+&#xa0;&#xa0;6       12<br />
+</p>
+
+<ul class="org-ul">
+<li>Challenge
+<ul class="org-ul">
+<li>Extra memory usage O(h), h is the height of the tree.</li>
+<li>Super Star: Extra memory usage O(1)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0a8f280" class="outline-4">
+<h4 id="org0a8f280"><span class="section-number-4">1.4.2</span> Answer1: usage O(h) by stack</h4>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/lintcode.html';
+    this.page.identifier = 'lintcode.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
