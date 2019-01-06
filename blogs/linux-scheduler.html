@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:39 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX调度器/Linux Scheduler</title>
 <meta name="generator" content="Org mode" />
@@ -31,23 +31,23 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgea55b5e">1. Scheduler Abbreviation</a></li>
-<li><a href="#orgced6501">2. Scheduler Config and Options</a>
+<li><a href="#org49c921b">1. Scheduler Abbreviation</a></li>
+<li><a href="#org1065481">2. Scheduler Config and Options</a>
 <ul>
-<li><a href="#orga49a840">2.1. config</a></li>
-<li><a href="#orgc6b98fd">2.2. proc/sys/kernel/</a></li>
-<li><a href="#org7ca8ab5">2.3. boot arguments</a></li>
+<li><a href="#org61644c3">2.1. config</a></li>
+<li><a href="#org8cd6cb6">2.2. proc/sys/kernel/</a></li>
+<li><a href="#org5c6319c">2.3. boot arguments</a></li>
 </ul>
 </li>
-<li><a href="#orgb7e98b3">3. Schedule initialize Trace</a></li>
-<li><a href="#orge57f926">4. Schedule Routine Analysis</a></li>
-<li><a href="#org743406e">5. References</a></li>
+<li><a href="#org3da58f8">3. Schedule initialize Trace</a></li>
+<li><a href="#org7ed9eb4">4. Schedule Routine Analysis</a></li>
+<li><a href="#org7157b27">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgea55b5e" class="outline-2">
-<h2 id="orgea55b5e"><span class="section-number-2">1</span> Scheduler Abbreviation</h2>
+<div id="outline-container-org49c921b" class="outline-2">
+<h2 id="org49c921b"><span class="section-number-2">1</span> Scheduler Abbreviation</h2>
 <div class="outline-text-2" id="text-1">
 <dl class="org-dl">
 <dt>rt</dt><dd>realtime</dd>
@@ -57,12 +57,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgced6501" class="outline-2">
-<h2 id="orgced6501"><span class="section-number-2">2</span> Scheduler Config and Options</h2>
+<div id="outline-container-org1065481" class="outline-2">
+<h2 id="org1065481"><span class="section-number-2">2</span> Scheduler Config and Options</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga49a840" class="outline-3">
-<h3 id="orga49a840"><span class="section-number-3">2.1</span> config</h3>
+<div id="outline-container-org61644c3" class="outline-3">
+<h3 id="org61644c3"><span class="section-number-3">2.1</span> config</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>CONFIG_SCHEDSTATS</li>
@@ -70,11 +70,11 @@
 </div>
 </div>
 
-<div id="outline-container-orgc6b98fd" class="outline-3">
-<h3 id="orgc6b98fd"><span class="section-number-3">2.2</span> proc/sys/kernel/</h3>
+<div id="outline-container-org8cd6cb6" class="outline-3">
+<h3 id="org8cd6cb6"><span class="section-number-3">2.2</span> proc/sys/kernel/</h3>
 </div>
-<div id="outline-container-org7ca8ab5" class="outline-3">
-<h3 id="org7ca8ab5"><span class="section-number-3">2.3</span> boot arguments</h3>
+<div id="outline-container-org5c6319c" class="outline-3">
+<h3 id="org5c6319c"><span class="section-number-3">2.3</span> boot arguments</h3>
 <div class="outline-text-3" id="text-2-3">
 <dl class="org-dl">
 <dt>schedstats</dt><dd>schedstats=[enable|disable]</dd>
@@ -83,8 +83,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgb7e98b3" class="outline-2">
-<h2 id="orgb7e98b3"><span class="section-number-2">3</span> Schedule initialize Trace</h2>
+<div id="outline-container-org3da58f8" class="outline-2">
+<h2 id="org3da58f8"><span class="section-number-2">3</span> Schedule initialize Trace</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In <code>start_kernel</code> routine, call <code>sched_init</code> initialize scheduler:
@@ -150,8 +150,8 @@ Then call <code>init_idle</code> and <code>init_sched_fair_class</code> do botto
 </div>
 </div>
 
-<div id="outline-container-orge57f926" class="outline-2">
-<h2 id="orge57f926"><span class="section-number-2">4</span> Schedule Routine Analysis</h2>
+<div id="outline-container-org7ed9eb4" class="outline-2">
+<h2 id="org7ed9eb4"><span class="section-number-2">4</span> Schedule Routine Analysis</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Here is the entry:
@@ -240,8 +240,8 @@ And now disable and do schedule:
 </div>
 </div>
 
-<div id="outline-container-org743406e" class="outline-2">
-<h2 id="org743406e"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org7157b27" class="outline-2">
+<h2 id="org7157b27"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>linux pi_futex</dt><dd><a href="http://kouucocu.lofter.com/post/1cdb8c4b_50f62fe">http://kouucocu.lofter.com/post/1cdb8c4b_50f62fe</a></dd>

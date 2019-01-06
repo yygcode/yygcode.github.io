@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-21 Thu 23:16 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>KASLR is Dead: Long Live KASLR</title>
 <meta name="generator" content="Org mode" />
@@ -22,35 +22,35 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgeb2f272">1. Author</a>
+<li><a href="#orgcb99dbb">1. Author</a>
 <ul>
-<li><a href="#org70b0108">1.1. Daniel Gruss</a></li>
-<li><a href="#orge038297">1.2. Moritz Lipp</a></li>
-<li><a href="#org81f0736">1.3. Michael Schwarz</a></li>
-<li><a href="#org60aae00">1.4. Richard Fellner</a></li>
-<li><a href="#orgba055de">1.5. Clementine Maurice</a></li>
-<li><a href="#org5ce6fa0">1.6. Stefan Mangard</a></li>
+<li><a href="#org8ab8b41">1.1. Daniel Gruss</a></li>
+<li><a href="#org5796cd8">1.2. Moritz Lipp</a></li>
+<li><a href="#org6056b9c">1.3. Michael Schwarz</a></li>
+<li><a href="#org28b53bb">1.4. Richard Fellner</a></li>
+<li><a href="#orgfff79d9">1.5. Clementine Maurice</a></li>
+<li><a href="#org049ea23">1.6. Stefan Mangard</a></li>
 </ul>
 </li>
-<li><a href="#orgb1f1eac">2. Abstract</a></li>
-<li><a href="#orga2cd78b">3. Introduction</a></li>
-<li><a href="#orgfdd2803">4. Background</a>
+<li><a href="#orgce93225">2. Abstract</a></li>
+<li><a href="#orgd1eedc6">3. Introduction</a></li>
+<li><a href="#org274a700">4. Background</a>
 <ul>
-<li><a href="#orgff7fe21">4.1. Virtual Address Space</a></li>
-<li><a href="#orge2ae3d7">4.2. CPU Caches</a></li>
-<li><a href="#org6ae61e6">4.3. Microarchitectural Attacks on Kernel Address Informationo</a></li>
+<li><a href="#org75401a3">4.1. Virtual Address Space</a></li>
+<li><a href="#org4a1611c">4.2. CPU Caches</a></li>
+<li><a href="#org4b5844b">4.3. Microarchitectural Attacks on Kernel Address Informationo</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgeb2f272" class="outline-2">
-<h2 id="orgeb2f272"><span class="section-number-2">1</span> Author</h2>
+<div id="outline-container-orgcb99dbb" class="outline-2">
+<h2 id="orgcb99dbb"><span class="section-number-2">1</span> Author</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org70b0108" class="outline-3">
-<h3 id="org70b0108"><span class="section-number-3">1.1</span> Daniel Gruss</h3>
+<div id="outline-container-org8ab8b41" class="outline-3">
+<h3 id="org8ab8b41"><span class="section-number-3">1.1</span> Daniel Gruss</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 <a href="https://gruss.cc/">https://gruss.cc/</a>
@@ -77,8 +77,8 @@ graduate courses (Embedded Security, Security Aspects in Software Development).
 </div>
 </div>
 
-<div id="outline-container-orge038297" class="outline-3">
-<h3 id="orge038297"><span class="section-number-3">1.2</span> Moritz Lipp</h3>
+<div id="outline-container-org5796cd8" class="outline-3">
+<h3 id="org5796cd8"><span class="section-number-3">1.2</span> Moritz Lipp</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <a href="https://mlq.me/">https://mlq.me/</a>
@@ -102,8 +102,8 @@ If you have any questions or just want to get in touch, feel free to contact me!
 </div>
 </div>
 
-<div id="outline-container-org81f0736" class="outline-3">
-<h3 id="org81f0736"><span class="section-number-3">1.3</span> Michael Schwarz</h3>
+<div id="outline-container-org6056b9c" class="outline-3">
+<h3 id="org6056b9c"><span class="section-number-3">1.3</span> Michael Schwarz</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 <a href="https://misc0110.net/web/">https://misc0110.net/web/</a>
@@ -127,19 +127,19 @@ Aspects in Software Development.
 </div>
 </div>
 
-<div id="outline-container-org60aae00" class="outline-3">
-<h3 id="org60aae00"><span class="section-number-3">1.4</span> Richard Fellner</h3>
+<div id="outline-container-org28b53bb" class="outline-3">
+<h3 id="org28b53bb"><span class="section-number-3">1.4</span> Richard Fellner</h3>
 </div>
-<div id="outline-container-orgba055de" class="outline-3">
-<h3 id="orgba055de"><span class="section-number-3">1.5</span> Clementine Maurice</h3>
+<div id="outline-container-orgfff79d9" class="outline-3">
+<h3 id="orgfff79d9"><span class="section-number-3">1.5</span> Clementine Maurice</h3>
 </div>
-<div id="outline-container-org5ce6fa0" class="outline-3">
-<h3 id="org5ce6fa0"><span class="section-number-3">1.6</span> Stefan Mangard</h3>
+<div id="outline-container-org049ea23" class="outline-3">
+<h3 id="org049ea23"><span class="section-number-3">1.6</span> Stefan Mangard</h3>
 </div>
 </div>
 
-<div id="outline-container-orgb1f1eac" class="outline-2">
-<h2 id="orgb1f1eac"><span class="section-number-2">2</span> Abstract</h2>
+<div id="outline-container-orgce93225" class="outline-2">
+<h2 id="orgce93225"><span class="section-number-2">2</span> Abstract</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Modern operating system kernels employ address space layout randomization (ASLR)
@@ -165,8 +165,8 @@ demonstrate that KAISER has a runtime overhead of only 0:28%.
 </div>
 </div>
 
-<div id="outline-container-orga2cd78b" class="outline-2">
-<h2 id="orga2cd78b"><span class="section-number-2">3</span> Introduction</h2>
+<div id="outline-container-orgd1eedc6" class="outline-2">
+<h2 id="orgd1eedc6"><span class="section-number-2">3</span> Introduction</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Like user programs, kernel code contains software bugs which can be exploited
@@ -273,12 +273,12 @@ Section 5, we discuss future work. We conclude in Section 6.
 </div>
 </div>
 
-<div id="outline-container-orgfdd2803" class="outline-2">
-<h2 id="orgfdd2803"><span class="section-number-2">4</span> Background</h2>
+<div id="outline-container-org274a700" class="outline-2">
+<h2 id="org274a700"><span class="section-number-2">4</span> Background</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgff7fe21" class="outline-3">
-<h3 id="orgff7fe21"><span class="section-number-3">4.1</span> Virtual Address Space</h3>
+<div id="outline-container-org75401a3" class="outline-3">
+<h3 id="org75401a3"><span class="section-number-3">4.1</span> Virtual Address Space</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Virtual addressing is the foundation of memory isolation between different
@@ -353,8 +353,8 @@ attacks.
 </div>
 </div>
 
-<div id="outline-container-orge2ae3d7" class="outline-3">
-<h3 id="orge2ae3d7"><span class="section-number-3">4.2</span> CPU Caches</h3>
+<div id="outline-container-org4a1611c" class="outline-3">
+<h3 id="org4a1611c"><span class="section-number-3">4.2</span> CPU Caches</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Caches are small memory buffers inside the CPU, storing frequently used data.
@@ -369,8 +369,8 @@ used for address resolution.
 </div>
 </div>
 
-<div id="outline-container-org6ae61e6" class="outline-3">
-<h3 id="org6ae61e6"><span class="section-number-3">4.3</span> Microarchitectural Attacks on Kernel Address Informationo</h3>
+<div id="outline-container-org4b5844b" class="outline-3">
+<h3 id="org4b5844b"><span class="section-number-3">4.3</span> Microarchitectural Attacks on Kernel Address Informationo</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Until recently, Linux provided information on virtual and physical addresses

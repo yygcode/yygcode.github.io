@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-04 Wed 22:39 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX系统通过信号捕捉进程调用栈</title>
 <meta name="generator" content="Org mode" />
@@ -31,15 +31,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org92af4a6">1. 标题在说什么</a></li>
-<li><a href="#orgddf3039">2. 技术概述</a></li>
-<li><a href="#org4701059">3. 测试代码</a></li>
+<li><a href="#org8778f9d">1. 标题在说什么</a></li>
+<li><a href="#orgad36b61">2. 技术概述</a></li>
+<li><a href="#org6096890">3. 测试代码</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org92af4a6" class="outline-2">
-<h2 id="org92af4a6"><span class="section-number-2">1</span> 标题在说什么</h2>
+<div id="outline-container-org8778f9d" class="outline-2">
+<h2 id="org8778f9d"><span class="section-number-2">1</span> 标题在说什么</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 开启core转储功能后，程序运行中发生严重错误（如SIGILL, SIGSEGV）后，生成core
@@ -50,31 +50,31 @@
 编写会导致SIGSEGV的代码：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">func2</span>()
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">func2</span>()
 {
-        <span class="org-type">char</span> *<span class="org-variable-name">p</span> = <span class="org-constant">NULL</span>;
-        printf(<span class="org-string">"%s\n"</span>, __func__);
-        *p = <span class="org-string">'\0'</span>; <span class="org-comment-delimiter">/* </span><span class="org-comment">core dump here ! </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">p</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s\n"</span>,<span class="org-whitespace-space"> </span>__func__);
+<span class="org-whitespace-space">        </span>*p<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">'\0'</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">core</span><span class="org-whitespace-space"> </span><span class="org-comment">dump</span><span class="org-whitespace-space"> </span><span class="org-comment">here</span><span class="org-whitespace-space"> </span><span class="org-comment">!</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
 }
 
-<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">func1</span>()
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">func1</span>()
 {
-        printf(<span class="org-string">"%s\n"</span>, __func__);
-        func2();
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s\n"</span>,<span class="org-whitespace-space"> </span>__func__);
+<span class="org-whitespace-space">        </span>func2();
 }
 
-<span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">func</span>()
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">func</span>()
 {
-        printf(<span class="org-string">"%s\n"</span>, __func__);
-        func1();
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%s\n"</span>,<span class="org-whitespace-space"> </span>__func__);
+<span class="org-whitespace-space">        </span>func1();
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
-        func();
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span>func();
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -83,35 +83,35 @@
 运行调试
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gcc -o -g backtrace backtrace.c
-~$ ulimit -c unlimited
-~$ ./backtrace
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>-g<span class="org-whitespace-space"> </span>backtrace<span class="org-whitespace-space"> </span>backtrace.c
+~$<span class="org-whitespace-space"> </span>ulimit<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>unlimited
+~$<span class="org-whitespace-space"> </span>./backtrace
 func
 func1
 func2
-Segmentation fault (core dumped)
-~$ gdb backtrace core
-GNU gdb (Debian 7.7.1+dfsg-5) 7.7.1
+Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whitespace-space"> </span>(core<span class="org-whitespace-space"> </span>dumped)
+~$<span class="org-whitespace-space"> </span>gdb<span class="org-whitespace-space"> </span>backtrace<span class="org-whitespace-space"> </span>core
+GNU<span class="org-whitespace-space"> </span>gdb<span class="org-whitespace-space"> </span>(Debian<span class="org-whitespace-space"> </span>7.7.1+dfsg-5)<span class="org-whitespace-space"> </span>7.7.1
 ...
-Type <span class="org-string">"apropos word"</span> to search for commands related to <span class="org-string">"word"</span>...
-Reading symbols from backtrace...done.
-[New LWP 5568]
-Core was generated by <span class="org-sh-quoted-exec">`./backtrace'.</span>
-<span class="org-sh-quoted-exec">Program terminated with signal SIGSEGV, Segmentation fault.</span>
-<span class="org-sh-quoted-exec">#0  0x0000000000400524 in func2 () at backtrace.c:7</span>
-<span class="org-sh-quoted-exec">7               *p = '\0'; /* core dump here ! */</span>
-<span class="org-sh-quoted-exec">(gdb) bt</span>
-<span class="org-sh-quoted-exec">#0  0x0000000000400524 in func2 () at backtrace.c:7</span>
-<span class="org-sh-quoted-exec">#1  0x0000000000400541 in func1 () at backtrace.c:13</span>
-<span class="org-sh-quoted-exec">#2  0x000000000040055b in func () at backtrace.c:19</span>
-<span class="org-sh-quoted-exec">#3  0x0000000000400576 in main (argc=1, argv=0x7ffd21ea50a8) at backtrace.c:24</span>
+Type<span class="org-whitespace-space"> </span><span class="org-string">"apropos</span><span class="org-whitespace-space"> </span><span class="org-string">word"</span><span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>search<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>commands<span class="org-whitespace-space"> </span>related<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span><span class="org-string">"word"</span>...
+Reading<span class="org-whitespace-space"> </span>symbols<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>backtrace...done.
+[New<span class="org-whitespace-space"> </span>LWP<span class="org-whitespace-space"> </span>5568]
+Core<span class="org-whitespace-space"> </span>was<span class="org-whitespace-space"> </span>generated<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">`./backtrace'.</span>
+<span class="org-sh-quoted-exec">Program</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">terminated</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">with</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">signal</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">SIGSEGV,</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">Segmentation</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">fault.</span>
+<span class="org-sh-quoted-exec">#0</span><span class="org-whitespace-space">  </span><span class="org-sh-quoted-exec">0x0000000000400524</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">in</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">func2</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">()</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">at</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">backtrace.c:7</span>
+<span class="org-sh-quoted-exec">7</span><span class="org-whitespace-space">               </span><span class="org-sh-quoted-exec">*p</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">=</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">'\0';</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">/*</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">core</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">dump</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">here</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">!</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">*/</span>
+<span class="org-sh-quoted-exec">(gdb)</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">bt</span>
+<span class="org-sh-quoted-exec">#0</span><span class="org-whitespace-space">  </span><span class="org-sh-quoted-exec">0x0000000000400524</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">in</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">func2</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">()</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">at</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">backtrace.c:7</span>
+<span class="org-sh-quoted-exec">#1</span><span class="org-whitespace-space">  </span><span class="org-sh-quoted-exec">0x0000000000400541</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">in</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">func1</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">()</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">at</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">backtrace.c:13</span>
+<span class="org-sh-quoted-exec">#2</span><span class="org-whitespace-space">  </span><span class="org-sh-quoted-exec">0x000000000040055b</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">in</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">func</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">()</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">at</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">backtrace.c:19</span>
+<span class="org-sh-quoted-exec">#3</span><span class="org-whitespace-space">  </span><span class="org-sh-quoted-exec">0x0000000000400576</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">in</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">main</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">(argc=1,</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">argv=0x7ffd21ea50a8)</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">at</span><span class="org-whitespace-space"> </span><span class="org-sh-quoted-exec">backtrace.c:24</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgddf3039" class="outline-2">
-<h2 id="orgddf3039"><span class="section-number-2">2</span> 技术概述</h2>
+<div id="outline-container-orgad36b61" class="outline-2">
+<h2 id="orgad36b61"><span class="section-number-2">2</span> 技术概述</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 基于信号处理机制，使用SRC_C{sigaction, sigfillset, sigdelset}定制信号处理回调，并通过SRC_C{sigaltstack}提供信号处理函数特有的栈，打印user context.
@@ -119,8 +119,8 @@ Core was generated by <span class="org-sh-quoted-exec">`./backtrace'.</span>
 </div>
 </div>
 
-<div id="outline-container-org4701059" class="outline-2">
-<h2 id="org4701059"><span class="section-number-2">3</span> 测试代码</h2>
+<div id="outline-container-org6096890" class="outline-2">
+<h2 id="org6096890"><span class="section-number-2">3</span> 测试代码</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-C">

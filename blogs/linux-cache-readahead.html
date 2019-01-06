@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:39 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux缓存预读</title>
 <meta name="generator" content="Org mode" />
@@ -31,15 +31,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org80c4e65">1. 介绍</a></li>
-<li><a href="#org8ab251d">2. LINUX实现</a></li>
-<li><a href="#org08b4a5e">3. References</a></li>
+<li><a href="#org242fc46">1. 介绍</a></li>
+<li><a href="#org505b4cc">2. LINUX实现</a></li>
+<li><a href="#org79743db">3. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org80c4e65" class="outline-2">
-<h2 id="org80c4e65"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org242fc46" class="outline-2">
+<h2 id="org242fc46"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 缓存预读(readahead)是指基于IO特征，推测性地将文件数据提前读取到缓存中的过程，希望这些提前读取的数据，将来对应用程序有帮助。缓存预读工作良好时，通过消除等待数据时间，以及增大IO传输单元(预读IO尺寸一般大于应用IO尺寸)，可以显著提高应用性能。另一方面，预读也可能使性能变得更差：如果预读失效（预读数据将来未使用），稀缺内存和IO带宽将会浪费在永远不会使用的数据上。因此，与通用内存管理一样，预读算法是性能的关键，也重度依赖启发。
@@ -102,12 +102,12 @@ a couple of years(几年).
 </div>
 </div>
 
-<div id="outline-container-org8ab251d" class="outline-2">
-<h2 id="org8ab251d"><span class="section-number-2">2</span> LINUX实现</h2>
+<div id="outline-container-org505b4cc" class="outline-2">
+<h2 id="org505b4cc"><span class="section-number-2">2</span> LINUX实现</h2>
 </div>
 
-<div id="outline-container-org08b4a5e" class="outline-2">
-<h2 id="org08b4a5e"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org79743db" class="outline-2">
+<h2 id="org79743db"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>512K readahead size with thrashing safe readahead</dt><dd><a href="https://lwn.net/Articles/372281/">https://lwn.net/Articles/372281/</a></dd>

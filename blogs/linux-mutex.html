@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:39 -->
+<!-- 2019-01-07 Mon 00:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Mutex Implementation</title>
 <meta name="generator" content="Org mode" />
@@ -31,16 +31,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5f2379c">1. 介绍</a></li>
-<li><a href="#orgf3ecf06">2. Kernel Code Comments</a></li>
-<li><a href="#org468084f">3. size</a></li>
-<li><a href="#org5219077">4. References</a></li>
+<li><a href="#orgc8d473b">1. 介绍</a></li>
+<li><a href="#org04d2ae6">2. Kernel Code Comments</a></li>
+<li><a href="#orga0baace">3. size</a></li>
+<li><a href="#orgd76da34">4. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5f2379c" class="outline-2">
-<h2 id="org5f2379c"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgc8d473b" class="outline-2">
+<h2 id="orgc8d473b"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Linux Mutex是Futex的包装，本文介绍Mutex实现机制。
@@ -48,8 +48,8 @@ Linux Mutex是Futex的包装，本文介绍Mutex实现机制。
 </div>
 </div>
 
-<div id="outline-container-orgf3ecf06" class="outline-2">
-<h2 id="orgf3ecf06"><span class="section-number-2">2</span> Kernel Code Comments</h2>
+<div id="outline-container-org04d2ae6" class="outline-2">
+<h2 id="org04d2ae6"><span class="section-number-2">2</span> Kernel Code Comments</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-comment-delimiter">/*</span>
@@ -157,8 +157,8 @@ Linux Mutex是Futex的包装，本文介绍Mutex实现机制。
 </div>
 </div>
 
-<div id="outline-container-org468084f" class="outline-2">
-<h2 id="org468084f"><span class="section-number-2">3</span> size</h2>
+<div id="outline-container-orga0baace" class="outline-2">
+<h2 id="orga0baace"><span class="section-number-2">3</span> size</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -177,8 +177,8 @@ Linux Mutex是Futex的包装，本文介绍Mutex实现机制。
 </div>
 </div>
 
-<div id="outline-container-org5219077" class="outline-2">
-<h2 id="org5219077"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-orgd76da34" class="outline-2">
+<h2 id="orgd76da34"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>A futex overview and update</dt><dd><a href="https://lwn.net/Articles/360699/">https://lwn.net/Articles/360699/</a></dd>

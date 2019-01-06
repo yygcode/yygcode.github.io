@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-08-26 Sun 23:44 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Mac新手配置记录 - 开发环境诉求</title>
 <meta name="generator" content="Org mode" />
@@ -31,42 +31,48 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0e6be18">1. Software Install</a>
+<li><a href="#orgd62b2f7">1. Software Install</a>
 <ul>
-<li><a href="#org5a85b60">1.1. Editor</a></li>
-<li><a href="#orga7ecc42">1.2. Homebrew</a>
+<li><a href="#org1bdde86">1.1. Editor</a></li>
+<li><a href="#orgdc04a91">1.2. Homebrew</a>
 <ul>
-<li><a href="#orgdc717ad">1.2.1. list</a></li>
+<li><a href="#orgb63d369">1.2.1. list</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgcda2089">2. Conventient Config</a>
+<li><a href="#orge535170">2. Conventient Config</a>
 <ul>
-<li><a href="#orge456483">2.1. Defualts Shortcuts</a></li>
-<li><a href="#orgf2be3a1">2.2. Customize Shortcuts</a></li>
+<li><a href="#org57ef9b5">2.1. Defualts Shortcuts</a></li>
+<li><a href="#org3e0ff99">2.2. Customize Shortcuts</a></li>
+<li><a href="#orgd1b199a">2.3. Move alt-command dock(menu) bar to external display</a></li>
 </ul>
 </li>
-<li><a href="#org9df3816">3. Developer Tools</a>
+<li><a href="#orgd8700db">3. Developer Tools</a>
 <ul>
-<li><a href="#orgb1c6fce">3.1. terminal</a>
+<li><a href="#org134f3b0">3.1. terminal</a>
 <ul>
-<li><a href="#orgc099eca">3.1.1. iterm2</a></li>
-<li><a href="#org9d78096">3.1.2. tmux2</a></li>
+<li><a href="#org475eb13">3.1.1. iterm2</a></li>
+<li><a href="#org50658fd">3.1.2. tmux2</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#orga216d2b">4. FAQ</a>
+<ul>
+<li><a href="#org5c34136">4.1. Update Problem xcrun: error: invalid active developer path, missing xcrun</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0e6be18" class="outline-2">
-<h2 id="org0e6be18"><span class="section-number-2">1</span> Software Install</h2>
+<div id="outline-container-orgd62b2f7" class="outline-2">
+<h2 id="orgd62b2f7"><span class="section-number-2">1</span> Software Install</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org5a85b60" class="outline-3">
-<h3 id="org5a85b60"><span class="section-number-3">1.1</span> Editor</h3>
+<div id="outline-container-org1bdde86" class="outline-3">
+<h3 id="org1bdde86"><span class="section-number-3">1.1</span> Editor</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 自己编译安装，或使用brew安装的Emacs，没有对应的Application链接。直接安装
@@ -75,8 +81,8 @@ EmacsForMacOSX(<a href="https://emacsformacosx.com/">https://emacsformacosx.com/
 </div>
 </div>
 
-<div id="outline-container-orga7ecc42" class="outline-3">
-<h3 id="orga7ecc42"><span class="section-number-3">1.2</span> Homebrew</h3>
+<div id="outline-container-orgdc04a91" class="outline-3">
+<h3 id="orgdc04a91"><span class="section-number-3">1.2</span> Homebrew</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 包管理器维护一系列工具软件，自动处理其安装、移除、依赖、升级、配置等事项，降低操作系统维护难度。例如GNU/Linux发行版Debian的<a href="https://www.debian.org/doc/manuals/debian-reference/ch02.en.html">apt</a>。
@@ -95,16 +101,16 @@ Apple没有给MacOS开发包管理器。brew是三方开发的MacOS包管理器�
 执行如下指令安装：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">/usr/bin/ruby -e <span class="org-string">"$(</span><span class="org-sh-quoted-exec">curl</span><span class="org-string"> -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span>
+<pre class="src src-sh">/usr/bin/ruby<span class="org-whitespace-space"> </span>-e<span class="org-whitespace-space"> </span><span class="org-string">"$(</span><span class="org-sh-quoted-exec">curl</span><span class="org-whitespace-space"> </span><span class="org-string">-fsSL</span><span class="org-whitespace-space"> </span><span class="org-string">https://raw.githubusercontent.com/Homebrew/instal</span><span class="org-string"><span class="org-whitespace-line">l/master/install)"</span></span>
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgdc717ad" class="outline-4">
-<h4 id="orgdc717ad"><span class="section-number-4">1.2.1</span> list</h4>
+<div id="outline-container-orgb63d369" class="outline-4">
+<h4 id="orgb63d369"><span class="section-number-4">1.2.1</span> list</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">brew install global cmake wget
+<pre class="src src-sh">brew<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>global<span class="org-whitespace-space"> </span>cmake<span class="org-whitespace-space"> </span>wget
 </pre>
 </div>
 </div>
@@ -112,16 +118,16 @@ Apple没有给MacOS开发包管理器。brew是三方开发的MacOS包管理器�
 </div>
 </div>
 
-<div id="outline-container-orgcda2089" class="outline-2">
-<h2 id="orgcda2089"><span class="section-number-2">2</span> Conventient Config</h2>
+<div id="outline-container-orge535170" class="outline-2">
+<h2 id="orge535170"><span class="section-number-2">2</span> Conventient Config</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge456483" class="outline-3">
-<h3 id="orge456483"><span class="section-number-3">2.1</span> Defualts Shortcuts</h3>
+<div id="outline-container-org57ef9b5" class="outline-3">
+<h3 id="org57ef9b5"><span class="section-number-3">2.1</span> Defualts Shortcuts</h3>
 </div>
 
-<div id="outline-container-orgf2be3a1" class="outline-3">
-<h3 id="orgf2be3a1"><span class="section-number-3">2.2</span> Customize Shortcuts</h3>
+<div id="outline-container-org3e0ff99" class="outline-3">
+<h3 id="org3e0ff99"><span class="section-number-3">2.2</span> Customize Shortcuts</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 日常使用的软件，习惯于用一个快捷键启动。MacOS Keyboard定制的，按照如下教程创建一个快捷键：
@@ -225,21 +231,66 @@ you want.
 </blockquote>
 </div>
 </div>
+
+<div id="outline-container-orgd1b199a" class="outline-3">
+<h3 id="orgd1b199a"><span class="section-number-3">2.3</span> Move alt-command dock(menu) bar to external display</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>Open: Apple-&gt;System Preferences&#x2026;-&gt;Displays-&gt;Arrangement
+Drag top white bar from builtin display to external display</li>
+<li>PS: you can arrange dependent position here</li>
+</ul>
+</div>
+</div>
 </div>
 
-<div id="outline-container-org9df3816" class="outline-2">
-<h2 id="org9df3816"><span class="section-number-2">3</span> Developer Tools</h2>
+<div id="outline-container-orgd8700db" class="outline-2">
+<h2 id="orgd8700db"><span class="section-number-2">3</span> Developer Tools</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb1c6fce" class="outline-3">
-<h3 id="orgb1c6fce"><span class="section-number-3">3.1</span> terminal</h3>
+<div id="outline-container-org134f3b0" class="outline-3">
+<h3 id="org134f3b0"><span class="section-number-3">3.1</span> terminal</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orgc099eca" class="outline-4">
-<h4 id="orgc099eca"><span class="section-number-4">3.1.1</span> iterm2</h4>
+<div id="outline-container-org475eb13" class="outline-4">
+<h4 id="org475eb13"><span class="section-number-4">3.1.1</span> iterm2</h4>
 </div>
-<div id="outline-container-org9d78096" class="outline-4">
-<h4 id="org9d78096"><span class="section-number-4">3.1.2</span> tmux2</h4>
+<div id="outline-container-org50658fd" class="outline-4">
+<h4 id="org50658fd"><span class="section-number-4">3.1.2</span> tmux2</h4>
+</div>
+</div>
+</div>
+<div id="outline-container-orga216d2b" class="outline-2">
+<h2 id="orga216d2b"><span class="section-number-2">4</span> FAQ</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org5c34136" class="outline-3">
+<h3 id="org5c34136"><span class="section-number-3">4.1</span> Update Problem xcrun: error: invalid active developer path, missing xcrun</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+After Update MAC os, Compile(e.g. make) error:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">MacBook-Pro-3:perfbook<span class="org-whitespace-space"> </span>yanyg$<span class="org-whitespace-space"> </span>make
+xcrun:<span class="org-whitespace-space"> </span>error:<span class="org-whitespace-space"> </span>invalid<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>developer<span class="org-whitespace-space"> </span>path<span class="org-whitespace-space"> </span>(/Library/Developer/CommandLineTools<span class="org-whitespace-line">),</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">missing</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xcrun</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">at:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/Library/Developer/CommandLineTools/usr/bin/xcrun'</span>
+</pre>
+</div>
+
+<p>
+Exec command:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">xcode-select<span class="org-whitespace-space"> </span>--install
+</pre>
+</div>
+
+<p>
+Exec follow if problem still exist:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">xcode-select<span class="org-whitespace-space"> </span>-switch<span class="org-whitespace-space"> </span>/
+</pre>
+</div>
 </div>
 </div>
 </div>

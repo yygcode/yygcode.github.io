@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-08-14 Tue 00:58 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>GCC内联汇编</title>
 <meta name="generator" content="Org mode" />
@@ -44,30 +44,30 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org253337a">1. 什么是内联汇编</a></li>
-<li><a href="#orgea2439d">2. 为什么使用内联汇编</a></li>
-<li><a href="#org2bef366">3. 内联汇编语法格式</a>
+<li><a href="#orge785165">1. 什么是内联汇编</a></li>
+<li><a href="#orgb512b16">2. 为什么使用内联汇编</a></li>
+<li><a href="#org5e9a5d0">3. 内联汇编语法格式</a>
 <ul>
-<li><a href="#org70ba052">3.1. Basic Asm</a></li>
-<li><a href="#org446cfb8">3.2. Extend Asm</a>
+<li><a href="#org09e66b5">3.1. Basic Asm</a></li>
+<li><a href="#orgf709810">3.2. Extend Asm</a>
 <ul>
-<li><a href="#orgc04f616">3.2.1. volatile</a></li>
-<li><a href="#org0a9d8dc">3.2.2. goto</a></li>
-<li><a href="#org5d9f25e">3.2.3. AssemblerTemplate</a></li>
+<li><a href="#org52f4376">3.2.1. volatile</a></li>
+<li><a href="#org73aced6">3.2.2. goto</a></li>
+<li><a href="#org21a1681">3.2.3. AssemblerTemplate</a></li>
 </ul>
 </li>
-<li><a href="#org47316aa">3.3. Output Operands</a></li>
-<li><a href="#org74b2e61">3.4. Input Operands</a></li>
+<li><a href="#org3410302">3.3. Output Operands</a></li>
+<li><a href="#org5756d94">3.4. Input Operands</a></li>
 </ul>
 </li>
-<li><a href="#org0fc0b61">4. 内联汇编示例</a></li>
-<li><a href="#org0650745">5. References</a></li>
+<li><a href="#orgdebf657">4. 内联汇编示例</a></li>
+<li><a href="#org35ebbeb">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org253337a" class="outline-2">
-<h2 id="org253337a"><span class="section-number-2">1</span> 什么是内联汇编</h2>
+<div id="outline-container-orge785165" class="outline-2">
+<h2 id="orge785165"><span class="section-number-2">1</span> 什么是内联汇编</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 通过C标准或编译器特有的语法规则，用汇编语言编写函数，称为内联汇编(Inline
@@ -76,8 +76,8 @@ Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="
 </div>
 </div>
 
-<div id="outline-container-orgea2439d" class="outline-2">
-<h2 id="orgea2439d"><span class="section-number-2">2</span> 为什么使用内联汇编</h2>
+<div id="outline-container-orgb512b16" class="outline-2">
+<h2 id="orgb512b16"><span class="section-number-2">2</span> 为什么使用内联汇编</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 使用内联汇编基于两个原因：
@@ -89,18 +89,18 @@ Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="
 </div>
 </div>
 
-<div id="outline-container-org2bef366" class="outline-2">
-<h2 id="org2bef366"><span class="section-number-2">3</span> 内联汇编语法格式</h2>
+<div id="outline-container-org5e9a5d0" class="outline-2">
+<h2 id="org5e9a5d0"><span class="section-number-2">3</span> 内联汇编语法格式</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 完整的清单请查看<a href="https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C">GCC Mnaual - For Using Assembly Language with C</a>。
 </p>
 </div>
-<div id="outline-container-org70ba052" class="outline-3">
-<h3 id="org70ba052"><span class="section-number-3">3.1</span> Basic Asm</h3>
+<div id="outline-container-org09e66b5" class="outline-3">
+<h3 id="org09e66b5"><span class="section-number-3">3.1</span> Basic Asm</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] ( AssemblerInstruction )
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>[<span class="org-keyword">volatile</span>]<span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>AssemblerInstruction<span class="org-whitespace-space"> </span>)
 </pre>
 </div>
 <p>
@@ -129,104 +129,104 @@ GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇�
 一个简单的basic asm例子：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#define</span> <span class="org-function-name">DebugBreak</span>() <span class="org-keyword">asm</span>(<span class="org-string">"int $3"</span>)
+<pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">DebugBreak</span>()<span class="org-whitespace-space"> </span><span class="org-keyword">asm</span>(<span class="org-string">"int</span><span class="org-whitespace-space"> </span><span class="org-string">$3"</span>)
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">int</span> <span class="org-variable-name">sum</span> = 0;
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sum</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
-        <span class="org-keyword">asm</span>(<span class="org-string">"movl $100, sum\n\t"</span>);
-        printf(<span class="org-string">"sum=%d\n"</span>, sum);
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span>(<span class="org-string">"movl</span><span class="org-whitespace-space"> </span><span class="org-string">$100,</span><span class="org-whitespace-space"> </span><span class="org-string">sum\n\t"</span>);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"sum=%d\n"</span>,<span class="org-whitespace-space"> </span>sum);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org446cfb8" class="outline-3">
-<h3 id="org446cfb8"><span class="section-number-3">3.2</span> Extend Asm</h3>
+<div id="outline-container-orgf709810" class="outline-3">
+<h3 id="orgf709810"><span class="section-number-3">3.2</span> Extend Asm</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] ( AssemblerTemplate
-                 : OutputOperands
-                 [ : InputOperands
-                 [ : Clobbers ] ])
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>[<span class="org-keyword">volatile</span>]<span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>AssemblerTemplate
+<span class="org-whitespace-space">                 </span>:<span class="org-whitespace-space"> </span>OutputOperands
+<span class="org-whitespace-space">                 </span>[<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>InputOperands
+<span class="org-whitespace-space">                 </span>[<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>Clobbers<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>])
 
-<span class="org-keyword">asm</span> [<span class="org-keyword">volatile</span>] <span class="org-keyword">goto</span> ( AssemblerTemplate
-                      :
-                      : InputOperands
-                      : Clobbers
-                      : GotoLabels)
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>[<span class="org-keyword">volatile</span>]<span class="org-whitespace-space"> </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>AssemblerTemplate
+<span class="org-whitespace-space">                      </span>:
+<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span>InputOperands
+<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span>Clobbers
+<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span>GotoLabels)
 
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgc04f616" class="outline-4">
-<h4 id="orgc04f616"><span class="section-number-4">3.2.1</span> volatile</h4>
+<div id="outline-container-org52f4376" class="outline-4">
+<h4 id="org52f4376"><span class="section-number-4">3.2.1</span> volatile</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 volatile和C语言中的一致，如果汇编指令产生边界效应，需要添加volatile禁止优化。如下示例：
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdint.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdint.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unistd.h&gt;</span>
 
-<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">uint64_t</span> <span class="org-function-name">nv_rdtsc</span>(<span class="org-type">void</span>)
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">nv_rdtsc</span>(<span class="org-type">void</span>)
 {
-        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rts</span>;
 
-        <span class="org-keyword">asm</span> (<span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
-             <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
-             <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
-             : <span class="org-string">"=a"</span> (rts)
-             :
-             : <span class="org-string">"rdx"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"rdtsc\n\t"</span><span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Returns</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">time</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">EDX:EAX.</span>
+<span class="org-whitespace-space">             </span><span class="org-string">"shl</span><span class="org-whitespace-space"> </span><span class="org-string">$32,</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx\n\t"</span><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Shift</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">upper</span><span class="org-whitespace-space"> </span><span class="org-comment">bits</span><span class="org-whitespace-space"> </span><span class="org-comment">left.</span>
+<span class="org-whitespace-space">             </span><span class="org-string">"or</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">'Or'</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">lower</span><span class="org-whitespace-space"> </span><span class="org-comment">bits.</span>
+<span class="org-whitespace-space">             </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(rts)
+<span class="org-whitespace-space">             </span>:
+<span class="org-whitespace-space">             </span>:<span class="org-whitespace-space"> </span><span class="org-string">"rdx"</span>);
 
-        <span class="org-keyword">return</span> rts;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>rts;
 }
 
-<span class="org-keyword">static</span> <span class="org-keyword">inline</span> <span class="org-type">uint64_t</span> <span class="org-function-name">rdtsc</span>(<span class="org-type">void</span>)
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">rdtsc</span>(<span class="org-type">void</span>)
 {
-        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rts</span>;
 
-        <span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> (<span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
-                      <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
-                      <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
-                      : <span class="org-string">"=a"</span> (rts)
-                      :
-                      : <span class="org-string">"rdx"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span>(<span class="org-string">"rdtsc\n\t"</span><span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Returns</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">time</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">EDX:EAX.</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">"shl</span><span class="org-whitespace-space"> </span><span class="org-string">$32,</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx\n\t"</span><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Shift</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">upper</span><span class="org-whitespace-space"> </span><span class="org-comment">bits</span><span class="org-whitespace-space"> </span><span class="org-comment">left.</span>
+<span class="org-whitespace-space">                      </span><span class="org-string">"or</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">'Or'</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">lower</span><span class="org-whitespace-space"> </span><span class="org-comment">bits.</span>
+<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(rts)
+<span class="org-whitespace-space">                      </span>:
+<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span><span class="org-string">"rdx"</span>);
 
-        <span class="org-keyword">return</span> rts;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>rts;
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
-        <span class="org-type">uint64_t</span> <span class="org-variable-name">rts1</span>, <span class="org-variable-name">rts2</span>, <span class="org-variable-name">rts3</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rts1</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">rts2</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">rts3</span>;
 
-        rts1 = nv_rdtsc();
-        usleep(10);
-        rts2 = nv_rdtsc();
-        usleep(20);
-        rts3 = nv_rdtsc();
+<span class="org-whitespace-space">        </span>rts1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>nv_rdtsc();
+<span class="org-whitespace-space">        </span>usleep(10);
+<span class="org-whitespace-space">        </span>rts2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>nv_rdtsc();
+<span class="org-whitespace-space">        </span>usleep(20);
+<span class="org-whitespace-space">        </span>rts3<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>nv_rdtsc();
 
-        printf(<span class="org-string">"rts = %lu, %lu, %lu\n"</span>, rts1, rts2, rts3);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"rts</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">%lu,</span><span class="org-whitespace-space"> </span><span class="org-string">%lu,</span><span class="org-whitespace-space"> </span><span class="org-string">%lu\n"</span>,<span class="org-whitespace-space"> </span>rts1,<span class="org-whitespace-space"> </span>rts2,<span class="org-whitespace-space"> </span>rts3);
 
-        rts1 = rdtsc();
-        usleep(10);
-        rts2 = rdtsc();
-        usleep(20);
-        rts3 = rdtsc();
-        printf(<span class="org-string">"rts = %lu, %lu, %lu\n"</span>, rts1, rts2, rts3);
+<span class="org-whitespace-space">        </span>rts1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc();
+<span class="org-whitespace-space">        </span>usleep(10);
+<span class="org-whitespace-space">        </span>rts2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc();
+<span class="org-whitespace-space">        </span>usleep(20);
+<span class="org-whitespace-space">        </span>rts3<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rdtsc();
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"rts</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">%lu,</span><span class="org-whitespace-space"> </span><span class="org-string">%lu,</span><span class="org-whitespace-space"> </span><span class="org-string">%lu\n"</span>,<span class="org-whitespace-space"> </span>rts1,<span class="org-whitespace-space"> </span>rts2,<span class="org-whitespace-space"> </span>rts3);
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -258,17 +258,17 @@ you allow the optimizers to produce the most efficient code possible.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">void</span> <span class="org-function-name">DoCheck</span>(<span class="org-type">uint32_t</span> <span class="org-variable-name">dwSomeValue</span>)
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">DoCheck</span>(<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dwSomeValue</span>)
 {
-   <span class="org-type">uint32_t</span> <span class="org-variable-name">dwRes</span>;
+<span class="org-whitespace-space">   </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dwRes</span>;
 
-   <span class="org-comment-delimiter">// </span><span class="org-comment">Assumes dwSomeValue is not zero.</span>
-   <span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1,%0"</span>
-     : <span class="org-string">"=r"</span> (dwRes)
-     : <span class="org-string">"r"</span> (dwSomeValue)
-     : <span class="org-string">"cc"</span>);
+<span class="org-whitespace-space">   </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Assumes</span><span class="org-whitespace-space"> </span><span class="org-comment">dwSomeValue</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">not</span><span class="org-whitespace-space"> </span><span class="org-comment">zero.</span>
+<span class="org-whitespace-space">   </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"bsfl</span><span class="org-whitespace-space"> </span><span class="org-string">%1,%0"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(dwRes)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(dwSomeValue)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>);
 
-   assert(dwRes &gt; 3);
+<span class="org-whitespace-space">   </span>assert(dwRes<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>3);
 }
 </pre>
 </div>
@@ -280,20 +280,20 @@ therefore move the asm outside the loop to produce more efficient code. Again,
 using volatile disables this type of optimization.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">void</span> <span class="org-function-name">do_print</span>(<span class="org-type">uint32_t</span> <span class="org-variable-name">dwSomeValue</span>)
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">do_print</span>(<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dwSomeValue</span>)
 {
-   <span class="org-type">uint32_t</span> <span class="org-variable-name">dwRes</span>;
+<span class="org-whitespace-space">   </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dwRes</span>;
 
-   <span class="org-keyword">for</span> (<span class="org-type">uint32_t</span> <span class="org-variable-name">x</span>=0; x &lt; 5; x++)
-   {
-      <span class="org-comment-delimiter">// </span><span class="org-comment">Assumes dwSomeValue is not zero.</span>
-      <span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1,%0"</span>
-        : <span class="org-string">"=r"</span> (dwRes)
-        : <span class="org-string">"r"</span> (dwSomeValue)
-        : <span class="org-string">"cc"</span>);
+<span class="org-whitespace-space">   </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>=0;<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>5;<span class="org-whitespace-space"> </span>x++)
+<span class="org-whitespace-space">   </span>{
+<span class="org-whitespace-space">      </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Assumes</span><span class="org-whitespace-space"> </span><span class="org-comment">dwSomeValue</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">not</span><span class="org-whitespace-space"> </span><span class="org-comment">zero.</span>
+<span class="org-whitespace-space">      </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"bsfl</span><span class="org-whitespace-space"> </span><span class="org-string">%1,%0"</span>
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(dwRes)
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(dwSomeValue)
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>);
 
-      printf(<span class="org-string">"%u: %u %u\n"</span>, x, dwSomeValue, dwRes);
-   }
+<span class="org-whitespace-space">      </span>printf(<span class="org-string">"%u:</span><span class="org-whitespace-space"> </span><span class="org-string">%u</span><span class="org-whitespace-space"> </span><span class="org-string">%u\n"</span>,<span class="org-whitespace-space"> </span>x,<span class="org-whitespace-space"> </span>dwSomeValue,<span class="org-whitespace-space"> </span>dwRes);
+<span class="org-whitespace-space">   </span>}
 }
 </pre>
 </div>
@@ -306,28 +306,28 @@ that the asm block will always return the same value and therefore optimize away
 the second call.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">uint64_t</span> <span class="org-variable-name">msr</span>;
+<pre class="src src-C"><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">msr</span>;
 
-<span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> ( <span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
-        <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
-        <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
-        : <span class="org-string">"=a"</span> (msr)
-        :
-        : <span class="org-string">"rdx"</span>);
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span><span class="org-string">"rdtsc\n\t"</span><span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Returns</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">time</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">EDX:EAX.</span>
+<span class="org-whitespace-space">        </span><span class="org-string">"shl</span><span class="org-whitespace-space"> </span><span class="org-string">$32,</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx\n\t"</span><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Shift</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">upper</span><span class="org-whitespace-space"> </span><span class="org-comment">bits</span><span class="org-whitespace-space"> </span><span class="org-comment">left.</span>
+<span class="org-whitespace-space">        </span><span class="org-string">"or</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">'Or'</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">lower</span><span class="org-whitespace-space"> </span><span class="org-comment">bits.</span>
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(msr)
+<span class="org-whitespace-space">        </span>:
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"rdx"</span>);
 
-printf(<span class="org-string">"msr: %llx\n"</span>, msr);
+printf(<span class="org-string">"msr:</span><span class="org-whitespace-space"> </span><span class="org-string">%llx\n"</span>,<span class="org-whitespace-space"> </span>msr);
 
-<span class="org-comment-delimiter">// </span><span class="org-comment">Do other work...</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">other</span><span class="org-whitespace-space"> </span><span class="org-comment">work...</span>
 
-<span class="org-comment-delimiter">// </span><span class="org-comment">Reprint the timestamp</span>
-<span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> ( <span class="org-string">"rdtsc\n\t"</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">Returns the time in EDX:EAX.</span>
-        <span class="org-string">"shl $32, %%rdx\n\t"</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">Shift the upper bits left.</span>
-        <span class="org-string">"or %%rdx, %0"</span>        <span class="org-comment-delimiter">// </span><span class="org-comment">'Or' in the lower bits.</span>
-        : <span class="org-string">"=a"</span> (msr)
-        :
-        : <span class="org-string">"rdx"</span>);
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Reprint</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">timestamp</span>
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span><span class="org-string">"rdtsc\n\t"</span><span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Returns</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">time</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">EDX:EAX.</span>
+<span class="org-whitespace-space">        </span><span class="org-string">"shl</span><span class="org-whitespace-space"> </span><span class="org-string">$32,</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx\n\t"</span><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Shift</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">upper</span><span class="org-whitespace-space"> </span><span class="org-comment">bits</span><span class="org-whitespace-space"> </span><span class="org-comment">left.</span>
+<span class="org-whitespace-space">        </span><span class="org-string">"or</span><span class="org-whitespace-space"> </span><span class="org-string">%%rdx,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">'Or'</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">lower</span><span class="org-whitespace-space"> </span><span class="org-comment">bits.</span>
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=a"</span><span class="org-whitespace-space"> </span>(msr)
+<span class="org-whitespace-space">        </span>:
+<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span><span class="org-string">"rdx"</span>);
 
-printf(<span class="org-string">"msr: %llx\n"</span>, msr);
+printf(<span class="org-string">"msr:</span><span class="org-whitespace-space"> </span><span class="org-string">%llx\n"</span>,<span class="org-whitespace-space"> </span>msr);
 </pre>
 </div>
 
@@ -345,8 +345,8 @@ Setting it with a volatile asm, as in the following PowerPC example, does not
 work reliably.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">volatile</span>(<span class="org-string">"mtfsf 255, %0"</span> : : <span class="org-string">"f"</span> (fpenv));
-sum = x + y;
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"mtfsf</span><span class="org-whitespace-space"> </span><span class="org-string">255,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"f"</span><span class="org-whitespace-space"> </span>(fpenv));
+sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>y;
 </pre>
 </div>
 
@@ -356,8 +356,8 @@ as expected, add an artificial dependency to the asm by referencing a variable
 in the subsequent code, for example:
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">volatile</span> (<span class="org-string">"mtfsf 255,%1"</span> : <span class="org-string">"=X"</span> (sum) : <span class="org-string">"f"</span> (fpenv));
-sum = x + y;
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span>(<span class="org-string">"mtfsf</span><span class="org-whitespace-space"> </span><span class="org-string">255,%1"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=X"</span><span class="org-whitespace-space"> </span>(sum)<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"f"</span><span class="org-whitespace-space"> </span>(fpenv));
+sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>y;
 </pre>
 </div>
 
@@ -371,47 +371,47 @@ errors during compilation if your asm code defines symbols or labels. Using ‘%
 </div>
 </div>
 
-<div id="outline-container-org0a9d8dc" class="outline-4">
-<h4 id="org0a9d8dc"><span class="section-number-4">3.2.2</span> goto</h4>
+<div id="outline-container-org73aced6" class="outline-4">
+<h4 id="org73aced6"><span class="section-number-4">3.2.2</span> goto</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 允许汇编指令跳转到C语言定义的GotoLabels任一个，多个GotoLabels用逗号分割。允许
 goto跳转的汇编块不允许包含输出。如下代码示例显示了内联跳转。
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
 
-<span class="org-type">void</span> <span class="org-function-name">func</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>)
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">func</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>)
 {
-        <span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (<span class="org-string">"cmpl $1,%0\n\t"</span>
-                  <span class="org-string">"je %l[Label1]\n\t"</span>
-                  <span class="org-string">"cmpl $2, %0\n\t"</span>
-                  <span class="org-string">"je %l[Label2]\n\t"</span>
-                  : <span class="org-comment-delimiter">/* </span><span class="org-comment">no outputs </span><span class="org-comment-delimiter">*/</span>
-                  : <span class="org-string">"r"</span>(i)
-                  : <span class="org-comment-delimiter">/* </span><span class="org-comment">no clobber </span><span class="org-comment-delimiter">*/</span>
-                  : Label1, Label2
-                 );
+<span class="org-whitespace-space">        </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span>(<span class="org-string">"cmpl</span><span class="org-whitespace-space"> </span><span class="org-string">$1,%0\n\t"</span>
+<span class="org-whitespace-space">                  </span><span class="org-string">"je</span><span class="org-whitespace-space"> </span><span class="org-string">%l[Label1]\n\t"</span>
+<span class="org-whitespace-space">                  </span><span class="org-string">"cmpl</span><span class="org-whitespace-space"> </span><span class="org-string">$2,</span><span class="org-whitespace-space"> </span><span class="org-string">%0\n\t"</span>
+<span class="org-whitespace-space">                  </span><span class="org-string">"je</span><span class="org-whitespace-space"> </span><span class="org-string">%l[Label2]\n\t"</span>
+<span class="org-whitespace-space">                  </span>:<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">no</span><span class="org-whitespace-space"> </span><span class="org-comment">outputs</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">                  </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span>(i)
+<span class="org-whitespace-space">                  </span>:<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">no</span><span class="org-whitespace-space"> </span><span class="org-comment">clobber</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">                  </span>:<span class="org-whitespace-space"> </span>Label1,<span class="org-whitespace-space"> </span>Label2
+<span class="org-whitespace-space">                 </span>);
 
-        printf(<span class="org-string">"asm no goto\n"</span>);
-        <span class="org-keyword">return</span>;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"asm</span><span class="org-whitespace-space"> </span><span class="org-string">no</span><span class="org-whitespace-space"> </span><span class="org-string">goto\n"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span>;
 
 <span class="org-constant">Label1</span>:
-        printf(<span class="org-string">"asm goto Label1\n"</span>);
-        <span class="org-keyword">return</span>;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"asm</span><span class="org-whitespace-space"> </span><span class="org-string">goto</span><span class="org-whitespace-space"> </span><span class="org-string">Label1\n"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span>;
 
 <span class="org-constant">Label2</span>:
-        printf(<span class="org-string">"asm goto Label2\n"</span>);
-        <span class="org-keyword">return</span>;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"asm</span><span class="org-whitespace-space"> </span><span class="org-string">goto</span><span class="org-whitespace-space"> </span><span class="org-string">Label2\n"</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span>;
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
-        func(0);
-        func(1);
-        func(2);
-        func(3);
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span>func(0);
+<span class="org-whitespace-space">        </span>func(1);
+<span class="org-whitespace-space">        </span>func(2);
+<span class="org-whitespace-space">        </span>func(3);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>
@@ -465,18 +465,18 @@ this approach.
 Here is an example of asm goto for i386:
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (
-    <span class="org-string">"btl %1, %0\n\t"</span>
-    <span class="org-string">"jc %l2"</span>
-    : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
-    : <span class="org-string">"r"</span> (p1), <span class="org-string">"r"</span> (p2)
-    : <span class="org-string">"cc"</span>
-    : carry);
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span>(
+<span class="org-whitespace-space">    </span><span class="org-string">"btl</span><span class="org-whitespace-space"> </span><span class="org-string">%1,</span><span class="org-whitespace-space"> </span><span class="org-string">%0\n\t"</span>
+<span class="org-whitespace-space">    </span><span class="org-string">"jc</span><span class="org-whitespace-space"> </span><span class="org-string">%l2"</span>
+<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">No</span><span class="org-whitespace-space"> </span><span class="org-comment">outputs.</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(p1),<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(p2)
+<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>
+<span class="org-whitespace-space">    </span>:<span class="org-whitespace-space"> </span>carry);
 
-<span class="org-keyword">return</span> 0;
+<span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 
 <span class="org-constant">carry</span>:
-<span class="org-keyword">return</span> 1;
+<span class="org-keyword">return</span><span class="org-whitespace-space"> </span>1;
 </pre>
 </div>
 
@@ -484,17 +484,17 @@ Here is an example of asm goto for i386:
 The following example shows an asm goto that uses a memory clobber.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">int</span> <span class="org-function-name">frob</span>(<span class="org-type">int</span> <span class="org-variable-name">x</span>)
+<pre class="src src-C"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">frob</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>)
 {
-  <span class="org-type">int</span> <span class="org-variable-name">y</span>;
-  <span class="org-keyword">asm</span> <span class="org-keyword">goto</span> (<span class="org-string">"frob %%r5, %1; jc %l[error]; mov (%2), %%r5"</span>
-            : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
-            : <span class="org-string">"r"</span>(x), <span class="org-string">"r"</span>(&amp;y)
-            : <span class="org-string">"r5"</span>, <span class="org-string">"memory"</span>
-            : error);
-  <span class="org-keyword">return</span> y;
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">y</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span>(<span class="org-string">"frob</span><span class="org-whitespace-space"> </span><span class="org-string">%%r5,</span><span class="org-whitespace-space"> </span><span class="org-string">%1;</span><span class="org-whitespace-space"> </span><span class="org-string">jc</span><span class="org-whitespace-space"> </span><span class="org-string">%l[error];</span><span class="org-whitespace-space"> </span><span class="org-string">mov</span><span class="org-whitespace-space"> </span><span class="org-string">(%2),</span><span class="org-whitespace-space"> </span><span class="org-string">%%r5"</span>
+<span class="org-whitespace-space">            </span>:<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">No</span><span class="org-whitespace-space"> </span><span class="org-comment">outputs.</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">            </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span>(x),<span class="org-whitespace-space"> </span><span class="org-string">"r"</span>(&amp;y)
+<span class="org-whitespace-space">            </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r5"</span>,<span class="org-whitespace-space"> </span><span class="org-string">"memory"</span>
+<span class="org-whitespace-space">            </span>:<span class="org-whitespace-space"> </span>error);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>y;
 <span class="org-constant">error</span>:
-  <span class="org-keyword">return</span> -1;
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>-1;
 }
 </pre>
 </div>
@@ -502,8 +502,8 @@ The following example shows an asm goto that uses a memory clobber.
 </div>
 </div>
 
-<div id="outline-container-org5d9f25e" class="outline-4">
-<h4 id="org5d9f25e"><span class="section-number-4">3.2.3</span> AssemblerTemplate</h4>
+<div id="outline-container-org21a1681" class="outline-4">
+<h4 id="org21a1681"><span class="section-number-4">3.2.3</span> AssemblerTemplate</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <blockquote>
 <ul class="org-ul">
@@ -609,7 +609,7 @@ For example, if an x86 compiler supports two dialects (‘att’, ‘intel’), 
 assembler template such as this:
 </p>
 <div class="org-src-container">
-<pre class="src src-asm"><span class="org-string">"bt{l %[Offset],%[Base] | %[Base],%[Offset]}; jc %l2"</span>
+<pre class="src src-asm"><span class="org-string">"bt{l</span><span class="org-whitespace-space"> </span><span class="org-string">%[Offset],%[Base]</span><span class="org-whitespace-space"> </span><span class="org-string">|</span><span class="org-whitespace-space"> </span><span class="org-string">%[Base],%[Offset]};</span><span class="org-whitespace-space"> </span><span class="org-string">jc</span><span class="org-whitespace-space"> </span><span class="org-string">%l2"</span>
 </pre>
 </div>
 
@@ -617,8 +617,8 @@ assembler template such as this:
 is equivalent to one of
 </p>
 <div class="org-src-container">
-<pre class="src src-asm"><span class="org-string">"btl %[Offset],%[Base] ; jc %l2"</span>   <span class="org-comment-delimiter">/* </span><span class="org-comment">att dialect */</span>
-<span class="org-string">"bt %[Base],%[Offset]; jc %l2"</span>     <span class="org-comment-delimiter">/* </span><span class="org-comment">intel dialect */</span>
+<pre class="src src-asm"><span class="org-string">"btl</span><span class="org-whitespace-space"> </span><span class="org-string">%[Offset],%[Base]</span><span class="org-whitespace-space"> </span><span class="org-string">;</span><span class="org-whitespace-space"> </span><span class="org-string">jc</span><span class="org-whitespace-space"> </span><span class="org-string">%l2"</span><span class="org-whitespace-space">   </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">att</span><span class="org-whitespace-space"> </span><span class="org-comment">dialect</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+<span class="org-string">"bt</span><span class="org-whitespace-space"> </span><span class="org-string">%[Base],%[Offset];</span><span class="org-whitespace-space"> </span><span class="org-string">jc</span><span class="org-whitespace-space"> </span><span class="org-string">%l2"</span><span class="org-whitespace-space">     </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">intel</span><span class="org-whitespace-space"> </span><span class="org-comment">dialect</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
 </pre>
 </div>
 
@@ -626,7 +626,7 @@ is equivalent to one of
 Using that same compiler, this code:
 </p>
 <div class="org-src-container">
-<pre class="src src-asm"><span class="org-string">"xchg{l}\t{%%}ebx, %1"</span>
+<pre class="src src-asm"><span class="org-string">"xchg{l}\t{%%}ebx,</span><span class="org-whitespace-space"> </span><span class="org-string">%1"</span>
 </pre>
 </div>
 
@@ -634,8 +634,8 @@ Using that same compiler, this code:
 corresponds to either
 </p>
 <div class="org-src-container">
-<pre class="src src-asm"><span class="org-string">"xchgl\t%%ebx, %1"</span>                 <span class="org-comment-delimiter">/* </span><span class="org-comment">att dialect */</span>
-<span class="org-string">"xchg\tebx, %1"</span>                    <span class="org-comment-delimiter">/* </span><span class="org-comment">intel dialect */</span>
+<pre class="src src-asm"><span class="org-string">"xchgl\t%%ebx,</span><span class="org-whitespace-space"> </span><span class="org-string">%1"</span><span class="org-whitespace-space">                 </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">att</span><span class="org-whitespace-space"> </span><span class="org-comment">dialect</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+<span class="org-string">"xchg\tebx,</span><span class="org-whitespace-space"> </span><span class="org-string">%1"</span><span class="org-whitespace-space">                    </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">intel</span><span class="org-whitespace-space"> </span><span class="org-comment">dialect</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
 </pre>
 </div>
 
@@ -647,8 +647,8 @@ There is no support for nesting dialect alternatives.
 </div>
 </div>
 
-<div id="outline-container-org47316aa" class="outline-3">
-<h3 id="org47316aa"><span class="section-number-3">3.3</span> Output Operands</h3>
+<div id="outline-container-org3410302" class="outline-3">
+<h3 id="org3410302"><span class="section-number-3">3.3</span> Output Operands</h3>
 <div class="outline-text-3" id="text-3-3">
 <blockquote>
 <ul class="org-ul">
@@ -665,15 +665,15 @@ In this i386 example, old (referred to in the template string as %0) and *Base
 (as %1) are outputs and Offset (%2) is an input:
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">bool</span> <span class="org-variable-name">old</span>;
+<pre class="src src-C"><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-variable-name">old</span>;
 
-<span class="org-keyword">__asm__</span> (<span class="org-string">"btsl %2,%1\n\t"</span> <span class="org-comment-delimiter">// </span><span class="org-comment">Turn on zero-based bit #Offset in Base.</span>
-         <span class="org-string">"sbb %0,%0"</span>      <span class="org-comment-delimiter">// </span><span class="org-comment">Use the CF to calculate old.</span>
-   : <span class="org-string">"=r"</span> (old), <span class="org-string">"+rm"</span> (*Base)
-   : <span class="org-string">"Ir"</span> (Offset)
-   : <span class="org-string">"cc"</span>);
+<span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span>(<span class="org-string">"btsl</span><span class="org-whitespace-space"> </span><span class="org-string">%2,%1\n\t"</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Turn</span><span class="org-whitespace-space"> </span><span class="org-comment">on</span><span class="org-whitespace-space"> </span><span class="org-comment">zero-based</span><span class="org-whitespace-space"> </span><span class="org-comment">bit</span><span class="org-whitespace-space"> </span><span class="org-comment">#Offset</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">Base.</span>
+<span class="org-whitespace-space">         </span><span class="org-string">"sbb</span><span class="org-whitespace-space"> </span><span class="org-string">%0,%0"</span><span class="org-whitespace-space">      </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Use</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">CF</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">calculate</span><span class="org-whitespace-space"> </span><span class="org-comment">old.</span>
+<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(old),<span class="org-whitespace-space"> </span><span class="org-string">"+rm"</span><span class="org-whitespace-space"> </span>(*Base)
+<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span><span class="org-string">"Ir"</span><span class="org-whitespace-space"> </span>(Offset)
+<span class="org-whitespace-space">   </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>);
 
-<span class="org-keyword">return</span> old;
+<span class="org-keyword">return</span><span class="org-whitespace-space"> </span>old;
 </pre>
 </div>
 
@@ -681,7 +681,7 @@ In this i386 example, old (referred to in the template string as %0) and *Base
 Operands are separated by commas. Each operand has this format:
 </p>
 <div class="org-src-container">
-<pre class="src src-C">[ [asmSymbolicName] ] constraint (cvariablename)
+<pre class="src src-C">[<span class="org-whitespace-space"> </span>[asmSymbolicName]<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>constraint<span class="org-whitespace-space"> </span>(cvariablename)
 </pre>
 </div>
 
@@ -791,13 +791,13 @@ number of the first input operand is one greater than that of the last output
 operand. In this i386 example, that makes Mask referenced as %1:
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">Mask</span> = 1234;
-<span class="org-type">uint32_t</span> <span class="org-variable-name">Index</span>;
+<pre class="src src-C"><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">Mask</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1234;
+<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">Index</span>;
 
-<span class="org-keyword">asm</span> (<span class="org-string">"bsfl %1, %0"</span>
-     : <span class="org-string">"=r"</span> (Index)
-     : <span class="org-string">"r"</span> (Mask)
-     : <span class="org-string">"cc"</span>);
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"bsfl</span><span class="org-whitespace-space"> </span><span class="org-string">%1,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(Index)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(Mask)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>);
 </pre>
 </div>
 
@@ -818,13 +818,13 @@ emphasize which names get used where. It is acceptable to reuse the names Index
 and Mask.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">Mask</span> = 1234;
-<span class="org-type">uint32_t</span> <span class="org-variable-name">Index</span>;
+<pre class="src src-C"><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">Mask</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1234;
+<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">Index</span>;
 
-<span class="org-keyword">asm</span> (<span class="org-string">"bsfl %[aMask], %[aIndex]"</span>
-     : [aIndex] <span class="org-string">"=r"</span> (Index)
-     : [aMask] <span class="org-string">"r"</span> (Mask)
-     : <span class="org-string">"cc"</span>);
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"bsfl</span><span class="org-whitespace-space"> </span><span class="org-string">%[aMask],</span><span class="org-whitespace-space"> </span><span class="org-string">%[aIndex]"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>[aIndex]<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(Index)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>[aMask]<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(Mask)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"cc"</span>);
 
 </pre>
 </div>
@@ -833,13 +833,13 @@ and Mask.
 Here are some more examples of output operands.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-type">uint32_t</span> <span class="org-variable-name">c</span> = 1;
-<span class="org-type">uint32_t</span> <span class="org-variable-name">d</span>;
-<span class="org-type">uint32_t</span> *<span class="org-variable-name">e</span> = &amp;c;
+<pre class="src src-C"><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">c</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">d</span>;
+<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">e</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;c;
 
-<span class="org-keyword">asm</span> (<span class="org-string">"mov %[e], %[d]"</span>
-     : [d] <span class="org-string">"=rm"</span> (d)
-     : [e] <span class="org-string">"rm"</span> (*e));
+<span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"mov</span><span class="org-whitespace-space"> </span><span class="org-string">%[e],</span><span class="org-whitespace-space"> </span><span class="org-string">%[d]"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>[d]<span class="org-whitespace-space"> </span><span class="org-string">"=rm"</span><span class="org-whitespace-space"> </span>(d)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>[e]<span class="org-whitespace-space"> </span><span class="org-string">"rm"</span><span class="org-whitespace-space"> </span>(*e));
 </pre>
 </div>
 
@@ -853,8 +853,8 @@ constraints.
 </div>
 </div>
 
-<div id="outline-container-org74b2e61" class="outline-3">
-<h3 id="org74b2e61"><span class="section-number-3">3.4</span> Input Operands</h3>
+<div id="outline-container-org5756d94" class="outline-3">
+<h3 id="org5756d94"><span class="section-number-3">3.4</span> Input Operands</h3>
 <div class="outline-text-3" id="text-3-4">
 <blockquote>
 <ul class="org-ul">
@@ -870,7 +870,7 @@ assembly code.
 Operands are separated by commas. Each operand has this format:
 </p>
 <div class="org-src-container">
-<pre class="src src-C">[ [asmSymbolicName] ] constraint (cexpression)
+<pre class="src src-C">[<span class="org-whitespace-space"> </span>[asmSymbolicName]<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>constraint<span class="org-whitespace-space"> </span>(cexpression)
 </pre>
 </div>
 
@@ -929,9 +929,9 @@ If there are no output operands but there are input operands, place two
 consecutive colons where the output operands would go:
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">__asm__</span> (<span class="org-string">"some instructions"</span>
-         : <span class="org-comment-delimiter">/* </span><span class="org-comment">No outputs. </span><span class="org-comment-delimiter">*/</span>
-         : <span class="org-string">"r"</span> (Offset / 8));
+<pre class="src src-C"><span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span>(<span class="org-string">"some</span><span class="org-whitespace-space"> </span><span class="org-string">instructions"</span>
+<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">No</span><span class="org-whitespace-space"> </span><span class="org-comment">outputs.</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">         </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(Offset<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>8));
 </pre>
 </div>
 
@@ -962,9 +962,9 @@ mere fact that foo is the value of both operands is not enough to guarantee that
 they are in the same place in the generated assembler code.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> (<span class="org-string">"combine %2, %0"</span>
-     : <span class="org-string">"=r"</span> (foo)
-     : <span class="org-string">"0"</span> (foo), <span class="org-string">"g"</span> (bar));
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"combine</span><span class="org-whitespace-space"> </span><span class="org-string">%2,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span><span class="org-whitespace-space"> </span>(foo)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"0"</span><span class="org-whitespace-space"> </span>(foo),<span class="org-whitespace-space"> </span><span class="org-string">"g"</span><span class="org-whitespace-space"> </span>(bar));
 </pre>
 </div>
 
@@ -972,9 +972,9 @@ they are in the same place in the generated assembler code.
 Here is an example using symbolic names.
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-keyword">asm</span> (<span class="org-string">"cmoveq %1, %2, %[result]"</span>
-     : [result] <span class="org-string">"=r"</span>(result)
-     : <span class="org-string">"r"</span> (test), <span class="org-string">"r"</span> (new), <span class="org-string">"[result]"</span> (old));
+<pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>(<span class="org-string">"cmoveq</span><span class="org-whitespace-space"> </span><span class="org-string">%1,</span><span class="org-whitespace-space"> </span><span class="org-string">%2,</span><span class="org-whitespace-space"> </span><span class="org-string">%[result]"</span>
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>[result]<span class="org-whitespace-space"> </span><span class="org-string">"=r"</span>(result)
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(test),<span class="org-whitespace-space"> </span><span class="org-string">"r"</span><span class="org-whitespace-space"> </span>(new),<span class="org-whitespace-space"> </span><span class="org-string">"[result]"</span><span class="org-whitespace-space"> </span>(old));
 </pre>
 </div>
 </blockquote>
@@ -987,11 +987,11 @@ Here is an example using symbolic names.
 </div>
 </div>
 
-<div id="outline-container-org0fc0b61" class="outline-2">
-<h2 id="org0fc0b61"><span class="section-number-2">4</span> 内联汇编示例</h2>
+<div id="outline-container-orgdebf657" class="outline-2">
+<h2 id="orgdebf657"><span class="section-number-2">4</span> 内联汇编示例</h2>
 </div>
-<div id="outline-container-org0650745" class="outline-2">
-<h2 id="org0650745"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org35ebbeb" class="outline-2">
+<h2 id="org35ebbeb"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>GCC Manual</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html</a></dd>

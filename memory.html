@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:37 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>内存管理技术</title>
 <meta name="generator" content="Org mode" />
@@ -28,7 +28,7 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfebd75f">1. <span class="todo TODO">TODO</span> 概述</a></li>
+<li><a href="#org011285a">1. <span class="todo TODO">TODO</span> 概述</a></li>
 <li><a href="#us">2. 用户态内存管理技术</a>
 <ul>
 <li><a href="#us-process-layout">2.1. 从程序地址空间布局谈起</a></li>
@@ -36,33 +36,33 @@
 <li><a href="#us-alsr">2.3. ASLR(地址空间布局随机化)策略</a></li>
 <li><a href="#us-stack">2.4. 栈空间管理</a></li>
 <li><a href="#us-heap">2.5. <span class="todo TODO">TODO</span> 堆内存管理</a></li>
-<li><a href="#orgb4ea051">2.6. 典型分配器分析</a>
+<li><a href="#org00dcdee">2.6. 典型分配器分析</a>
 <ul>
-<li><a href="#org01024a2">2.6.1. tcmalloc</a></li>
+<li><a href="#org61c6c9a">2.6.1. tcmalloc</a></li>
 </ul>
 </li>
 <li><a href="#us-mempool">2.7. <span class="todo TODO">TODO</span> 内存池的实现</a></li>
 </ul>
 </li>
-<li><a href="#org7128fb1">3. 内核态内存管理</a>
+<li><a href="#org3b694f6">3. 内核态内存管理</a>
 <ul>
-<li><a href="#orgb9e046d">3.1. dummy</a>
+<li><a href="#orgfa20db0">3.1. dummy</a>
 <ul>
-<li><a href="#org4e6ff30">3.1.1. brk</a></li>
+<li><a href="#orgced0c93">3.1.1. brk</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org29fbcae">4. 读书笔记</a>
+<li><a href="#orgd020547">4. 读书笔记</a>
 <ul>
-<li><a href="#orgb1c3a2c">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
+<li><a href="#org01ca9fc">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
 <ul>
-<li><a href="#org7e69147">4.1.1. Chapter</a></li>
+<li><a href="#org5350dd4">4.1.1. Chapter</a></li>
 </ul>
 </li>
-<li><a href="#orgae5a6e5">4.2. Professional Linux Kernel Architecture CN</a>
+<li><a href="#org826f35a">4.2. Professional Linux Kernel Architecture CN</a>
 <ul>
-<li><a href="#org6a03599">4.2.1. 概述</a></li>
+<li><a href="#org0f7fcb6">4.2.1. 概述</a></li>
 </ul>
 </li>
 </ul>
@@ -71,8 +71,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgfebd75f" class="outline-2">
-<h2 id="orgfebd75f"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
+<div id="outline-container-org011285a" class="outline-2">
+<h2 id="org011285a"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 待定内容：介绍用户态内存使用于管理、内核态内存使用与管理、内存池、伙伴系统、虚拟内存管理等。
@@ -80,12 +80,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgfad3ed2" class="outline-2">
-<h2 id="us"><a id="orgfad3ed2"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
+<div id="outline-container-org6115ccd" class="outline-2">
+<h2 id="us"><a id="org6115ccd"></a><span class="section-number-2">2</span> 用户态内存管理技术</h2>
 <div class="outline-text-2" id="text-us">
 </div>
-<div id="outline-container-org6c8b9f3" class="outline-3">
-<h3 id="us-process-layout"><a id="org6c8b9f3"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
+<div id="outline-container-org5e55db4" class="outline-3">
+<h3 id="us-process-layout"><a id="org5e55db4"></a><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
 <div class="outline-text-3" id="text-us-process-layout">
 <p>
 二进制可执行文件是由特定格式的二进制代码和数据组成。常见的格式有如下三种：
@@ -133,22 +133,45 @@ LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存�
 <p>
 下图是一个典型的进程地址空间布局概要图：
 </p>
-
-<div class="figure">
-<p><img src="img/memory.process-layout.png" alt="memory.process-layout.png" />
-</p>
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>进程地址空间布局</label><pre class="src src-ditaa">+-----------------+ &lt;-:-:-:Task Size
+|      GAPS cAAA  |
++-----------------+ &lt;-:-:-:STACK TOP randomized variable
+|      cBLU       |
+|                 |
+|      Stack      | &lt;-:-:-:Already Used
+|        |        |
+|        |        |
++-----------------+
+|        |        |
+|        V        |
+|                 |
+|      cPNK       |
+|        ^ MMAP   |
+|        |        |
+|        |        |
++-----------------+ &lt;-:-:-:mm.mmap_base (TASK_UNMAPPED_SIZE)
+|                 |
+|      cGRE       |
+|        ^ HEAP   |
+|        |        |
++-----------------+
+|      c96E       |
+|      TEXT       |
++-----------------+
+</pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4929391" class="outline-3">
-<h3 id="us-exe-size-analysis"><a id="org4929391"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
+<div id="outline-container-org95eb38a" class="outline-3">
+<h3 id="us-exe-size-analysis"><a id="org95eb38a"></a><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
 <div class="outline-text-3" id="text-us-exe-size-analysis">
 <p>
 先参考如下示例代码：
 </p>
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>数据段示例代码</label><pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;malloc.h&gt;</span>
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;2&nbsp; </span>数据段示例代码</label><pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;malloc.h&gt;</span>
 
 <span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">initialized_data</span>[1024*1024]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{1};
 <span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">uninitialized_data</span>[1024*1024];
@@ -204,8 +227,8 @@ main(400530)为main函数入口地址。
 </div>
 </div>
 
-<div id="outline-container-org50ebafb" class="outline-3">
-<h3 id="us-alsr"><a id="org50ebafb"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
+<div id="outline-container-orgde0384a" class="outline-3">
+<h3 id="us-alsr"><a id="orgde0384a"></a><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
 <div class="outline-text-3" id="text-us-alsr">
 <p>
 上一小节分析中，通过reaelf并未看到stack和heap起始地址与长度限制，因为这是在运行时确定的。系统调用exec用load_elf_binary函数加载ELF文件，该函数检测
@@ -268,8 +291,8 @@ lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespa
 </div>
 </div>
 
-<div id="outline-container-orgb34e61f" class="outline-3">
-<h3 id="us-stack"><a id="orgb34e61f"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
+<div id="outline-container-orge52f537" class="outline-3">
+<h3 id="us-stack"><a id="orge52f537"></a><span class="section-number-3">2.4</span> 栈空间管理</h3>
 <div class="outline-text-3" id="text-us-stack">
 <p>
 用户态进程栈大小通过 <code>ulimit -s</code> 查看，通过 <code>ulimit -s new_size</code> 修改。默认大小
@@ -331,8 +354,8 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org2ba59f5" class="outline-3">
-<h3 id="us-heap"><a id="org2ba59f5"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
+<div id="outline-container-org39943d7" class="outline-3">
+<h3 id="us-heap"><a id="org39943d7"></a><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
 <div class="outline-text-3" id="text-us-heap">
 <ul class="org-ul">
 <li>内存泄漏、进程退出时全部回收、brk与mmap</li>
@@ -373,12 +396,12 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-orgb4ea051" class="outline-3">
-<h3 id="orgb4ea051"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
+<div id="outline-container-org00dcdee" class="outline-3">
+<h3 id="org00dcdee"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-org01024a2" class="outline-4">
-<h4 id="org01024a2"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
+<div id="outline-container-org61c6c9a" class="outline-4">
+<h4 id="org61c6c9a"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a>
@@ -388,8 +411,8 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 
 
-<div id="outline-container-org31a9d23" class="outline-3">
-<h3 id="us-mempool"><a id="org31a9d23"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
+<div id="outline-container-org43c0224" class="outline-3">
+<h3 id="us-mempool"><a id="org43c0224"></a><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
 <div class="outline-text-3" id="text-us-mempool">
 <ul class="org-ul">
 <li>特化实现、均衡技术、缓存对齐与性能</li>
@@ -398,16 +421,16 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org7128fb1" class="outline-2">
-<h2 id="org7128fb1"><span class="section-number-2">3</span> 内核态内存管理</h2>
+<div id="outline-container-org3b694f6" class="outline-2">
+<h2 id="org3b694f6"><span class="section-number-2">3</span> 内核态内存管理</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb9e046d" class="outline-3">
-<h3 id="orgb9e046d"><span class="section-number-3">3.1</span> dummy</h3>
+<div id="outline-container-orgfa20db0" class="outline-3">
+<h3 id="orgfa20db0"><span class="section-number-3">3.1</span> dummy</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org4e6ff30" class="outline-4">
-<h4 id="org4e6ff30"><span class="section-number-4">3.1.1</span> brk</h4>
+<div id="outline-container-orgced0c93" class="outline-4">
+<h4 id="orgced0c93"><span class="section-number-4">3.1.1</span> brk</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 brk stands for break. means program break
@@ -434,16 +457,16 @@ echo<span class="org-whitespace-space"> </span>2<span class="org-whitespace-spac
 </div>
 </div>
 </div>
-<div id="outline-container-org29fbcae" class="outline-2">
-<h2 id="org29fbcae"><span class="section-number-2">4</span> 读书笔记</h2>
+<div id="outline-container-orgd020547" class="outline-2">
+<h2 id="orgd020547"><span class="section-number-2">4</span> 读书笔记</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgb1c3a2c" class="outline-3">
-<h3 id="orgb1c3a2c"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
+<div id="outline-container-org01ca9fc" class="outline-3">
+<h3 id="org01ca9fc"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-org7e69147" class="outline-4">
-<h4 id="org7e69147"><span class="section-number-4">4.1.1</span> Chapter</h4>
+<div id="outline-container-org5350dd4" class="outline-4">
+<h4 id="org5350dd4"><span class="section-number-4">4.1.1</span> Chapter</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 1
@@ -451,12 +474,12 @@ echo<span class="org-whitespace-space"> </span>2<span class="org-whitespace-spac
 </div>
 </div>
 </div>
-<div id="outline-container-orgae5a6e5" class="outline-3">
-<h3 id="orgae5a6e5"><span class="section-number-3">4.2</span> Professional Linux Kernel Architecture CN</h3>
+<div id="outline-container-org826f35a" class="outline-3">
+<h3 id="org826f35a"><span class="section-number-3">4.2</span> Professional Linux Kernel Architecture CN</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-org6a03599" class="outline-4">
-<h4 id="org6a03599"><span class="section-number-4">4.2.1</span> 概述</h4>
+<div id="outline-container-org0f7fcb6" class="outline-4">
+<h4 id="org0f7fcb6"><span class="section-number-4">4.2.1</span> 概述</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 领域：

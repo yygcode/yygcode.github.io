@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-04 Wed 22:22 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux GCC编程技巧 &#x2013; Wrap拦截标准库与系统函数</title>
 <meta name="generator" content="Org mode" />
@@ -31,56 +31,56 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org71bc6a8">1. 使用wrap拦截系统函数</a></li>
+<li><a href="#orgbde3a7a">1. 使用wrap拦截系统函数</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org71bc6a8" class="outline-2">
-<h2 id="org71bc6a8"><span class="section-number-2">1</span> 使用wrap拦截系统函数</h2>
+<div id="outline-container-orgbde3a7a" class="outline-2">
+<h2 id="orgbde3a7a"><span class="section-number-2">1</span> 使用wrap拦截系统函数</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 下例使用wrap包装malloc，我们可以添加一些统计，来确认是否有内存泄漏问题。
 </p>
 <div class="org-src-container">
-<pre class="src src-C"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
-<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
 
-<span class="org-type">unsigned</span> <span class="org-type">long</span> <span class="org-variable-name">mcount</span> = 0;
+<span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">mcount</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
 
-<span class="org-keyword">extern</span> <span class="org-type">void</span> * <span class="org-function-name">__real_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>);
-<span class="org-keyword">extern</span> <span class="org-type">void</span>  <span class="org-function-name">__real_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>);
+<span class="org-keyword">extern</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span><span class="org-function-name">__real_malloc</span>(<span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">size</span>);
+<span class="org-keyword">extern</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space">  </span><span class="org-function-name">__real_free</span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ptr</span>);
 
-<span class="org-type">void</span> *<span class="org-function-name">__wrap_malloc</span>(<span class="org-type">size_t</span> <span class="org-variable-name">size</span>)
+<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">__wrap_malloc</span>(<span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">size</span>)
 {
-        <span class="org-type">void</span> *<span class="org-variable-name">ptr</span> = __real_malloc(size);
+<span class="org-whitespace-space">        </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ptr</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>__real_malloc(size);
 
-        <span class="org-keyword">if</span> (ptr)
-                ++mcount;
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ptr)
+<span class="org-whitespace-space">                </span>++mcount;
 
-        printf(<span class="org-string">"wrap malloc ptr=%p, size=%zu, count=%lu\n"</span>, ptr, size, mcount);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"wrap</span><span class="org-whitespace-space"> </span><span class="org-string">malloc</span><span class="org-whitespace-space"> </span><span class="org-string">ptr=%p,</span><span class="org-whitespace-space"> </span><span class="org-string">size=%zu,</span><span class="org-whitespace-space"> </span><span class="org-string">count=%lu\n"</span>,<span class="org-whitespace-space"> </span>ptr,<span class="org-whitespace-space"> </span>size,<span class="org-whitespace-space"> </span>mcount);
 
-        <span class="org-keyword">return</span> ptr;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ptr;
 }
 
-<span class="org-type">void</span> <span class="org-function-name">__wrap_free</span>(<span class="org-type">void</span> *<span class="org-variable-name">ptr</span>)
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__wrap_free</span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ptr</span>)
 {
-        __real_free(ptr);
-        <span class="org-keyword">if</span> (ptr)
-                --mcount;
-        printf(<span class="org-string">"wrap free   ptr=%p, count=%lu\n"</span>, ptr, mcount);
+<span class="org-whitespace-space">        </span>__real_free(ptr);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ptr)
+<span class="org-whitespace-space">                </span>--mcount;
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"wrap</span><span class="org-whitespace-space"> </span><span class="org-string">free</span><span class="org-whitespace-space">   </span><span class="org-string">ptr=%p,</span><span class="org-whitespace-space"> </span><span class="org-string">count=%lu\n"</span>,<span class="org-whitespace-space"> </span>ptr,<span class="org-whitespace-space"> </span>mcount);
 }
 
-<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[argc])
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
-        <span class="org-type">int</span> *<span class="org-variable-name">pi</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">pi</span>;
 
-        pi = malloc(<span class="org-keyword">sizeof</span>(*pi)*10);
-        memset(pi, 0, <span class="org-keyword">sizeof</span>(*pi)*10);
-        free(pi);
+<span class="org-whitespace-space">        </span>pi<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>malloc(<span class="org-keyword">sizeof</span>(*pi)*10);
+<span class="org-whitespace-space">        </span>memset(pi,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(*pi)*10);
+<span class="org-whitespace-space">        </span>free(pi);
 
-        <span class="org-keyword">return</span> 0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>
 </div>

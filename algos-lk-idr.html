@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:37 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
@@ -22,20 +22,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7b39ac5">1. 介绍</a></li>
-<li><a href="#org366035c">2. 代码分析</a>
+<li><a href="#orgee05a30">1. 介绍</a></li>
+<li><a href="#orgbf71044">2. 代码分析</a>
 <ul>
-<li><a href="#orgb4fcef9">2.1. 数据结构</a></li>
-<li><a href="#org6cbccc1">2.2. idr_alloc分析</a></li>
+<li><a href="#org4a41666">2.1. 数据结构</a></li>
+<li><a href="#org3000975">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#org06fc914">3. Reference Material</a></li>
+<li><a href="#org311b005">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org7b39ac5" class="outline-2">
-<h2 id="org7b39ac5"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgee05a30" class="outline-2">
+<h2 id="orgee05a30"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -43,12 +43,12 @@
 </div>
 </div>
 
-<div id="outline-container-org366035c" class="outline-2">
-<h2 id="org366035c"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-orgbf71044" class="outline-2">
+<h2 id="orgbf71044"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgb4fcef9" class="outline-3">
-<h3 id="orgb4fcef9"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-org4a41666" class="outline-3">
+<h3 id="org4a41666"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span>{
@@ -92,8 +92,8 @@
 </div>
 </div>
 
-<div id="outline-container-org6cbccc1" class="outline-3">
-<h3 id="org6cbccc1"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-org3000975" class="outline-3">
+<h3 id="org3000975"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -126,8 +126,8 @@
 </div>
 
 
-<div id="outline-container-org06fc914" class="outline-2">
-<h2 id="org06fc914"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org311b005" class="outline-2">
+<h2 id="org311b005"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>

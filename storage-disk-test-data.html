@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:37 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Disk Testing Data</title>
 <meta name="generator" content="Org mode" />
@@ -22,50 +22,50 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7396dcf">1. Test tools</a>
+<li><a href="#org1020138">1. Test tools</a>
 <ul>
-<li><a href="#orga5658d8">1.1. dd</a></li>
-<li><a href="#org5ca9597">1.2. fio</a></li>
-<li><a href="#org988272c">1.3. iometer</a></li>
+<li><a href="#org997c0ad">1.1. dd</a></li>
+<li><a href="#orga45875d">1.2. fio</a></li>
+<li><a href="#org6eb1222">1.3. iometer</a></li>
 </ul>
 </li>
-<li><a href="#orga17d294">2. Basic Rules</a></li>
-<li><a href="#org68cba41">3. SATA HDD</a>
+<li><a href="#org262b518">2. Basic Rules</a></li>
+<li><a href="#org8a93e37">3. SATA HDD</a>
 <ul>
-<li><a href="#org2f31285">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
+<li><a href="#org7795c31">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
 <ul>
-<li><a href="#org5b4055e">3.1.1. Disk infomation</a></li>
-<li><a href="#org09bfe7a">3.1.2. dd test</a></li>
-<li><a href="#org203d6ab">3.1.3. FIO</a></li>
+<li><a href="#orged77dbb">3.1.1. Disk infomation</a></li>
+<li><a href="#orgcc2ee08">3.1.2. dd test</a></li>
+<li><a href="#org89bc311">3.1.3. FIO</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga08b2fe">4. SAS HDD</a></li>
-<li><a href="#orga443cfb">5. SATA SSD</a></li>
-<li><a href="#org0fb8a2f">6. SAS SSD</a></li>
-<li><a href="#org5b066c9">7. NVMe SSD</a></li>
+<li><a href="#org8d27596">4. SAS HDD</a></li>
+<li><a href="#orga3b6721">5. SATA SSD</a></li>
+<li><a href="#org6f2c087">6. SAS SSD</a></li>
+<li><a href="#org70e52d3">7. NVMe SSD</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org7396dcf" class="outline-2">
-<h2 id="org7396dcf"><span class="section-number-2">1</span> Test tools</h2>
+<div id="outline-container-org1020138" class="outline-2">
+<h2 id="org1020138"><span class="section-number-2">1</span> Test tools</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga5658d8" class="outline-3">
-<h3 id="orga5658d8"><span class="section-number-3">1.1</span> dd</h3>
+<div id="outline-container-org997c0ad" class="outline-3">
+<h3 id="org997c0ad"><span class="section-number-3">1.1</span> dd</h3>
 </div>
-<div id="outline-container-org5ca9597" class="outline-3">
-<h3 id="org5ca9597"><span class="section-number-3">1.2</span> fio</h3>
+<div id="outline-container-orga45875d" class="outline-3">
+<h3 id="orga45875d"><span class="section-number-3">1.2</span> fio</h3>
 </div>
-<div id="outline-container-org988272c" class="outline-3">
-<h3 id="org988272c"><span class="section-number-3">1.3</span> iometer</h3>
+<div id="outline-container-org6eb1222" class="outline-3">
+<h3 id="org6eb1222"><span class="section-number-3">1.3</span> iometer</h3>
 </div>
 </div>
 
-<div id="outline-container-orga17d294" class="outline-2">
-<h2 id="orga17d294"><span class="section-number-2">2</span> Basic Rules</h2>
+<div id="outline-container-org262b518" class="outline-2">
+<h2 id="org262b518"><span class="section-number-2">2</span> Basic Rules</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 访问硬盘时, LBA数值越小(靠近外圈), 块越大, 顺序特征越好, 读写性能越好.
@@ -73,16 +73,16 @@
 </div>
 </div>
 
-<div id="outline-container-org68cba41" class="outline-2">
-<h2 id="org68cba41"><span class="section-number-2">3</span> SATA HDD</h2>
+<div id="outline-container-org8a93e37" class="outline-2">
+<h2 id="org8a93e37"><span class="section-number-2">3</span> SATA HDD</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org2f31285" class="outline-3">
-<h3 id="org2f31285"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
+<div id="outline-container-org7795c31" class="outline-3">
+<h3 id="org7795c31"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org5b4055e" class="outline-4">
-<h4 id="org5b4055e"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
+<div id="outline-container-orged77dbb" class="outline-4">
+<h4 id="orged77dbb"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-conf">Model Family:     HGST Travelstar 7K1000
@@ -104,8 +104,8 @@ SMART support is: Enabled
 </div>
 </div>
 </div>
-<div id="outline-container-org09bfe7a" class="outline-4">
-<h4 id="org09bfe7a"><span class="section-number-4">3.1.2</span> dd test</h4>
+<div id="outline-container-orgcc2ee08" class="outline-4">
+<h4 id="orgcc2ee08"><span class="section-number-4">3.1.2</span> dd test</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 简单查看结果可知, 64K性能是512B性能的15倍.
@@ -145,26 +145,26 @@ SMART support is: Enabled
 </div>
 </div>
 
-<div id="outline-container-org203d6ab" class="outline-4">
-<h4 id="org203d6ab"><span class="section-number-4">3.1.3</span> FIO</h4>
+<div id="outline-container-org89bc311" class="outline-4">
+<h4 id="org89bc311"><span class="section-number-4">3.1.3</span> FIO</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga08b2fe" class="outline-2">
-<h2 id="orga08b2fe"><span class="section-number-2">4</span> SAS HDD</h2>
+<div id="outline-container-org8d27596" class="outline-2">
+<h2 id="org8d27596"><span class="section-number-2">4</span> SAS HDD</h2>
 </div>
 
-<div id="outline-container-orga443cfb" class="outline-2">
-<h2 id="orga443cfb"><span class="section-number-2">5</span> SATA SSD</h2>
+<div id="outline-container-orga3b6721" class="outline-2">
+<h2 id="orga3b6721"><span class="section-number-2">5</span> SATA SSD</h2>
 </div>
 
-<div id="outline-container-org0fb8a2f" class="outline-2">
-<h2 id="org0fb8a2f"><span class="section-number-2">6</span> SAS SSD</h2>
+<div id="outline-container-org6f2c087" class="outline-2">
+<h2 id="org6f2c087"><span class="section-number-2">6</span> SAS SSD</h2>
 </div>
 
-<div id="outline-container-org5b066c9" class="outline-2">
-<h2 id="org5b066c9"><span class="section-number-2">7</span> NVMe SSD</h2>
+<div id="outline-container-org70e52d3" class="outline-2">
+<h2 id="org70e52d3"><span class="section-number-2">7</span> NVMe SSD</h2>
 </div>
 </div>
 <div id="postamble" class="status">

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-21 Thu 23:16 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>加密工具 - GPG入门</title>
 <meta name="generator" content="Org mode" />
@@ -53,47 +53,44 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge156126">1. GPG是什么</a></li>
-<li><a href="#org334b05f">2. 安装</a>
+<li><a href="#org4d48bfd">1. GPG是什么</a></li>
+<li><a href="#org539af89">2. 安装</a>
 <ul>
-<li><a href="#orgaab9daf">2.1. Debian</a></li>
-<li><a href="#orgdae92f7">2.2. msys</a></li>
-<li><a href="#org7f3e9da">2.3. 源码安装</a></li>
+<li><a href="#org3ee52a8">2.1. Debian</a></li>
+<li><a href="#org0b634a8">2.2. msys</a></li>
+<li><a href="#org4f75251">2.3. 源码安装</a></li>
 </ul>
 </li>
-<li><a href="#orgab49784">3. 使用介绍</a>
+<li><a href="#org9eb9658">3. 使用介绍</a>
 <ul>
-<li><a href="#org4e04882">3.1. 生成密钥</a></li>
-<li><a href="#org22a41e6">3.2. 密钥管理</a>
+<li><a href="#org23f02d4">3.1. 生成密钥</a></li>
+<li><a href="#org7786a94">3.2. 密钥管理</a>
 <ul>
-<li><a href="#org747c1cc">3.2.1. 密钥列表</a></li>
-<li><a href="#org5482820">3.2.2. 删除密钥</a></li>
-<li><a href="#orgdcfb20d">3.2.3. 导出公钥</a></li>
-<li><a href="#org418be19">3.2.4. 上传公钥</a></li>
-<li><a href="#org3d03ecd">3.2.5. 导入公钥</a></li>
-<li><a href="#orgef1837d">3.2.6. 导入私钥</a></li>
+<li><a href="#org46ddb94">3.2.1. 密钥列表</a></li>
+<li><a href="#orgd0e951c">3.2.2. 删除密钥</a></li>
+<li><a href="#orge8b2848">3.2.3. 导出公钥</a></li>
+<li><a href="#org46df864">3.2.4. 上传公钥</a></li>
+<li><a href="#orgab7cd44">3.2.5. 导入公钥</a></li>
+<li><a href="#orga95c93d">3.2.6. 导入私钥</a></li>
 </ul>
 </li>
-<li><a href="#orgebbf187">3.3. 签名与签名验证</a></li>
-<li><a href="#org6be7dae">3.4. 加密解密</a></li>
-<li><a href="#orgeb7b12b">3.5. 加密同时签名</a></li>
+<li><a href="#org00a910b">3.3. 签名与签名验证</a></li>
+<li><a href="#org73a714c">3.4. 加密解密</a></li>
+<li><a href="#org24b6050">3.5. 加密同时签名</a></li>
 </ul>
 </li>
-<li><a href="#org7ea092c">4. 其他</a>
+<li><a href="#org93a3acf">4. 其他</a>
 <ul>
-<li><a href="#org1624cee">4.1. 私钥备份保护</a></li>
+<li><a href="#org1174f8c">4.1. 私钥备份保护</a></li>
 </ul>
 </li>
-<li><a href="#org200abd1">5. References</a></li>
+<li><a href="#org114694a">5. References</a></li>
 </ul>
 </div>
 </div>
-<p>
-近期产品中需要导入一个组件锁定策略。使用到GnuPG，记录如下：
-</p>
 
-<div id="outline-container-orge156126" class="outline-2">
-<h2 id="orge156126"><span class="section-number-2">1</span> GPG是什么</h2>
+<div id="outline-container-org4d48bfd" class="outline-2">
+<h2 id="org4d48bfd"><span class="section-number-2">1</span> GPG是什么</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://zh.wikipedia.org/zh-cn/GnuPG">GPG</a>即<a href="https://gnupg.org/">GnuPG</a>(the GNU Privacy Guard, GNU加密保护)，是一款开源加密软件，遵循
@@ -130,40 +127,40 @@ The current version of Gpg4win is 3.1.1.
 </div>
 </div>
 
-<div id="outline-container-org334b05f" class="outline-2">
-<h2 id="org334b05f"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-org539af89" class="outline-2">
+<h2 id="org539af89"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgaab9daf" class="outline-3">
-<h3 id="orgaab9daf"><span class="section-number-3">2.1</span> Debian</h3>
+<div id="outline-container-org3ee52a8" class="outline-3">
+<h3 id="org3ee52a8"><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ sudo apt-get install gnupg
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>gnupg
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgdae92f7" class="outline-3">
-<h3 id="orgdae92f7"><span class="section-number-3">2.2</span> msys</h3>
+<div id="outline-container-org0b634a8" class="outline-3">
+<h3 id="org0b634a8"><span class="section-number-3">2.2</span> msys</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ pacman -S gnupg
-<span class="org-comment-delimiter"># </span><span class="org-comment">or you can search candidates includes key gnupg by command:</span>
-~$ pacman -Ss gnupg
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>gnupg
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">or</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">can</span><span class="org-whitespace-space"> </span><span class="org-comment">search</span><span class="org-whitespace-space"> </span><span class="org-comment">candidates</span><span class="org-whitespace-space"> </span><span class="org-comment">includes</span><span class="org-whitespace-space"> </span><span class="org-comment">key</span><span class="org-whitespace-space"> </span><span class="org-comment">gnupg</span><span class="org-whitespace-space"> </span><span class="org-comment">by</span><span class="org-whitespace-space"> </span><span class="org-comment">command:</span>
+~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-Ss<span class="org-whitespace-space"> </span>gnupg
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7f3e9da" class="outline-3">
-<h3 id="org7f3e9da"><span class="section-number-3">2.3</span> 源码安装</h3>
+<div id="outline-container-org4f75251" class="outline-3">
+<h3 id="org4f75251"><span class="section-number-3">2.3</span> 源码安装</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 使用Git获取源码：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ git clone git://git.gnupg.org/gnupg.git
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>git://git.gnupg.org/gnupg.git
 </pre>
 </div>
 
@@ -175,42 +172,42 @@ The current version of Gpg4win is 3.1.1.
 编译安装：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ ./autogen.sh
-*** Activating trailing whitespace git pre-commit hook. ***
-    For more information see this thread:
-      https://mail.gnome.org/archives/desktop-devel-list/2009-May/msg00084.html
-    To deactivate this pre-commit hook again move .git/hooks/pre-commit
-    and .git/hooks/pre-commit.sample out of the way.
-&#8216;.git/hooks/pre-commit.sample&#8217; -&gt; &#8216;.git/hooks/pre-commit&#8217;
-autogen.sh: *** Adding GIT filter.cleanpo.clean configuration.
-*** Activating commit log message check hook. ***
-&#8216;build-aux/git-hooks/commit-msg&#8217; -&gt; &#8216;.git/hooks/commit-msg&#8217;
-autogen.sh: Running aclocal -I m4 ...
-autogen.sh: Running autoheader...
-autogen.sh: Running automake --gnu ...
-autogen.sh: Running autoconf ...
-autogen.sh: You may now run:
-  ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
-~$ ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
-~$ sudo make install
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>./autogen.sh
+***<span class="org-whitespace-space"> </span>Activating<span class="org-whitespace-space"> </span>trailing<span class="org-whitespace-space"> </span>whitespace<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>pre-commit<span class="org-whitespace-space"> </span>hook.<span class="org-whitespace-space"> </span>***
+<span class="org-whitespace-space">    </span>For<span class="org-whitespace-space"> </span>more<span class="org-whitespace-space"> </span>information<span class="org-whitespace-space"> </span>see<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>thread:
+<span class="org-whitespace-space">      </span>https://mail.gnome.org/archives/desktop-devel-list/2009-May/msg00084.html
+<span class="org-whitespace-space">    </span>To<span class="org-whitespace-space"> </span>deactivate<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>pre-commit<span class="org-whitespace-space"> </span>hook<span class="org-whitespace-space"> </span>again<span class="org-whitespace-space"> </span>move<span class="org-whitespace-space"> </span>.git/hooks/pre-commit
+<span class="org-whitespace-space">    </span>and<span class="org-whitespace-space"> </span>.git/hooks/pre-commit.sample<span class="org-whitespace-space"> </span>out<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>way.
+&#8216;.git/hooks/pre-commit.sample&#8217;<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>&#8216;.git/hooks/pre-commit&#8217;
+autogen.sh:<span class="org-whitespace-space"> </span>***<span class="org-whitespace-space"> </span>Adding<span class="org-whitespace-space"> </span>GIT<span class="org-whitespace-space"> </span>filter.cleanpo.clean<span class="org-whitespace-space"> </span>configuration.
+***<span class="org-whitespace-space"> </span>Activating<span class="org-whitespace-space"> </span>commit<span class="org-whitespace-space"> </span>log<span class="org-whitespace-space"> </span>message<span class="org-whitespace-space"> </span>check<span class="org-whitespace-space"> </span>hook.<span class="org-whitespace-space"> </span>***
+&#8216;build-aux/git-hooks/commit-msg&#8217;<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>&#8216;.git/hooks/commit-msg&#8217;
+autogen.sh:<span class="org-whitespace-space"> </span>Running<span class="org-whitespace-space"> </span>aclocal<span class="org-whitespace-space"> </span>-I<span class="org-whitespace-space"> </span>m4<span class="org-whitespace-space"> </span>...
+autogen.sh:<span class="org-whitespace-space"> </span>Running<span class="org-whitespace-space"> </span>autoheader...
+autogen.sh:<span class="org-whitespace-space"> </span>Running<span class="org-whitespace-space"> </span>automake<span class="org-whitespace-space"> </span>--gnu<span class="org-whitespace-space"> </span>...
+autogen.sh:<span class="org-whitespace-space"> </span>Running<span class="org-whitespace-space"> </span>autoconf<span class="org-whitespace-space"> </span>...
+autogen.sh:<span class="org-whitespace-space"> </span>You<span class="org-whitespace-space"> </span>may<span class="org-whitespace-space"> </span>now<span class="org-whitespace-space"> </span>run:
+<span class="org-whitespace-space">  </span>./configure<span class="org-whitespace-space"> </span>--sysconfdir=/etc<span class="org-whitespace-space"> </span>--enable-maintainer-mode<span class="org-whitespace-space">  </span>&amp;&amp;<span class="org-whitespace-space"> </span>make
+~$<span class="org-whitespace-space"> </span>./configure<span class="org-whitespace-space"> </span>--sysconfdir=/etc<span class="org-whitespace-space"> </span>--enable-maintainer-mode<span class="org-whitespace-space">  </span>&amp;&amp;<span class="org-whitespace-space"> </span>make
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>install
 </pre>
 </div>
 <p>
 如果系统太老，库版本兼容性不满足报错，建议直接安装二进制，或下载较老版本gnupg，或者尝试升级操作系统。例如：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ ./configure --sysconfdir=/etc --enable-maintainer-mode  &amp;&amp; make
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>./configure<span class="org-whitespace-space"> </span>--sysconfdir=/etc<span class="org-whitespace-space"> </span>--enable-maintainer-mode<span class="org-whitespace-space">  </span>&amp;&amp;<span class="org-whitespace-space"> </span>make
 ...
 configure:
 ***
-*** You need libassuan to build this program.
-*** This library is for example available at
-***   https://gnupg.org/ftp/gcrypt/libassuan/
-*** (at least version 2.5.0 (API 2) is required)<span class="org-builtin">.</span>
-configure: error:
+***<span class="org-whitespace-space"> </span>You<span class="org-whitespace-space"> </span>need<span class="org-whitespace-space"> </span>libassuan<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>build<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>program.
+***<span class="org-whitespace-space"> </span>This<span class="org-whitespace-space"> </span>library<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>example<span class="org-whitespace-space"> </span>available<span class="org-whitespace-space"> </span>at
+***<span class="org-whitespace-space">   </span>https://gnupg.org/ftp/gcrypt/libassuan/
+***<span class="org-whitespace-space"> </span>(at<span class="org-whitespace-space"> </span>least<span class="org-whitespace-space"> </span>version<span class="org-whitespace-space"> </span>2.5.0<span class="org-whitespace-space"> </span>(API<span class="org-whitespace-space"> </span>2)<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>required)<span class="org-builtin">.</span>
+configure:<span class="org-whitespace-space"> </span>error:
 ***
-*** Required libraries not found. Please consult the above messages
-*** and install them before running configure again.
+***<span class="org-whitespace-space"> </span>Required<span class="org-whitespace-space"> </span>libraries<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>found.<span class="org-whitespace-space"> </span>Please<span class="org-whitespace-space"> </span>consult<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>above<span class="org-whitespace-space"> </span>messages
+***<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>them<span class="org-whitespace-space"> </span>before<span class="org-whitespace-space"> </span>running<span class="org-whitespace-space"> </span>configure<span class="org-whitespace-space"> </span>again.
 ***
 </pre>
 </div>
@@ -218,22 +215,22 @@ configure: error:
 </div>
 </div>
 
-<div id="outline-container-orgab49784" class="outline-2">
-<h2 id="orgab49784"><span class="section-number-2">3</span> 使用介绍</h2>
+<div id="outline-container-org9eb9658" class="outline-2">
+<h2 id="org9eb9658"><span class="section-number-2">3</span> 使用介绍</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4e04882" class="outline-3">
-<h3 id="org4e04882"><span class="section-number-3">3.1</span> 生成密钥</h3>
+<div id="outline-container-org23f02d4" class="outline-3">
+<h3 id="org23f02d4"><span class="section-number-3">3.1</span> 生成密钥</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --gen-key
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--gen-key
 </pre>
 </div>
 <p>
 Linux下版本\texttt{--gen-key}部分参数是默认的，使用如下命令对所有选项进行设置：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --full-generate-key
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--full-generate-key
 </pre>
 </div>
 
@@ -241,60 +238,60 @@ Linux下版本\texttt{--gen-key}部分参数是默认的，使用如下命令对
 示例：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --full-generate-key
-<span class="org-function-name">gpg</span> (GnuPG) 2.1.18; Copyright (C) 2017 Free Software Foundation, Inc.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--full-generate-key
+<span class="org-function-name">gpg</span><span class="org-whitespace-space"> </span>(GnuPG)<span class="org-whitespace-space"> </span>2.1.18;<span class="org-whitespace-space"> </span>Copyright<span class="org-whitespace-space"> </span>(C)<span class="org-whitespace-space"> </span>2017<span class="org-whitespace-space"> </span>Free<span class="org-whitespace-space"> </span>Software<span class="org-whitespace-space"> </span>Foundation,<span class="org-whitespace-space"> </span>Inc.
+This<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>free<span class="org-whitespace-space"> </span>software:<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>free<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>change<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>redistribute<span class="org-whitespace-space"> </span>it.
+There<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>NO<span class="org-whitespace-space"> </span>WARRANTY,<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>extent<span class="org-whitespace-space"> </span>permitted<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>law.
 
-Please select what kind of key you want:
-   (1) RSA and RSA (default)
-   (2) DSA and Elgamal
-   (3) DSA (sign only)
-   (4) RSA (sign only)
-Your selection? 1
-RSA keys may be between 1024 and 4096 bits long.
-What keysize do you want? (2048) 4096
-Requested keysize is 4096 bits
-Please specify how long the key should be valid.
-         0 = key does not expire
-      &lt;n&gt;  = key expires<span class="org-keyword"> in</span> n days
-      &lt;n&gt;w = key expires<span class="org-keyword"> in</span> n weeks
-      &lt;n&gt;m = key expires<span class="org-keyword"> in</span> n months
-      &lt;n&gt;y = key expires<span class="org-keyword"> in</span> n years
-Key is valid for? (0) 0
-Key does not expire at all
-Is this correct? (y/N) y
+Please<span class="org-whitespace-space"> </span>select<span class="org-whitespace-space"> </span>what<span class="org-whitespace-space"> </span>kind<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>want:
+<span class="org-whitespace-space">   </span>(1)<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>(default)
+<span class="org-whitespace-space">   </span>(2)<span class="org-whitespace-space"> </span>DSA<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>Elgamal
+<span class="org-whitespace-space">   </span>(3)<span class="org-whitespace-space"> </span>DSA<span class="org-whitespace-space"> </span>(sign<span class="org-whitespace-space"> </span>only)
+<span class="org-whitespace-space">   </span>(4)<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>(sign<span class="org-whitespace-space"> </span>only)
+Your<span class="org-whitespace-space"> </span>selection?<span class="org-whitespace-space"> </span>1
+RSA<span class="org-whitespace-space"> </span>keys<span class="org-whitespace-space"> </span>may<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>between<span class="org-whitespace-space"> </span>1024<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>4096<span class="org-whitespace-space"> </span>bits<span class="org-whitespace-space"> </span>long.
+What<span class="org-whitespace-space"> </span>keysize<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>want?<span class="org-whitespace-space"> </span>(2048)<span class="org-whitespace-space"> </span>4096
+Requested<span class="org-whitespace-space"> </span>keysize<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>4096<span class="org-whitespace-space"> </span>bits
+Please<span class="org-whitespace-space"> </span>specify<span class="org-whitespace-space"> </span>how<span class="org-whitespace-space"> </span>long<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>should<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>valid.
+<span class="org-whitespace-space">         </span>0<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>does<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>expire
+<span class="org-whitespace-space">      </span>&lt;n&gt;<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>expires<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>days
+<span class="org-whitespace-space">      </span>&lt;n&gt;w<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>expires<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>weeks
+<span class="org-whitespace-space">      </span>&lt;n&gt;m<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>expires<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>months
+<span class="org-whitespace-space">      </span>&lt;n&gt;y<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>expires<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>years
+Key<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>valid<span class="org-whitespace-space"> </span>for?<span class="org-whitespace-space"> </span>(0)<span class="org-whitespace-space"> </span>0
+Key<span class="org-whitespace-space"> </span>does<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>expire<span class="org-whitespace-space"> </span>at<span class="org-whitespace-space"> </span>all
+Is<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>correct?<span class="org-whitespace-space"> </span>(y/N)<span class="org-whitespace-space"> </span>y
 
-GnuPG needs to construct a user ID to identify your key.
+GnuPG<span class="org-whitespace-space"> </span>needs<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>construct<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>ID<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>identify<span class="org-whitespace-space"> </span>your<span class="org-whitespace-space"> </span>key.
 
-Real name: test
-Name must be at least 5 characters long
-Real name: gpgtest
-Email address: gpgtest@gmail.com
-Comment: GPG test for blog
-You selected this USER-ID:
-    <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
+Real<span class="org-whitespace-space"> </span>name:<span class="org-whitespace-space"> </span>test
+Name<span class="org-whitespace-space"> </span>must<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>at<span class="org-whitespace-space"> </span>least<span class="org-whitespace-space"> </span>5<span class="org-whitespace-space"> </span>characters<span class="org-whitespace-space"> </span>long
+Real<span class="org-whitespace-space"> </span>name:<span class="org-whitespace-space"> </span>gpgtest
+Email<span class="org-whitespace-space"> </span>address:<span class="org-whitespace-space"> </span>gpgtest@gmail.com
+Comment:<span class="org-whitespace-space"> </span>GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog
+You<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>USER-ID:
+<span class="org-whitespace-space">    </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
 
-<span class="org-function-name">Change</span> (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
-We need to generate a lot of random bytes. It is a good idea to perform
-some other action (<span class="org-builtin">type</span> on the keyboard, move the mouse, utilize the
-                   disks) during the prime generation; this gives the random number
-generator a better chance to gain enough entropy.
+<span class="org-function-name">Change</span><span class="org-whitespace-space"> </span>(N)ame,<span class="org-whitespace-space"> </span>(C)omment,<span class="org-whitespace-space"> </span>(E)mail<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>(O)kay/(Q)uit?<span class="org-whitespace-space"> </span>O
+We<span class="org-whitespace-space"> </span>need<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>generate<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>lot<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>random<span class="org-whitespace-space"> </span>bytes.<span class="org-whitespace-space"> </span>It<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>good<span class="org-whitespace-space"> </span>idea<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>perform
+some<span class="org-whitespace-space"> </span>other<span class="org-whitespace-space"> </span>action<span class="org-whitespace-space"> </span>(<span class="org-builtin">type</span><span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>keyboard,<span class="org-whitespace-space"> </span>move<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>mouse,<span class="org-whitespace-space"> </span>utilize<span class="org-whitespace-space"> </span>the
+<span class="org-whitespace-space">                   </span>disks)<span class="org-whitespace-space"> </span>during<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>prime<span class="org-whitespace-space"> </span>generation;<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>gives<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>random<span class="org-whitespace-space"> </span>num<span class="org-whitespace-line">ber</span>
+generator<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>better<span class="org-whitespace-space"> </span>chance<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>gain<span class="org-whitespace-space"> </span>enough<span class="org-whitespace-space"> </span>entropy.
 
-We need to generate a lot of random bytes. It is a good idea to perform
-some other action (<span class="org-builtin">type</span> on the keyboard, move the mouse, utilize the
-disks) during the prime generation; this gives the random number
-generator a better chance to gain enough entropy.
+We<span class="org-whitespace-space"> </span>need<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>generate<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>lot<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>random<span class="org-whitespace-space"> </span>bytes.<span class="org-whitespace-space"> </span>It<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>good<span class="org-whitespace-space"> </span>idea<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>perform
+some<span class="org-whitespace-space"> </span>other<span class="org-whitespace-space"> </span>action<span class="org-whitespace-space"> </span>(<span class="org-builtin">type</span><span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>keyboard,<span class="org-whitespace-space"> </span>move<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>mouse,<span class="org-whitespace-space"> </span>utilize<span class="org-whitespace-space"> </span>the
+disks)<span class="org-whitespace-space"> </span>during<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>prime<span class="org-whitespace-space"> </span>generation;<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>gives<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>random<span class="org-whitespace-space"> </span>number
+generator<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>better<span class="org-whitespace-space"> </span>chance<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>gain<span class="org-whitespace-space"> </span>enough<span class="org-whitespace-space"> </span>entropy.
 
-gpg: key 82159169CFBF69E6 marked as ultimately trusted
-gpg: revocation certificate stored as <span class="org-string">'/home/yanyg/.gnupg/openpgp-revocs.d/4F2F97E03BFBF466032ADFB382159169CFBF69E6.rev'</span>
-public and secret key created and signed.
+gpg:<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>82159169CFBF69E6<span class="org-whitespace-space"> </span>marked<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>ultimately<span class="org-whitespace-space"> </span>trusted
+gpg:<span class="org-whitespace-space"> </span>revocation<span class="org-whitespace-space"> </span>certificate<span class="org-whitespace-space"> </span>stored<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span><span class="org-string">'/home/yanyg/.gnupg/openpgp-revocs.d/4F2F9</span><span class="org-string"><span class="org-whitespace-line">7E03BFBF466032ADFB382159169CFBF69E6.rev'</span></span>
+public<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>secret<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>created<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>signed.
 
-pub   rsa4096 2018-06-11 [SC]
-      4F2F97E03BFBF466032ADFB382159169CFBF69E6
-      4F2F97E03BFBF466032ADFB382159169CFBF69E6
-uid                      gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
-sub   rsa4096 2018-06-11 [E]
+pub<span class="org-whitespace-space">   </span>rsa4096<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[SC]
+<span class="org-whitespace-space">      </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+<span class="org-whitespace-space">      </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid<span class="org-whitespace-space">                      </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa4096<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[E]
 </pre>
 </div>
 <p>
@@ -303,54 +300,54 @@ sub   rsa4096 2018-06-11 [E]
 </div>
 </div>
 
-<div id="outline-container-org22a41e6" class="outline-3">
-<h3 id="org22a41e6"><span class="section-number-3">3.2</span> 密钥管理</h3>
+<div id="outline-container-org7786a94" class="outline-3">
+<h3 id="org7786a94"><span class="section-number-3">3.2</span> 密钥管理</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org747c1cc" class="outline-4">
-<h4 id="org747c1cc"><span class="section-number-4">3.2.1</span> 密钥列表</h4>
+<div id="outline-container-org46ddb94" class="outline-4">
+<h4 id="org46ddb94"><span class="section-number-4">3.2.1</span> 密钥列表</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 其中 <i>gpgtest</i> 是新生成的。
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --list-keys
-gpg: checking the trustdb
-gpg: marginals needed: 3  completes needed: 1  trust model: pgp
-gpg: depth: 0  valid:   2  signed:   1  trust: 0-, 0q, 0n, 0m, 0f, 2u
-gpg: depth: 1  valid:   1  signed:   0  trust: 1-, 0q, 0n, 0m, 0f, 0u
-gpg: next trustdb check due at 2020-06-09
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--list-keys
+gpg:<span class="org-whitespace-space"> </span>checking<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>trustdb
+gpg:<span class="org-whitespace-space"> </span>marginals<span class="org-whitespace-space"> </span>needed:<span class="org-whitespace-space"> </span>3<span class="org-whitespace-space">  </span>completes<span class="org-whitespace-space"> </span>needed:<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space">  </span>trust<span class="org-whitespace-space"> </span>model:<span class="org-whitespace-space"> </span>pgp
+gpg:<span class="org-whitespace-space"> </span>depth:<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">  </span>valid:<span class="org-whitespace-space">   </span>2<span class="org-whitespace-space">  </span>signed:<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space">  </span>trust:<span class="org-whitespace-space"> </span>0-,<span class="org-whitespace-space"> </span>0q,<span class="org-whitespace-space"> </span>0n,<span class="org-whitespace-space"> </span>0m,<span class="org-whitespace-space"> </span>0f,<span class="org-whitespace-space"> </span>2u
+gpg:<span class="org-whitespace-space"> </span>depth:<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space">  </span>valid:<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space">  </span>signed:<span class="org-whitespace-space">   </span>0<span class="org-whitespace-space">  </span>trust:<span class="org-whitespace-space"> </span>1-,<span class="org-whitespace-space"> </span>0q,<span class="org-whitespace-space"> </span>0n,<span class="org-whitespace-space"> </span>0m,<span class="org-whitespace-space"> </span>0f,<span class="org-whitespace-space"> </span>0u
+gpg:<span class="org-whitespace-space"> </span>next<span class="org-whitespace-space"> </span>trustdb<span class="org-whitespace-space"> </span>check<span class="org-whitespace-space"> </span>due<span class="org-whitespace-space"> </span>at<span class="org-whitespace-space"> </span>2020-06-09
 /home/yanyg/.gnupg/pubring.kbx
 ------------------------------
-pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]
-      D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
-uid           [ultimate] yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>
-sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]
+pub<span class="org-whitespace-space">   </span>rsa2048<span class="org-whitespace-space"> </span>2018-06-10<span class="org-whitespace-space"> </span>[SC]<span class="org-whitespace-space"> </span>[expires:<span class="org-whitespace-space"> </span>2020-06-09]
+<span class="org-whitespace-space">      </span>D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+uid<span class="org-whitespace-space">           </span>[ultimate]<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span><a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa2048<span class="org-whitespace-space"> </span>2018-06-10<span class="org-whitespace-space"> </span>[E]<span class="org-whitespace-space"> </span>[expires:<span class="org-whitespace-space"> </span>2020-06-09]
 
-pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]
-      321A80E17CFEB82B9913E30F43886FD7AC849DDB
-uid           [  full  ] root1 <a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a>
-sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]
+pub<span class="org-whitespace-space">   </span>rsa2048<span class="org-whitespace-space"> </span>2018-06-10<span class="org-whitespace-space"> </span>[SC]<span class="org-whitespace-space"> </span>[expires:<span class="org-whitespace-space"> </span>2020-06-09]
+<span class="org-whitespace-space">      </span>321A80E17CFEB82B9913E30F43886FD7AC849DDB
+uid<span class="org-whitespace-space">           </span>[<span class="org-whitespace-space">  </span>full<span class="org-whitespace-space">  </span>]<span class="org-whitespace-space"> </span>root1<span class="org-whitespace-space"> </span><a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa2048<span class="org-whitespace-space"> </span>2018-06-10<span class="org-whitespace-space"> </span>[E]<span class="org-whitespace-space"> </span>[expires:<span class="org-whitespace-space"> </span>2020-06-09]
 
-pub   rsa4096 2018-06-11 [SC]
-      4F2F97E03BFBF466032ADFB382159169CFBF69E6
-uid           [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
-sub   rsa4096 2018-06-11 [E]
-~$ gpg --list-keys --keyid-format short
-pub   rsa4096/CFBF69E6 2018-06-11 [SC]
-      4F2F97E03BFBF466032ADFB382159169CFBF69E6
-uid         [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
-sub   rsa4096/2EF4FC4B 2018-06-11 [E]
+pub<span class="org-whitespace-space">   </span>rsa4096<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[SC]
+<span class="org-whitespace-space">      </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid<span class="org-whitespace-space">           </span>[ultimate]<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa4096<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[E]
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--list-keys<span class="org-whitespace-space"> </span>--keyid-format<span class="org-whitespace-space"> </span>short
+pub<span class="org-whitespace-space">   </span>rsa4096/CFBF69E6<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[SC]
+<span class="org-whitespace-space">      </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid<span class="org-whitespace-space">         </span>[ultimate]<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa4096/2EF4FC4B<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[E]
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5482820" class="outline-4">
-<h4 id="org5482820"><span class="section-number-4">3.2.2</span> 删除密钥</h4>
+<div id="outline-container-orgd0e951c" class="outline-4">
+<h4 id="orgd0e951c"><span class="section-number-4">3.2.2</span> 删除密钥</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --delete-key [UID]
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--delete-key<span class="org-whitespace-space"> </span>[UID]
 </pre>
 </div>
 <p>
@@ -360,35 +357,35 @@ sub   rsa4096/2EF4FC4B 2018-06-11 [E]
 </div>
 </div>
 
-<div id="outline-container-orgdcfb20d" class="outline-4">
-<h4 id="orgdcfb20d"><span class="section-number-4">3.2.3</span> 导出公钥</h4>
+<div id="outline-container-orge8b2848" class="outline-4">
+<h4 id="orge8b2848"><span class="section-number-4">3.2.3</span> 导出公钥</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <div class="org-src-container">
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">binary pub key</span>
-~$ gpg --output gpgtest.pub --export gpgtest
-<span class="org-comment-delimiter"># </span><span class="org-comment">ascii pub key</span>
-~$ gpg --armor --output gpgtest.pub --export gpgtest
+<pre class="src src-sh"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">binary</span><span class="org-whitespace-space"> </span><span class="org-comment">pub</span><span class="org-whitespace-space"> </span><span class="org-comment">key</span>
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--output<span class="org-whitespace-space"> </span>gpgtest.pub<span class="org-whitespace-space"> </span>--export<span class="org-whitespace-space"> </span>gpgtest
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">ascii</span><span class="org-whitespace-space"> </span><span class="org-comment">pub</span><span class="org-whitespace-space"> </span><span class="org-comment">key</span>
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--armor<span class="org-whitespace-space"> </span>--output<span class="org-whitespace-space"> </span>gpgtest.pub<span class="org-whitespace-space"> </span>--export<span class="org-whitespace-space"> </span>gpgtest
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org418be19" class="outline-4">
-<h4 id="org418be19"><span class="section-number-4">3.2.4</span> 上传公钥</h4>
+<div id="outline-container-org46df864" class="outline-4">
+<h4 id="org46df864"><span class="section-number-4">3.2.4</span> 上传公钥</h4>
 <div class="outline-text-4" id="text-3-2-4">
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --keyserver certserver.pgp.com --send-key 82159169CFBF69E6
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--keyserver<span class="org-whitespace-space"> </span>certserver.pgp.com<span class="org-whitespace-space"> </span>--send-key<span class="org-whitespace-space"> </span>82159169CFBF69E6
 </pre>
 </div>
 <p>
 其中/key/不能使用UID，需要使用指纹，至少需要long格式指纹，来自下面命令：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">gpg --list-key --keyid-format long gpgtest
-pub   rsa4096/82159169CFBF69E6 2018-06-11 [SC]
-      4F2F97E03BFBF466032ADFB382159169CFBF69E6
-uid                 [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
-sub   rsa4096/9D5CD5E32EF4FC4B 2018-06-11 [E]
+<pre class="src src-sh">gpg<span class="org-whitespace-space"> </span>--list-key<span class="org-whitespace-space"> </span>--keyid-format<span class="org-whitespace-space"> </span>long<span class="org-whitespace-space"> </span>gpgtest
+pub<span class="org-whitespace-space">   </span>rsa4096/82159169CFBF69E6<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[SC]
+<span class="org-whitespace-space">      </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+uid<span class="org-whitespace-space">                 </span>[ultimate]<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sub<span class="org-whitespace-space">   </span>rsa4096/9D5CD5E32EF4FC4B<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space"> </span>[E]
 </pre>
 </div>
 <p>
@@ -397,17 +394,17 @@ sub   rsa4096/9D5CD5E32EF4FC4B 2018-06-11 [E]
 </div>
 </div>
 
-<div id="outline-container-org3d03ecd" class="outline-4">
-<h4 id="org3d03ecd"><span class="section-number-4">3.2.5</span> 导入公钥</h4>
+<div id="outline-container-orgab7cd44" class="outline-4">
+<h4 id="orgab7cd44"><span class="section-number-4">3.2.5</span> 导入公钥</h4>
 <div class="outline-text-4" id="text-3-2-5">
 <p>
 导入：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~# gpg --import gpgtest.pub
-gpg: key 82159169CFBF69E6: public key <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> imported
-gpg: Total number processed: 1
-gpg:               imported: 1
+<pre class="src src-sh">~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--import<span class="org-whitespace-space"> </span>gpgtest.pub
+gpg:<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>82159169CFBF69E6:<span class="org-whitespace-space"> </span>public<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmai</a></span><span class="org-string"><span class="org-whitespace-line"><a href="mailto:gpgtest%40gmail.com">l.com&gt;</a>"</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">imported</span>
+gpg:<span class="org-whitespace-space"> </span>Total<span class="org-whitespace-space"> </span>number<span class="org-whitespace-space"> </span>processed:<span class="org-whitespace-space"> </span>1
+gpg:<span class="org-whitespace-space">               </span>imported:<span class="org-whitespace-space"> </span>1
 </pre>
 </div>
 
@@ -415,143 +412,143 @@ gpg:               imported: 1
 设置可信：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~# gpg --edit-key gpgtest
-gpg&gt; help
-quit        quit this menu
-save        save and quit
-<span class="org-builtin">help</span>        show this help
-fpr         show key fingerprint
-grip        show the keygrip
-list        list key and user IDs
-uid         select user ID N
-key         select subkey N
-check       check signatures
-sign        sign selected user IDs [* see below for related commands]
-lsign       sign selected user IDs locally
-tsign       sign selected user IDs with a trust signature
-nrsign      sign selected user IDs with a non-revocable signature
-deluid      delete selected user IDs
-delkey      delete selected subkeys
-delsig      delete signatures from the selected user IDs
-pref        list preferences (expert)
-showpref    list preferences (verbose)
-trust       change the ownertrust
-revsig      revoke signatures on the selected user IDs
-<span class="org-builtin">enable</span>      enable key
-disable     disable key
-showphoto   show selected photo IDs
-clean       compact unusable user IDs and remove unusable signatures from key
-minimize    compact unusable user IDs and remove all signatures from key
+<pre class="src src-sh">~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--edit-key<span class="org-whitespace-space"> </span>gpgtest
+gpg&gt;<span class="org-whitespace-space"> </span>help
+quit<span class="org-whitespace-space">        </span>quit<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>menu
+save<span class="org-whitespace-space">        </span>save<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>quit
+<span class="org-builtin">help</span><span class="org-whitespace-space">        </span>show<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>help
+fpr<span class="org-whitespace-space">         </span>show<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>fingerprint
+grip<span class="org-whitespace-space">        </span>show<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>keygrip
+list<span class="org-whitespace-space">        </span>list<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs
+uid<span class="org-whitespace-space">         </span>select<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>ID<span class="org-whitespace-space"> </span>N
+key<span class="org-whitespace-space">         </span>select<span class="org-whitespace-space"> </span>subkey<span class="org-whitespace-space"> </span>N
+check<span class="org-whitespace-space">       </span>check<span class="org-whitespace-space"> </span>signatures
+sign<span class="org-whitespace-space">        </span>sign<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>[*<span class="org-whitespace-space"> </span>see<span class="org-whitespace-space"> </span>below<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>related<span class="org-whitespace-space"> </span>commands]
+lsign<span class="org-whitespace-space">       </span>sign<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>locally
+tsign<span class="org-whitespace-space">       </span>sign<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>trust<span class="org-whitespace-space"> </span>signature
+nrsign<span class="org-whitespace-space">      </span>sign<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>non-revocable<span class="org-whitespace-space"> </span>signature
+deluid<span class="org-whitespace-space">      </span>delete<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs
+delkey<span class="org-whitespace-space">      </span>delete<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>subkeys
+delsig<span class="org-whitespace-space">      </span>delete<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs
+pref<span class="org-whitespace-space">        </span>list<span class="org-whitespace-space"> </span>preferences<span class="org-whitespace-space"> </span>(expert)
+showpref<span class="org-whitespace-space">    </span>list<span class="org-whitespace-space"> </span>preferences<span class="org-whitespace-space"> </span>(verbose)
+trust<span class="org-whitespace-space">       </span>change<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>ownertrust
+revsig<span class="org-whitespace-space">      </span>revoke<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs
+<span class="org-builtin">enable</span><span class="org-whitespace-space">      </span>enable<span class="org-whitespace-space"> </span>key
+disable<span class="org-whitespace-space">     </span>disable<span class="org-whitespace-space"> </span>key
+showphoto<span class="org-whitespace-space">   </span>show<span class="org-whitespace-space"> </span>selected<span class="org-whitespace-space"> </span>photo<span class="org-whitespace-space"> </span>IDs
+clean<span class="org-whitespace-space">       </span>compact<span class="org-whitespace-space"> </span>unusable<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>remove<span class="org-whitespace-space"> </span>unusable<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>key
+minimize<span class="org-whitespace-space">    </span>compact<span class="org-whitespace-space"> </span>unusable<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>IDs<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>remove<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>key
 
-* The <span class="org-string">'sign'</span> command may be prefixed with an <span class="org-string">'l'</span> for local signatures (lsign),
-  a <span class="org-string">'t'</span> for trust signatures (tsign), an <span class="org-string">'nr'</span> for non-revocable signatures
-  (nrsign), or any combination thereof (ltsign, tnrsign, etc.)<span class="org-builtin">.</span>
+*<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span><span class="org-string">'sign'</span><span class="org-whitespace-space"> </span>command<span class="org-whitespace-space"> </span>may<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>prefixed<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span><span class="org-string">'l'</span><span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>local<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>(lsign),
+<span class="org-whitespace-space">  </span>a<span class="org-whitespace-space"> </span><span class="org-string">'t'</span><span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>trust<span class="org-whitespace-space"> </span>signatures<span class="org-whitespace-space"> </span>(tsign),<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span><span class="org-string">'nr'</span><span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>non-revocable<span class="org-whitespace-space"> </span>signatures
+<span class="org-whitespace-space">  </span>(nrsign),<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>combination<span class="org-whitespace-space"> </span>thereof<span class="org-whitespace-space"> </span>(ltsign,<span class="org-whitespace-space"> </span>tnrsign,<span class="org-whitespace-space"> </span>etc.)<span class="org-builtin">.</span>
 
-gpg&gt; trust
-pub  rsa4096/82159169CFBF69E6
-     created: 2018-06-11  expires: never       usage: SC
-     trust: unknown       validity: unknown
-sub  rsa4096/9D5CD5E32EF4FC4B
-     created: 2018-06-11  expires: never       usage: E
-[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+gpg&gt;<span class="org-whitespace-space"> </span>trust
+pub<span class="org-whitespace-space">  </span>rsa4096/82159169CFBF69E6
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>SC
+<span class="org-whitespace-space">     </span>trust:<span class="org-whitespace-space"> </span>unknown<span class="org-whitespace-space">       </span>validity:<span class="org-whitespace-space"> </span>unknown
+sub<span class="org-whitespace-space">  </span>rsa4096/9D5CD5E32EF4FC4B
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>E
+[<span class="org-whitespace-space"> </span>unknown]<span class="org-whitespace-space"> </span>(1)<span class="org-builtin">.</span><span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
 
-Please decide how far you trust this user to correctly verify other users<span class="org-string">' keys</span>
-<span class="org-string">(by looking at passports, checking fingerprints from different sources, etc.)</span>
+Please<span class="org-whitespace-space"> </span>decide<span class="org-whitespace-space"> </span>how<span class="org-whitespace-space"> </span>far<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>trust<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>correctly<span class="org-whitespace-space"> </span>verify<span class="org-whitespace-space"> </span>other<span class="org-whitespace-space"> </span>users<span class="org-string">'</span><span class="org-whitespace-space"> </span><span class="org-string">keys</span>
+<span class="org-string">(by</span><span class="org-whitespace-space"> </span><span class="org-string">looking</span><span class="org-whitespace-space"> </span><span class="org-string">at</span><span class="org-whitespace-space"> </span><span class="org-string">passports,</span><span class="org-whitespace-space"> </span><span class="org-string">checking</span><span class="org-whitespace-space"> </span><span class="org-string">fingerprints</span><span class="org-whitespace-space"> </span><span class="org-string">from</span><span class="org-whitespace-space"> </span><span class="org-string">different</span><span class="org-whitespace-space"> </span><span class="org-string">sources,</span><span class="org-whitespace-space"> </span><span class="org-string">etc.)</span>
 
-<span class="org-string">  1 = I don'</span>t know or won<span class="org-string">'t say</span>
-<span class="org-string">  2 = I do NOT trust</span>
-<span class="org-string">  3 = I trust marginally</span>
-<span class="org-string">  4 = I trust fully</span>
-<span class="org-string">  5 = I trust ultimately</span>
-<span class="org-string">  m = back to the main menu</span>
+<span class="org-whitespace-space">  </span><span class="org-string">1</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">don'</span>t<span class="org-whitespace-space"> </span>know<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>won<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">say</span>
+<span class="org-whitespace-space">  </span><span class="org-string">2</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">do</span><span class="org-whitespace-space"> </span><span class="org-string">NOT</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span>
+<span class="org-whitespace-space">  </span><span class="org-string">3</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">marginally</span>
+<span class="org-whitespace-space">  </span><span class="org-string">4</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">fully</span>
+<span class="org-whitespace-space">  </span><span class="org-string">5</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">ultimately</span>
+<span class="org-whitespace-space">  </span><span class="org-string">m</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">back</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">main</span><span class="org-whitespace-space"> </span><span class="org-string">menu</span>
 
-<span class="org-string">Your decision? 4</span>
+<span class="org-string">Your</span><span class="org-whitespace-space"> </span><span class="org-string">decision?</span><span class="org-whitespace-space"> </span><span class="org-string">4</span>
 
-<span class="org-string">pub  rsa4096/82159169CFBF69E6</span>
-<span class="org-string">     created: 2018-06-11  expires: never       usage: SC</span>
-<span class="org-string">     trust: full          validity: unknown</span>
-<span class="org-string">sub  rsa4096/9D5CD5E32EF4FC4B</span>
-<span class="org-string">     created: 2018-06-11  expires: never       usage: E</span>
-<span class="org-string">[ unknown] (1). gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
-<span class="org-string">Please note that the shown key validity is not necessarily correct</span>
-<span class="org-string">unless you restart the program.</span>
+<span class="org-string">pub</span><span class="org-whitespace-space">  </span><span class="org-string">rsa4096/82159169CFBF69E6</span>
+<span class="org-whitespace-space">     </span><span class="org-string">created:</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space">  </span><span class="org-string">expires:</span><span class="org-whitespace-space"> </span><span class="org-string">never</span><span class="org-whitespace-space">       </span><span class="org-string">usage:</span><span class="org-whitespace-space"> </span><span class="org-string">SC</span>
+<span class="org-whitespace-space">     </span><span class="org-string">trust:</span><span class="org-whitespace-space"> </span><span class="org-string">full</span><span class="org-whitespace-space">          </span><span class="org-string">validity:</span><span class="org-whitespace-space"> </span><span class="org-string">unknown</span>
+<span class="org-string">sub</span><span class="org-whitespace-space">  </span><span class="org-string">rsa4096/9D5CD5E32EF4FC4B</span>
+<span class="org-whitespace-space">     </span><span class="org-string">created:</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space">  </span><span class="org-string">expires:</span><span class="org-whitespace-space"> </span><span class="org-string">never</span><span class="org-whitespace-space">       </span><span class="org-string">usage:</span><span class="org-whitespace-space"> </span><span class="org-string">E</span>
+<span class="org-string">[</span><span class="org-whitespace-space"> </span><span class="org-string">unknown]</span><span class="org-whitespace-space"> </span><span class="org-string">(1).</span><span class="org-whitespace-space"> </span><span class="org-string">gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">Please</span><span class="org-whitespace-space"> </span><span class="org-string">note</span><span class="org-whitespace-space"> </span><span class="org-string">that</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">shown</span><span class="org-whitespace-space"> </span><span class="org-string">key</span><span class="org-whitespace-space"> </span><span class="org-string">validity</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">necessarily</span><span class="org-whitespace-space"> </span><span class="org-string">correct</span>
+<span class="org-string">unless</span><span class="org-whitespace-space"> </span><span class="org-string">you</span><span class="org-whitespace-space"> </span><span class="org-string">restart</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">program.</span>
 
-<span class="org-string">gpg&gt; save</span>
-<span class="org-string">Key not changed so no update needed.</span>
+<span class="org-string">gpg&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">save</span>
+<span class="org-string">Key</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">changed</span><span class="org-whitespace-space"> </span><span class="org-string">so</span><span class="org-whitespace-space"> </span><span class="org-string">no</span><span class="org-whitespace-space"> </span><span class="org-string">update</span><span class="org-whitespace-space"> </span><span class="org-string">needed.</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgef1837d" class="outline-4">
-<h4 id="orgef1837d"><span class="section-number-4">3.2.6</span> 导入私钥</h4>
+<div id="outline-container-orga95c93d" class="outline-4">
+<h4 id="orga95c93d"><span class="section-number-4">3.2.6</span> 导入私钥</h4>
 <div class="outline-text-4" id="text-3-2-6">
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --export-secret-keys gpgtest &gt; gpgtest.priv
-<span class="org-comment-delimiter"># </span><span class="org-comment">Change to another account</span>
-~# gpg --allow-secret-key-import --import gpgtest.priv
-<span class="org-comment-delimiter"># </span><span class="org-comment">change trust to 5</span>
-gpg --edit-key gpgtest
-<span class="org-function-name">gpg</span> (GnuPG) 2.1.18; Copyright (C) 2017 Free Software Foundation, Inc.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--export-secret-keys<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>gpgtest.priv
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Change</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">another</span><span class="org-whitespace-space"> </span><span class="org-comment">account</span>
+~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--allow-secret-key-import<span class="org-whitespace-space"> </span>--import<span class="org-whitespace-space"> </span>gpgtest.priv
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">change</span><span class="org-whitespace-space"> </span><span class="org-comment">trust</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">5</span>
+gpg<span class="org-whitespace-space"> </span>--edit-key<span class="org-whitespace-space"> </span>gpgtest
+<span class="org-function-name">gpg</span><span class="org-whitespace-space"> </span>(GnuPG)<span class="org-whitespace-space"> </span>2.1.18;<span class="org-whitespace-space"> </span>Copyright<span class="org-whitespace-space"> </span>(C)<span class="org-whitespace-space"> </span>2017<span class="org-whitespace-space"> </span>Free<span class="org-whitespace-space"> </span>Software<span class="org-whitespace-space"> </span>Foundation,<span class="org-whitespace-space"> </span>Inc.
+This<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>free<span class="org-whitespace-space"> </span>software:<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>free<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>change<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>redistribute<span class="org-whitespace-space"> </span>it.
+There<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>NO<span class="org-whitespace-space"> </span>WARRANTY,<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>extent<span class="org-whitespace-space"> </span>permitted<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>law.
 
-Secret key is available.
+Secret<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>available.
 
-sec  rsa4096/82159169CFBF69E6
-     created: 2018-06-11  expires: never       usage: SC
-     trust: full          validity: unknown
-ssb  rsa4096/9D5CD5E32EF4FC4B
-     created: 2018-06-11  expires: never       usage: E
-[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+sec<span class="org-whitespace-space">  </span>rsa4096/82159169CFBF69E6
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>SC
+<span class="org-whitespace-space">     </span>trust:<span class="org-whitespace-space"> </span>full<span class="org-whitespace-space">          </span>validity:<span class="org-whitespace-space"> </span>unknown
+ssb<span class="org-whitespace-space">  </span>rsa4096/9D5CD5E32EF4FC4B
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>E
+[<span class="org-whitespace-space"> </span>unknown]<span class="org-whitespace-space"> </span>(1)<span class="org-builtin">.</span><span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
 
-gpg&gt; trust
-sec  rsa4096/82159169CFBF69E6
-     created: 2018-06-11  expires: never       usage: SC
-     trust: full          validity: unknown
-ssb  rsa4096/9D5CD5E32EF4FC4B
-     created: 2018-06-11  expires: never       usage: E
-[ unknown] (1)<span class="org-builtin">.</span> gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
+gpg&gt;<span class="org-whitespace-space"> </span>trust
+sec<span class="org-whitespace-space">  </span>rsa4096/82159169CFBF69E6
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>SC
+<span class="org-whitespace-space">     </span>trust:<span class="org-whitespace-space"> </span>full<span class="org-whitespace-space">          </span>validity:<span class="org-whitespace-space"> </span>unknown
+ssb<span class="org-whitespace-space">  </span>rsa4096/9D5CD5E32EF4FC4B
+<span class="org-whitespace-space">     </span>created:<span class="org-whitespace-space"> </span>2018-06-11<span class="org-whitespace-space">  </span>expires:<span class="org-whitespace-space"> </span>never<span class="org-whitespace-space">       </span>usage:<span class="org-whitespace-space"> </span>E
+[<span class="org-whitespace-space"> </span>unknown]<span class="org-whitespace-space"> </span>(1)<span class="org-builtin">.</span><span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>(GPG<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>blog)<span class="org-whitespace-space"> </span><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>
 
-Please decide how far you trust this user to correctly verify other users<span class="org-string">' keys</span>
-<span class="org-string">(by looking at passports, checking fingerprints from different sources, etc.)</span>
+Please<span class="org-whitespace-space"> </span>decide<span class="org-whitespace-space"> </span>how<span class="org-whitespace-space"> </span>far<span class="org-whitespace-space"> </span>you<span class="org-whitespace-space"> </span>trust<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>user<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>correctly<span class="org-whitespace-space"> </span>verify<span class="org-whitespace-space"> </span>other<span class="org-whitespace-space"> </span>users<span class="org-string">'</span><span class="org-whitespace-space"> </span><span class="org-string">keys</span>
+<span class="org-string">(by</span><span class="org-whitespace-space"> </span><span class="org-string">looking</span><span class="org-whitespace-space"> </span><span class="org-string">at</span><span class="org-whitespace-space"> </span><span class="org-string">passports,</span><span class="org-whitespace-space"> </span><span class="org-string">checking</span><span class="org-whitespace-space"> </span><span class="org-string">fingerprints</span><span class="org-whitespace-space"> </span><span class="org-string">from</span><span class="org-whitespace-space"> </span><span class="org-string">different</span><span class="org-whitespace-space"> </span><span class="org-string">sources,</span><span class="org-whitespace-space"> </span><span class="org-string">etc.)</span>
 
-<span class="org-string">  1 = I don'</span>t know or won<span class="org-string">'t say</span>
-<span class="org-string">  2 = I do NOT trust</span>
-<span class="org-string">  3 = I trust marginally</span>
-<span class="org-string">  4 = I trust fully</span>
-<span class="org-string">  5 = I trust ultimately</span>
-<span class="org-string">  m = back to the main menu</span>
+<span class="org-whitespace-space">  </span><span class="org-string">1</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">don'</span>t<span class="org-whitespace-space"> </span>know<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>won<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">say</span>
+<span class="org-whitespace-space">  </span><span class="org-string">2</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">do</span><span class="org-whitespace-space"> </span><span class="org-string">NOT</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span>
+<span class="org-whitespace-space">  </span><span class="org-string">3</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">marginally</span>
+<span class="org-whitespace-space">  </span><span class="org-string">4</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">fully</span>
+<span class="org-whitespace-space">  </span><span class="org-string">5</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">I</span><span class="org-whitespace-space"> </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">ultimately</span>
+<span class="org-whitespace-space">  </span><span class="org-string">m</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">back</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">main</span><span class="org-whitespace-space"> </span><span class="org-string">menu</span>
 
-<span class="org-string">Your decision? 5</span>
-<span class="org-string">Do you really want to set this key to ultimate trust? (y/N) y</span>
-<span class="org-string">sec  rsa4096/82159169CFBF69E6</span>
-<span class="org-string">     created: 2018-06-11  expires: never       usage: SC</span>
-<span class="org-string">     trust: ultimate      validity: unknown</span>
-<span class="org-string">ssb  rsa4096/9D5CD5E32EF4FC4B</span>
-<span class="org-string">     created: 2018-06-11  expires: never       usage: E</span>
-<span class="org-string">[ unknown] (1). gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
-<span class="org-string">Please note that the shown key validity is not necessarily correct</span>
-<span class="org-string">unless you restart the program.</span>
+<span class="org-string">Your</span><span class="org-whitespace-space"> </span><span class="org-string">decision?</span><span class="org-whitespace-space"> </span><span class="org-string">5</span>
+<span class="org-string">Do</span><span class="org-whitespace-space"> </span><span class="org-string">you</span><span class="org-whitespace-space"> </span><span class="org-string">really</span><span class="org-whitespace-space"> </span><span class="org-string">want</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">set</span><span class="org-whitespace-space"> </span><span class="org-string">this</span><span class="org-whitespace-space"> </span><span class="org-string">key</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">ultimate</span><span class="org-whitespace-space"> </span><span class="org-string">trust?</span><span class="org-whitespace-space"> </span><span class="org-string">(y/N)</span><span class="org-whitespace-space"> </span><span class="org-string">y</span>
+<span class="org-string">sec</span><span class="org-whitespace-space">  </span><span class="org-string">rsa4096/82159169CFBF69E6</span>
+<span class="org-whitespace-space">     </span><span class="org-string">created:</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space">  </span><span class="org-string">expires:</span><span class="org-whitespace-space"> </span><span class="org-string">never</span><span class="org-whitespace-space">       </span><span class="org-string">usage:</span><span class="org-whitespace-space"> </span><span class="org-string">SC</span>
+<span class="org-whitespace-space">     </span><span class="org-string">trust:</span><span class="org-whitespace-space"> </span><span class="org-string">ultimate</span><span class="org-whitespace-space">      </span><span class="org-string">validity:</span><span class="org-whitespace-space"> </span><span class="org-string">unknown</span>
+<span class="org-string">ssb</span><span class="org-whitespace-space">  </span><span class="org-string">rsa4096/9D5CD5E32EF4FC4B</span>
+<span class="org-whitespace-space">     </span><span class="org-string">created:</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space">  </span><span class="org-string">expires:</span><span class="org-whitespace-space"> </span><span class="org-string">never</span><span class="org-whitespace-space">       </span><span class="org-string">usage:</span><span class="org-whitespace-space"> </span><span class="org-string">E</span>
+<span class="org-string">[</span><span class="org-whitespace-space"> </span><span class="org-string">unknown]</span><span class="org-whitespace-space"> </span><span class="org-string">(1).</span><span class="org-whitespace-space"> </span><span class="org-string">gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">Please</span><span class="org-whitespace-space"> </span><span class="org-string">note</span><span class="org-whitespace-space"> </span><span class="org-string">that</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">shown</span><span class="org-whitespace-space"> </span><span class="org-string">key</span><span class="org-whitespace-space"> </span><span class="org-string">validity</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">necessarily</span><span class="org-whitespace-space"> </span><span class="org-string">correct</span>
+<span class="org-string">unless</span><span class="org-whitespace-space"> </span><span class="org-string">you</span><span class="org-whitespace-space"> </span><span class="org-string">restart</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">program.</span>
 
-<span class="org-string">gpg&gt; save</span>
-<span class="org-string">Key not changed so no update needed.</span>
-<span class="org-string">~# gpg --list-keys</span>
-<span class="org-string">gpg: checking the trustdb</span>
-<span class="org-string">gpg: marginals needed: 3  completes needed: 1  trust model: pgp</span>
-<span class="org-string">gpg: depth: 0  valid:   2  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 2u</span>
-<span class="org-string">gpg: next trustdb check due at 2020-06-09</span>
+<span class="org-string">gpg&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">save</span>
+<span class="org-string">Key</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">changed</span><span class="org-whitespace-space"> </span><span class="org-string">so</span><span class="org-whitespace-space"> </span><span class="org-string">no</span><span class="org-whitespace-space"> </span><span class="org-string">update</span><span class="org-whitespace-space"> </span><span class="org-string">needed.</span>
+<span class="org-string">~#</span><span class="org-whitespace-space"> </span><span class="org-string">gpg</span><span class="org-whitespace-space"> </span><span class="org-string">--list-keys</span>
+<span class="org-string">gpg:</span><span class="org-whitespace-space"> </span><span class="org-string">checking</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">trustdb</span>
+<span class="org-string">gpg:</span><span class="org-whitespace-space"> </span><span class="org-string">marginals</span><span class="org-whitespace-space"> </span><span class="org-string">needed:</span><span class="org-whitespace-space"> </span><span class="org-string">3</span><span class="org-whitespace-space">  </span><span class="org-string">completes</span><span class="org-whitespace-space"> </span><span class="org-string">needed:</span><span class="org-whitespace-space"> </span><span class="org-string">1</span><span class="org-whitespace-space">  </span><span class="org-string">trust</span><span class="org-whitespace-space"> </span><span class="org-string">model:</span><span class="org-whitespace-space"> </span><span class="org-string">pgp</span>
+<span class="org-string">gpg:</span><span class="org-whitespace-space"> </span><span class="org-string">depth:</span><span class="org-whitespace-space"> </span><span class="org-string">0</span><span class="org-whitespace-space">  </span><span class="org-string">valid:</span><span class="org-whitespace-space">   </span><span class="org-string">2</span><span class="org-whitespace-space">  </span><span class="org-string">signed:</span><span class="org-whitespace-space">   </span><span class="org-string">0</span><span class="org-whitespace-space">  </span><span class="org-string">trust:</span><span class="org-whitespace-space"> </span><span class="org-string">0-,</span><span class="org-whitespace-space"> </span><span class="org-string">0q,</span><span class="org-whitespace-space"> </span><span class="org-string">0n,</span><span class="org-whitespace-space"> </span><span class="org-string">0m,</span><span class="org-whitespace-space"> </span><span class="org-string">0f,</span><span class="org-whitespace-space"> </span><span class="org-string">2u</span>
+<span class="org-string">gpg:</span><span class="org-whitespace-space"> </span><span class="org-string">next</span><span class="org-whitespace-space"> </span><span class="org-string">trustdb</span><span class="org-whitespace-space"> </span><span class="org-string">check</span><span class="org-whitespace-space"> </span><span class="org-string">due</span><span class="org-whitespace-space"> </span><span class="org-string">at</span><span class="org-whitespace-space"> </span><span class="org-string">2020-06-09</span>
 <span class="org-string">/root/.gnupg/pubring.kbx</span>
 <span class="org-string">------------------------</span>
-<span class="org-string">pub   rsa2048 2018-06-10 [SC] [expires: 2020-06-09]</span>
-<span class="org-string">      321A80E17CFEB82B9913E30F43886FD7AC849DDB</span>
-<span class="org-string">uid           [ultimate] root1 <a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a></span>
-<span class="org-string">sub   rsa2048 2018-06-10 [E] [expires: 2020-06-09]</span>
+<span class="org-string">pub</span><span class="org-whitespace-space">   </span><span class="org-string">rsa2048</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-10</span><span class="org-whitespace-space"> </span><span class="org-string">[SC]</span><span class="org-whitespace-space"> </span><span class="org-string">[expires:</span><span class="org-whitespace-space"> </span><span class="org-string">2020-06-09]</span>
+<span class="org-whitespace-space">      </span><span class="org-string">321A80E17CFEB82B9913E30F43886FD7AC849DDB</span>
+<span class="org-string">uid</span><span class="org-whitespace-space">           </span><span class="org-string">[ultimate]</span><span class="org-whitespace-space"> </span><span class="org-string">root1</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:root1%40test.com">&lt;root1@test.com&gt;</a></span>
+<span class="org-string">sub</span><span class="org-whitespace-space">   </span><span class="org-string">rsa2048</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-10</span><span class="org-whitespace-space"> </span><span class="org-string">[E]</span><span class="org-whitespace-space"> </span><span class="org-string">[expires:</span><span class="org-whitespace-space"> </span><span class="org-string">2020-06-09]</span>
 
-<span class="org-string">pub   rsa4096 2018-06-11 [SC]</span>
-<span class="org-string">      4F2F97E03BFBF466032ADFB382159169CFBF69E6</span>
-<span class="org-string">uid           [ultimate] gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
-<span class="org-string">sub   rsa4096 2018-06-11 [E]</span>
+<span class="org-string">pub</span><span class="org-whitespace-space">   </span><span class="org-string">rsa4096</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space"> </span><span class="org-string">[SC]</span>
+<span class="org-whitespace-space">      </span><span class="org-string">4F2F97E03BFBF466032ADFB382159169CFBF69E6</span>
+<span class="org-string">uid</span><span class="org-whitespace-space">           </span><span class="org-string">[ultimate]</span><span class="org-whitespace-space"> </span><span class="org-string">gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a></span>
+<span class="org-string">sub</span><span class="org-whitespace-space">   </span><span class="org-string">rsa4096</span><span class="org-whitespace-space"> </span><span class="org-string">2018-06-11</span><span class="org-whitespace-space"> </span><span class="org-string">[E]</span>
 </pre>
 </div>
 <p>
@@ -561,27 +558,27 @@ Please decide how far you trust this user to correctly verify other users<span c
 </div>
 </div>
 
-<div id="outline-container-orgebbf187" class="outline-3">
-<h3 id="orgebbf187"><span class="section-number-3">3.3</span> 签名与签名验证</h3>
+<div id="outline-container-org00a910b" class="outline-3">
+<h3 id="org00a910b"><span class="section-number-3">3.3</span> 签名与签名验证</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 对文件进行签名：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">generate test files</span>
-~$ dd <span class="org-variable-name">if</span>=/dev/urandom <span class="org-variable-name">of</span>=test.data <span class="org-variable-name">bs</span>=1K <span class="org-variable-name">count</span>=4
-~$ ls -lh test.data
--rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
-~$ gpg --local-user gpgtest --sign test.data
-~$ ls -lh test.data*
--rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
--rw-r--r-- 1 yanyg yanyg 4.7K Jun 11 14:34 test.data.gpg
-gpg --verify test.data.gpg
-gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
-gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
-gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
-gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
-~$ echo $<span class="org-variable-name">?</span>
+<pre class="src src-sh"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">generate</span><span class="org-whitespace-space"> </span><span class="org-comment">test</span><span class="org-whitespace-space"> </span><span class="org-comment">files</span>
+~$<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/urandom<span class="org-whitespace-space"> </span><span class="org-variable-name">of</span>=test.data<span class="org-whitespace-space"> </span><span class="org-variable-name">bs</span>=1K<span class="org-whitespace-space"> </span><span class="org-variable-name">count</span>=4
+~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>test.data
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.0K<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:32<span class="org-whitespace-space"> </span>test.data
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--local-user<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>--sign<span class="org-whitespace-space"> </span>test.data
+~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>test.data*
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.0K<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:32<span class="org-whitespace-space"> </span>test.data
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.7K<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:34<span class="org-whitespace-space"> </span>test.data.gpg
+gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.data.gpg
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:34:03<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:<span class="org-whitespace-space">                </span>issuer<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest@gmail.com"</span>
+gpg:<span class="org-whitespace-space"> </span>Good<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ulti<span class="org-whitespace-line">mate]</span>
+~$<span class="org-whitespace-space"> </span>echo<span class="org-whitespace-space"> </span>$<span class="org-variable-name">?</span>
 0
 </pre>
 </div>
@@ -590,20 +587,20 @@ gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <
 针对特定 <i>key</i> 进行签名验证：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --output gpgtest.gpg --export gpgtest
-~$ gpg --no-default-keyring --keyring $<span class="org-variable-name">PWD</span>/gpgtest.gpg --verify test.data.gpg
-gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
-gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
-gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
-gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
-~$ echo $<span class="org-variable-name">?</span>
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--output<span class="org-whitespace-space"> </span>gpgtest.gpg<span class="org-whitespace-space"> </span>--export<span class="org-whitespace-space"> </span>gpgtest
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--no-default-keyring<span class="org-whitespace-space"> </span>--keyring<span class="org-whitespace-space"> </span>$<span class="org-variable-name">PWD</span>/gpgtest.gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.data.gpg
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:34:03<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:<span class="org-whitespace-space">                </span>issuer<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest@gmail.com"</span>
+gpg:<span class="org-whitespace-space"> </span>Good<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ulti<span class="org-whitespace-line">mate]</span>
+~$<span class="org-whitespace-space"> </span>echo<span class="org-whitespace-space"> </span>$<span class="org-variable-name">?</span>
 0
-~$ gpg --no-default-keyring --keyring $<span class="org-variable-name">PWD</span>/yanyg.gpg --verify test.data.gpg
-gpg: Signature made Mon 11 Jun 2018 02:34:03 PM CST
-gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
-gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
-gpg: Can<span class="org-string">'t check signature: No public key</span>
-<span class="org-string">~$ echo $?</span>
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--no-default-keyring<span class="org-whitespace-space"> </span>--keyring<span class="org-whitespace-space"> </span>$<span class="org-variable-name">PWD</span>/yanyg.gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.data.gpg
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:34:03<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:<span class="org-whitespace-space">                </span>issuer<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest@gmail.com"</span>
+gpg:<span class="org-whitespace-space"> </span>Can<span class="org-string">'t</span><span class="org-whitespace-space"> </span><span class="org-string">check</span><span class="org-whitespace-space"> </span><span class="org-string">signature:</span><span class="org-whitespace-space"> </span><span class="org-string">No</span><span class="org-whitespace-space"> </span><span class="org-string">public</span><span class="org-whitespace-space"> </span><span class="org-string">key</span>
+<span class="org-string">~$</span><span class="org-whitespace-space"> </span><span class="org-string">echo</span><span class="org-whitespace-space"> </span><span class="org-string">$?</span>
 <span class="org-string">2</span>
 </pre>
 </div>
@@ -615,18 +612,18 @@ gpg: Can<span class="org-string">'t check signature: No public key</span>
 <i>&#x2013;sign</i> 签名采用二进制存储，如果想保存为纯文本，使用参数 <i>&#x2013;cleansign</i> ：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ echo <span class="org-string">"plain text"</span> &gt;&gt; test.txt
-~$ gpg --clearsign test.txt
-~$ ls -lh test.txt*
--rw-r--r-- 1 yanyg yanyg  11 Jun 11 14:45 test.txt
--rw-r--r-- 1 yanyg yanyg 548 Jun 11 14:45 test.txt.asc
-~$ cat test.txt.asc
-cat test.txt.asc
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>echo<span class="org-whitespace-space"> </span><span class="org-string">"plain</span><span class="org-whitespace-space"> </span><span class="org-string">text"</span><span class="org-whitespace-space"> </span>&gt;&gt;<span class="org-whitespace-space"> </span>test.txt
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--clearsign<span class="org-whitespace-space"> </span>test.txt
+~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>test.txt*
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">  </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:45<span class="org-whitespace-space"> </span>test.txt
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>548<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:45<span class="org-whitespace-space"> </span>test.txt.asc
+~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>test.txt.asc
+cat<span class="org-whitespace-space"> </span>test.txt.asc
+-----BEGIN<span class="org-whitespace-space"> </span>PGP<span class="org-whitespace-space"> </span>SIGNED<span class="org-whitespace-space"> </span>MESSAGE-----
+Hash:<span class="org-whitespace-space"> </span>SHA256
 
-plain text
------BEGIN PGP SIGNATURE-----
+plain<span class="org-whitespace-space"> </span>text
+-----BEGIN<span class="org-whitespace-space"> </span>PGP<span class="org-whitespace-space"> </span>SIGNATURE-----
 
 iQEzBAEBCAAdFiEE0BqO3vjy8KO1xif3Ux7dTb+fD1sFAlseGooACgkQUx7dTb+f
 D1v/DQgAnn75lyOmcX4TJFMj2FV8J2JVjY8Hbp71jMO68x9j1Kao8pemvMMXC87w
@@ -636,7 +633,7 @@ i1E94rBslfguzO8mRlqvj7b8vEWdGJpXtCPTLhgNKg1Grx9vOhAfhLHl3Vgb+PKB
 bVl1EZ2CTBuVk4ruNWBlS0FUo5+gAolicYoNT4v4uDy7AXjKY6dIs9qsbmKBbNN0
 <span class="org-variable-name">lXAROEL0pBiIOtYkx531LfwfX69bkg</span>==
 =VsDH
------END PGP SIGNATURE-----
+-----END<span class="org-whitespace-space"> </span>PGP<span class="org-whitespace-space"> </span>SIGNATURE-----
 </pre>
 </div>
 
@@ -644,22 +641,22 @@ bVl1EZ2CTBuVk4ruNWBlS0FUo5+gAolicYoNT4v4uDy7AXjKY6dIs9qsbmKBbNN0
 一般建议签名与文件分离：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --local-user gpgtest --detach-sign test.data
-~$ ls -lh test.data*
--rw-r--r-- 1 yanyg yanyg 4.0K Jun 11 14:32 test.data
--rw-r--r-- 1 yanyg yanyg 4.7K Jun 11 14:34 test.data.gpg
--rw-r--r-- 1 yanyg yanyg  585 Jun 11 14:47 test.data.sig
-~$ gpg --verify test.data.sig test.data
-gpg: Signature made Mon 11 Jun 2018 02:47:22 PM CST
-gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
-gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
-gpg: Good signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
-<span class="org-comment-delimiter"># </span><span class="org-comment">Give wrong file:</span>
-~$ gpg --verify test.data.sig  test.txt
-gpg: Signature made Mon 11 Jun 2018 02:47:22 PM CST
-gpg:                using RSA key 4F2F97E03BFBF466032ADFB382159169CFBF69E6
-gpg:                issuer <span class="org-string">"gpgtest@gmail.com"</span>
-gpg: BAD signature from <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> [ultimate]
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--local-user<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>--detach-sign<span class="org-whitespace-space"> </span>test.data
+~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>test.data*
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.0K<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:32<span class="org-whitespace-space"> </span>test.data
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>4.7K<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:34<span class="org-whitespace-space"> </span>test.data.gpg
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">  </span>585<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:47<span class="org-whitespace-space"> </span>test.data.sig
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.data.sig<span class="org-whitespace-space"> </span>test.data
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:47:22<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:<span class="org-whitespace-space">                </span>issuer<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest@gmail.com"</span>
+gpg:<span class="org-whitespace-space"> </span>Good<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ulti<span class="org-whitespace-line">mate]</span>
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Give</span><span class="org-whitespace-space"> </span><span class="org-comment">wrong</span><span class="org-whitespace-space"> </span><span class="org-comment">file:</span>
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.data.sig<span class="org-whitespace-space">  </span>test.txt
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:47:22<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>4F2F97E03BFBF466032ADFB382159169CFBF69E6
+gpg:<span class="org-whitespace-space">                </span>issuer<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest@gmail.com"</span>
+gpg:<span class="org-whitespace-space"> </span>BAD<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ultim<span class="org-whitespace-line">ate]</span>
 </pre>
 </div>
 
@@ -667,10 +664,10 @@ gpg: BAD signature from <span class="org-string">"gpgtest (GPG test for blog) <a
 ASCII格式签名分离：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --armor --detach-sign test.txt
-File <span class="org-string">'test.txt.asc'</span> exists. Overwrite? (y/N) y
-yanyg@pc:~/org$ cat test.txt.asc
------BEGIN PGP SIGNATURE-----
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--armor<span class="org-whitespace-space"> </span>--detach-sign<span class="org-whitespace-space"> </span>test.txt
+File<span class="org-whitespace-space"> </span><span class="org-string">'test.txt.asc'</span><span class="org-whitespace-space"> </span>exists.<span class="org-whitespace-space"> </span>Overwrite?<span class="org-whitespace-space"> </span>(y/N)<span class="org-whitespace-space"> </span>y
+yanyg@pc:~/org$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>test.txt.asc
+-----BEGIN<span class="org-whitespace-space"> </span>PGP<span class="org-whitespace-space"> </span>SIGNATURE-----
 
 iQEzBAABCAAdFiEE0BqO3vjy8KO1xif3Ux7dTb+fD1sFAlseG20ACgkQUx7dTb+f
 D1sCpgf/d7gh5oaQ50K6CeL6VnFNL54olDcVIaGd6Trjz0smCYuszmVZ2s2j7C0d
@@ -680,37 +677,37 @@ rUETZPmRmYbEKS0Sn85J2ztQbKbHQr5VQ11UmdIsGHIM4tZuf57BBXoD0QCzPzJg
 OQBs4tQZfPsC1rfVZgg8GgxhVcfCRRNOO/vtz+aiVgzIf+IIRAQnnVvj2lkpVi2E
 IuSb+9CDA/f4W2VFUka8xFg/h2EBvw==
 =YAAi
------END PGP SIGNATURE-----
-~$ gpg --verify test.txt.asc test.txt
-gpg: Signature made Mon 11 Jun 2018 02:49:17 PM CST
-gpg:                using RSA key D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
-gpg: Good signature from <span class="org-string">"yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span> [ultimate]
-~$ gpg --verify test.txt.asc test.data
-gpg: Signature made Mon 11 Jun 2018 02:49:17 PM CST
-gpg:                using RSA key D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
-gpg: BAD signature from <span class="org-string">"yanyg <a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span> [ultimate]
+-----END<span class="org-whitespace-space"> </span>PGP<span class="org-whitespace-space"> </span>SIGNATURE-----
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.txt.asc<span class="org-whitespace-space"> </span>test.txt
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:49:17<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+gpg:<span class="org-whitespace-space"> </span>Good<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"yanyg</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ultimate]
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--verify<span class="org-whitespace-space"> </span>test.txt.asc<span class="org-whitespace-space"> </span>test.data
+gpg:<span class="org-whitespace-space"> </span>Signature<span class="org-whitespace-space"> </span>made<span class="org-whitespace-space"> </span>Mon<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>2018<span class="org-whitespace-space"> </span>02:49:17<span class="org-whitespace-space"> </span>PM<span class="org-whitespace-space"> </span>CST
+gpg:<span class="org-whitespace-space">                </span>using<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>D01A8EDEF8F2F0A3B5C627F7531EDD4DBF9F0F5B
+gpg:<span class="org-whitespace-space"> </span>BAD<span class="org-whitespace-space"> </span>signature<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span><span class="org-string">"yanyg</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:yanyg%40inspur.com">&lt;yanyg@inspur.com&gt;</a>"</span><span class="org-whitespace-space"> </span>[ultimate]
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6be7dae" class="outline-3">
-<h3 id="org6be7dae"><span class="section-number-3">3.4</span> 加密解密</h3>
+<div id="outline-container-org73a714c" class="outline-3">
+<h3 id="org73a714c"><span class="section-number-3">3.4</span> 加密解密</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 使用 <i>&#x2013;encrypt</i> 参数加密， <i>&#x2013;decrypt</i> 参数解密：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --recipient gpgtest --output test.txt.enc --encrypt test.txt
-~$ ls -lh test.txt test.txt.enc
--rw-r--r-- 1 yanyg yanyg  11 Jun 11 14:45 test.txt
--rw-r--r-- 1 yanyg yanyg 607 Jun 11 14:53 test.txt.enc
-~$ gpg --decrypt test.txt.enc
-gpg: encrypted with 4096-bit RSA key, ID 9D5CD5E32EF4FC4B, created 2018-06-11
-      <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
-plain text
-~$ gpg --quiet --decrypt test.txt.enc
-plain text
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--recipient<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>--output<span class="org-whitespace-space"> </span>test.txt.enc<span class="org-whitespace-space"> </span>--encrypt<span class="org-whitespace-space"> </span>test.txt
+~$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lh<span class="org-whitespace-space"> </span>test.txt<span class="org-whitespace-space"> </span>test.txt.enc
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">  </span>11<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:45<span class="org-whitespace-space"> </span>test.txt
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space"> </span>607<span class="org-whitespace-space"> </span>Jun<span class="org-whitespace-space"> </span>11<span class="org-whitespace-space"> </span>14:53<span class="org-whitespace-space"> </span>test.txt.enc
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--decrypt<span class="org-whitespace-space"> </span>test.txt.enc
+gpg:<span class="org-whitespace-space"> </span>encrypted<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>4096-bit<span class="org-whitespace-space"> </span>RSA<span class="org-whitespace-space"> </span>key,<span class="org-whitespace-space"> </span>ID<span class="org-whitespace-space"> </span>9D5CD5E32EF4FC4B,<span class="org-whitespace-space"> </span>created<span class="org-whitespace-space"> </span>2018-06-11
+<span class="org-whitespace-space">      </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span>
+plain<span class="org-whitespace-space"> </span>text
+~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--quiet<span class="org-whitespace-space"> </span>--decrypt<span class="org-whitespace-space"> </span>test.txt.enc
+plain<span class="org-whitespace-space"> </span>text
 </pre>
 </div>
 
@@ -727,32 +724,32 @@ man:
 </blockquote>
 
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --export-secret-keys gpgtest &gt; gpgtest.priv
-<span class="org-comment-delimiter"># </span><span class="org-comment">change to root</span>
-~# gpg --allow-secret-key-import --import gpgtest.priv
-gpg: key 82159169CFBF69E6: public key <span class="org-string">"gpgtest (GPG test for blog) <a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmail.com&gt;</a>"</span> imported
-gpg: key 82159169CFBF69E6: secret key imported
-gpg: Total number processed: 1
-gpg:               imported: 1
-gpg:       secret keys read: 1
-gpg:   secret keys imported: 1
-~# gpg --quiet --decrypt test.txt.enc
-plain text
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--export-secret-keys<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>gpgtest.priv
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">change</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">root</span>
+~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--allow-secret-key-import<span class="org-whitespace-space"> </span>--import<span class="org-whitespace-space"> </span>gpgtest.priv
+gpg:<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>82159169CFBF69E6:<span class="org-whitespace-space"> </span>public<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span><span class="org-string">"gpgtest</span><span class="org-whitespace-space"> </span><span class="org-string">(GPG</span><span class="org-whitespace-space"> </span><span class="org-string">test</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">blog)</span><span class="org-whitespace-space"> </span><span class="org-string"><a href="mailto:gpgtest%40gmail.com">&lt;gpgtest@gmai</a></span><span class="org-string"><span class="org-whitespace-line"><a href="mailto:gpgtest%40gmail.com">l.com&gt;</a>"</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">imported</span>
+gpg:<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>82159169CFBF69E6:<span class="org-whitespace-space"> </span>secret<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>imported
+gpg:<span class="org-whitespace-space"> </span>Total<span class="org-whitespace-space"> </span>number<span class="org-whitespace-space"> </span>processed:<span class="org-whitespace-space"> </span>1
+gpg:<span class="org-whitespace-space">               </span>imported:<span class="org-whitespace-space"> </span>1
+gpg:<span class="org-whitespace-space">       </span>secret<span class="org-whitespace-space"> </span>keys<span class="org-whitespace-space"> </span>read:<span class="org-whitespace-space"> </span>1
+gpg:<span class="org-whitespace-space">   </span>secret<span class="org-whitespace-space"> </span>keys<span class="org-whitespace-space"> </span>imported:<span class="org-whitespace-space"> </span>1
+~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--quiet<span class="org-whitespace-space"> </span>--decrypt<span class="org-whitespace-space"> </span>test.txt.enc
+plain<span class="org-whitespace-space"> </span>text
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgeb7b12b" class="outline-3">
-<h3 id="orgeb7b12b"><span class="section-number-3">3.5</span> 加密同时签名</h3>
+<div id="outline-container-org24b6050" class="outline-3">
+<h3 id="org24b6050"><span class="section-number-3">3.5</span> 加密同时签名</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 使用本地私钥签名，使用接收者公钥加密：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gpg --local-user gpgtest --recipient root1 --output my.enc --sign --encrypt my.txt
-<span class="org-comment-delimiter"># </span><span class="org-comment">Change to root to verify &amp; decrypt</span>
-~# gpg --quiet --decrypt my.enc
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--local-user<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>--recipient<span class="org-whitespace-space"> </span>root1<span class="org-whitespace-space"> </span>--output<span class="org-whitespace-space"> </span>my.enc<span class="org-whitespace-space"> </span>--sign<span class="org-whitespace-space"> </span>--encrypt<span class="org-whitespace-space"> </span>m<span class="org-whitespace-line">y.txt</span>
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Change</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">root</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">verify</span><span class="org-whitespace-space"> </span><span class="org-comment">&amp;</span><span class="org-whitespace-space"> </span><span class="org-comment">decrypt</span>
+~#<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--quiet<span class="org-whitespace-space"> </span>--decrypt<span class="org-whitespace-space"> </span>my.enc
 </pre>
 </div>
 <p>
@@ -767,12 +764,12 @@ plain text
 </div>
 </div>
 
-<div id="outline-container-org7ea092c" class="outline-2">
-<h2 id="org7ea092c"><span class="section-number-2">4</span> 其他</h2>
+<div id="outline-container-org93a3acf" class="outline-2">
+<h2 id="org93a3acf"><span class="section-number-2">4</span> 其他</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org1624cee" class="outline-3">
-<h3 id="org1624cee"><span class="section-number-3">4.1</span> 私钥备份保护</h3>
+<div id="outline-container-org1174f8c" class="outline-3">
+<h3 id="org1174f8c"><span class="section-number-3">4.1</span> 私钥备份保护</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>没有完美的方法</li>
@@ -783,8 +780,8 @@ plain text
 </div>
 </div>
 
-<div id="outline-container-org200abd1" class="outline-2">
-<h2 id="org200abd1"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org114694a" class="outline-2">
+<h2 id="org114694a"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>阮一峰GPG入门教程</dt><dd><a href="http://www.ruanyifeng.com/blog/2013/07/gpg.html">http://www.ruanyifeng.com/blog/2013/07/gpg.html</a></dd>

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:37 -->
+<!-- 2019-01-07 Mon 00:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>C语言编程技巧/C Programming Tips</title>
 <meta name="generator" content="Org mode" />
@@ -44,36 +44,36 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org53ea215">1. 说明</a></li>
-<li><a href="#org2a7dcb8">2. 返回结构体</a></li>
-<li><a href="#org186d7c9">3. 内联汇编</a>
+<li><a href="#org91bb4dd">1. 说明</a></li>
+<li><a href="#orge935201">2. 返回结构体</a></li>
+<li><a href="#orgf5f5595">3. 内联汇编</a>
 <ul>
-<li><a href="#org92854f6">3.1. 基本格式</a>
+<li><a href="#orga82860d">3.1. 基本格式</a>
 <ul>
-<li><a href="#org4a5b357">3.1.1. 语法</a></li>
-<li><a href="#orgbf0f7fb">3.1.2. 示例</a></li>
+<li><a href="#orge0627f1">3.1.1. 语法</a></li>
+<li><a href="#orgc7830bc">3.1.2. 示例</a></li>
 </ul>
 </li>
-<li><a href="#org4daf410">3.2. 扩展格式</a>
+<li><a href="#orgc228e3d">3.2. 扩展格式</a>
 <ul>
-<li><a href="#org02b6420">3.2.1. 语法</a></li>
+<li><a href="#orgfd46006">3.2.1. 语法</a></li>
 </ul>
 </li>
-<li><a href="#org6cdeceb">3.3. cpu ticks rdstc</a>
+<li><a href="#org19f8958">3.3. cpu ticks rdstc</a>
 <ul>
-<li><a href="#org3abd743">3.3.1. inline function</a></li>
-<li><a href="#org2fa5225">3.3.2. gcc extend macro</a></li>
+<li><a href="#org2c5a801">3.3.1. inline function</a></li>
+<li><a href="#orgaad9752">3.3.2. gcc extend macro</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org09cc5bb">4. Reference Materials</a></li>
+<li><a href="#orgd06583f">4. Reference Materials</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org53ea215" class="outline-2">
-<h2 id="org53ea215"><span class="section-number-2">1</span> 说明</h2>
+<div id="outline-container-org91bb4dd" class="outline-2">
+<h2 id="org91bb4dd"><span class="section-number-2">1</span> 说明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文不介绍基本C语言编程，只记录实际代码中用到的各种编程技巧，这些技巧一般是GCC
@@ -82,8 +82,8 @@
 </div>
 </div>
 
-<div id="outline-container-org2a7dcb8" class="outline-2">
-<h2 id="org2a7dcb8"><span class="section-number-2">2</span> 返回结构体</h2>
+<div id="outline-container-orge935201" class="outline-2">
+<h2 id="orge935201"><span class="section-number-2">2</span> 返回结构体</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 使用型别强制转换与打括号组合，返回结构体类别：
@@ -120,16 +120,16 @@
 </div>
 </div>
 
-<div id="outline-container-org186d7c9" class="outline-2">
-<h2 id="org186d7c9"><span class="section-number-2">3</span> 内联汇编</h2>
+<div id="outline-container-orgf5f5595" class="outline-2">
+<h2 id="orgf5f5595"><span class="section-number-2">3</span> 内联汇编</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org92854f6" class="outline-3">
-<h3 id="org92854f6"><span class="section-number-3">3.1</span> 基本格式</h3>
+<div id="outline-container-orga82860d" class="outline-3">
+<h3 id="orga82860d"><span class="section-number-3">3.1</span> 基本格式</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org4a5b357" class="outline-4">
-<h4 id="org4a5b357"><span class="section-number-4">3.1.1</span> 语法</h4>
+<div id="outline-container-orge0627f1" class="outline-4">
+<h4 id="orge0627f1"><span class="section-number-4">3.1.1</span> 语法</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly</span><span class="org-whitespace-space"> </span><span class="org-string">code"</span>);
@@ -145,8 +145,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgbf0f7fb" class="outline-4">
-<h4 id="orgbf0f7fb"><span class="section-number-4">3.1.2</span> 示例</h4>
+<div id="outline-container-orgc7830bc" class="outline-4">
+<h4 id="orgc7830bc"><span class="section-number-4">3.1.2</span> 示例</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -168,12 +168,12 @@
 </div>
 </div>
 
-<div id="outline-container-org4daf410" class="outline-3">
-<h3 id="org4daf410"><span class="section-number-3">3.2</span> 扩展格式</h3>
+<div id="outline-container-orgc228e3d" class="outline-3">
+<h3 id="orgc228e3d"><span class="section-number-3">3.2</span> 扩展格式</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org02b6420" class="outline-4">
-<h4 id="org02b6420"><span class="section-number-4">3.2.1</span> 语法</h4>
+<div id="outline-container-orgfd46006" class="outline-4">
+<h4 id="orgfd46006"><span class="section-number-4">3.2.1</span> 语法</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span>(<span class="org-string">"assembly</span><span class="org-whitespace-space"> </span><span class="org-string">code"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>output<span class="org-whitespace-space"> </span>locations<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>input<span class="org-whitespace-space"> </span>operands<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>changed<span class="org-whitespace-space"> </span>registers);
@@ -188,12 +188,12 @@
 </div>
 </div>
 
-<div id="outline-container-org6cdeceb" class="outline-3">
-<h3 id="org6cdeceb"><span class="section-number-3">3.3</span> cpu ticks rdstc</h3>
+<div id="outline-container-org19f8958" class="outline-3">
+<h3 id="org19f8958"><span class="section-number-3">3.3</span> cpu ticks rdstc</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-org3abd743" class="outline-4">
-<h4 id="org3abd743"><span class="section-number-4">3.3.1</span> inline function</h4>
+<div id="outline-container-org2c5a801" class="outline-4">
+<h4 id="org2c5a801"><span class="section-number-4">3.3.1</span> inline function</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -227,8 +227,8 @@
 </div>
 </div>
 
-<div id="outline-container-org2fa5225" class="outline-4">
-<h4 id="org2fa5225"><span class="section-number-4">3.3.2</span> gcc extend macro</h4>
+<div id="outline-container-orgaad9752" class="outline-4">
+<h4 id="orgaad9752"><span class="section-number-4">3.3.2</span> gcc extend macro</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -259,8 +259,8 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org09cc5bb" class="outline-2">
-<h2 id="org09cc5bb"><span class="section-number-2">4</span> Reference Materials</h2>
+<div id="outline-container-orgd06583f" class="outline-2">
+<h2 id="orgd06583f"><span class="section-number-2">4</span> Reference Materials</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>LWN A guide to inline assembly code in GCC</dt><dd><a href="https://lwn.net/Articles/685739/">https://lwn.net/Articles/685739/</a></dd>

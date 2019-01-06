@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:38 -->
+<!-- 2019-01-07 Mon 00:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX IDR/IDA算法分析</title>
 <meta name="generator" content="Org mode" />
@@ -31,22 +31,22 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb5088d6">1. 介绍</a>
+<li><a href="#org1f2bbec">1. 介绍</a>
 <ul>
-<li><a href="#org7fb0dd6">1.1. loop示例</a>
+<li><a href="#orga3a2262">1.1. loop示例</a>
 <ul>
-<li><a href="#org2df1a59">1.1.1. 静态初始化</a></li>
+<li><a href="#org85775e9">1.1.1. 静态初始化</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org24c343a">2. References</a></li>
+<li><a href="#org350c879">2. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgb5088d6" class="outline-2">
-<h2 id="orgb5088d6"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org1f2bbec" class="outline-2">
+<h2 id="org1f2bbec"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <blockquote>
 <p>
@@ -56,15 +56,15 @@ Small id to pointer translation service avoiding fixed sized tables.
 </blockquote>
 </div>
 
-<div id="outline-container-org7fb0dd6" class="outline-3">
-<h3 id="org7fb0dd6"><span class="section-number-3">1.1</span> loop示例</h3>
+<div id="outline-container-orga3a2262" class="outline-3">
+<h3 id="orga3a2262"><span class="section-number-3">1.1</span> loop示例</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2/source/drivers/block/loop.c">loop.c</a>使用为例阐述：
 </p>
 </div>
-<div id="outline-container-org2df1a59" class="outline-4">
-<h4 id="org2df1a59"><span class="section-number-4">1.1.1</span> 静态初始化</h4>
+<div id="outline-container-org85775e9" class="outline-4">
+<h4 id="org85775e9"><span class="section-number-4">1.1.1</span> 静态初始化</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">idr.h</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-comment-delimiter">*/</span>
@@ -86,8 +86,8 @@ loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2
 </div>
 </div>
 
-<div id="outline-container-org24c343a" class="outline-2">
-<h2 id="org24c343a"><span class="section-number-2">2</span> References</h2>
+<div id="outline-container-org350c879" class="outline-2">
+<h2 id="org350c879"><span class="section-number-2">2</span> References</h2>
 <div class="outline-text-2" id="text-2">
 <dl class="org-dl">
 <dt>LWN A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>

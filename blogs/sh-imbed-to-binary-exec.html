@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-04 Wed 22:22 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Shell脚本嵌入到二进制代码中</title>
 <meta name="generator" content="Org mode" />
@@ -31,30 +31,30 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgadec13f">1. 描述</a></li>
-<li><a href="#orge098b08">2. 技术点备忘</a>
+<li><a href="#org7e8c41e">1. 描述</a></li>
+<li><a href="#org4de9157">2. 技术点备忘</a>
 <ul>
-<li><a href="#org2e87b85">2.1. openssl加解密</a></li>
-<li><a href="#org90e0e8f">2.2. objcopy转换任意文件为二进制目标对象</a></li>
-<li><a href="#org77cb623">2.3. strip symbol</a></li>
-<li><a href="#org703a433">2.4. gpg howto</a></li>
+<li><a href="#org72826a9">2.1. openssl加解密</a></li>
+<li><a href="#orgd3ace67">2.2. objcopy转换任意文件为二进制目标对象</a></li>
+<li><a href="#orgb95f078">2.3. strip symbol</a></li>
+<li><a href="#org55be5e8">2.4. gpg howto</a></li>
 </ul>
 </li>
-<li><a href="#orgf0c88b8">3. 其他设计事项</a>
+<li><a href="#orgff3a1b2">3. 其他设计事项</a>
 <ul>
-<li><a href="#org783599a">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
-<li><a href="#orga922a07">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
-<li><a href="#orge0849a5">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
-<li><a href="#org980e97b">3.4. 充分应用非对称加密提高可靠性</a></li>
+<li><a href="#org095b788">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
+<li><a href="#orgac256e1">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
+<li><a href="#orgfc9e71e">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
+<li><a href="#orgee9caaf">3.4. 充分应用非对称加密提高可靠性</a></li>
 </ul>
 </li>
-<li><a href="#orgb11017a">4. References</a></li>
+<li><a href="#orgca70029">4. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgadec13f" class="outline-2">
-<h2 id="orgadec13f"><span class="section-number-2">1</span> 描述</h2>
+<div id="outline-container-org7e8c41e" class="outline-2">
+<h2 id="org7e8c41e"><span class="section-number-2">1</span> 描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近需要完成一个小的加密工具，有较高安全要求，并要求快速完成，但对加解密性能不敏感。为简化实现，规划使用Bash Shell封装，调用现有工具<a href="https://gnupg.org/">GPG</a>完成。使用<a href="https://github.com/Distrotech/tar">tar</a>和
@@ -63,86 +63,86 @@
 </div>
 </div>
 
-<div id="outline-container-orge098b08" class="outline-2">
-<h2 id="orge098b08"><span class="section-number-2">2</span> 技术点备忘</h2>
+<div id="outline-container-org4de9157" class="outline-2">
+<h2 id="org4de9157"><span class="section-number-2">2</span> 技术点备忘</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org2e87b85" class="outline-3">
-<h3 id="org2e87b85"><span class="section-number-3">2.1</span> openssl加解密</h3>
+<div id="outline-container-org72826a9" class="outline-3">
+<h3 id="org72826a9"><span class="section-number-3">2.1</span> openssl加解密</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">~$ openssl enc -pass pass:123 -e -aes-256-cbc -in test.txt -out test.txt.enc
-~$ openssl enc -pass pass:123 -d -aes-256-cbc -in test.txt.enc -out test.txt.new
-<span class="org-comment-delimiter">### </span><span class="org-comment">We can get more notice with wrong option. e.g.: --help, --xxx</span>
-~$ openssl enc --help
-unknown option <span class="org-string">'--help'</span>
-options are
--in &lt;file&gt;     input file
--out &lt;file&gt;    output file
--pass &lt;arg&gt;    pass phrase source
--e             encrypt
--d             decrypt
--a/-base64     base64 encode/decode, depending on encryption flag
--k             passphrase is the next argument
--kfile         passphrase is the first line of the file argument
--md            the next argument is the md to use to create a key
-                 from a passphrase.  One of md2, md5, sha or sha1
--S             salt<span class="org-keyword"> in</span> hex is the next argument
--K/-iv         key/iv<span class="org-keyword"> in</span> hex is the next argument
--[pP]          print the iv/key (<span class="org-keyword">then exit</span> if -P)
--bufsize &lt;n&gt;   buffer size
--nopad         disable standard block padding
--engine e      use engine e, possibly a hardware device.
-Cipher Types
--aes-128-cbc               -aes-128-cbc-hmac-sha1     -aes-128-cfb
--aes-128-cfb1              -aes-128-cfb8              -aes-128-ctr
--aes-128-ecb               -aes-128-gcm               -aes-128-ofb
--aes-128-xts               -aes-192-cbc               -aes-192-cfb
-... ...
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>openssl<span class="org-whitespace-space"> </span>enc<span class="org-whitespace-space"> </span>-pass<span class="org-whitespace-space"> </span>pass:123<span class="org-whitespace-space"> </span>-e<span class="org-whitespace-space"> </span>-aes-256-cbc<span class="org-whitespace-space"> </span>-in<span class="org-whitespace-space"> </span>test.txt<span class="org-whitespace-space"> </span>-out<span class="org-whitespace-space"> </span>test.txt.enc
+~$<span class="org-whitespace-space"> </span>openssl<span class="org-whitespace-space"> </span>enc<span class="org-whitespace-space"> </span>-pass<span class="org-whitespace-space"> </span>pass:123<span class="org-whitespace-space"> </span>-d<span class="org-whitespace-space"> </span>-aes-256-cbc<span class="org-whitespace-space"> </span>-in<span class="org-whitespace-space"> </span>test.txt.enc<span class="org-whitespace-space"> </span>-out<span class="org-whitespace-space"> </span>test.txt.new
+<span class="org-comment-delimiter">###</span><span class="org-whitespace-space"> </span><span class="org-comment">We</span><span class="org-whitespace-space"> </span><span class="org-comment">can</span><span class="org-whitespace-space"> </span><span class="org-comment">get</span><span class="org-whitespace-space"> </span><span class="org-comment">more</span><span class="org-whitespace-space"> </span><span class="org-comment">notice</span><span class="org-whitespace-space"> </span><span class="org-comment">with</span><span class="org-whitespace-space"> </span><span class="org-comment">wrong</span><span class="org-whitespace-space"> </span><span class="org-comment">option.</span><span class="org-whitespace-space"> </span><span class="org-comment">e.g.:</span><span class="org-whitespace-space"> </span><span class="org-comment">--help,</span><span class="org-whitespace-space"> </span><span class="org-comment">--xxx</span>
+~$<span class="org-whitespace-space"> </span>openssl<span class="org-whitespace-space"> </span>enc<span class="org-whitespace-space"> </span>--help
+unknown<span class="org-whitespace-space"> </span>option<span class="org-whitespace-space"> </span><span class="org-string">'--help'</span>
+options<span class="org-whitespace-space"> </span>are
+-in<span class="org-whitespace-space"> </span>&lt;file&gt;<span class="org-whitespace-space">     </span>input<span class="org-whitespace-space"> </span>file
+-out<span class="org-whitespace-space"> </span>&lt;file&gt;<span class="org-whitespace-space">    </span>output<span class="org-whitespace-space"> </span>file
+-pass<span class="org-whitespace-space"> </span>&lt;arg&gt;<span class="org-whitespace-space">    </span>pass<span class="org-whitespace-space"> </span>phrase<span class="org-whitespace-space"> </span>source
+-e<span class="org-whitespace-space">             </span>encrypt
+-d<span class="org-whitespace-space">             </span>decrypt
+-a/-base64<span class="org-whitespace-space">     </span>base64<span class="org-whitespace-space"> </span>encode/decode,<span class="org-whitespace-space"> </span>depending<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>encryption<span class="org-whitespace-space"> </span>flag
+-k<span class="org-whitespace-space">             </span>passphrase<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>next<span class="org-whitespace-space"> </span>argument
+-kfile<span class="org-whitespace-space">         </span>passphrase<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>first<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>file<span class="org-whitespace-space"> </span>argument
+-md<span class="org-whitespace-space">            </span>the<span class="org-whitespace-space"> </span>next<span class="org-whitespace-space"> </span>argument<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>md<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>use<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>create<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>key
+<span class="org-whitespace-space">                 </span>from<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>passphrase.<span class="org-whitespace-space">  </span>One<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>md2,<span class="org-whitespace-space"> </span>md5,<span class="org-whitespace-space"> </span>sha<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>sha1
+-S<span class="org-whitespace-space">             </span>salt<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>hex<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>next<span class="org-whitespace-space"> </span>argument
+-K/-iv<span class="org-whitespace-space">         </span>key/iv<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>hex<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>next<span class="org-whitespace-space"> </span>argument
+-[pP]<span class="org-whitespace-space">          </span>print<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>iv/key<span class="org-whitespace-space"> </span>(<span class="org-keyword">then</span><span class="org-whitespace-space"> </span><span class="org-keyword">exit</span><span class="org-whitespace-space"> </span>if<span class="org-whitespace-space"> </span>-P)
+-bufsize<span class="org-whitespace-space"> </span>&lt;n&gt;<span class="org-whitespace-space">   </span>buffer<span class="org-whitespace-space"> </span>size
+-nopad<span class="org-whitespace-space">         </span>disable<span class="org-whitespace-space"> </span>standard<span class="org-whitespace-space"> </span>block<span class="org-whitespace-space"> </span>padding
+-engine<span class="org-whitespace-space"> </span>e<span class="org-whitespace-space">      </span>use<span class="org-whitespace-space"> </span>engine<span class="org-whitespace-space"> </span>e,<span class="org-whitespace-space"> </span>possibly<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>hardware<span class="org-whitespace-space"> </span>device.
+Cipher<span class="org-whitespace-space"> </span>Types
+-aes-128-cbc<span class="org-whitespace-space">               </span>-aes-128-cbc-hmac-sha1<span class="org-whitespace-space">     </span>-aes-128-cfb
+-aes-128-cfb1<span class="org-whitespace-space">              </span>-aes-128-cfb8<span class="org-whitespace-space">              </span>-aes-128-ctr
+-aes-128-ecb<span class="org-whitespace-space">               </span>-aes-128-gcm<span class="org-whitespace-space">               </span>-aes-128-ofb
+-aes-128-xts<span class="org-whitespace-space">               </span>-aes-192-cbc<span class="org-whitespace-space">               </span>-aes-192-cfb
+...<span class="org-whitespace-space"> </span>...
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org90e0e8f" class="outline-3">
-<h3 id="org90e0e8f"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
+<div id="outline-container-orgd3ace67" class="outline-3">
+<h3 id="orgd3ace67"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
-<pre class="src src-sh">~$ objcopy -I binary -O elf64-x86-64 -B i386 file.in file.o
-~$ readelf -s test.o
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>objcopy<span class="org-whitespace-space"> </span>-I<span class="org-whitespace-space"> </span>binary<span class="org-whitespace-space"> </span>-O<span class="org-whitespace-space"> </span>elf64-x86-64<span class="org-whitespace-space"> </span>-B<span class="org-whitespace-space"> </span>i386<span class="org-whitespace-space"> </span>file.in<span class="org-whitespace-space"> </span>file.o
+~$<span class="org-whitespace-space"> </span>readelf<span class="org-whitespace-space"> </span>-s<span class="org-whitespace-space"> </span>test.o
 
-Symbol table <span class="org-string">'.symtab'</span> contains 5 entries:
-   Num:    Value          Size Type    Bind   Vis      Ndx Name
-     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
-     1: 0000000000000000     0 SECTION LOCAL  DEFAULT    1
-     2: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT    1 _binary_test_in_start
-     3: 0000000000000205     0 NOTYPE  GLOBAL DEFAULT    1 _binary_test_in_end
-     4: 0000000000000205     0 NOTYPE  GLOBAL DEFAULT  ABS _binary_test_in_size
-<span class="org-comment-delimiter">#### </span><span class="org-comment">=&gt; We need to define extern char variable with above name</span>
-~$ cat eg.c
-extern const char _binary_test_in_start;
-extern const char _binary_test_in_end;
-// <span class="org-comment-delimiter">#### </span><span class="org-comment">=&gt; The data is positioned bewteen above symbol</span>
-... ...
-<span class="org-function-name">copy_region_to_data</span>(&amp;_binary_test_in_start, &amp;_binary_test_in_end, <span class="org-string">"test.data"</span>);
-// <span class="org-comment-delimiter">#### </span><span class="org-comment">=&gt; DATA RANGE: [&amp;_binary_test_in_start, &amp;_binary_test_in_end)</span>
+Symbol<span class="org-whitespace-space"> </span>table<span class="org-whitespace-space"> </span><span class="org-string">'.symtab'</span><span class="org-whitespace-space"> </span>contains<span class="org-whitespace-space"> </span>5<span class="org-whitespace-space"> </span>entries:
+<span class="org-whitespace-space">   </span>Num:<span class="org-whitespace-space">    </span>Value<span class="org-whitespace-space">          </span>Size<span class="org-whitespace-space"> </span>Type<span class="org-whitespace-space">    </span>Bind<span class="org-whitespace-space">   </span>Vis<span class="org-whitespace-space">      </span>Ndx<span class="org-whitespace-space"> </span>Name
+<span class="org-whitespace-space">     </span>0:<span class="org-whitespace-space"> </span>0000000000000000<span class="org-whitespace-space">     </span>0<span class="org-whitespace-space"> </span>NOTYPE<span class="org-whitespace-space">  </span>LOCAL<span class="org-whitespace-space">  </span>DEFAULT<span class="org-whitespace-space">  </span>UND
+<span class="org-whitespace-space">     </span>1:<span class="org-whitespace-space"> </span>0000000000000000<span class="org-whitespace-space">     </span>0<span class="org-whitespace-space"> </span>SECTION<span class="org-whitespace-space"> </span>LOCAL<span class="org-whitespace-space">  </span>DEFAULT<span class="org-whitespace-space">    </span>1
+<span class="org-whitespace-space">     </span>2:<span class="org-whitespace-space"> </span>0000000000000000<span class="org-whitespace-space">     </span>0<span class="org-whitespace-space"> </span>NOTYPE<span class="org-whitespace-space">  </span>GLOBAL<span class="org-whitespace-space"> </span>DEFAULT<span class="org-whitespace-space">    </span>1<span class="org-whitespace-space"> </span>_binary_test_in_start
+<span class="org-whitespace-space">     </span>3:<span class="org-whitespace-space"> </span>0000000000000205<span class="org-whitespace-space">     </span>0<span class="org-whitespace-space"> </span>NOTYPE<span class="org-whitespace-space">  </span>GLOBAL<span class="org-whitespace-space"> </span>DEFAULT<span class="org-whitespace-space">    </span>1<span class="org-whitespace-space"> </span>_binary_test_in_end
+<span class="org-whitespace-space">     </span>4:<span class="org-whitespace-space"> </span>0000000000000205<span class="org-whitespace-space">     </span>0<span class="org-whitespace-space"> </span>NOTYPE<span class="org-whitespace-space">  </span>GLOBAL<span class="org-whitespace-space"> </span>DEFAULT<span class="org-whitespace-space">  </span>ABS<span class="org-whitespace-space"> </span>_binary_test_in_size
+<span class="org-comment-delimiter">####</span><span class="org-whitespace-space"> </span><span class="org-comment">=&gt;</span><span class="org-whitespace-space"> </span><span class="org-comment">We</span><span class="org-whitespace-space"> </span><span class="org-comment">need</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">define</span><span class="org-whitespace-space"> </span><span class="org-comment">extern</span><span class="org-whitespace-space"> </span><span class="org-comment">char</span><span class="org-whitespace-space"> </span><span class="org-comment">variable</span><span class="org-whitespace-space"> </span><span class="org-comment">with</span><span class="org-whitespace-space"> </span><span class="org-comment">above</span><span class="org-whitespace-space"> </span><span class="org-comment">name</span>
+~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>eg.c
+extern<span class="org-whitespace-space"> </span>const<span class="org-whitespace-space"> </span>char<span class="org-whitespace-space"> </span>_binary_test_in_start;
+extern<span class="org-whitespace-space"> </span>const<span class="org-whitespace-space"> </span>char<span class="org-whitespace-space"> </span>_binary_test_in_end;
+//<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">####</span><span class="org-whitespace-space"> </span><span class="org-comment">=&gt;</span><span class="org-whitespace-space"> </span><span class="org-comment">The</span><span class="org-whitespace-space"> </span><span class="org-comment">data</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">positioned</span><span class="org-whitespace-space"> </span><span class="org-comment">bewteen</span><span class="org-whitespace-space"> </span><span class="org-comment">above</span><span class="org-whitespace-space"> </span><span class="org-comment">symbol</span>
+...<span class="org-whitespace-space"> </span>...
+<span class="org-function-name">copy_region_to_data</span>(&amp;_binary_test_in_start,<span class="org-whitespace-space"> </span>&amp;_binary_test_in_end,<span class="org-whitespace-space"> </span><span class="org-string">"test.data"</span>);
+//<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">####</span><span class="org-whitespace-space"> </span><span class="org-comment">=&gt;</span><span class="org-whitespace-space"> </span><span class="org-comment">DATA</span><span class="org-whitespace-space"> </span><span class="org-comment">RANGE:</span><span class="org-whitespace-space"> </span><span class="org-comment">[&amp;_binary_test_in_start,</span><span class="org-whitespace-space"> </span><span class="org-comment">&amp;_binary_test_in_end)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org77cb623" class="outline-3">
-<h3 id="org77cb623"><span class="section-number-3">2.3</span> strip symbol</h3>
+<div id="outline-container-orgb95f078" class="outline-3">
+<h3 id="orgb95f078"><span class="section-number-3">2.3</span> strip symbol</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
-<pre class="src src-sh">~$ strip --strip-all test
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>strip<span class="org-whitespace-space"> </span>--strip-all<span class="org-whitespace-space"> </span>test
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org703a433" class="outline-3">
-<h3 id="org703a433"><span class="section-number-3">2.4</span> gpg howto</h3>
+<div id="outline-container-org55be5e8" class="outline-3">
+<h3 id="org55be5e8"><span class="section-number-3">2.4</span> gpg howto</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li>See <a href="tools-encrypt-gpg.html">tools-encrypt-gpg.html</a></li>
@@ -151,26 +151,26 @@ extern const char _binary_test_in_end;
 </div>
 </div>
 
-<div id="outline-container-orgf0c88b8" class="outline-2">
-<h2 id="orgf0c88b8"><span class="section-number-2">3</span> 其他设计事项</h2>
+<div id="outline-container-orgff3a1b2" class="outline-2">
+<h2 id="orgff3a1b2"><span class="section-number-2">3</span> 其他设计事项</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org783599a" class="outline-3">
-<h3 id="org783599a"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
+<div id="outline-container-org095b788" class="outline-3">
+<h3 id="org095b788"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
 </div>
-<div id="outline-container-orga922a07" class="outline-3">
-<h3 id="orga922a07"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
+<div id="outline-container-orgac256e1" class="outline-3">
+<h3 id="orgac256e1"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
 </div>
-<div id="outline-container-orge0849a5" class="outline-3">
-<h3 id="orge0849a5"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
+<div id="outline-container-orgfc9e71e" class="outline-3">
+<h3 id="orgfc9e71e"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
 </div>
-<div id="outline-container-org980e97b" class="outline-3">
-<h3 id="org980e97b"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
+<div id="outline-container-orgee9caaf" class="outline-3">
+<h3 id="orgee9caaf"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
 </div>
 </div>
 
-<div id="outline-container-orgb11017a" class="outline-2">
-<h2 id="orgb11017a"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-orgca70029" class="outline-2">
+<h2 id="orgca70029"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>GPG入门：<a href="tools-encrypt-gpg.html">GPG - encrypt tools in this site</a></li>

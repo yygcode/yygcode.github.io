@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-07-04 Wed 22:27 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>深入理解 GNU GRUB - 02 boot.S 2.5 MBR过程模拟实现</title>
 <meta name="generator" content="Org mode" />
@@ -31,19 +31,19 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgac89aa3">1. MBR过程模拟实现</a>
+<li><a href="#org3a198b2">1. MBR过程模拟实现</a>
 <ul>
-<li><a href="#org5f0d30e">1.1. 测试虚拟机配置</a></li>
-<li><a href="#org3880d36">1.2. <span class="todo TODO">TODO</span> "Hello cppgp"的实现</a></li>
-<li><a href="#org417be20">1.3. 测试</a></li>
+<li><a href="#orgcf02284">1.1. 测试虚拟机配置</a></li>
+<li><a href="#org6efc9a8">1.2. <span class="todo TODO">TODO</span> "Hello cppgp"的实现</a></li>
+<li><a href="#org2950e9f">1.3. 测试</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgac89aa3" class="outline-2">
-<h2 id="orgac89aa3"><span class="section-number-2">1</span> MBR过程模拟实现</h2>
+<div id="outline-container-org3a198b2" class="outline-2">
+<h2 id="org3a198b2"><span class="section-number-2">1</span> MBR过程模拟实现</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 现在，我们对系统引导的第一步已经有了一个详细的认识。为了更深一步的理解MBR和这些
@@ -60,14 +60,14 @@ BIOS调用，提供一些测试题目：
 </p>
 </div>
 
-<div id="outline-container-org5f0d30e" class="outline-3">
-<h3 id="org5f0d30e"><span class="section-number-3">1.1</span> 测试虚拟机配置</h3>
+<div id="outline-container-orgcf02284" class="outline-3">
+<h3 id="orgcf02284"><span class="section-number-3">1.1</span> 测试虚拟机配置</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 最新注释：Debian下安装 qemu-system-x86即可：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ sudo apt-get install qemu-system-x86
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>qemu-system-x86
 </pre>
 </div>
 <p>
@@ -82,59 +82,59 @@ disk”，磁盘类型默认，磁盘大小默认（我们不会用到的），�
 </div>
 </div>
 
-<div id="outline-container-org3880d36" class="outline-3">
-<h3 id="org3880d36"><span class="section-number-3">1.2</span> <span class="todo TODO">TODO</span> "Hello cppgp"的实现</h3>
+<div id="outline-container-org6efc9a8" class="outline-3">
+<h3 id="org6efc9a8"><span class="section-number-3">1.2</span> <span class="todo TODO">TODO</span> "Hello cppgp"的实现</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-comment-delimiter">/*</span>
-<span class="org-comment"> * boot-hello-cppgp.S</span>
-<span class="org-comment"> */</span>
-        <span class="org-keyword">.file</span> <span class="org-string">"boot-hello-cppgp.S"</span>
-        <span class="org-keyword">.text</span>
-        <span class="org-keyword">.code16</span>
-<span class="org-keyword">.globl</span> _start
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">boot-hello-cppgp.S</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">.file</span><span class="org-whitespace-space"> </span><span class="org-string">"boot-hello-cppgp.S"</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">.text</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">.code16</span>
+<span class="org-keyword">.globl</span><span class="org-whitespace-space"> </span>_start
 <span class="org-function-name">_start</span>:
-        <span class="org-keyword">jmp</span> after_pb
+<span class="org-whitespace-space">        </span><span class="org-keyword">jmp</span><span class="org-whitespace-space"> </span>after_pb
 <span class="org-function-name">output</span>:
-        <span class="org-keyword">.asciz</span> <span class="org-string">"Hello Cppgp/r/n"</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">.asciz</span><span class="org-whitespace-space"> </span><span class="org-string">"Hello</span><span class="org-whitespace-space"> </span><span class="org-string">Cppgp/r/n"</span>
 <span class="org-function-name">idle_repeat</span>:
-        <span class="org-keyword">.long</span> 0xA0000000
+<span class="org-whitespace-space">        </span><span class="org-keyword">.long</span><span class="org-whitespace-space"> </span>0xA0000000
 <span class="org-function-name">after_pb</span>:
-        <span class="org-keyword">cli</span>
-        <span class="org-comment-delimiter">/*</span>
-<span class="org-comment">         * some bogus BIOS will jump to CS:IP=0x7C00:0000</span>
-<span class="org-comment">         * instead of CS:IP=0x0000:0x7C00</span>
-<span class="org-comment">         */</span>
-        <span class="org-keyword">ljmp</span> $0, $real_start
+<span class="org-whitespace-space">        </span><span class="org-keyword">cli</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space">         </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">some</span><span class="org-whitespace-space"> </span><span class="org-comment">bogus</span><span class="org-whitespace-space"> </span><span class="org-comment">BIOS</span><span class="org-whitespace-space"> </span><span class="org-comment">will</span><span class="org-whitespace-space"> </span><span class="org-comment">jump</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">CS:IP=0x7C00:0000</span>
+<span class="org-whitespace-space">         </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">instead</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">CS:IP=0x0000:0x7C00</span>
+<span class="org-whitespace-space">         </span><span class="org-comment">*/</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">ljmp</span><span class="org-whitespace-space"> </span>$0,<span class="org-whitespace-space"> </span>$real_start
 <span class="org-function-name">real_start</span>:
-        <span class="org-keyword">xorw</span> <span class="org-variable-name">%ax</span>, <span class="org-variable-name">%ax</span>
-        <span class="org-keyword">movw</span> <span class="org-variable-name">%ax</span>, <span class="org-variable-name">%ds</span>
-        <span class="org-keyword">movw</span> <span class="org-variable-name">%ax</span>, <span class="org-variable-name">%ss</span>
-        <span class="org-keyword">movw</span> $0x200, <span class="org-variable-name">%sp</span>
-        <span class="org-keyword">sti</span>
-        <span class="org-comment-delimiter">/* </span><span class="org-comment">do output and change color forever */</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">xorw</span><span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movw</span><span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ds</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movw</span><span class="org-whitespace-space"> </span><span class="org-variable-name">%ax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ss</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movw</span><span class="org-whitespace-space"> </span>$0x200,<span class="org-whitespace-space"> </span><span class="org-variable-name">%sp</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">sti</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">output</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">change</span><span class="org-whitespace-space"> </span><span class="org-comment">color</span><span class="org-whitespace-space"> </span><span class="org-comment">forever</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
 <span class="org-function-name">loop_output</span>:
-        <span class="org-keyword">movw</span> $output, <span class="org-variable-name">%si</span>
-        <span class="org-keyword">call</span> message
-        <span class="org-comment-delimiter">/* </span><span class="org-comment">waiting for repeating idle */</span>
-        <span class="org-keyword">xorl</span> <span class="org-variable-name">%eax</span>, <span class="org-variable-name">%eax</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movw</span><span class="org-whitespace-space"> </span>$output,<span class="org-whitespace-space"> </span><span class="org-variable-name">%si</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">call</span><span class="org-whitespace-space"> </span>message
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">waiting</span><span class="org-whitespace-space"> </span><span class="org-comment">for</span><span class="org-whitespace-space"> </span><span class="org-comment">repeating</span><span class="org-whitespace-space"> </span><span class="org-comment">idle</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">xorl</span><span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
 <span class="org-function-name">loop_idle</span>:
-        <span class="org-keyword">incl</span> <span class="org-variable-name">%eax</span>
-        <span class="org-keyword">cmpl</span> idle_repeat, <span class="org-variable-name">%eax</span>
-        <span class="org-keyword">jne</span> loop_idle
-        <span class="org-keyword">jmp</span> loop_output
-<span class="org-comment-delimiter">/* </span><span class="org-comment">message function */</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">incl</span><span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">cmpl</span><span class="org-whitespace-space"> </span>idle_repeat,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">jne</span><span class="org-whitespace-space"> </span>loop_idle
+<span class="org-whitespace-space">        </span><span class="org-keyword">jmp</span><span class="org-whitespace-space"> </span>loop_output
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">message</span><span class="org-whitespace-space"> </span><span class="org-comment">function</span><span class="org-whitespace-space"> </span><span class="org-comment">*/</span>
 <span class="org-function-name">1</span>:
-        <span class="org-keyword">movb</span> $0xE, <span class="org-variable-name">%ah</span>
-        <span class="org-keyword">int</span> $0x10
+<span class="org-whitespace-space">        </span><span class="org-keyword">movb</span><span class="org-whitespace-space"> </span>$0xE,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ah</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">int</span><span class="org-whitespace-space"> </span>$0x10
 <span class="org-function-name">message</span>:
-        <span class="org-keyword">lodsb</span>
-        <span class="org-keyword">cmpb</span> $0, <span class="org-variable-name">%al</span>
-        <span class="org-keyword">jne</span> 1b
-        <span class="org-keyword">ret</span>
-. = _start + 0x1FE
+<span class="org-whitespace-space">        </span><span class="org-keyword">lodsb</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">cmpb</span><span class="org-whitespace-space"> </span>$0,<span class="org-whitespace-space"> </span><span class="org-variable-name">%al</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">jne</span><span class="org-whitespace-space"> </span>1b
+<span class="org-whitespace-space">        </span><span class="org-keyword">ret</span>
+.<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>_start<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>0x1FE
 <span class="org-function-name">magic</span>:
-        <span class="org-keyword">.byte</span> 0x55, 0xAA
+<span class="org-whitespace-space">        </span><span class="org-keyword">.byte</span><span class="org-whitespace-space"> </span>0x55,<span class="org-whitespace-space"> </span>0xAA
 </pre>
 </div>
 
@@ -142,19 +142,19 @@ disk”，磁盘类型默认，磁盘大小默认（我们不会用到的），�
 在Linux下使用GCC编译、连接，使用objcopy提取IMG。如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">~$ gcc -Wall -W -nostdinc -fno-builtin -m32 -MD -c -o boot-hello-cppgp.o boot-hello-cppgp.S
-~$ gcc -o boot-hello-cppgp.exec boot-hello-cppgp.o -m32 -Wl,--build-id=none -m32 -nostdlib -Wl,-N  -Wl,-Ttext,0x7C00
-~$ objcopy -O binary --strip-unneeded -R .note -R .comment -R .note.gnu.build-id -R .reginfo -R .rel.dyn boot-hello-cppgp.exec boot-hello-cppgp.img
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-Wall<span class="org-whitespace-space"> </span>-W<span class="org-whitespace-space"> </span>-nostdinc<span class="org-whitespace-space"> </span>-fno-builtin<span class="org-whitespace-space"> </span>-m32<span class="org-whitespace-space"> </span>-MD<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>boot-hello-cppgp.o<span class="org-whitespace-space"> </span>boot-he<span class="org-whitespace-line">llo-cppgp.S</span>
+~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>boot-hello-cppgp.exec<span class="org-whitespace-space"> </span>boot-hello-cppgp.o<span class="org-whitespace-space"> </span>-m32<span class="org-whitespace-space"> </span>-Wl,--build-id=none<span class="org-whitespace-space"> </span>-m32<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-nostdlib</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-Wl,-N</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">-Wl,-Ttext,0x7C00</span>
+~$<span class="org-whitespace-space"> </span>objcopy<span class="org-whitespace-space"> </span>-O<span class="org-whitespace-space"> </span>binary<span class="org-whitespace-space"> </span>--strip-unneeded<span class="org-whitespace-space"> </span>-R<span class="org-whitespace-space"> </span>.note<span class="org-whitespace-space"> </span>-R<span class="org-whitespace-space"> </span>.comment<span class="org-whitespace-space"> </span>-R<span class="org-whitespace-space"> </span>.note.gnu.build-id<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-R</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">.reginfo</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-R</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">.rel.dyn</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">boot-hello-cppgp.exec</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">boot-hello-cppgp.img</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org417be20" class="outline-3">
-<h3 id="org417be20"><span class="section-number-3">1.3</span> 测试</h3>
+<div id="outline-container-org2950e9f" class="outline-3">
+<h3 id="org2950e9f"><span class="section-number-3">1.3</span> 测试</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
-<pre class="src src-sh">~$ qemu-system-x86_64 boot-hello-cppgp.img
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>qemu-system-x86_64<span class="org-whitespace-space"> </span>boot-hello-cppgp.img
 </pre>
 </div>
 
@@ -162,13 +162,13 @@ disk”，磁盘类型默认，磁盘大小默认（我们不会用到的），�
 不依赖任何操作系统，可以看到屏幕显示：
 </p>
 <div class="org-src-container">
-<pre class="src src-text">Sea BIOS (version...)
+<pre class="src src-text">Sea<span class="org-whitespace-space"> </span>BIOS<span class="org-whitespace-space"> </span>(version...)
 
-iPXE ...
+iPXE<span class="org-whitespace-space"> </span>...
 
-Booting from Hard Disk...
-Hello cppgp
-Hello cppgp
+Booting<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>Hard<span class="org-whitespace-space"> </span>Disk...
+Hello<span class="org-whitespace-space"> </span>cppgp
+Hello<span class="org-whitespace-space"> </span>cppgp
 _
 </pre>
 </div>

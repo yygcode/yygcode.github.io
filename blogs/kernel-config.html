@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-30 Sat 20:07 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Linux Kernel Config Notes</title>
 <meta name="generator" content="Org mode" />
@@ -31,9 +31,9 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbd9b7a2">1. CONFIG_DEBUG_ATOMIC_SLEEP</a></li>
-<li><a href="#orgc7cb770">2. CONFIG_KASAN - Kernel Address Sanitizer(防毒)</a></li>
-<li><a href="#orgf336a02">3. CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</a></li>
+<li><a href="#org144b5ef">1. CONFIG_DEBUG_ATOMIC_SLEEP</a></li>
+<li><a href="#org9abb91f">2. CONFIG_KASAN - Kernel Address Sanitizer(防毒)</a></li>
+<li><a href="#org111e258">3. CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</a></li>
 </ul>
 </div>
 </div>
@@ -41,8 +41,8 @@
 本文持续更新
 </p>
 
-<div id="outline-container-orgbd9b7a2" class="outline-2">
-<h2 id="orgbd9b7a2"><span class="section-number-2">1</span> CONFIG_DEBUG_ATOMIC_SLEEP</h2>
+<div id="outline-container-org144b5ef" class="outline-2">
+<h2 id="org144b5ef"><span class="section-number-2">1</span> CONFIG_DEBUG_ATOMIC_SLEEP</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 打开此选项时，
@@ -53,8 +53,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgc7cb770" class="outline-2">
-<h2 id="orgc7cb770"><span class="section-number-2">2</span> CONFIG_KASAN - Kernel Address Sanitizer(防毒)</h2>
+<div id="outline-container-org9abb91f" class="outline-2">
+<h2 id="org9abb91f"><span class="section-number-2">2</span> CONFIG_KASAN - Kernel Address Sanitizer(防毒)</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 KASAN是动态内存错误检测器，为查找use-after-free(释放后使用)和out-of-bounds(越界使用)提供快速全面的方案。
@@ -83,8 +83,8 @@ Currently KASAN is supported only for the x86_64 and arm64 architectures.
 </div>
 </div>
 
-<div id="outline-container-orgf336a02" class="outline-2">
-<h2 id="orgf336a02"><span class="section-number-2">3</span> CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</h2>
+<div id="outline-container-org111e258" class="outline-2">
+<h2 id="org111e258"><span class="section-number-2">3</span> CONFIG_VMAP_STACK - Use a Virtually Mapped Stack(V34.9)</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 打开此选项调试内存泄漏和访问溢出。

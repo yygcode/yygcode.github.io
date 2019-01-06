@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:38 -->
+<!-- 2019-01-07 Mon 00:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Git - gitignore配置</title>
 <meta name="generator" content="Org mode" />
@@ -31,27 +31,27 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org02de908">1. gitignore介绍</a>
+<li><a href="#org22afa26">1. gitignore介绍</a>
 <ul>
-<li><a href="#org7890748">1.1. gitignore语法规则</a></li>
-<li><a href="#orgcc3cc2f">1.2. gitignore文件位置</a></li>
+<li><a href="#org0025980">1.1. gitignore语法规则</a></li>
+<li><a href="#org487d5c1">1.2. gitignore文件位置</a></li>
 </ul>
 </li>
 <li><a href="#glob">2. glob介绍</a></li>
-<li><a href="#org67ddc13">3. gitignore(org repo示例)</a>
+<li><a href="#org1302de4">3. gitignore(org repo示例)</a>
 <ul>
-<li><a href="#org0257fc9">3.1. 需求</a></li>
-<li><a href="#org1e1a989">3.2. 实现</a></li>
-<li><a href="#org514a72b">3.3. 其他</a></li>
+<li><a href="#orgbde4e96">3.1. 需求</a></li>
+<li><a href="#org3744121">3.2. 实现</a></li>
+<li><a href="#org601104f">3.3. 其他</a></li>
 </ul>
 </li>
-<li><a href="#org1eee842">4. 粘贴内容</a>
+<li><a href="#orgc423eef">4. 粘贴内容</a>
 <ul>
-<li><a href="#org742537b">4.1. Git Basics - Recording Changes to the Repository (Copied)</a></li>
+<li><a href="#org9ce941b">4.1. Git Basics - Recording Changes to the Repository (Copied)</a></li>
 <li><a href="#man">4.2. gitignore man</a></li>
 </ul>
 </li>
-<li><a href="#org40bd63f">5. 参考资料</a></li>
+<li><a href="#orgf537cfb">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
@@ -62,8 +62,8 @@ Empty
 
 </div>
 
-<div id="outline-container-org02de908" class="outline-2">
-<h2 id="org02de908"><span class="section-number-2">1</span> gitignore介绍</h2>
+<div id="outline-container-org22afa26" class="outline-2">
+<h2 id="org22afa26"><span class="section-number-2">1</span> gitignore介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 我使用<a href="https://git-scm.com/">git</a>管理代码和文本文档，例如，<a href="https://orgmode.org/">emacs org</a> repo。一些文档类型是中间产物，希望
@@ -71,8 +71,8 @@ git不提示untracked，错误的添加此类文档时也希望能忽略并弹�
 </p>
 </div>
 
-<div id="outline-container-org7890748" class="outline-3">
-<h3 id="org7890748"><span class="section-number-3">1.1</span> gitignore语法规则</h3>
+<div id="outline-container-org0025980" class="outline-3">
+<h3 id="org0025980"><span class="section-number-3">1.1</span> gitignore语法规则</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 文档描述gitignore语法规则有五条：
@@ -125,8 +125,8 @@ x/**/b
 </div>
 </div>
 
-<div id="outline-container-orgcc3cc2f" class="outline-3">
-<h3 id="orgcc3cc2f"><span class="section-number-3">1.2</span> gitignore文件位置</h3>
+<div id="outline-container-org487d5c1" class="outline-3">
+<h3 id="org487d5c1"><span class="section-number-3">1.2</span> gitignore文件位置</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>$HOME/.config/git/ignore</li>
@@ -137,8 +137,8 @@ x/**/b
 </div>
 </div>
 
-<div id="outline-container-orgdceee3d" class="outline-2">
-<h2 id="glob"><a id="orgdceee3d"></a><span class="section-number-2">2</span> glob介绍</h2>
+<div id="outline-container-org77774e2" class="outline-2">
+<h2 id="glob"><a id="org77774e2"></a><span class="section-number-2">2</span> glob介绍</h2>
 <div class="outline-text-2" id="text-glob">
 <p>
 glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Glob_(programming)">WIKI</a>下有较为细节描述。简单描述如下：
@@ -154,12 +154,12 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org67ddc13" class="outline-2">
-<h2 id="org67ddc13"><span class="section-number-2">3</span> gitignore(org repo示例)</h2>
+<div id="outline-container-org1302de4" class="outline-2">
+<h2 id="org1302de4"><span class="section-number-2">3</span> gitignore(org repo示例)</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org0257fc9" class="outline-3">
-<h3 id="org0257fc9"><span class="section-number-3">3.1</span> 需求</h3>
+<div id="outline-container-orgbde4e96" class="outline-3">
+<h3 id="orgbde4e96"><span class="section-number-3">3.1</span> 需求</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>包含所有的.org文件</li>
@@ -170,8 +170,8 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org1e1a989" class="outline-3">
-<h3 id="org1e1a989"><span class="section-number-3">3.2</span> 实现</h3>
+<div id="outline-container-org3744121" class="outline-3">
+<h3 id="org3744121"><span class="section-number-3">3.2</span> 实现</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-text">#<span class="org-whitespace-space"> </span>default<span class="org-whitespace-space"> </span>ignore<span class="org-whitespace-space"> </span>all
@@ -194,8 +194,8 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org514a72b" class="outline-3">
-<h3 id="org514a72b"><span class="section-number-3">3.3</span> 其他</h3>
+<div id="outline-container-org601104f" class="outline-3">
+<h3 id="org601104f"><span class="section-number-3">3.3</span> 其他</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 参考<a href="https://github.com/github/gitignore">github ignore</a>。
@@ -204,12 +204,12 @@ glob是shell下使用的通配模式，<a href="https://en.wikipedia.org/wiki/Gl
 </div>
 </div>
 
-<div id="outline-container-org1eee842" class="outline-2">
-<h2 id="org1eee842"><span class="section-number-2">4</span> 粘贴内容</h2>
+<div id="outline-container-orgc423eef" class="outline-2">
+<h2 id="orgc423eef"><span class="section-number-2">4</span> 粘贴内容</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org742537b" class="outline-3">
-<h3 id="org742537b"><span class="section-number-3">4.1</span> Git Basics - Recording Changes to the Repository (Copied)</h3>
+<div id="outline-container-org9ce941b" class="outline-3">
+<h3 id="org9ce941b"><span class="section-number-3">4.1</span> Git Basics - Recording Changes to the Repository (Copied)</h3>
 <div class="outline-text-3" id="text-4-1">
 <dl class="org-dl">
 <dt>URL</dt><dd><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository</a></dd>
@@ -288,8 +288,8 @@ doc/**/*.pdf
 </div>
 </div>
 
-<div id="outline-container-org8eb8272" class="outline-3">
-<h3 id="man"><a id="org8eb8272"></a><span class="section-number-3">4.2</span> gitignore man</h3>
+<div id="outline-container-orga21bbf5" class="outline-3">
+<h3 id="man"><a id="orga21bbf5"></a><span class="section-number-3">4.2</span> gitignore man</h3>
 <div class="outline-text-3" id="text-man">
 <blockquote>
 <p>
@@ -633,8 +633,8 @@ Part of the git(1) suite
 </div>
 </div>
 
-<div id="outline-container-org40bd63f" class="outline-2">
-<h2 id="org40bd63f"><span class="section-number-2">5</span> 参考资料</h2>
+<div id="outline-container-orgf537cfb" class="outline-2">
+<h2 id="orgf537cfb"><span class="section-number-2">5</span> 参考资料</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>GIT-SCM</dt><dd><a href="https://git-scm.com/docs/gitignore">https://git-scm.com/docs/gitignore</a></dd>

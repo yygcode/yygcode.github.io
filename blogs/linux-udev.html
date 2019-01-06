@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2018-06-03 Sun 11:39 -->
+<!-- 2019-01-07 Mon 00:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>LINUX Udev机制介绍及简单调试</title>
 <meta name="generator" content="Org mode" />
@@ -31,16 +31,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd8e2032">1. udev调测过程</a></li>
-<li><a href="#org9b7e5df">2. udev实现</a>
+<li><a href="#orgaed7b8c">1. udev调测过程</a></li>
+<li><a href="#orgd04d34b">2. udev实现</a>
 <ul>
-<li><a href="#org99aa6b3">2.1. 代码实现</a></li>
+<li><a href="#orgb75da6f">2.1. 代码实现</a></li>
 </ul>
 </li>
-<li><a href="#org97c7413">3. References</a>
+<li><a href="#orgebfcec3">3. References</a>
 <ul>
-<li><a href="#org7cf87dc">3.1. 使用</a></li>
-<li><a href="#org852a410">3.2. 实现</a></li>
+<li><a href="#org4e540c5">3.1. 使用</a></li>
+<li><a href="#org053c363">3.2. 实现</a></li>
 </ul>
 </li>
 </ul>
@@ -250,8 +250,8 @@ Linux内核特化处理了PQualifier=011B，按照异常流程删除了scsi设�
 <li>脚本检测ACTION环境变量为ADD/CHANGE，删除来自特定存储且PQualifier=001B的设备。</li>
 </ol>
 
-<div id="outline-container-orgd8e2032" class="outline-2">
-<h2 id="orgd8e2032"><span class="section-number-2">1</span> udev调测过程</h2>
+<div id="outline-container-orgaed7b8c" class="outline-2">
+<h2 id="orgaed7b8c"><span class="section-number-2">1</span> udev调测过程</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>使用info查看设备属性</li>
@@ -343,8 +343,8 @@ GROUP<span class="org-whitespace-space"> </span>6<span class="org-whitespace-spa
 </div>
 </div>
 
-<div id="outline-container-org9b7e5df" class="outline-2">
-<h2 id="org9b7e5df"><span class="section-number-2">2</span> udev实现</h2>
+<div id="outline-container-orgd04d34b" class="outline-2">
+<h2 id="orgd04d34b"><span class="section-number-2">2</span> udev实现</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 LINUX通过设备文件的主次设备号与内核建立映射关系。设备文件的维护经历了静态维护、
@@ -406,8 +406,8 @@ implemented in non-pagable memory.</li>
 </blockquote>
 </div>
 
-<div id="outline-container-org99aa6b3" class="outline-3">
-<h3 id="org99aa6b3"><span class="section-number-3">2.1</span> 代码实现</h3>
+<div id="outline-container-orgb75da6f" class="outline-3">
+<h3 id="orgb75da6f"><span class="section-number-3">2.1</span> 代码实现</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 代码位于<a href="https://www.kernel.org/pub/linux/utils/kernel/hotplug/">Kernel Utils Hotplug</a>，代码最新更新是2012/4，长久未更新，已经十分稳定了。
@@ -423,12 +423,12 @@ https://kernel.googlesource.com/pub/scm/linux/hotplug/udev.git
 </div>
 </div>
 
-<div id="outline-container-org97c7413" class="outline-2">
-<h2 id="org97c7413"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-orgebfcec3" class="outline-2">
+<h2 id="orgebfcec3"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org7cf87dc" class="outline-3">
-<h3 id="org7cf87dc"><span class="section-number-3">3.1</span> 使用</h3>
+<div id="outline-container-org4e540c5" class="outline-3">
+<h3 id="org4e540c5"><span class="section-number-3">3.1</span> 使用</h3>
 <div class="outline-text-3" id="text-3-1">
 <dl class="org-dl">
 <dt>udev man7</dt><dd><a href="https://linux.die.net/man/7/udev">https://linux.die.net/man/7/udev</a></dd>
@@ -439,8 +439,8 @@ https://kernel.googlesource.com/pub/scm/linux/hotplug/udev.git
 </dl>
 </div>
 </div>
-<div id="outline-container-org852a410" class="outline-3">
-<h3 id="org852a410"><span class="section-number-3">3.2</span> 实现</h3>
+<div id="outline-container-org053c363" class="outline-3">
+<h3 id="org053c363"><span class="section-number-3">3.2</span> 实现</h3>
 <div class="outline-text-3" id="text-3-2">
 <dl class="org-dl">
 <dt>udev and devfs</dt><dd><a href="https://lwn.net/Articles/65197/">https://lwn.net/Articles/65197/</a></dd>
