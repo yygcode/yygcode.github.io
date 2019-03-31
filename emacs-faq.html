@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
+<!-- 2019-03-13 Wed 00:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>Emacs FAQ</title>
 <meta name="generator" content="Org mode" />
@@ -22,7 +22,11 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2be1c81">1. 使用问题记录</a></li>
+<li><a href="#org2be1c81">1. 使用问题记录</a>
+<ul>
+<li><a href="#org097d61a">1.1. Mac Terminal 启动 eaacs，提示错误：</a></li>
+</ul>
+</li>
 <li><a href="#orga72bbf1">2. 常用功能</a></li>
 </ul>
 </div>
@@ -30,6 +34,42 @@
 
 <div id="outline-container-org2be1c81" class="outline-2">
 <h2 id="org2be1c81"><span class="section-number-2">1</span> 使用问题记录</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org097d61a" class="outline-3">
+<h3 id="org097d61a"><span class="section-number-3">1.1</span> Mac Terminal 启动 eaacs，提示错误：</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-text">2019-01-06<span class="org-whitespace-space"> </span>16:32:27.531<span class="org-whitespace-space"> </span>Emacs[16265:19036405]<span class="org-whitespace-space"> </span>Failed<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>initialize<span class="org-whitespace-space"> </span>color<span class="org-whitespace-space"> </span>list
+unarchiver:<span class="org-whitespace-space"> </span>Error<span class="org-whitespace-space"> </span>Domain=NSCocoaErrorDomain<span class="org-whitespace-space"> </span>Code=4864<span class="org-whitespace-space"> </span>"***<span class="org-whitespace-space"> </span>-[NSKeyedUnarchiver
+_initForReadingFromData:error:throwLegacyExceptions:]:<span class="org-whitespace-space"> </span>non-keyed<span class="org-whitespace-space"> </span>archive<span class="org-whitespace-space"> </span>cannot
+be<span class="org-whitespace-space"> </span>decoded<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>NSKeyedUnarchiver"<span class="org-whitespace-space"> </span>UserInfo={NSDebugDescription=***
+-[NSKeyedUnarchiver<span class="org-whitespace-space"> </span>_initForReadingFromData:error:throwLegacyExceptions:]:
+non-keyed<span class="org-whitespace-space"> </span>archive<span class="org-whitespace-space"> </span>cannot<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>decoded<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>NSKeyedUnarchiver
+</pre>
+</div>
+
+<p>
+Mac Version:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Mojave
+System<span class="org-whitespace-space"> </span>Version:<span class="org-whitespace-space"> </span>macOS<span class="org-whitespace-space"> </span>10.14<span class="org-whitespace-space"> </span>(18A391)
+Kernel<span class="org-whitespace-space"> </span>Version:<span class="org-whitespace-space"> </span>Darwin<span class="org-whitespace-space"> </span>18.0.0
+</pre>
+</div>
+<p>
+解决：
+mojave
+rm ~/Library/colors/Emacs.clr
+See:
+</p>
+<ul class="org-ul">
+<li><a href="https://stackoverflow.com/a/52928889">https://stackoverflow.com/a/52928889</a>,</li>
+<li><a href="https://lists.gnu.org/archive/html/emacs-devel/2018-09/msg00900.html">https://lists.gnu.org/archive/html/emacs-devel/2018-09/msg00900.html</a></li>
+</ul>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orga72bbf1" class="outline-2">

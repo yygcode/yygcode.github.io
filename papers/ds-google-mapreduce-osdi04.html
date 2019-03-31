@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-03-31 Sun 19:43 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>MapReduce: Simplified Data Processing on Large Clusters</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Jeffrey Dean and Sanjay Ghemawat, Google, Inc." />
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/readtheorg.css"/>
+<script src="../styles/jquery/2.1.3/jquery.min.js"></script>
+<script src="../styles/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="../styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="paper-index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">MapReduce: Simplified Data Processing on Large Clusters</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org752996e">DECLARATION</a></li>
+<li><a href="#org16d9495">Abstract</a></li>
+<li><a href="#org289cfdf">1. Introduction</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org752996e" class="outline-2">
+<h2 id="org752996e">DECLARATION</h2>
+<div class="outline-text-2" id="text-org752996e">
+<p>
+This page is the Google MapReduce paper. Original Paper Link is:
+<a href="https://research.google.com/archive/mapreduce-osdi04.pdf">https://research.google.com/archive/mapreduce-osdi04.pdf</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org16d9495" class="outline-2">
+<h2 id="org16d9495">Abstract</h2>
+<div class="outline-text-2" id="text-org16d9495">
+<p>
+MapReduce is a programming model and an associated implementation for processing
+and generating large data sets. Users specify a map function that processes a
+key/value pair to generate a set of intermediate key/value pairs, and a reduce
+function that merges all intermediate values associated with the same
+intermediate key. Many real world tasks are expressible in this model, as shown
+in the paper.
+</p>
+
+<p>
+Programs written in this functional style are automatically parallelized and
+executed on a large cluster of commodity machines. The run-time system takes
+care of the details of partitioning the input data, scheduling the program’s
+execution across a set of machines, handling machine failures, and managing the
+required inter-machine communication. This allows programmers without any
+experience with parallel and distributed systems to easily utilize the resources
+of a large distributed system.
+</p>
+
+<p>
+Our implementation of MapReduce runs on a large cluster of commodity machines
+and is highly scalable: a typical MapReduce computation processes many terabytes
+of data on thousands of machines. Programmers find the system easy to use:
+hundreds of MapReduce programs have been implemented and upwards of one thousand
+MapReduce jobs are executed on Google’s clusters every day.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org289cfdf" class="outline-2">
+<h2 id="org289cfdf"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Over the past five years, the authors and many others at Google have implemented
+hundreds of special-purpose computations that process large amounts of raw data,
+such as crawled documents, web request logs, etc., to compute various kinds of
+derived data, such as inverted indices, various representations of the graph
+structure
+of web documents, summaries of the number of pages
+crawled per host, the set of most frequent queries in a
+given day, etc. Most such computations are conceptu-
+ally straightforward. However, the input data is usually
+large and the computations have to be distributed across
+hundreds or thousands of machines in order to finish in
+a reasonable amount of time. The issues of how to par-
+allelize the computation, distribute the data, and handle
+failures conspire to obscure the original simple compu-
+tation with large amounts of complex code to deal with
+these issues.
+As a reaction to this complexity, we designed a new
+abstraction that allows us to express the simple computa-
+tions we were trying to perform but hides the messy de-
+tails of parallelization, fault-tolerance, data distribution
+and load balancing in a library. Our abstraction is in-
+spired by the map and reduce primitives present in Lisp
+and many other functional languages. We realized that
+most of our computations involved applying a map op-
+eration to each logical “record” in our input in order to
+compute a set of intermediate key/value pairs, and then
+applying a reduce operation to all the values that shared
+the same key, in order to combine the derived data ap-
+propriately. Our use of a functional model with user-
+specified map and reduce operations allows us to paral-
+lelize large computations easily and to use re-execution
+as the primary mechanism for fault tolerance.
+The major contributions of this work are a simple and
+powerful interface that enables automatic parallelization
+and distribution of large-scale computations, combined
+with an implementation of this interface that achieves
+high performance on large clusters of commodity PCs.
+Section 2 describes the basic programming model and
+gives several examples. Section 3 describes an imple-
+mentation of the MapReduce interface tailored towards
+our cluster-based computing environment. Section 4 de-
+scribes several refinements of the programming model
+that we have found useful. Section 5 has performance
+measurements of our implementation for a variety of
+tasks. Section 6 explores the use of MapReduce within
+Google including our experiences in using it as the basis
+To appear in OSDI 2004 1
+for a rewrite of our production indexing system. Sec-
+tion 7 discusses related and future work.
+2 Programming Model
+The computation takes a set of input key/value pairs, and
+produces a set of output key/value pairs. The user of
+the MapReduce library expresses the computation as two
+functions: Map and Reduce.
+Map, written by the user, takes an input pair and pro-
+duces a set of intermediate key/value pairs. The MapRe-
+duce library groups together all intermediate values asso-
+ciated with the same intermediate key I and passes them
+to the Reduce function.
+The Reduce function, also written by the user, accepts
+an intermediate key I and a set of values for that key. It
+merges together these values to form a possibly smaller
+set of values. Typically just zero or one output value is
+produced per Reduce invocation. The intermediate val-
+ues are supplied to the user’s reduce function via an iter-
+ator. This allows us to handle lists of values that are too
+large to fit in memory.
+2.1 Example
+Consider the problem of counting the number of oc-
+currences of each word in a large collection of docu-
+ments. The user would write code similar to the follow-
+ing pseudo-code:
+map(String key, String value):
+<i>/ key: document name
+/</i> value: document contents
+for each word w in value:
+EmitIntermediate(w, "1");
+reduce(String key, Iterator values):
+<i>/ key: a word
+/</i> values: a list of counts
+int result = 0;
+for each v in values:
+result += ParseInt(v);
+Emit(AsString(result));
+The map function emits each word plus an associated
+count of occurrences (just ‘1’ in this simple example).
+The reduce function sums together all counts emitted
+for a particular word.
+In addition, the user writes code to fill in a mapreduce
+specification object with the names of the input and out-
+put files, and optional tuning parameters. The user then
+invokes the MapReduce function, passing it the specifi-
+cation object. The user’s code is linked together with the
+MapReduce library (implemented in C++). Appendix A
+contains the full program text for this example.
+2.2 Types
+Even though the previous pseudo-codeis written in terms
+of string inputs and outputs, conceptually the map and
+reduce functions supplied by the user have associated
+types:
+map (k1,v1) → list(k2,v2)
+reduce (k2,list(v2)) → list(v2)
+I.e., the input keys and values are drawn from a different
+domain than the output keys and values. Furthermore,
+the intermediate keys and values are from the same do-
+main as the output keys and values.
+Our C++ implementation passes strings to and from
+the user-defined functions and leaves it to the user code
+to convert between strings and appropriate types.
+2.3 More Examples
+Here are a few simple examples of interesting programs
+that can be easily expressed as MapReduce computa-
+tions.
+Distributed Grep: The map function emits a line if it
+matches a supplied pattern. The reduce function is an
+identity function that just copies the supplied intermedi-
+ate data to the output.
+Count of URL Access Frequency: The map func-
+tion processes logs of web page requests and outputs
+hURL, 1i. The reduce function adds together all values
+for the same URL and emits a hURL, total counti
+pair.
+Reverse Web-Link Graph: The map function outputs
+htarget, sourcei pairs for each link to a target
+URL found in a page named source. The reduce
+function concatenates the list of all source URLs as-
+sociated with a given target URL and emits the pair:
+htarget, list(source)i
+Term-Vector per Host: A term vector summarizes the
+most important words that occur in a document or a set
+of documents as a list of hword, frequencyi pairs. The
+map function emits a hhostname, term vectori
+pair for each input document (where the hostname is
+extracted from the URL of the document). The re-
+duce function is passed all per-document term vectors
+for a given host. It adds these term vectors together,
+throwing away infrequent terms, and then emits a final
+hhostname, term vectori pair.
+To appear in OSDI 2004 2
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/papers/ds-google-mapreduce-osdi04.html';
+    this.page.identifier = 'ds-google-mapreduce-osdi04.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</body>
+</html>

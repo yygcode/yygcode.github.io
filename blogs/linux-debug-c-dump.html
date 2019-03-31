@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:29 -->
+<!-- 2019-03-13 Wed 00:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</title>
 <meta name="generator" content="Org mode" />
@@ -259,7 +259,7 @@ assert是主动防御机制，用于检测不可能发生的情况，记录信�
 <span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
 {
 <span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>50,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>100;
-<span class="org-whitespace-space">        </span>assert_stack(<span class="org-type">i</span>*2<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>j,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span>assert_stack(i*2<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>j,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
 <span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
 }
 </pre>

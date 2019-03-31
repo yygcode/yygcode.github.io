@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2019-03-13 Wed 00:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Emacs Notes</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
+<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Emacs Notes</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga708a51">1. How to configure</a></li>
+<li><a href="#orgb74bac0">2. Funny Config</a>
+<ul>
+<li><a href="#orgbf9a6b4">2.1. map</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga708a51" class="outline-2">
+<h2 id="orga708a51"><span class="section-number-2">1</span> How to configure</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>install emacs</li>
+<li>start emacs, read input C-h t</li>
+<li>learn elisp x in y minutes: <a href="https://learnxinyminutes.com/docs/elisp/">https://learnxinyminutes.com/docs/elisp/</a></li>
+<li>I deeply use use-package/quelpa/quelpa-use-package, so grasp it.
+web: <a href="https://jwiegley.github.io/use-package/keywords">https://jwiegley.github.io/use-package/keywords</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb74bac0" class="outline-2">
+<h2 id="orgb74bac0"><span class="section-number-2">2</span> Funny Config</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgbf9a6b4" class="outline-3">
+<h3 id="orgbf9a6b4"><span class="section-number-3">2.1</span> map</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>map character 'a' to 'a'</li>
+</ul>
+<p>
+(global-set-key "c" '(lambda()(interactive)(insert-char 97)))
+ Yes, now you press c will insert a, but how to restore ? use follow command:
+(global-set-key "c" 'self-insert-command)
+</p>
+
+<p>
+In fact almost all basic alphanumeric use self-insert-command.
+OC
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/emacs-notes.html';
+    this.page.identifier = 'emacs-notes.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

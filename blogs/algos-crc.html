@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2019-03-13 Wed 00:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>CRC算法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yonggang.yyg" />
+<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
+<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
+<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="../r/bootstrap.min.js"></script>
+<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">CRC算法</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org84c3b19">1. Description</a></li>
+<li><a href="#org4f49f5f">2. Reference</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org84c3b19" class="outline-2">
+<h2 id="org84c3b19"><span class="section-number-2">1</span> Description</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+CRC(Cyclic Redundancy Check, 循环冗余校验码)是一种散列函数，用来对一段数据生成固定位数的校验码，这些校验码可用来检测数据传输或保存后可能出现的错误。
+</p>
+
+<p>
+CRC是基于有限域GF(2)的多项式环，所有系数都是二进制多项式系数的集合，该集合对于所有的代数操作都是封闭的。例如：
+</p>
+\begin{equation}
+(x^3 + x) + (x + 1) = x^3 + 2x + 1 = x^3 + 1
+\end{equation}
+<p>
+因为所有操作都会模2，因此2x总是为0。
+</p>
+
+<p>
+同样有：
+</p>
+\begin{equation}
+(x^2 + x)(x + 1) = x^3 + 2x^2 + x = x^3 + 1
+\end{equation}
+</div>
+</div>
+
+<div id="outline-container-org4f49f5f" class="outline-2">
+<h2 id="org4f49f5f"><span class="section-number-2">2</span> Reference</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>CRC paper</dt><dd><a href="http://www.ross.net/crc/crcpaper.html">http://www.ross.net/crc/crcpaper.html</a></dd>
+<dt>zh_CN WIKI</dt><dd><a href="https://zh.wikipedia.org/wiki/%E5%BE%AA%E7%92%B0%E5%86%97%E9%A4%98%E6%A0%A1%E9%A9%97">https://zh.wikipedia.org/wiki/循環冗餘校驗</a></dd>
+<dt>htot crc32c</dt><dd><a href="https://github.com/htot/crc32c">https://github.com/htot/crc32c</a></dd>
+<dt>crc64 go</dt><dd><a href="https://github.com/gcc-mirror/gcc/blob/master/libgo/go/hash/crc64/crc64.go">https://github.com/gcc-mirror/gcc/blob/master/libgo/go/hash/crc64/crc64.go</a></dd>
+<dt>crc64 mattsta</dt><dd><a href="https://github.com/mattsta/crc64-compare/blob/master/crc64-adler.c">https://github.com/mattsta/crc64-compare/blob/master/crc64-adler.c</a></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/blogs/algos-crc.html';
+    this.page.identifier = 'algos-crc.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

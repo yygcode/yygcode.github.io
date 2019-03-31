@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:29 -->
+<!-- 2019-03-13 Wed 00:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>排序算法</title>
 <meta name="generator" content="Org mode" />
@@ -57,60 +57,60 @@
 <ul>
 <li><a href="#org3881b00">1.1. 插入排序</a>
 <ul>
-<li><a href="#org4dedaeb">1.1.1. 计算机编程艺术</a></li>
-<li><a href="#org367733a">1.1.2. WIKI</a></li>
-<li><a href="#org69fbd93">1.1.3. C语言实现</a></li>
+<li><a href="#orgd7182bc">1.1.1. 计算机编程艺术</a></li>
+<li><a href="#org24f6c49">1.1.2. WIKI</a></li>
+<li><a href="#orgbc18254">1.1.3. C语言实现</a></li>
 </ul>
 </li>
 <li><a href="#org717dc14">1.2. 冒泡排序(交换排序)</a>
 <ul>
-<li><a href="#orgc41c002">1.2.1. 计算机编程艺术</a></li>
-<li><a href="#org24f6c49">1.2.2. WIKI</a></li>
-<li><a href="#orgcd2a24b">1.2.3. C语言实现</a></li>
+<li><a href="#org5069535">1.2.1. 计算机编程艺术</a></li>
+<li><a href="#org4becc35">1.2.2. WIKI</a></li>
+<li><a href="#orgf4831ce">1.2.3. C语言实现</a></li>
 <li><a href="#orgeac97f5">1.2.4. C语言实现旗标版(性能优化)</a></li>
 </ul>
 </li>
 <li><a href="#org05f367c">1.3. 选择排序</a>
 <ul>
-<li><a href="#org38cf80e">1.3.1. 计算机编程艺术</a></li>
-<li><a href="#orgc1b504b">1.3.2. C语言实现</a></li>
+<li><a href="#org52194fb">1.3.1. 计算机编程艺术</a></li>
+<li><a href="#org0da4ce9">1.3.2. C语言实现</a></li>
 </ul>
 </li>
 <li><a href="#org096cdc7">1.4. 合并排序</a>
 <ul>
-<li><a href="#orgdc480b9">1.4.1. 计算机编程艺术</a>
+<li><a href="#org0931862">1.4.1. 计算机编程艺术</a>
 <ul>
 <li><a href="#org18d4806">1.4.1.1. 有序文件两路合并</a></li>
 <li><a href="#orgbf29c7a">1.4.1.2. 自然的两路合并排序</a></li>
 </ul>
 </li>
-<li><a href="#orgb7d1e40">1.4.2. C语言实现</a></li>
+<li><a href="#org581fa6a">1.4.2. C语言实现</a></li>
 </ul>
 </li>
 <li><a href="#orgbdc6eb4">1.5. 快速排序</a>
 <ul>
-<li><a href="#org1f21d9c">1.5.1. 算法导论</a></li>
+<li><a href="#org591482b">1.5.1. 算法导论</a></li>
 <li><a href="#org6c97279">1.5.2. 优化</a></li>
-<li><a href="#orga2747ae">1.5.3. C语言实现</a></li>
+<li><a href="#org1508546">1.5.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org6fe815d">1.6. 堆排序</a>
+<li><a href="#org2f94eb5">1.6. 堆排序</a>
 <ul>
-<li><a href="#org591482b">1.6.1. 算法导论</a>
+<li><a href="#orge89021f">1.6.1. 算法导论</a>
 <ul>
 <li><a href="#org4a0afb9">1.6.1.1. 堆数据结构</a></li>
 <li><a href="#org7179887">1.6.1.2. 保持堆的性质</a></li>
 <li><a href="#org4c6ea31">1.6.1.3. 建堆</a></li>
-<li><a href="#org22ff0c7">1.6.1.4. 堆排序</a></li>
+<li><a href="#org6fe815d">1.6.1.4. 堆排序</a></li>
 </ul>
 </li>
-<li><a href="#orgd7182bc">1.6.2. 计算机编程艺术</a>
+<li><a href="#org88dd6ab">1.6.2. 计算机编程艺术</a>
 <ul>
 <li><a href="#org2d0b99e">1.6.2.1. 描述</a></li>
 <li><a href="#orgdcc77d2">1.6.2.2. 算法描述</a></li>
 </ul>
 </li>
-<li><a href="#orgbc18254">1.6.3. C语言实现</a></li>
+<li><a href="#org4ca5adc">1.6.3. C语言实现</a></li>
 </ul>
 </li>
 <li><a href="#orge9d68a5">1.7. 希尔排序</a></li>
@@ -130,8 +130,8 @@
 <h3 id="org3881b00"><span class="section-number-3">1.1</span> 插入排序</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org4dedaeb" class="outline-4">
-<h4 id="org4dedaeb"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
+<div id="outline-container-orgd7182bc" class="outline-4">
+<h4 id="orgd7182bc"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 直接插入排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
@@ -149,8 +149,8 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org367733a" class="outline-4">
-<h4 id="org367733a"><span class="section-number-4">1.1.2</span> WIKI</h4>
+<div id="outline-container-org24f6c49" class="outline-4">
+<h4 id="org24f6c49"><span class="section-number-4">1.1.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <blockquote>
 <ul class="org-ul">
@@ -163,8 +163,8 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org69fbd93" class="outline-4">
-<h4 id="org69fbd93"><span class="section-number-4">1.1.3</span> C语言实现</h4>
+<div id="outline-container-orgbc18254" class="outline-4">
+<h4 id="orgbc18254"><span class="section-number-4">1.1.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -229,8 +229,8 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 <h3 id="org717dc14"><span class="section-number-3">1.2</span> 冒泡排序(交换排序)</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgc41c002" class="outline-4">
-<h4 id="orgc41c002"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org5069535" class="outline-4">
+<h4 id="org5069535"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 冒泡排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
@@ -247,8 +247,8 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-org24f6c49" class="outline-4">
-<h4 id="org24f6c49"><span class="section-number-4">1.2.2</span> WIKI</h4>
+<div id="outline-container-org4becc35" class="outline-4">
+<h4 id="org4becc35"><span class="section-number-4">1.2.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <blockquote>
 <ul class="org-ul">
@@ -287,8 +287,8 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-orgcd2a24b" class="outline-4">
-<h4 id="orgcd2a24b"><span class="section-number-4">1.2.3</span> C语言实现</h4>
+<div id="outline-container-orgf4831ce" class="outline-4">
+<h4 id="orgf4831ce"><span class="section-number-4">1.2.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -413,8 +413,8 @@ BOUND &larr; t，并返回到B2；
 <h3 id="org05f367c"><span class="section-number-3">1.3</span> 选择排序</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
-<div id="outline-container-org38cf80e" class="outline-4">
-<h4 id="org38cf80e"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org52194fb" class="outline-4">
+<h4 id="org52194fb"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <p>
 直接选择排序: 适当重新安排记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>；在完成排序后，它们的键码将是有序的K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。排序是以上边指出的方法为基础，但改为首选最大最大元素，紧接着选择第二个最大的，等等，这样做证明是更为方便的。
@@ -429,8 +429,8 @@ R<sub>N</sub>都处于它们的最后位置处）。
 </div>
 </div>
 
-<div id="outline-container-orgc1b504b" class="outline-4">
-<h4 id="orgc1b504b"><span class="section-number-4">1.3.2</span> C语言实现</h4>
+<div id="outline-container-org0da4ce9" class="outline-4">
+<h4 id="org0da4ce9"><span class="section-number-4">1.3.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -499,8 +499,8 @@ R<sub>N</sub>都处于它们的最后位置处）。
 <h3 id="org096cdc7"><span class="section-number-3">1.4</span> 合并排序</h3>
 <div class="outline-text-3" id="text-1-4">
 </div>
-<div id="outline-container-orgdc480b9" class="outline-4">
-<h4 id="orgdc480b9"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org0931862" class="outline-4">
+<h4 id="org0931862"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-4-1">
 </div>
 <div id="outline-container-org18d4806" class="outline-5">
@@ -535,8 +535,8 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orgb7d1e40" class="outline-4">
-<h4 id="orgb7d1e40"><span class="section-number-4">1.4.2</span> C语言实现</h4>
+<div id="outline-container-org581fa6a" class="outline-4">
+<h4 id="org581fa6a"><span class="section-number-4">1.4.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-4-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;errno.h&gt;</span>
@@ -680,8 +680,8 @@ x<sub>m</sub>)并终止此算法。
 <h3 id="orgbdc6eb4"><span class="section-number-3">1.5</span> 快速排序</h3>
 <div class="outline-text-3" id="text-1-5">
 </div>
-<div id="outline-container-org1f21d9c" class="outline-4">
-<h4 id="org1f21d9c"><span class="section-number-4">1.5.1</span> 算法导论</h4>
+<div id="outline-container-org591482b" class="outline-4">
+<h4 id="org591482b"><span class="section-number-4">1.5.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-5-1">
 <p>
 利用分治思想实现。分三步处理：
@@ -708,8 +708,8 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orga2747ae" class="outline-4">
-<h4 id="orga2747ae"><span class="section-number-4">1.5.3</span> C语言实现</h4>
+<div id="outline-container-org1508546" class="outline-4">
+<h4 id="org1508546"><span class="section-number-4">1.5.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-5-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -795,12 +795,12 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org6fe815d" class="outline-3">
-<h3 id="org6fe815d"><span class="section-number-3">1.6</span> 堆排序</h3>
+<div id="outline-container-org2f94eb5" class="outline-3">
+<h3 id="org2f94eb5"><span class="section-number-3">1.6</span> 堆排序</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-org591482b" class="outline-4">
-<h4 id="org591482b"><span class="section-number-4">1.6.1</span> 算法导论</h4>
+<div id="outline-container-orge89021f" class="outline-4">
+<h4 id="orge89021f"><span class="section-number-4">1.6.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-6-1">
 </div>
 <div id="outline-container-org4a0afb9" class="outline-5">
@@ -832,8 +832,8 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-org22ff0c7" class="outline-5">
-<h5 id="org22ff0c7"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
+<div id="outline-container-org6fe815d" class="outline-5">
+<h5 id="org6fe815d"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
 <div class="outline-text-5" id="text-1-6-1-4">
 <p>
 先建堆，此后将第1个元素（最大元素）与数组最后一个元素交换，并使得数组大小减1，以此迭代直到数组大小为1，此时整个数组是有序的。
@@ -842,8 +842,8 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-orgd7182bc" class="outline-4">
-<h4 id="orgd7182bc"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
+<div id="outline-container-org88dd6ab" class="outline-4">
+<h4 id="org88dd6ab"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-6-2">
 </div>
 <div id="outline-container-org2d0b99e" class="outline-5">
@@ -891,8 +891,8 @@ FIXME: &lt;Unfinished&gt;
 </div>
 </div>
 
-<div id="outline-container-orgbc18254" class="outline-4">
-<h4 id="orgbc18254"><span class="section-number-4">1.6.3</span> C语言实现</h4>
+<div id="outline-container-org4ca5adc" class="outline-4">
+<h4 id="org4ca5adc"><span class="section-number-4">1.6.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-6-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
