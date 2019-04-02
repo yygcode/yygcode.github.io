@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-04-03 Wed 00:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>The Hadoop Distributed Filesystem</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Konstantin Shvachko, Hairong Kuang, Sanjay Radia, Robert Chansler, Yahoo!" />
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/readtheorg.css"/>
+<script src="../styles/jquery/2.1.3/jquery.min.js"></script>
+<script src="../styles/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="../styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="paper-index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">The Hadoop Distributed Filesystem</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org3abdb44">DECLARATION</a></li>
+<li><a href="#org3794982">Abstract</a></li>
+<li><a href="#org183e136">Keywords:</a></li>
+<li><a href="#orga7c5db1">1. INTRODUCTION AND RELATED WORK</a></li>
+<li><a href="#org5eca297">2. ARCHITECTURE</a>
+<ul>
+<li><a href="#orgc9ccea7">2.1. NameNode</a></li>
+<li><a href="#org7c82ffb">2.2. DataNodes</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3abdb44" class="outline-2">
+<h2 id="org3abdb44">DECLARATION</h2>
+<div class="outline-text-2" id="text-org3abdb44">
+<p>
+This page is the The Hadoop Distributed Filesystem paper. Original Paper Link
+is: <a href="http://storageconference.us/2010/Papers/MSST/Shvachko.pdf">http://storageconference.us/2010/Papers/MSST/Shvachko.pdf</a>
+</p>
+
+<p>
+The Hadoop Distributed Filesystem
+</p>
+
+<p>
+Konstantin Shvachko, Hairong Kuang, Sanjay Radia, Robert Chansler
+Yahoo!
+Sunnyvale, California USA
+{Shv, Hairong, SRadia, Chansler}@Yahoo-Inc.com
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3794982" class="outline-2">
+<h2 id="org3794982">Abstract</h2>
+<div class="outline-text-2" id="text-org3794982">
+<p>
+The Hadoop Distributed File System (HDFS) is designed to store very large data
+sets reliably, and to stream those data sets at high bandwidth to user
+applications. In a large cluster, thousands of servers both host directly
+attached storage and execute user application tasks. By distributing storage and
+computation across many servers, the resource can grow with demand while
+remaining economical at every size. We describe the architecture of HDFS and
+report on experience using HDFS to manage 25 petabytes of enterprise data at
+Yahoo!.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org183e136" class="outline-2">
+<h2 id="org183e136">Keywords:</h2>
+<div class="outline-text-2" id="text-org183e136">
+<p>
+Hadoop, HDFS, distributed file system
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga7c5db1" class="outline-2">
+<h2 id="orga7c5db1"><span class="section-number-2">1</span> INTRODUCTION AND RELATED WORK</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Hadoop [1][16][19] provides a distributed file system and a framework for the
+analysis and transformation of very large data sets using the MapReduce [3]
+paradigm. An important characteristic of Hadoop is the partitioning of data and
+computation across many (thousands) of hosts, and executing application
+computations in parallel close to their data. A Hadoop cluster scales
+computation capacity, storage capacity and IO bandwidth by simply adding
+commodity servers. Hadoop clusters at Yahoo! span 25 000 servers, and store
+25 petabytes of application data, with the largest cluster being 3500 servers.
+One hundred other organizations worldwide report using Hadoop.
+</p>
+
+<table>
+<caption class="t-above"><span class="table-number">Table 1:</span> Hadoop project components</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">HDFS</td>
+<td class="org-left">Distributed file system Subject of this paper!</td>
+</tr>
+
+<tr>
+<td class="org-left">MapReduce</td>
+<td class="org-left">Distributed computation framework</td>
+</tr>
+
+<tr>
+<td class="org-left">HBase</td>
+<td class="org-left">Column-oriented table service</td>
+</tr>
+
+<tr>
+<td class="org-left">Pig</td>
+<td class="org-left">Dataflow language and parallel execution framework</td>
+</tr>
+
+<tr>
+<td class="org-left">Hive</td>
+<td class="org-left">Data warehouse infrastructure</td>
+</tr>
+
+<tr>
+<td class="org-left">ZooKeeper</td>
+<td class="org-left">Distributed coordination service</td>
+</tr>
+
+<tr>
+<td class="org-left">Chukwa</td>
+<td class="org-left">System for collecting management data</td>
+</tr>
+
+<tr>
+<td class="org-left">Avro</td>
+<td class="org-left">Data serialization system</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Hadoop is an Apache project; all components are available via the Apache open
+source license. Yahoo! has developed and contributed to 80% of the core of
+Hadoop (HDFS and MapReduce). HBase was originally developed at Powerset, now a
+department at Microsoft. Hive [15] was originated and devel-developed at
+Facebook. Pig [4], ZooKeeper [6], and Chukwa were originated and developed at
+Yahoo! Avro was originated at Yahoo! and is being co-developed with Cloudera.
+</p>
+
+<p>
+HDFS is the file system component of Hadoop. While the interface to HDFS is
+patterned after the UNIX file system, faithfulness to standards was sacrificed
+in favor of improved performance for the applications at hand.
+</p>
+
+<p>
+HDFS stores file system metadata and application data separately. As in other
+distributed file systems, like PVFS [2][14], Lustre [7] and GFS [5][8], HDFS
+stores metadata on a dedicated server, called the NameNode. Application data
+are stored on other servers called DataNodes. All servers are fully connected
+and communicate with each other using TCP-based protocols.
+</p>
+
+<p>
+Unlike Lustre and PVFS, the DataNodes in HDFS do not use data protection
+mechanisms such as RAID to make the data durable. Instead, like GFS, the file
+content is replicated on multiple DataNodes for reliability. While ensuring data
+durability, this strategy has the added advantage that data transfer bandwidth
+is multiplied, and there are more opportunities for locating computation near
+the needed data.
+</p>
+
+<p>
+Several distributed file systems have or are exploring truly distributed
+implementations of the namespace. Ceph [17] has a cluster of namespace servers
+(MDS) and uses a dynamic subtree partitioning algorithm in order to map the
+namespace tree to MDSs evenly. GFS is also evolving into a distributed namespace
+implementation [8]. The new GFS will have hundreds of namespace servers
+(masters) with 100 million files per master. Lustre [7] has an implementation of
+clustered namespace on its roadmap for Lustre 2.2 release. The intent is to
+stripe a directory over multiple metadata servers (MDS), each of which contains
+a disjoint portion of the namespace. A file is assigned to a particular MDS
+using a hash function on the file name.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5eca297" class="outline-2">
+<h2 id="org5eca297"><span class="section-number-2">2</span> ARCHITECTURE</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgc9ccea7" class="outline-3">
+<h3 id="orgc9ccea7"><span class="section-number-3">2.1</span> NameNode</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+The HDFS namespace is a hierarchy of files and directories. Files and
+directories are represented on the NameNode by inodes, which record attributes
+like permissions, modification and access times, namespace and disk space
+quotas. The file content is split into large blocks (typically 128 megabytes,
+but user selectable file-by-file) and each block of the file is independently
+replicated at multiple DataNodes (typically three, but user selectable
+file-by-file). The NameNode maintains the namespace tree and the mapping of file
+blocks to DataNodes (the physical location of file data). An HDFS client wanting
+to read a file first contacts the NameNode for the locations of data blocks
+comprising the file and then reads block contents from the DataNode closest to
+the client. When writing data, the client requests the NameNode to nominate a
+suite of three DataNodes to host the block replicas. The client then writes
+data to the DataNodes in a pipeline fashion. The current design has a single
+NameNode for each cluster. The cluster can have thousands of DataNodes and
+tens of thousands of HDFS clients per cluster, as each DataNode may execute
+multiple application tasks concurrently.
+</p>
+
+<p>
+HDFS keeps the entire namespace in RAM. The inode data and the list of blocks
+belonging to each file comprise the metadata of the name system called the
+image. The persistent record of the image stored in the local host’s native
+files system is called a checkpoint. The NameNode also stores the modification
+log of the image called the journal in the local host’s native file system. For
+improved durability, redundant copies of the checkpoint and journal can be made
+at other servers. During restarts the NameNode restores the namespace by reading
+the namespace and replaying the journal. The locations of block replicas may
+change over time and are not part of the persistent checkpoint.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7c82ffb" class="outline-3">
+<h3 id="org7c82ffb"><span class="section-number-3">2.2</span> DataNodes</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Each block replica on a DataNode is represented by two files in the local host’s
+native file system. The first file contains the data itself and the second file
+is block’s metadata including checksums for the block data and the block’s
+generation stamp. The size of the data file equals the actual length of the
+block and does not require extra space to round it up to the nominal block size
+as in traditional file systems. Thus, if a block is half full it needs only half
+of the space of the full block on the local drive.
+</p>
+
+<p>
+During startup each DataNode connects to the NameNode and performs a handshake.
+The purpose of the handshake is to verify the namespace ID and the software
+version of the DataNode. If either does not match that of the NameNode the
+DataNode automatically shuts down. The namespace ID is assigned to the file
+system instance when it is formatted. The namespace ID is persistently stored
+on all nodes of the cluster. Nodes with a different namespace ID will not be
+able to join the cluster, thus preserving the integrity of the file system.
+</p>
+
+<p>
+The consistency of software versions is important because incompatible version
+may cause data corruption or loss, and on large clusters of thousands of
+machines it is easy to overlook nodes that did not shut down properly prior to
+the software upgrade or were not available during the upgrade.
+</p>
+
+<p>
+A DataNode that is newly initialized and without any namespace ID is permitted
+to join the cluster and receive the cluster’s namespace ID.
+</p>
+
+<p>
+After the handshake the DataNode registers with the NameNode. DataNodes
+persistently store their unique storage IDs. The storage ID is an internal
+identifier of the DataNode, which makes it recognizable even if it is restarted
+with a different IP address or port. The storage ID is assigned to the DataNode
+when it registers with the NameNode for the first time and never changes after
+that.
+</p>
+
+<p>
+A DataNode identifies block replicas in its possession to the NameNode by
+sending a block report. A block report contains the block id, the generation
+stamp and the length for each block replica the server hosts. The first block
+report is sent immediately after the DataNode registration. Subsequent block
+reports are sent every hour and provide the NameNode with an up-to-date view of
+where block replicas are located on the cluster.
+</p>
+
+<p>
+During normal operation DataNodes send heartbeats to the NameNode to confirm
+that the DataNode is operating and the block replicas it hosts are available.
+The default heartbeat interval is three seconds. If the NameNode does not
+receive a heartbeat from a DataNode in ten minutes the NameNode considers the
+DataNode to be out of service and the block replicas hosted by that DataNode to
+be unavailable. The NameNode then schedules creation of new replicas of those
+blocks on other DataNodes.
+</p>
+
+<p>
+Heartbeats from a DataNode also carry information about total storage capacity,
+fraction of storage in use, and the number of data transfers currently in
+progress. These statistics are used for the NameNode’s space allocation and load
+balancing decisions.
+</p>
+
+<p>
+The NameNode does not directly call DataNodes. It uses replies to heartbeats to
+send instructions to the DataNodes. The instructions include commands to:
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/papers/ds-hdfs.html';
+    this.page.identifier = 'ds-hdfs.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</body>
+</html>

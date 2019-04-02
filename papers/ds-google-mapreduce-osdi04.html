@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-31 Sun 19:43 -->
+<!-- 2019-04-03 Wed 00:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>MapReduce: Simplified Data Processing on Large Clusters</title>
 <meta name="generator" content="Org mode" />
@@ -83,18 +83,17 @@ Over the past five years, the authors and many others at Google have implemented
 hundreds of special-purpose computations that process large amounts of raw data,
 such as crawled documents, web request logs, etc., to compute various kinds of
 derived data, such as inverted indices, various representations of the graph
-structure
-of web documents, summaries of the number of pages
-crawled per host, the set of most frequent queries in a
-given day, etc. Most such computations are conceptu-
-ally straightforward. However, the input data is usually
-large and the computations have to be distributed across
-hundreds or thousands of machines in order to finish in
-a reasonable amount of time. The issues of how to par-
-allelize the computation, distribute the data, and handle
-failures conspire to obscure the original simple compu-
-tation with large amounts of complex code to deal with
-these issues.
+structure of web documents, summaries of the number of pages crawled per host,
+the set of most frequent queries in a given day, etc. Most such computations are
+conceptually straightforward. However, the input data is usually large and the
+computations have to be distributed across hundreds or thousands of machines
+in order to finish in a reasonable amount of time. The issues of how to
+parallelize the computation, distribute the data, and handle failures conspire
+to obscure the original simple computation with large amounts of complex code to
+deal with these issues.
+</p>
+
+<p>
 As a reaction to this complexity, we designed a new
 abstraction that allows us to express the simple computa-
 tions we were trying to perform but hides the messy de-
