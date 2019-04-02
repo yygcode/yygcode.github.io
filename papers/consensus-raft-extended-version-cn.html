@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-04-03 Wed 01:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Raft一致性算法论文译文</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="罗远航翻译" />
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/readtheorg.css"/>
+<script src="../styles/jquery/2.1.3/jquery.min.js"></script>
+<script src="../styles/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="../styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="paper-index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Raft一致性算法论文译文</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org04b30d2">声明</a></li>
+<li><a href="#org5b1562a">1. 摘要</a></li>
+<li><a href="#org1f83bf2">2. 引言</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org04b30d2" class="outline-2">
+<h2 id="org04b30d2">声明</h2>
+<div class="outline-text-2" id="text-org04b30d2">
+<p>
+本文是罗远航（<a href="http://blog.luoyuanhang.com/">主页</a>）翻译的论文In Search of an Understandable Consensus Algorithm
+(Extended Version)。这里是原文地址：
+<a href="http://blog.luoyuanhang.com/2017/02/02/raft-paper-in-zh-CN/">http://blog.luoyuanhang.com/2017/02/02/raft-paper-in-zh-CN/</a>
+</p>
+
+<p>
+<a href="consensus-raft-extended-version.html">这里</a>是英文版本。
+</p>
+
+<p>
+翻译：罗远航主页：<a href="http://blog.luoyuanhang.com/">http://blog.luoyuanhang.com/</a>
+本文链接：<a href="http://blog.luoyuanhang.com/2017/02/02/raft-paper-in-zh-CN/">http://blog.luoyuanhang.com/2017/02/02/raft-paper-in-zh-CN/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5b1562a" class="outline-2">
+<h2 id="org5b1562a"><span class="section-number-2">1</span> 摘要</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Raft是一种用来管理日志复制的一致性算法。它和Paxos的性能和功能是一样的，但是它和
+Paxos的结构不一样；这使得Raft更容易理解并且更易于建立实际的系统。为了提高理解性，
+Raft将一致性算法分为了几个部分，例如领导选取（leader selection），日志复制（log
+replication）和安全性（safety），同时它使用了更强的一致性来减少了必须需要考虑的状态。从用户学习的结果来看，Raft比Paxos更容易学会。Raft还包括了一种新的机制来使得动态改变集群成员，它使用重叠大多数（overlapping majorities）来保证安全。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1f83bf2" class="outline-2">
+<h2 id="org1f83bf2"><span class="section-number-2">2</span> 引言</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+一致性算法允许一组机器像一个整体一样工作，即使其中的一些机器出了错误也能正常工作。正因为此，他们扮演着建立大规模可靠的软件系统的关键角色。在过去的十年中 Paxos 一直都主导着有关一致性算法的讨论：大多数一致性算法的实现都基于它或者受它影响，并且 Paxos 也成为了教学生关于一致性知识的主要工具。
+</p>
+
+<p>
+不幸的是，尽管在降低它的复杂性方面做了许多努力，Paxos 依旧很难理解。并且，Paxos 需要经过复杂的修改才能应用于实际中。这些导致了系统构构建者和学生都十分头疼。
+</p>
+
+<p>
+在被 Paxos 折磨之后，我们开始寻找一种在系统构建和教学上更好的新的一致性算法。我们的首要目标是让它易于理解：我们能不能定义一种面向实际系统的一致性算法并且比 Paxos 更容易学习呢？并且，我们希望这种算法能凭直觉就能明白，这对于一个系统构建者来说是十分必要的。对于一个算法，不仅仅是让它工作起来很重要，知道它是如何工作的更重要。
+</p>
+
+<p>
+我们工作的结果是一种新的一致性算法，叫做 Raft。在设计 Raft 的过程中我们应用了许多专门的技巧来提升理解性，包括算法分解（分为领导选取（leader selection），日志复制（log replication）和安全性（safety））和减少状态（state space reduction）（相对于 Paxos，Raft 减少了非确定性的程度和服务器互相不一致的方式）。在两所学校的43个学生的研究中发现，Raft 比 Paxos 要更容易理解：在学习了两种算法之后，其中的33个学生回答 Raft 的问题要比回答 Paxos 的问题要好。
+</p>
+
+<p>
+Raft 算法和现在一些已经有的算法在一些地方很相似（主要是 Oki 和 Liskov 的 Viewstamped Replication。但是 Raft 有几个新的特性：
+</p>
+
+<p>
+强领导者（Strong Leader）：Raft 使用一种比其他算法更强的领导形式。例如，日志条目只从领导者发送向其他服务器。这样就简化了对日志复制的管理，使得 Raft 更易于理解。领导选取（Leader Selection）：Raft 使用随机定时器来选取领导者。这种方式仅仅是在所有算法都需要实现的心跳机制上增加了一点变化，它使得在解决冲突时更简单和快速。成员变化（Membership Change）：Raft 为了调整集群中成员关系使用了新的联合一致性（joint consensus）的方法，这种方法中大多数不同配置的机器在转换关系的时候会交迭（overlap）。这使得在配置改变的时候，集群能够继续操作。我们认为，Raft 在教学方面和实际实现方面比 Paxos 和其他算法更出众。它比其他算法更简单、更容易理解；它能满足一个实际系统的需求；它拥有许多开源的实现并且被许多公司所使用；它的安全特性已经被证明；并且它的效率和其他算法相比也具有竞争力。
+</p>
+
+<p>
+这篇论文剩下的部分会讲如下内容：复制状态机（replicated state machine）问题（第2节），讨论 Paxos 的优缺点（第3节），讨论我们用的为了达到提升理解性的方法（第4节），陈述 Raft 一致性算法（第5~8节），评价 Raft 算法（第9节），对相关工作的讨论（第10节）。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="disqus_thread" class="disqus container"></div>
+<script>
+  var disqus_config = function () {
+    this.page.url = 'http://ycode.org/papers/consensus-raft-extended-version-cn.html';
+    this.page.identifier = 'consensus-raft-extended-version-cn.html';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://yanyg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</body>
+</html>

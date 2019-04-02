@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-04-03 Wed 00:04 -->
+<!-- 2019-04-03 Wed 01:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>The Hadoop Distributed Filesystem</title>
 <meta name="generator" content="Org mode" />
@@ -34,6 +34,7 @@
 <ul>
 <li><a href="#orgc9ccea7">2.1. NameNode</a></li>
 <li><a href="#org7c82ffb">2.2. DataNodes</a></li>
+<li><a href="#org9d191b3">2.3. HDFS Client</a></li>
 </ul>
 </li>
 </ul>
@@ -312,6 +313,48 @@ balancing decisions.
 <p>
 The NameNode does not directly call DataNodes. It uses replies to heartbeats to
 send instructions to the DataNodes. The instructions include commands to:
+</p>
+<ul class="org-ul">
+<li>replicate blocks to other nodes;</li>
+<li>remove local block replicas;</li>
+<li>re-register or to shut down the node;</li>
+<li>send an immediate block report.</li>
+</ul>
+
+<p>
+These commands are important for maintaining the overall system integrity and
+therefore it is critical to keep heartbeats frequent even on big clusters. The
+NameNode can process thousands of heartbeats per second without affecting other
+NameNode operations.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9d191b3" class="outline-3">
+<h3 id="org9d191b3"><span class="section-number-3">2.3</span> HDFS Client</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+User applications access the file system using the HDFS client, a code library
+that exports the HDFS file system interface.
+</p>
+
+<p>
+Similar to most conventional file systems, HDFS supports operations to read,
+write and delete files, and operations to create and delete directories. The
+user references files and directories by paths in the namespace. The user
+application generally does not need to know that file system metadata and
+storage are on different servers, or that blocks have multiple replicas.
+</p>
+
+<p>
+When an application reads a file, the HDFS client first asks the NameNode for
+the list of DataNodes that host replicas of the blocks of the file. It then
+contacts a DataNode directly and requests the transfer of the desired block.
+When a client writes, it first asks the NameNode to choose DataNodes to host
+replicas of the first block of the file. The client organizes a pipeline from
+node-to-node and sends the data. When the first block is filled, the client
+requests new DataNodes to be chosen to host replicas of the next block. A new
+pipeline is organized, and the
 </p>
 </div>
 </div>
