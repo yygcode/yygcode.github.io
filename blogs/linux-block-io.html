@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>LINUX块设备IO流程分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,24 +29,24 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8e409aa">1. Code Diagram</a>
+<li><a href="#org5821787">1. Code Diagram</a>
 <ul>
-<li><a href="#orga636aab">1.1. read</a></li>
+<li><a href="#orga130cdc">1.1. read</a></li>
 </ul>
 </li>
-<li><a href="#orgaa7a4fe">2. References</a></li>
+<li><a href="#org915497c">2. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8e409aa" class="outline-2">
-<h2 id="org8e409aa"><span class="section-number-2">1</span> Code Diagram</h2>
+<div id="outline-container-org5821787" class="outline-2">
+<h2 id="org5821787"><span class="section-number-2">1</span> Code Diagram</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga636aab" class="outline-3">
-<h3 id="orga636aab"><span class="section-number-3">1.1</span> read</h3>
+<div id="outline-container-orga130cdc" class="outline-3">
+<h3 id="orga130cdc"><span class="section-number-3">1.1</span> read</h3>
 <div class="outline-text-3" id="text-1-1">
-<table id="orgce4bd7a">
+<table id="org7d24f5d">
 
 
 <colgroup>
@@ -125,27 +123,21 @@
 </div>
 </div>
 
-<div id="outline-container-orgaa7a4fe" class="outline-2">
-<h2 id="orgaa7a4fe"><span class="section-number-2">2</span> References</h2>
+<div id="outline-container-org915497c" class="outline-2">
+<h2 id="org915497c"><span class="section-number-2">2</span> References</h2>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/linux-block-io.html';
-    this.page.identifier = 'linux-block-io.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

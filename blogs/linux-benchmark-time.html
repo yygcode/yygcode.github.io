@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>程序执行时间与代码执行时间评估/Benchmark process execution time and code execution time</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -53,21 +51,21 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org10226a9">1. 评估进程执行时间</a></li>
-<li><a href="#orgf706ffa">2. 代码段执行时间评估</a>
+<li><a href="#orgf311290">1. 评估进程执行时间</a></li>
+<li><a href="#org8157e36">2. 代码段执行时间评估</a>
 <ul>
-<li><a href="#org79c7064">2.1. Methods</a></li>
-<li><a href="#org34fe570">2.2. Test Results</a></li>
+<li><a href="#org0df497e">2.1. Methods</a></li>
+<li><a href="#orge3d12a2">2.2. Test Results</a></li>
 </ul>
 </li>
-<li><a href="#org466b247">3. Test Code</a></li>
-<li><a href="#org798f4e3">4. 参考资源</a></li>
+<li><a href="#org35f05f7">3. Test Code</a></li>
+<li><a href="#org8ba7882">4. 参考资源</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org10226a9" class="outline-2">
-<h2 id="org10226a9"><span class="section-number-2">1</span> 评估进程执行时间</h2>
+<div id="outline-container-orgf311290" class="outline-2">
+<h2 id="orgf311290"><span class="section-number-2">1</span> 评估进程执行时间</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Shell环境下使用time评估。bash shell有内置的time，系统提供功能更多的time命令
@@ -101,26 +99,29 @@ Time:
 </div>
 </div>
 
-<div id="outline-container-orgf706ffa" class="outline-2">
-<h2 id="orgf706ffa"><span class="section-number-2">2</span> 代码段执行时间评估</h2>
+<div id="outline-container-org8157e36" class="outline-2">
+<h2 id="org8157e36"><span class="section-number-2">2</span> 代码段执行时间评估</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org79c7064" class="outline-3">
-<h3 id="org79c7064"><span class="section-number-3">2.1</span> Methods</h3>
+<div id="outline-container-org0df497e" class="outline-3">
+<h3 id="org0df497e"><span class="section-number-3">2.1</span> Methods</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-使用\(time\)、\(gettimeofday\)、\(clock\_gettime\)获取秒、微秒、纳秒级别的时间精度，但上述三者都触发系统调用或vdso。使用内嵌汇编和CPU指令RDTSC获取更高精度(与
+使用\(time\)、\(gettimeofday\)、\(clock\_gettime\)获取秒、微秒、纳秒级别的时间
+精度，但上述三者都触发系统调用或vdso。使用内嵌汇编和CPU指令RDTSC获取更高精度(与
 CPU主频相同)的时间精度。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org34fe570" class="outline-3">
-<h3 id="org34fe570"><span class="section-number-3">2.2</span> Test Results</h3>
+<div id="outline-container-orge3d12a2" class="outline-3">
+<h3 id="orge3d12a2"><span class="section-number-3">2.2</span> Test Results</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 通过测试代码，在我的T430(CPU 2.89Hz Cores 4)上2594 TSC为1微秒(10<sup>-6</sup>)，2.8 TSC
-为1纳秒(这和CPU的频率2.8GHz是一致的)。系统调用成本大概240-310 TSC，而vdso(虚拟系统调用)110-130 TSC。vdso是系统调用成本的40%左右。传递编译参数\(-static\)使用系统调用，不传递该参数默认为动态链接，在支持vdso系统上优先使用vdso。
+为1纳秒(这和CPU的频率2.8GHz是一致的)。系统调用成本大概240-310 TSC，而vdso(虚拟
+系统调用)110-130 TSC。vdso是系统调用成本的40%左右。传递编译参数\(-static\)使用
+系统调用，不传递该参数默认为动态链接，在支持vdso系统上优先使用vdso。
 </p>
 
 <div class="org-src-container">
@@ -204,8 +205,8 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org466b247" class="outline-2">
-<h2 id="org466b247"><span class="section-number-2">3</span> Test Code</h2>
+<div id="outline-container-org35f05f7" class="outline-2">
+<h2 id="org35f05f7"><span class="section-number-2">3</span> Test Code</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 如下是benchmark-time.c代码：
@@ -402,8 +403,8 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org798f4e3" class="outline-2">
-<h2 id="org798f4e3"><span class="section-number-2">4</span> 参考资源</h2>
+<div id="outline-container-org8ba7882" class="outline-2">
+<h2 id="org8ba7882"><span class="section-number-2">4</span> 参考资源</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>LWN - X86: Unify/Rewrite SMP TSC sync mode</dt><dd><a href="https://lwn.net/Articles/211051/">https://lwn.net/Articles/211051/</a></dd>
@@ -419,24 +420,18 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/linux-benchmark-time.html';
-    this.page.identifier = 'linux-benchmark-time.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

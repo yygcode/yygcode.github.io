@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>VAAI技术分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,20 +29,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf5f2584">1. Low Level VAAI Behaviour</a>
+<li><a href="#orgdf75a39">1. Low Level VAAI Behaviour</a>
 <ul>
-<li><a href="#org5669d2b">1.1. Atomic Test &amp; Set (ATS)</a></li>
-<li><a href="#org8bf9c67">1.2. Write Same/Zero</a></li>
-<li><a href="#orgdfd2bc2">1.3. Full Copy/XCOPY/Extended Copy</a></li>
+<li><a href="#orge7ba9c3">1.1. Atomic Test &amp; Set (ATS)</a></li>
+<li><a href="#org7818c68">1.2. Write Same/Zero</a></li>
+<li><a href="#org78b7083">1.3. Full Copy/XCOPY/Extended Copy</a></li>
 </ul>
 </li>
-<li><a href="#org3c22334">2. Reference links</a></li>
+<li><a href="#org6e97a9f">2. Reference links</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf5f2584" class="outline-2">
-<h2 id="orgf5f2584"><span class="section-number-2">1</span> Low Level VAAI Behaviour</h2>
+<div id="outline-container-orgdf75a39" class="outline-2">
+<h2 id="orgdf75a39"><span class="section-number-2">1</span> Low Level VAAI Behaviour</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li><a href="https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html">https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html</a></li>
@@ -72,8 +70,8 @@ have taken on numerous different names since first launched.
 </p>
 </div>
 
-<div id="outline-container-org5669d2b" class="outline-3">
-<h3 id="org5669d2b"><span class="section-number-3">1.1</span> Atomic Test &amp; Set (ATS)</h3>
+<div id="outline-container-orge7ba9c3" class="outline-3">
+<h3 id="orge7ba9c3"><span class="section-number-3">1.1</span> Atomic Test &amp; Set (ATS)</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 This is a replacement lock mechanism for SCSI reservations on VMFS volumes when
@@ -89,8 +87,8 @@ and uses opcode 0x89 (COMPARE AND WRITE).
 </div>
 </div>
 
-<div id="outline-container-org8bf9c67" class="outline-3">
-<h3 id="org8bf9c67"><span class="section-number-3">1.2</span> Write Same/Zero</h3>
+<div id="outline-container-org7818c68" class="outline-3">
+<h3 id="org7818c68"><span class="section-number-3">1.2</span> Write Same/Zero</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 One of the most common operations on virtual disks is initializing large extents
@@ -131,8 +129,8 @@ dramatically all round.
 </div>
 </div>
 
-<div id="outline-container-orgdfd2bc2" class="outline-3">
-<h3 id="orgdfd2bc2"><span class="section-number-3">1.3</span> Full Copy/XCOPY/Extended Copy</h3>
+<div id="outline-container-org78b7083" class="outline-3">
+<h3 id="org78b7083"><span class="section-number-3">1.3</span> Full Copy/XCOPY/Extended Copy</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 This primitive is used when a clone or migrate operation (such as a Storage
@@ -196,32 +194,26 @@ My thanks to Ilia Sokolinski for clarifying some of the behaviours above.
 </div>
 </div>
 
-<div id="outline-container-org3c22334" class="outline-2">
-<h2 id="org3c22334"><span class="section-number-2">2</span> Reference links</h2>
+<div id="outline-container-org6e97a9f" class="outline-2">
+<h2 id="org6e97a9f"><span class="section-number-2">2</span> Reference links</h2>
 <div class="outline-text-2" id="text-2">
 <dl class="org-dl">
 <dt>VMware ESXi SCSI Sense Code Decoder</dt><dd><a href="http://www.virten.net/vmware/esxi-scsi-sense-code-decoder/">http://www.virten.net/vmware/esxi-scsi-sense-code-decoder/</a></dd>
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/storage-VAAI.html';
-    this.page.identifier = 'storage-VAAI.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

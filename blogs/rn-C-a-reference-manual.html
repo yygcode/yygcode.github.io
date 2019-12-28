@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>C Reference Manual Reading Notes</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,59 +29,59 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7e3d7e2">1. CHARACTER SET</a>
+<li><a href="#orgdcad1e9">1. CHARACTER SET</a>
 <ul>
-<li><a href="#orgaf6fd9f">1.1. Execution Character Set</a></li>
-<li><a href="#org436b106">1.2. Whitespace and Line Terminaton</a></li>
-<li><a href="#org48dc917">1.3. Character Encoding</a></li>
-<li><a href="#org1424d36">1.4. Trigraphs</a></li>
-<li><a href="#org145a4ef">1.5. Digraphs</a></li>
-<li><a href="#orgb4da438">1.6. Ended with Hello world program</a></li>
+<li><a href="#org234c320">1.1. Execution Character Set</a></li>
+<li><a href="#orgebac042">1.2. Whitespace and Line Terminaton</a></li>
+<li><a href="#org8d29e3a">1.3. Character Encoding</a></li>
+<li><a href="#orga0cf342">1.4. Trigraphs</a></li>
+<li><a href="#org4a20597">1.5. Digraphs</a></li>
+<li><a href="#orgc32e897">1.6. Ended with Hello world program</a></li>
 </ul>
 </li>
-<li><a href="#org51bd2b2">2. Whitespace, Line Termination, and Lines Length Limits</a></li>
-<li><a href="#org214ffb4">3. Multibyte and Wide Characters</a></li>
-<li><a href="#orgacaa80c">4. Comments</a></li>
-<li><a href="#org5bac1b2">5. Tokens ( Without Constants )</a>
+<li><a href="#orgb5db932">2. Whitespace, Line Termination, and Lines Length Limits</a></li>
+<li><a href="#org4a2d528">3. Multibyte and Wide Characters</a></li>
+<li><a href="#org55fe613">4. Comments</a></li>
+<li><a href="#orgdb7a862">5. Tokens ( Without Constants )</a>
 <ul>
-<li><a href="#orgf7dbbd1">5.1. operators and separators.</a></li>
-<li><a href="#org53fe6a9">5.2. identifiers</a></li>
-<li><a href="#org7ac55d5">5.3. Keywords</a></li>
-<li><a href="#org0c2995b">5.4. Constants</a></li>
+<li><a href="#org6c66223">5.1. operators and separators.</a></li>
+<li><a href="#orga3ecc09">5.2. identifiers</a></li>
+<li><a href="#org4743515">5.3. Keywords</a></li>
+<li><a href="#org3afa673">5.4. Constants</a></li>
 </ul>
 </li>
-<li><a href="#org89c6e4e">6. Constants</a>
+<li><a href="#orgc1931a1">6. Constants</a>
 <ul>
-<li><a href="#org3c8b949">6.1. Integer Constants.</a></li>
-<li><a href="#org6216ce9">6.2. Floating-Point Constants</a></li>
-<li><a href="#org011d774">6.3. Character Constants</a></li>
-<li><a href="#orgeb56360">6.4. String Constants</a></li>
-<li><a href="#org2aca709">6.5. Escape Characters</a></li>
+<li><a href="#orgc289683">6.1. Integer Constants.</a></li>
+<li><a href="#orgb3a0051">6.2. Floating-Point Constants</a></li>
+<li><a href="#org3569123">6.3. Character Constants</a></li>
+<li><a href="#org10a7d06">6.4. String Constants</a></li>
+<li><a href="#org6f312b2">6.5. Escape Characters</a></li>
 </ul>
 </li>
-<li><a href="#orgd57f4d2">7. C++ Compatibility</a>
+<li><a href="#org9f98b15">7. C++ Compatibility</a>
 <ul>
-<li><a href="#org7aaa42a">7.1. Character Sets</a></li>
-<li><a href="#orgda5f52f">7.2. Comments</a></li>
-<li><a href="#orgf986e0c">7.3. Operators</a></li>
-<li><a href="#org3badf77">7.4. Identifiers and Keywords</a></li>
-<li><a href="#orgbcdd284">7.5. Character Constants</a></li>
+<li><a href="#org43c3f7e">7.1. Character Sets</a></li>
+<li><a href="#orgff91a07">7.2. Comments</a></li>
+<li><a href="#org6537ee7">7.3. Operators</a></li>
+<li><a href="#org6b12b83">7.4. Identifiers and Keywords</a></li>
+<li><a href="#org66bda42">7.5. Character Constants</a></li>
 </ul>
 </li>
-<li><a href="#org6189212">8. The C Preprocessor and Preprocessor Commands</a>
+<li><a href="#org60501a0">8. The C Preprocessor and Preprocessor Commands</a>
 <ul>
-<li><a href="#org47767fa">8.1. The C preprocessor</a></li>
-<li><a href="#orgee71627">8.2. Preprocessor Commands</a></li>
+<li><a href="#org2d6ab16">8.1. The C preprocessor</a></li>
+<li><a href="#org7b53ad9">8.2. Preprocessor Commands</a></li>
 </ul>
 </li>
-<li><a href="#org762e218">9. Preprocessor Lexical Conventions</a></li>
-<li><a href="#org966ebb9">10. Definition and Replacement</a></li>
+<li><a href="#org25e66da">9. Preprocessor Lexical Conventions</a></li>
+<li><a href="#org4e87d3f">10. Definition and Replacement</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org7e3d7e2" class="outline-2">
-<h2 id="org7e3d7e2"><span class="section-number-2">1</span> CHARACTER SET</h2>
+<div id="outline-container-orgdcad1e9" class="outline-2">
+<h2 id="orgdcad1e9"><span class="section-number-2">1</span> CHARACTER SET</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 A C source file is a sequence of characters selected from a character.
@@ -177,8 +175,8 @@ comments, character constants, string constants, and file names.</li>
 </ul>
 </div>
 
-<div id="outline-container-orgaf6fd9f" class="outline-3">
-<h3 id="orgaf6fd9f"><span class="section-number-3">1.1</span> Execution Character Set</h3>
+<div id="outline-container-org234c320" class="outline-3">
+<h3 id="org234c320"><span class="section-number-3">1.1</span> Execution Character Set</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The character set interpreted during the execution of a C program is not
@@ -199,8 +197,8 @@ the end of strings.
 </div>
 </div>
 
-<div id="outline-container-org436b106" class="outline-3">
-<h3 id="org436b106"><span class="section-number-3">1.2</span> Whitespace and Line Terminaton</h3>
+<div id="outline-container-orgebac042" class="outline-3">
+<h3 id="orgebac042"><span class="section-number-3">1.2</span> Whitespace and Line Terminaton</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 In C source programs the blank(space), end-of-line, VT,FF,HT are known
@@ -211,8 +209,8 @@ tokens.
 </div>
 </div>
 
-<div id="outline-container-org48dc917" class="outline-3">
-<h3 id="org48dc917"><span class="section-number-3">1.3</span> Character Encoding</h3>
+<div id="outline-container-org8d29e3a" class="outline-3">
+<h3 id="org8d29e3a"><span class="section-number-3">1.3</span> Character Encoding</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 A common C programming error is to aussume a particular encoding is in use when
@@ -221,8 +219,8 @@ another one holds in fact.
 </div>
 </div>
 
-<div id="outline-container-org1424d36" class="outline-3">
-<h3 id="org1424d36"><span class="section-number-3">1.4</span> Trigraphs</h3>
+<div id="outline-container-orga0cf342" class="outline-3">
+<h3 id="orga0cf342"><span class="section-number-3">1.4</span> Trigraphs</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 A set of trigraphs is included in Standard C so that programs may be written
@@ -254,8 +252,8 @@ listed in follows:
 </div>
 </div>
 
-<div id="outline-container-org145a4ef" class="outline-3">
-<h3 id="org145a4ef"><span class="section-number-3">1.5</span> Digraphs</h3>
+<div id="outline-container-org4a20597" class="outline-3">
+<h3 id="org4a20597"><span class="section-number-3">1.5</span> Digraphs</h3>
 <div class="outline-text-3" id="text-1-5">
 <div class="org-src-container">
 <pre class="src src-text">&lt;:<span class="org-whitespace-space">           </span>[
@@ -274,8 +272,8 @@ listed in follows:
 </div>
 </div>
 
-<div id="outline-container-orgb4da438" class="outline-3">
-<h3 id="orgb4da438"><span class="section-number-3">1.6</span> Ended with Hello world program</h3>
+<div id="outline-container-orgc32e897" class="outline-3">
+<h3 id="orgc32e897"><span class="section-number-3">1.6</span> Ended with Hello world program</h3>
 <div class="outline-text-3" id="text-1-6">
 <div class="org-src-container">
 <pre class="src src-C">%:include<span class="org-whitespace-space"> </span>&lt;stdio.h&gt;
@@ -289,8 +287,8 @@ listed in follows:
 
 <pre class="example">
 Hello world !/n
-
 </pre>
+
 
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-trigraphs
@@ -301,8 +299,8 @@ Hello<span class="org-whitespace-space"> </span>world<span class="org-whitespace
 </div>
 </div>
 </div>
-<div id="outline-container-org51bd2b2" class="outline-2">
-<h2 id="org51bd2b2"><span class="section-number-2">2</span> Whitespace, Line Termination, and Lines Length Limits</h2>
+<div id="outline-container-orgb5db932" class="outline-2">
+<h2 id="orgb5db932"><span class="section-number-2">2</span> Whitespace, Line Termination, and Lines Length Limits</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The blank(space), end-of-line, VT, FF, HT, and comments are known collectively
@@ -329,8 +327,8 @@ C99 allows 4095 characters.
 </div>
 </div>
 
-<div id="outline-container-org214ffb4" class="outline-2">
-<h2 id="org214ffb4"><span class="section-number-2">3</span> Multibyte and Wide Characters</h2>
+<div id="outline-container-org4a2d528" class="outline-2">
+<h2 id="org4a2d528"><span class="section-number-2">3</span> Multibyte and Wide Characters</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 To accommodate non-english alphabets that may contain a large number of
@@ -389,8 +387,8 @@ the execution character set before they are interpreted as multibyte sequences.
 </div>
 </div>
 
-<div id="outline-container-orgacaa80c" class="outline-2">
-<h2 id="orgacaa80c"><span class="section-number-2">4</span> Comments</h2>
+<div id="outline-container-org55fe613" class="outline-2">
+<h2 id="org55fe613"><span class="section-number-2">4</span> Comments</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Standard C supported two stylized comments:
@@ -447,8 +445,8 @@ about /*-style comments in the enclosed source text.
 </div>
 </div>
 
-<div id="outline-container-org5bac1b2" class="outline-2">
-<h2 id="org5bac1b2"><span class="section-number-2">5</span> Tokens ( Without Constants )</h2>
+<div id="outline-container-orgdb7a862" class="outline-2">
+<h2 id="orgdb7a862"><span class="section-number-2">5</span> Tokens ( Without Constants )</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Five classes of tokens: operators, separators, identifiers, keywords, and
@@ -456,8 +454,8 @@ constants.
 </p>
 </div>
 
-<div id="outline-container-orgf7dbbd1" class="outline-3">
-<h3 id="orgf7dbbd1"><span class="section-number-3">5.1</span> operators and separators.</h3>
+<div id="outline-container-org6c66223" class="outline-3">
+<h3 id="org6c66223"><span class="section-number-3">5.1</span> operators and separators.</h3>
 <div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-negation-char">!</span><span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>^<span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>.<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>?
@@ -478,8 +476,8 @@ constants.
 </div>
 </div>
 
-<div id="outline-container-org53fe6a9" class="outline-3">
-<h3 id="org53fe6a9"><span class="section-number-3">5.2</span> identifiers</h3>
+<div id="outline-container-orga3ecc09" class="outline-3">
+<h3 id="orga3ecc09"><span class="section-number-3">5.2</span> identifiers</h3>
 <div class="outline-text-3" id="text-5-2">
 <ul class="org-ul">
 <li>An identifier, or name, is a sequence of Latin capital and small letters,</li>
@@ -522,8 +520,8 @@ characters.
 </div>
 </div>
 
-<div id="outline-container-org7ac55d5" class="outline-3">
-<h3 id="org7ac55d5"><span class="section-number-3">5.3</span> Keywords</h3>
+<div id="outline-container-org4743515" class="outline-3">
+<h3 id="org4743515"><span class="section-number-3">5.3</span> Keywords</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-type">_Bool</span><span class="org-whitespace-space"> </span><span class="org-keyword">break</span><span class="org-whitespace-space"> </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-type">_Complex</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">continue</span><span class="org-whitespace-space"> </span><span class="org-keyword">default</span><span class="org-whitespace-space"> </span><span class="org-keyword">restrict</span><span class="org-whitespace-space"> </span><span class="org-keyword">do</span><span class="org-whitespace-space"> </span><span class="org-type">double</span>
@@ -534,8 +532,8 @@ characters.
 </div>
 </div>
 
-<div id="outline-container-org0c2995b" class="outline-3">
-<h3 id="org0c2995b"><span class="section-number-3">5.4</span> Constants</h3>
+<div id="outline-container-org3afa673" class="outline-3">
+<h3 id="org3afa673"><span class="section-number-3">5.4</span> Constants</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 It's more complicated than forwards. The next section will note the constants.
@@ -544,8 +542,8 @@ It's more complicated than forwards. The next section will note the constants.
 </div>
 </div>
 
-<div id="outline-container-org89c6e4e" class="outline-2">
-<h2 id="org89c6e4e"><span class="section-number-2">6</span> Constants</h2>
+<div id="outline-container-orgc1931a1" class="outline-2">
+<h2 id="orgc1931a1"><span class="section-number-2">6</span> Constants</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The lexical class of constants includes four different kinds of constants:
@@ -558,8 +556,8 @@ traditional C terminology of constrant for both cases.
 </p>
 </div>
 
-<div id="outline-container-org3c8b949" class="outline-3">
-<h3 id="org3c8b949"><span class="section-number-3">6.1</span> Integer Constants.</h3>
+<div id="outline-container-orgc289683" class="outline-3">
+<h3 id="orgc289683"><span class="section-number-3">6.1</span> Integer Constants.</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Integer constants may be specified in decimal, octual, or hexadecimal notation.
@@ -590,8 +588,8 @@ These are valid integer constants: 100, 1000L, 200ll, 0x300, 0777, 0x98FCEuLL.
 </div>
 </div>
 
-<div id="outline-container-org6216ce9" class="outline-3">
-<h3 id="org6216ce9"><span class="section-number-3">6.2</span> Floating-Point Constants</h3>
+<div id="outline-container-orgb3a0051" class="outline-3">
+<h3 id="orgb3a0051"><span class="section-number-3">6.2</span> Floating-Point Constants</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Floating-point constants may be written with a decimal point, a signed exponent,
@@ -616,8 +614,8 @@ These are valid floating-point constants: 0., e21, 3.1415, .01, 1.E-3, 0.52f,
 </div>
 </div>
 
-<div id="outline-container-org011d774" class="outline-3">
-<h3 id="org011d774"><span class="section-number-3">6.3</span> Character Constants</h3>
+<div id="outline-container-org3569123" class="outline-3">
+<h3 id="org3569123"><span class="section-number-3">6.3</span> Character Constants</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 A character constant is written by enclosing one or more characters in
@@ -650,8 +648,8 @@ the ASCII encoding:
 </div>
 
 
-<div id="outline-container-orgeb56360" class="outline-3">
-<h3 id="orgeb56360"><span class="section-number-3">6.4</span> String Constants</h3>
+<div id="outline-container-org10a7d06" class="outline-3">
+<h3 id="org10a7d06"><span class="section-number-3">6.4</span> String Constants</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 A string constant is a (possibly empty) sequence of characters enclosed in
@@ -679,8 +677,8 @@ string.
 </div>
 </div>
 
-<div id="outline-container-org2aca709" class="outline-3">
-<h3 id="org2aca709"><span class="section-number-3">6.5</span> Escape Characters</h3>
+<div id="outline-container-org6f312b2" class="outline-3">
+<h3 id="org6f312b2"><span class="section-number-3">6.5</span> Escape Characters</h3>
 <div class="outline-text-3" id="text-6-5">
 <div class="org-src-container">
 <pre class="src src-text">a<span class="org-whitespace-space"> </span>--<span class="org-whitespace-space"> </span>alert,<span class="org-whitespace-space">                </span>b--backspace,<span class="org-whitespace-space">               </span>f--form<span class="org-whitespace-space"> </span>feed,
@@ -695,12 +693,12 @@ numeric<span class="org-whitespace-space"> </span>escape<span class="org-whitesp
 </div>
 </div>
 
-<div id="outline-container-orgd57f4d2" class="outline-2">
-<h2 id="orgd57f4d2"><span class="section-number-2">7</span> C++ Compatibility</h2>
+<div id="outline-container-org9f98b15" class="outline-2">
+<h2 id="org9f98b15"><span class="section-number-2">7</span> C++ Compatibility</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org7aaa42a" class="outline-3">
-<h3 id="org7aaa42a"><span class="section-number-3">7.1</span> Character Sets</h3>
+<div id="outline-container-org43c3f7e" class="outline-3">
+<h3 id="org43c3f7e"><span class="section-number-3">7.1</span> Character Sets</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 The token respelling and trigraphs in Standard C are part of the C++ Standard,
@@ -712,8 +710,8 @@ implementations will provide them as an extension.)
 </div>
 </div>
 
-<div id="outline-container-orgda5f52f" class="outline-3">
-<h3 id="orgda5f52f"><span class="section-number-3">7.2</span> Comments</h3>
+<div id="outline-container-orgff91a07" class="outline-3">
+<h3 id="orgff91a07"><span class="section-number-3">7.2</span> Comments</h3>
 <div class="outline-text-3" id="text-7-2">
 <p>
 C99 comments are acceptable as C++ and vice versa.  Before C99, the characters
@@ -723,8 +721,8 @@ C99 comments are acceptable as C++ and vice versa.  Before C99, the characters
 </div>
 </div>
 
-<div id="outline-container-orgf986e0c" class="outline-3">
-<h3 id="orgf986e0c"><span class="section-number-3">7.3</span> Operators</h3>
+<div id="outline-container-org6537ee7" class="outline-3">
+<h3 id="org6537ee7"><span class="section-number-3">7.3</span> Operators</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 There are three new compound operators in C++:
@@ -741,8 +739,8 @@ there is no impact on portability from C to C++.
 </div>
 </div>
 
-<div id="outline-container-org3badf77" class="outline-3">
-<h3 id="org3badf77"><span class="section-number-3">7.4</span> Identifiers and Keywords</h3>
+<div id="outline-container-org6b12b83" class="outline-3">
+<h3 id="org6b12b83"><span class="section-number-3">7.4</span> Identifiers and Keywords</h3>
 <div class="outline-text-3" id="text-7-4">
 <p>
 The identiofiers listed in latter are keywords in C++, but not in C. However,
@@ -770,8 +768,8 @@ false are reserved in C99 as part of the standard libraries.
 </div>
 </div>
 
-<div id="outline-container-orgbcdd284" class="outline-3">
-<h3 id="orgbcdd284"><span class="section-number-3">7.5</span> Character Constants</h3>
+<div id="outline-container-org66bda42" class="outline-3">
+<h3 id="org66bda42"><span class="section-number-3">7.5</span> Character Constants</h3>
 <div class="outline-text-3" id="text-7-5">
 <p>
 Single-character constants have type int in C, but have type in C++.
@@ -785,12 +783,12 @@ sizeof(int) in C.
 </div>
 </div>
 
-<div id="outline-container-org6189212" class="outline-2">
-<h2 id="org6189212"><span class="section-number-2">8</span> The C Preprocessor and Preprocessor Commands</h2>
+<div id="outline-container-org60501a0" class="outline-2">
+<h2 id="org60501a0"><span class="section-number-2">8</span> The C Preprocessor and Preprocessor Commands</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org47767fa" class="outline-3">
-<h3 id="org47767fa"><span class="section-number-3">8.1</span> The C preprocessor</h3>
+<div id="outline-container-org2d6ab16" class="outline-3">
+<h3 id="org2d6ab16"><span class="section-number-3">8.1</span> The C preprocessor</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 The C preprocessor is a simple macroprocessor that conceptually processes the
@@ -804,8 +802,8 @@ compilation in a single pass over the source file.
 </div>
 </div>
 
-<div id="outline-container-orgee71627" class="outline-3">
-<h3 id="orgee71627"><span class="section-number-3">8.2</span> Preprocessor Commands</h3>
+<div id="outline-container-org7b53ad9" class="outline-3">
+<h3 id="org7b53ad9"><span class="section-number-3">8.2</span> Preprocessor Commands</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 The preprocessor is controlled by special preprocessor command lines, which are
@@ -869,8 +867,8 @@ contexts in which the macro is called.
 </div>
 </div>
 
-<div id="outline-container-org762e218" class="outline-2">
-<h2 id="org762e218"><span class="section-number-2">9</span> Preprocessor Lexical Conventions</h2>
+<div id="outline-container-org25e66da" class="outline-2">
+<h2 id="org25e66da"><span class="section-number-2">9</span> Preprocessor Lexical Conventions</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 The preprocessor does not parse the source text, but it does break it up into
@@ -967,8 +965,8 @@ The<span class="org-whitespace-space"> </span>preprocessor<span class="org-white
 </div>
 </div>
 
-<div id="outline-container-org966ebb9" class="outline-2">
-<h2 id="org966ebb9"><span class="section-number-2">10</span> Definition and Replacement</h2>
+<div id="outline-container-org4e87d3f" class="outline-2">
+<h2 id="org4e87d3f"><span class="section-number-2">10</span> Definition and Replacement</h2>
 <div class="outline-text-2" id="text-10">
 <ol class="org-ol">
 <li><p>
@@ -1955,24 +1953,18 @@ printf("This is a split string.");
 </p>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/rn-C-a-reference-manual.html';
-    this.page.identifier = 'rn-C-a-reference-manual.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

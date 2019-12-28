@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>深入理解 GNU GRUB - 02 boot.S 2.1 相关BIOS例程</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,16 +29,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8fcff45">1. boot.S: GRUB引导第一步</a>
+<li><a href="#orgec602c8">1. boot.S: GRUB引导第一步</a>
 <ul>
-<li><a href="#org5e280d8">1.1. 相关BIOS例程</a>
+<li><a href="#orgda891d8">1.1. 相关BIOS例程</a>
 <ul>
-<li><a href="#org432d55e">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
-<li><a href="#org629f177">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
-<li><a href="#org6e448a2">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
-<li><a href="#org8abd256">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
-<li><a href="#org8a6730a">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
-<li><a href="#org0a7227b">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
+<li><a href="#org56f8578">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
+<li><a href="#org9e2f8eb">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
+<li><a href="#orgf63c3ed">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
+<li><a href="#org526893c">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
+<li><a href="#org714a5cf">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
+<li><a href="#org1b7f6a5">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
 </ul>
 </li>
 </ul>
@@ -49,8 +47,8 @@
 </div>
 </div>
 
-<div id="outline-container-org8fcff45" class="outline-2">
-<h2 id="org8fcff45"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
+<div id="outline-container-orgec602c8" class="outline-2">
+<h2 id="orgec602c8"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主要工作包括：配置寄存器；设置堆栈；检测引导盘；检测引导盘读取模式；读取另一扇区指令。这个过程用到几个BIOS例程，并且对主引导记录（MBR, Master Boot Record）结构有很大的依赖。因此boot.S我们分作四步进行详细描述：
@@ -65,8 +63,8 @@ boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主
 在本节最后，我们实现一个简单的boot.S，这个boot.S仅仅通过BIOS例程，向终端输出文本。
 </p>
 </div>
-<div id="outline-container-org5e280d8" class="outline-3">
-<h3 id="org5e280d8"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
+<div id="outline-container-orgda891d8" class="outline-3">
+<h3 id="orgda891d8"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读支持、LBA方式读、CHS参数获取、CHS方式读、磁盘复位。磁盘读取出现LBA/CHS两种模式（其实LBA又分为28-bit、48-bit、64-bit三种），是因为在磁盘的发展历史上，由于对磁盘容量的错误估量，导致容量屏障的出现，而不得不进行接口更改、扩展。历史上出现的容量屏障主要有四次：
@@ -78,25 +76,29 @@ boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读�
 <li>2TiB限制。为了提供更大范围的寻址，Western Digital和Phoenix Technologies制定了EDD (BIOS Enhanced Disk Drive Services) 标准。它使用64位LBA寻址，同时也支持48位和28位寻址。48位LBA寻址容量为128PiB，而64位LBA寻址容量更是高达8ZiB，无论48位LBA或者64位LBA，在当前或可以预见的将来应该是足够的。但是历史悠久的MBR中保存有磁盘分区表DPT，而分区表中分区绝对起始扇区和分区总扇区数都是32位的，因此对于传统分区的磁盘，最大寻址范围由这两个32位值决定，大小为232*512=2TiB。为了解决该问题，引进了GPT (GUID Partition Table) 和EFI (Extensible Firmware Interface) 技术，本文不对其做详细描述，有兴趣的读者可以Google相关主题。</li>
 </ol>
 <p>
-在磁盘容量的计算上，软件按照1024进行单位换算，而厂商按照1000进行单位换算，因此上述的504MiB限制、7.85GiB限制、128GiB限制又称为522MB限制、8.46GB限制、137GB限制。除了上述限制，历史上还出现过一些软件导致的容量屏障，例如一些BIOS BUG或文件系统体系导致的容量屏障，本文 不再对其做进一步描述，有兴趣可以Google相关细节。BIOS例程及容量屏障描述参考如下网络资源：
+在磁盘容量的计算上，软件按照1024进行单位换算，而厂商按照1000进行单位换算，因此上述的504MiB限制、7.85GiB限制、128GiB限制又称为522MB限制、8.46GB限制、137GB限制。
+除了上述限制，历史上还出现过一些软件导致的容量屏障，例如一些BIOS BUG或文件系统体系导致的容量屏障，本文 不再对其做进一步描述，有兴趣可以Google相关细节。BIOS例程及容量屏障描述参考如下网络资源：
 <a href="http://en.wikipedia.org/wiki/INT_13H">http://en.wikipedia.org/wiki/INT_13H</a>
 <a href="http://en.wikipedia.org/wiki/INT_10H">http://en.wikipedia.org/wiki/INT_10H</a>
 <a href="http://www.pcguide.com/ref/hdd/bios/index.htm">http://www.pcguide.com/ref/hdd/bios/index.htm</a>
 </p>
 </div>
 
-<div id="outline-container-org432d55e" class="outline-4">
-<h4 id="org432d55e"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
+<div id="outline-container-org56f8578" class="outline-4">
+<h4 id="org56f8578"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
-检测磁盘扩展读（LBA/CHS）支持情况。详细描述如下。参数：寄存器        描述
+检测磁盘扩展读（LBA/CHS）支持情况。详细描述如下。
+参数：
+寄存器        描述
 AH=0x41    扩展检测函数序号
 DL        驱动器编号（第一块硬盘为0x80，第二块为0x81，依次类推）
 BX        0x55AA
 </p>
 
 <p>
-结果：寄存器        描述
+结果：
+寄存器        描述
 CF        支持清零，不支持置1
 AH        错误码或者主版本号
 BX        0x55AA
@@ -137,27 +139,34 @@ CX        接口支持掩码
 </div>
 </div>
 
-<div id="outline-container-org629f177" class="outline-4">
-<h4 id="org629f177"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
+<div id="outline-container-org9e2f8eb" class="outline-4">
+<h4 id="org9e2f8eb"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
-LBA模式的读采用打包的数据结构作为参数。参数：寄存器        描述
+LBA模式的读采用打包的数据结构作为参数。
+参数：
+寄存器        描述
 AH=42H    扩展读函数序号
 DL        驱动器编号（第一块硬盘为0x80，第二块为0x81，依次类推）
 DS:SI        segment:offset指针，指向磁盘地址包DAP (Disk Address Packet)
 </p>
 
 <p>
-DAP结构体的格式描述如下：偏移量        大小        描述
+DAP结构体的格式描述如下：
+偏移量        大小        描述
 00H        1 Byte        DAP大小=16=0x10
 01H        1 Byte        未用，必须置0
-02H~03H    2 Bytes        需要读的扇区数（有些BIOS限制不能超过127扇区）
-04H~07H    4 Bytes        segment:offset指针，指向内存缓冲区，读取到的扇区内容放置在该缓冲区
-08H~0FH    8 Bytes        需要读的连续扇区的起始扇区编号（第一个扇区的编号是0）
+02H~03H    2 Bytes        需要读的扇区数
+（有些BIOS限制不能超过127扇区）
+04H~07H    4 Bytes        segment:offset指针，指向内存缓冲区，读取到的
+扇区内容放置在该缓冲区
+08H~0FH    8 Bytes        需要读的连续扇区的起始扇区编号
+（第一个扇区的编号是0）
 </p>
 
 <p>
-结果：寄存器        描述
+结果：
+寄存器        描述
 CF        失败置1，成功清零
 AH        返回码
 </p>
@@ -209,23 +218,30 @@ AH        返回码
 </div>
 </div>
 
-<div id="outline-container-org6e448a2" class="outline-4">
-<h4 id="org6e448a2"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
+<div id="outline-container-orgf63c3ed" class="outline-4">
+<h4 id="orgf63c3ed"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
-获取驱动器CHS参数。如下。参数：寄存器        描述
+获取驱动器CHS参数。如下。
+参数：
+寄存器        描述
 AH=0x08    驱动器CHS参数读取函数序号
 DL        驱动器编号（第一块硬盘为0x80，第二块为0x81，依次类推）
 BX        0x55AA
 </p>
 
 <p>
-结果：寄存器        描述
+结果：
+寄存器        描述
 CF        成功清零，失败置1
 AH        返回码
 DL        驱动器号
 DH        逻辑磁头最大索引值（number_of-1因为索引从0开始）
-CX        逻辑柱面索引最大值和逻辑扇区数逻辑柱面最大索引=number_of-，因为索引从0开始逻辑扇区数=number_of，因为索引从1开始柱面占10位，CH表示柱面低8位，CL高2位表示柱面9~10位扇区占6位，CL低6位表示扇区
+CX        逻辑柱面索引最大值和逻辑扇区数
+        逻辑柱面最大索引=number_of-，因为索引从0开始
+        逻辑扇区数=number_of，因为索引从1开始
+柱面占10位，CH表示柱面低8位，CL高2位表示柱面9~10位
+扇区占6位，CL低6位表示扇区
 </p>
 
 <p>
@@ -253,30 +269,36 @@ CX        逻辑柱面索引最大值和逻辑扇区数逻辑柱面最大索引=
 </div>
 </div>
 
-<div id="outline-container-org8abd256" class="outline-4">
-<h4 id="org8abd256"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
+<div id="outline-container-org526893c" class="outline-4">
+<h4 id="org526893c"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
-CHS模式读扇区。需要注意缓冲区没有超出该段寻址范围。参数：寄存器        描述
+CHS模式读扇区。需要注意缓冲区没有超出该段寻址范围。
+参数：
+寄存器        描述
 AH=0x02    CHS模式读扇区函数序号
 AL        需读取扇区数
 CX        柱面和扇区，柱面占10位，扇区占6位
 CH表示柱面低8位，CL高2位表示柱面9~10位
 CL低6位表示扇区（从1~63）
 DH        磁头
-DL        驱动器编号第一软盘为0x00，第二软盘为0x01，依次类推第一硬盘为0x80，第二硬盘为0x81，依次类推
+DL        驱动器编号
+第一软盘为0x00，第二软盘为0x01，依次类推
+第一硬盘为0x80，第二硬盘为0x81，依次类推
 ES:BX        segment:offset缓冲区地址指针
 </p>
 
 <p>
-结果：寄存器        描述
+结果：
+寄存器        描述
 CF        成功清零，失败置1
 AH        返回码
 AL        实际读取的扇区数
 </p>
 
 <p>
-CHS读存在7.88GiB容量限制，现在几乎没有硬盘使用这种模式读，并且也很少有人使用软盘（你还有软驱吗？），因此CHS读扇区只是作为残留机制存在，很少用到。使用AT&amp;T语法实现这个调用的例子如下，因为要用到移位等，汇编代码看起来稍微有点麻烦。这里我们依然假定使用0x80作为驱动器，以C/H/S=0/0/1开始连续读取4个扇区。另外，需要用到2.1.3描述的CHS参数获取的结果。
+CHS读存在7.88GiB容量限制，现在几乎没有硬盘使用这种模式读，并且也很少有人使用软盘（你还有软驱吗？），因此CHS读扇区只是作为残留机制存在，很少用到。
+使用AT&amp;T语法实现这个调用的例子如下，因为要用到移位等，汇编代码看起来稍微有点麻烦。这里我们依然假定使用0x80作为驱动器，以C/H/S=0/0/1开始连续读取4个扇区。另外，需要用到2.1.3描述的CHS参数获取的结果。
 </p>
 <div class="org-src-container">
 <pre class="src src-asm">
@@ -357,17 +379,20 @@ CHS读结束后，通过CF判断是否成功。
 </div>
 </div>
 
-<div id="outline-container-org8a6730a" class="outline-4">
-<h4 id="org8a6730a"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
+<div id="outline-container-org714a5cf" class="outline-4">
+<h4 id="org714a5cf"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
-复位磁盘驱动器。如下。参数：寄存器        描述
+复位磁盘驱动器。如下。
+参数：
+寄存器        描述
 AH=0x00    驱动器复位函数序号
 DL        驱动器编号（第一块硬盘为0x80，第二块为0x81，依次类推）
 </p>
 
 <p>
-结果：寄存器        描述
+结果：
+寄存器        描述
 CF        成功清零，失败置1
 AH        状态
 </p>
@@ -396,19 +421,22 @@ AH        状态
 </div>
 </div>
 
-<div id="outline-container-org0a7227b" class="outline-4">
-<h4 id="org0a7227b"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
+<div id="outline-container-org1b7f6a5" class="outline-4">
+<h4 id="org1b7f6a5"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <p>
 BIOS使用INT 10H图形服务，可以用来设置图形模式、输出字符或字符串、以及基本图形（图形模式下读取/写入像素）。
-AH=0EH提供用来向终端输出单一字符。如下。参数：寄存器        描述
+AH=0EH提供用来向终端输出单一字符。如下。
+参数：
+寄存器        描述
 AH=0x0E    电传输出函数序号
 AL=Character    需要输出的字符
 BL=Color    输出字符颜色，只对图形终端有效
 </p>
 
 <p>
-结果：无返回
+结果：
+无返回
 </p>
 
 <p>
@@ -432,24 +460,18 @@ INT 10H, AH=0EH调用无返回值。
 </div>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/bootloader-grub-02-boot.S-BIOS-processdure.html';
-    this.page.identifier = 'bootloader-grub-02-boot.S-BIOS-processdure.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

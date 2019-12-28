@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>Meltdown Paper</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,16 +29,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc989f59">1. 声明</a></li>
-<li><a href="#orge409278">2. Authors</a></li>
-<li><a href="#org8e2a8c4">3. Abstract</a></li>
-<li><a href="#org14d2c67">4. Introduction</a></li>
+<li><a href="#org58f3874">1. 声明</a></li>
+<li><a href="#org6c274ba">2. Authors</a></li>
+<li><a href="#org444fb00">3. Abstract</a></li>
+<li><a href="#orgab0378b">4. Introduction</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc989f59" class="outline-2">
-<h2 id="orgc989f59"><span class="section-number-2">1</span> 声明</h2>
+<div id="outline-container-org58f3874" class="outline-2">
+<h2 id="org58f3874"><span class="section-number-2">1</span> 声明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文主要内容来自郭健(<a href="http://www.wowotech.net/basic_subject/meltdown.html">http://www.wowotech.net/basic_subject/meltdown.html</a>)翻译。
@@ -48,8 +46,8 @@
 </div>
 </div>
 
-<div id="outline-container-orge409278" class="outline-2">
-<h2 id="orge409278"><span class="section-number-2">2</span> Authors</h2>
+<div id="outline-container-org6c274ba" class="outline-2">
+<h2 id="org6c274ba"><span class="section-number-2">2</span> Authors</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>Moritz Lipp: <a href="https://mlq.me/">Homepage</a>, <a href="https://github.com/mlq">Github</a>, <a href="http://dblp.org/pers/hd/l/Lipp:Moritz">Dblp</a>, <a href="https://twitter.com/mlqxyz">Twitter</a></li>
@@ -66,8 +64,8 @@
 </div>
 </div>
 
-<div id="outline-container-org8e2a8c4" class="outline-2">
-<h2 id="org8e2a8c4"><span class="section-number-2">3</span> Abstract</h2>
+<div id="outline-container-org444fb00" class="outline-2">
+<h2 id="org444fb00"><span class="section-number-2">3</span> Abstract</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The security of computer systems fundamentally relies on memory isolation, e.g.,
@@ -90,15 +88,23 @@ this severe information leakage.
 </p>
 
 <p>
-内存隔离是计算机系统安全的基础，例如：内核空间的地址段往往是标记为受保护的，用户态程序读写内核地址则会触发异常，从而阻止其访问。在这篇文章中，我们会详细描述这个叫Meltdown的硬件漏洞。Meltdown是利用了现代处理器上乱序执行（out-of-order
-execution）的副作用（side effect），使得用户态程序也可以读出内核空间的数据，包括个人私有数据和密码。由于可以提高性能，现代处理器广泛采用了乱序执行特性。利用
-Meltdown进行攻击的方法和操作系统无关，也不依赖于软件的漏洞。地址空间隔离带来的安全保证被Meltdown给无情的打碎了（半虚拟化环境也是如此），因此，所有基于地址空间隔离的安全机制都不再安全了。在受影响的系统中，Meltdown可以让一个攻击者读取其他进程的数据，或者读取云服务器中其他虚拟机的数据，而不需要相应的权限。这份文档也说明了KAISER（本意是解决KASLR不能解决的问题）可以防止Meltdown攻击。因此，我们强烈建议必须立即部署KAISER，以防止大规模、严重的信息泄漏。
+内存隔离是计算机系统安全的基础，例如：内核空间的地址段往往是标记为受保护的，用户
+态程序读写内核地址则会触发异常，从而阻止其访问。在这篇文章中，我们会详细描述这个
+叫Meltdown的硬件漏洞。Meltdown是利用了现代处理器上乱序执行（out-of-order
+execution）的副作用（side effect），使得用户态程序也可以读出内核空间的数据，包括
+个人私有数据和密码。由于可以提高性能，现代处理器广泛采用了乱序执行特性。利用
+Meltdown进行攻击的方法和操作系统无关，也不依赖于软件的漏洞。地址空间隔离带来的
+安全保证被Meltdown给无情的打碎了（半虚拟化环境也是如此），因此，所有基于地址空间
+隔离的安全机制都不再安全了。在受影响的系统中，Meltdown可以让一个攻击者读取其他
+进程的数据，或者读取云服务器中其他虚拟机的数据，而不需要相应的权限。这份文档也
+说明了KAISER（本意是解决KASLR不能解决的问题）可以防止Meltdown攻击。因此，我们
+强烈建议必须立即部署KAISER，以防止大规模、严重的信息泄漏。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org14d2c67" class="outline-2">
-<h2 id="org14d2c67"><span class="section-number-2">4</span> Introduction</h2>
+<div id="outline-container-orgab0378b" class="outline-2">
+<h2 id="orgab0378b"><span class="section-number-2">4</span> Introduction</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 One of the central security features of today’s operating systems is memory
@@ -110,7 +116,11 @@ multiple users on a single machine in the cloud.
 </p>
 
 <p>
-当今操作系统的核心安全特性之一是内存隔离。所谓内存隔离就是操作系统要确保用户应用程序不能访问彼此的内存，此外，它也要阻止用户应用程序对内核空间的访问。在个人设备上，多个进程并行运行，我们需要隔离彼此。在云计算环境中，共享同一台物理主机的多个用户（虚拟机）的多个进程也是共存的，我们也不能让某个用户（虚拟机）的进程能够访问到其他用户（虚拟机）的进程数据。因此，这种内核隔离是我们计算环境的基石。
+当今操作系统的核心安全特性之一是内存隔离。所谓内存隔离就是操作系统要确保用户应用
+程序不能访问彼此的内存，此外，它也要阻止用户应用程序对内核空间的访问。在个人设备
+上，多个进程并行运行，我们需要隔离彼此。在云计算环境中，共享同一台物理主机的多个
+用户（虚拟机）的多个进程也是共存的，我们也不能让某个用户（虚拟机）的进程能够访问
+到其他用户（虚拟机）的进程数据。因此，这种内核隔离是我们计算环境的基石。
 </p>
 
 <p>
@@ -126,8 +136,14 @@ switching from a user process to the kernel.
 </p>
 
 <p>
-在现代处理器上，内核和用户地址空间的隔离通常由处理器控制寄存器中的一个bit实现（该bit被称为supervisor bit，标识当前处理器处于的模式），该bit定义了是否可以访问
-kernel space的内存页。基本的思路是：当执行内核代码的时候才设置此位等于1，在切换到用户进程时清除该bit。有了这种硬件特性的支持，操作系统可以将内核地址空间映射到每个进程。在用户进程执行过程中，往往需要从用户空间切换到内核空间，例如用户进程通过系统调用请求内核空间的服务，或者当在用户空间发生中断的时候，需要切换到内核空间执行interrupt handler，以便来处理外设的异步事件。考虑到从用户态切换内核态的频率非常高，如果在这个过程中地址空间不需要切换，那么系统性能就不会受到影响。
+在现代处理器上，内核和用户地址空间的隔离通常由处理器控制寄存器中的一个bit实现（
+该bit被称为supervisor bit，标识当前处理器处于的模式），该bit定义了是否可以访问
+kernel space的内存页。基本的思路是：当执行内核代码的时候才设置此位等于1，在切换
+到用户进程时清除该bit。有了这种硬件特性的支持，操作系统可以将内核地址空间映射到
+每个进程。在用户进程执行过程中，往往需要从用户空间切换到内核空间，例如用户进程
+通过系统调用请求内核空间的服务，或者当在用户空间发生中断的时候，需要切换到内核
+空间执行interrupt handler，以便来处理外设的异步事件。考虑到从用户态切换内核态的
+频率非常高，如果在这个过程中地址空间不需要切换，那么系统性能就不会受到影响。
 </p>
 
 <p>
@@ -142,7 +158,12 @@ potentially on other CPUs of other vendors.
 </p>
 
 <p>
-在这项工作中，我们提出了利用meltdown漏洞进行攻击的一种全新的方法，通过这种方法，任何用户进程都可以攻破操作系统对地址空间的隔离，通过一种简单的方法读取内核空间的数据，这里就包括映射到内核地址空间的所有的物理内存。Meltdown并不利用任何的软件的漏洞，也就是说它对任何一种操作系统都是有效的。相反，它是利用大多数现代处理器（例如2010年以后的Intel微架构（microarchitectural），其他CPU厂商也可能潜伏这样的问题）上的侧信道（side-channel）信息来发起攻击。
+在这项工作中，我们提出了利用meltdown漏洞进行攻击的一种全新的方法，通过这种方法，
+任何用户进程都可以攻破操作系统对地址空间的隔离，通过一种简单的方法读取内核空间的
+数据，这里就包括映射到内核地址空间的所有的物理内存。Meltdown并不利用任何的软件的
+漏洞，也就是说它对任何一种操作系统都是有效的。相反，它是利用大多数现代处理器（
+例如2010年以后的Intel微架构（microarchitectural），其他CPU厂商也可能潜伏这样的
+问题）上的侧信道（side-channel）信息来发起攻击。
 </p>
 
 <p>
@@ -155,8 +176,10 @@ effects caused by out-of-order execution.
 </p>
 
 <p>
-一般的侧信道攻击（side-channel attack）都需要直到攻击目标的详细信息，然后根据这些信息指定具体的攻击方法，从而获取秘密数据。Meltdown攻击方法则不然，它可以dump
-整个内核地址空间的数据（包括全部映射到内核地址空间的物理内存）。Meltdown攻击力度非常很大，其根本原因是利用了乱序执行的副作用（side effect）。
+一般的侧信道攻击（side-channel attack）都需要直到攻击目标的详细信息，然后根据
+这些信息指定具体的攻击方法，从而获取秘密数据。Meltdown攻击方法则不然，它可以dump
+整个内核地址空间的数据（包括全部映射到内核地址空间的物理内存）。Meltdown攻击力度
+非常很大，其根本原因是利用了乱序执行的副作用（side effect）。
 </p>
 
 <p>
@@ -171,7 +194,10 @@ and out-of-order execution.
 </p>
 
 <p>
-乱序执行是当今CPU的重要性能特性，用以克服繁忙执行单元的延时，例如加载内存数据到寄存器这样的操作。为了提高性能，CPU并不是进入stall状态，而是采用了乱序执行的方法，继续处理后续指令并调度该指令去空闲的执行单元去执行。然而，这种操作常常有不必要的副作用，而通过这些执行指令时候的副作用，例如时序方面的差异 <sup><a id="fnr.2.100" class="footref" href="#fn.2">2</a></sup>
+乱序执行是当今CPU的重要性能特性，用以克服繁忙执行单元的延时，例如加载内存数据到
+寄存器这样的操作。为了提高性能，CPU并不是进入stall状态，而是采用了乱序执行的
+方法，继续处理后续指令并调度该指令去空闲的执行单元去执行。然而，这种操作常常有
+不必要的副作用，而通过这些执行指令时候的副作用，例如时序方面的差异 <sup><a id="fnr.2.100" class="footref" href="#fn.2">2</a></sup>
 </p>
 <p>
 四、Meltdown攻击架构图（Building block of attack）
@@ -1182,8 +1208,8 @@ This work was supported in part by the European Research Council (ERC) under the
 <h2 class="footnotes">&#33050;&#27880;: </h2>
 <div id="text-footnotes">
 
-<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara">This attack was independently found by
-this paper and Jann Horn from Google Project Zero</div></div>
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">This attack was independently found by
+this paper and Jann Horn from Google Project Zero</p></div></div>
 
 <div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
 OSVIK, D. A., SHAMIR, A., AND TROMER, E. Cache Attacks and Countermeasures: the Case of AES. In CT-RSA (2006).
@@ -1207,7 +1233,13 @@ problem arises.
 </p>
 
 <p class="footpara">
-虽然性能提升了，但是从安全的角度来看却存在问题，关键点在于：在乱序执行下，被攻击的CPU可以运行未授权的进程从一个需要特权访问的地址上读出数据并加载到一个临时的寄存器中。CPU甚至可以基于该临时寄存器的值执行进一步的计算，例如，基于该寄存器的值来访问数组。当然，CPU最终还是会发现这个异常的地址访问，并丢弃了计算的结果（例如将已经修改的寄存器值）。虽然那些异常之后的指令被提前执行了，但是最终CPU还是力挽狂澜，清除了执行结果，因此看起来似乎什么也没有发生过。这也保证了从CPU体系结构角度来看，不存在任何的安全问题。
+虽然性能提升了，但是从安全的角度来看却存在问题，关键点在于：在乱序执行下，被攻击
+的CPU可以运行未授权的进程从一个需要特权访问的地址上读出数据并加载到一个临时的
+寄存器中。CPU甚至可以基于该临时寄存器的值执行进一步的计算，例如，基于该寄存器的
+值来访问数组。当然，CPU最终还是会发现这个异常的地址访问，并丢弃了计算的结果（
+例如将已经修改的寄存器值）。虽然那些异常之后的指令被提前执行了，但是最终CPU还是
+力挽狂澜，清除了执行结果，因此看起来似乎什么也没有发生过。这也保证了从CPU体系
+结构角度来看，不存在任何的安全问题。
 </p>
 
 <p class="footpara">
@@ -1514,24 +1546,18 @@ GRUSS, D., SPREITZER, R., AND MANGARD, S. Cache Template Attacks: Automating Att
 
 
 </div>
-</div></div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/paper-meltdown-cn.html';
-    this.page.identifier = 'paper-meltdown-cn.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
+</div>
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

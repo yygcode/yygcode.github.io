@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:57 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>排序算法</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -53,88 +51,90 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge517444">1. 内部排序</a>
+<li><a href="#orge583570">1. 内部排序</a>
 <ul>
-<li><a href="#org3881b00">1.1. 插入排序</a>
+<li><a href="#orge844e76">1.1. 插入排序</a>
 <ul>
-<li><a href="#orgd7182bc">1.1.1. 计算机编程艺术</a></li>
-<li><a href="#org24f6c49">1.1.2. WIKI</a></li>
-<li><a href="#orgbc18254">1.1.3. C语言实现</a></li>
+<li><a href="#org43413d6">1.1.1. 计算机编程艺术</a></li>
+<li><a href="#orged0b298">1.1.2. WIKI</a></li>
+<li><a href="#org1fb6161">1.1.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org717dc14">1.2. 冒泡排序(交换排序)</a>
+<li><a href="#org32512f7">1.2. 冒泡排序(交换排序)</a>
 <ul>
-<li><a href="#org5069535">1.2.1. 计算机编程艺术</a></li>
-<li><a href="#org4becc35">1.2.2. WIKI</a></li>
-<li><a href="#orgf4831ce">1.2.3. C语言实现</a></li>
-<li><a href="#orgeac97f5">1.2.4. C语言实现旗标版(性能优化)</a></li>
+<li><a href="#org9d00325">1.2.1. 计算机编程艺术</a></li>
+<li><a href="#org813d792">1.2.2. WIKI</a></li>
+<li><a href="#orge99b083">1.2.3. C语言实现</a></li>
+<li><a href="#orge935cc6">1.2.4. C语言实现旗标版(性能优化)</a></li>
 </ul>
 </li>
-<li><a href="#org05f367c">1.3. 选择排序</a>
+<li><a href="#org7e050c0">1.3. 选择排序</a>
 <ul>
-<li><a href="#org52194fb">1.3.1. 计算机编程艺术</a></li>
-<li><a href="#org0da4ce9">1.3.2. C语言实现</a></li>
+<li><a href="#orgcd58db9">1.3.1. 计算机编程艺术</a></li>
+<li><a href="#orgba78dc8">1.3.2. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org096cdc7">1.4. 合并排序</a>
+<li><a href="#org425e0ac">1.4. 合并排序</a>
 <ul>
-<li><a href="#org0931862">1.4.1. 计算机编程艺术</a>
+<li><a href="#org27c19f9">1.4.1. 计算机编程艺术</a>
 <ul>
-<li><a href="#org18d4806">1.4.1.1. 有序文件两路合并</a></li>
-<li><a href="#orgbf29c7a">1.4.1.2. 自然的两路合并排序</a></li>
+<li><a href="#org297c50e">1.4.1.1. 有序文件两路合并</a></li>
+<li><a href="#org843aabc">1.4.1.2. 自然的两路合并排序</a></li>
 </ul>
 </li>
-<li><a href="#org581fa6a">1.4.2. C语言实现</a></li>
+<li><a href="#org3eb155b">1.4.2. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#orgbdc6eb4">1.5. 快速排序</a>
+<li><a href="#org4fcd5b9">1.5. 快速排序</a>
 <ul>
-<li><a href="#org591482b">1.5.1. 算法导论</a></li>
-<li><a href="#org6c97279">1.5.2. 优化</a></li>
-<li><a href="#org1508546">1.5.3. C语言实现</a></li>
+<li><a href="#orgbbca8b8">1.5.1. 算法导论</a></li>
+<li><a href="#org158aa57">1.5.2. 优化</a></li>
+<li><a href="#orgcb1ebba">1.5.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#org2f94eb5">1.6. 堆排序</a>
+<li><a href="#org4c259eb">1.6. 堆排序</a>
 <ul>
-<li><a href="#orge89021f">1.6.1. 算法导论</a>
+<li><a href="#org143e628">1.6.1. 算法导论</a>
 <ul>
-<li><a href="#org4a0afb9">1.6.1.1. 堆数据结构</a></li>
-<li><a href="#org7179887">1.6.1.2. 保持堆的性质</a></li>
-<li><a href="#org4c6ea31">1.6.1.3. 建堆</a></li>
-<li><a href="#org6fe815d">1.6.1.4. 堆排序</a></li>
+<li><a href="#org11acd45">1.6.1.1. 堆数据结构</a></li>
+<li><a href="#org235db89">1.6.1.2. 保持堆的性质</a></li>
+<li><a href="#org51443eb">1.6.1.3. 建堆</a></li>
+<li><a href="#orgfaf3f34">1.6.1.4. 堆排序</a></li>
 </ul>
 </li>
-<li><a href="#org88dd6ab">1.6.2. 计算机编程艺术</a>
+<li><a href="#orgeb126d2">1.6.2. 计算机编程艺术</a>
 <ul>
-<li><a href="#org2d0b99e">1.6.2.1. 描述</a></li>
-<li><a href="#orgdcc77d2">1.6.2.2. 算法描述</a></li>
+<li><a href="#org3f68f5c">1.6.2.1. 描述</a></li>
+<li><a href="#orgb8b2dac">1.6.2.2. 算法描述</a></li>
 </ul>
 </li>
-<li><a href="#org4ca5adc">1.6.3. C语言实现</a></li>
+<li><a href="#org61ed6bf">1.6.3. C语言实现</a></li>
 </ul>
 </li>
-<li><a href="#orge9d68a5">1.7. 希尔排序</a></li>
-<li><a href="#org157f5bb">1.8. 基数排序</a></li>
-<li><a href="#org6ae8cf8">1.9. 桶排序</a></li>
+<li><a href="#org19eb795">1.7. 希尔排序</a></li>
+<li><a href="#org98664c4">1.8. 基数排序</a></li>
+<li><a href="#org5e7590b">1.9. 桶排序</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge517444" class="outline-2">
-<h2 id="orge517444"><span class="section-number-2">1</span> 内部排序</h2>
+
+<div id="outline-container-orge583570" class="outline-2">
+<h2 id="orge583570"><span class="section-number-2">1</span> 内部排序</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org3881b00" class="outline-3">
-<h3 id="org3881b00"><span class="section-number-3">1.1</span> 插入排序</h3>
+<div id="outline-container-orge844e76" class="outline-3">
+<h3 id="orge844e76"><span class="section-number-3">1.1</span> 插入排序</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-orgd7182bc" class="outline-4">
-<h4 id="orgd7182bc"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org43413d6" class="outline-4">
+<h4 id="org43413d6"><span class="section-number-4">1.1.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
-直接插入排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
+直接插入排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键
+将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
 </p>
 
 <p>
@@ -149,22 +149,25 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org24f6c49" class="outline-4">
-<h4 id="org24f6c49"><span class="section-number-4">1.1.2</span> WIKI</h4>
+<div id="outline-container-orged0b298" class="outline-4">
+<h4 id="orged0b298"><span class="section-number-4">1.1.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <blockquote>
 <ul class="org-ul">
-<li><a href="https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/插入排序</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F</a></li>
 </ul>
 <p>
-插入排序（英语：Insertion Sort）是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。插入排序在实现上，通常采用in-place排序（即只需用到O(1)的额外空间的排序），因而在从后向前扫描过程中，需要反复把已排序元素逐步向后挪位，为最新元素提供插入空间。
+插入排序（英语：Insertion Sort）是一种简单直观的排序算法。它的工作原理是通过构建
+有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。插入
+排序在实现上，通常采用in-place排序（即只需用到O(1)的额外空间的排序），因而在从后
+向前扫描过程中，需要反复把已排序元素逐步向后挪位，为最新元素提供插入空间。
 </p>
 </blockquote>
 </div>
 </div>
 
-<div id="outline-container-orgbc18254" class="outline-4">
-<h4 id="orgbc18254"><span class="section-number-4">1.1.3</span> C语言实现</h4>
+<div id="outline-container-org1fb6161" class="outline-4">
+<h4 id="org1fb6161"><span class="section-number-4">1.1.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -225,20 +228,23 @@ S5. [R进入R<sub>i+1</sub>] 置 R<sub>i+1</sub>&larr;R。
 </div>
 </div>
 
-<div id="outline-container-org717dc14" class="outline-3">
-<h3 id="org717dc14"><span class="section-number-3">1.2</span> 冒泡排序(交换排序)</h3>
+<div id="outline-container-org32512f7" class="outline-3">
+<h3 id="org32512f7"><span class="section-number-3">1.2</span> 冒泡排序(交换排序)</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-org5069535" class="outline-4">
-<h4 id="org5069535"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org9d00325" class="outline-4">
+<h4 id="org9d00325"><span class="section-number-4">1.2.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
-冒泡排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
+冒泡排序: 重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后他们的键
+将处于有序状态：K<sub>1</sub>&le; &#x2026; &le;K<sub>N</sub>
 </p>
 
 <p>
-B1. [初始化BOUND] 置BOUND &larr; N (BOUND是尚不知其记录是否已处于最终位置上的最高小标；这表示此刻我们尚一无所知)；<br />
-B2. [对j进行循环] 置 t &larr; 0，对 j=1, 2, &#x2026;, BOUND-1执行步骤B3，然后转到B4，但如果BOUND=1，则直接跳转到B4；<br />
+B1. [初始化BOUND] 置BOUND &larr; N (BOUND是尚不知其记录是否已处于最终位置
+上的最高小标；这表示此刻我们尚一无所知)；<br />
+B2. [对j进行循环] 置 t &larr; 0，对 j=1, 2, &#x2026;, BOUND-1执行步骤B3，然后
+转到B4，但如果BOUND=1，则直接跳转到B4；<br />
 B3. [比较/交换R<sub>j</sub>:R<sub>j+1</sub>] 如果K<sub>j</sub> &lt; K<sub>j+1</sub>，则交换
 R<sub>j</sub>&larr;&rarr;R<sub>j+1</sub>，并置 t&larr;j；<br />
 B4. [是否还要交换？] 如果 t&larr;0，则此算法终止，否则置
@@ -247,24 +253,35 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-org4becc35" class="outline-4">
-<h4 id="org4becc35"><span class="section-number-4">1.2.2</span> WIKI</h4>
+<div id="outline-container-org813d792" class="outline-4">
+<h4 id="org813d792"><span class="section-number-4">1.2.2</span> WIKI</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <blockquote>
 <ul class="org-ul">
-<li><a href="https://zh.wikipedia.org/wiki/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/冒泡排序</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F</a></li>
 </ul>
 
 <p>
-冒泡排序（英语：Bubble Sort）是一种简单的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。
+冒泡排序（英语：Bubble Sort）是一种简单的排序算法。它重复地走访过要排序的数列，
+一次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地
+进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为
+越小的元素会经由交换慢慢“浮”到数列的顶端。
 </p>
 
 <p>
-冒泡排序对n个项目需要O(n<sup>2</sup>)的比较次数，且可以原地排序。尽管这个算法是最简单了解和实现的排序算法之一，但它对于包含大量的元素的数列排序是很没有效率的。
+冒泡排序对n个项目需要O(n<sup>2</sup>)的比较次数，且可以原地排序。尽管这个算法是最简单
+了解和实现的排序算法之一，但它对于包含大量的元素的数列排序是很没有效率的。
 </p>
 
 <p>
-冒泡排序是与插入排序拥有相等的运行时间，但是两种算法在需要的交换次数却很大地不同。在最坏的情况，冒泡排序需要O(n<sup>2</sup>)次交换，而插入排序只要最多O(n)交换。冒泡排序的实现（类似下面）通常会对已经排序好的数列拙劣地运行O(n<sup>2</sup>)，而插入排序在这个例子只需要O(n)个运算。因此很多现代的算法教科书避免使用冒泡排序，而用插入排序取代之。冒泡排序如果能在内部循环第一次运行时，使用一个旗标来表示有无需要交换的可能，也可以把最优情况下的复杂度降低到O(n)。在这个情况，已经排序好的数列就无交换的需要。若在每次走访数列时，把走访顺序反过来，也可以稍微地改进效率。有时候称为鸡尾酒排序，因为算法会从数列的一端到另一端之间穿梭往返。
+冒泡排序是与插入排序拥有相等的运行时间，但是两种算法在需要的交换次数却很大地
+不同。在最坏的情况，冒泡排序需要O(n<sup>2</sup>)次交换，而插入排序只要最多O(n)交换。
+冒泡排序的实现（类似下面）通常会对已经排序好的数列拙劣地运行O(n<sup>2</sup>)，而插入排序
+在这个例子只需要O(n)个运算。因此很多现代的算法教科书避免使用冒泡排序，而用插入
+排序取代之。冒泡排序如果能在内部循环第一次运行时，使用一个旗标来表示有无需要
+交换的可能，也可以把最优情况下的复杂度降低到O(n)。在这个情况，已经排序好的数列就
+无交换的需要。若在每次走访数列时，把走访顺序反过来，也可以稍微地改进效率。有时候
+称为鸡尾酒排序，因为算法会从数列的一端到另一端之间穿梭往返。
 </p>
 
 <p>
@@ -287,8 +304,8 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-orgf4831ce" class="outline-4">
-<h4 id="orgf4831ce"><span class="section-number-4">1.2.3</span> C语言实现</h4>
+<div id="outline-container-orge99b083" class="outline-4">
+<h4 id="orge99b083"><span class="section-number-4">1.2.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -344,8 +361,8 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-orgeac97f5" class="outline-4">
-<h4 id="orgeac97f5"><span class="section-number-4">1.2.4</span> C语言实现旗标版(性能优化)</h4>
+<div id="outline-container-orge935cc6" class="outline-4">
+<h4 id="orge935cc6"><span class="section-number-4">1.2.4</span> C语言实现旗标版(性能优化)</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -409,28 +426,31 @@ BOUND &larr; t，并返回到B2；
 </div>
 </div>
 
-<div id="outline-container-org05f367c" class="outline-3">
-<h3 id="org05f367c"><span class="section-number-3">1.3</span> 选择排序</h3>
+<div id="outline-container-org7e050c0" class="outline-3">
+<h3 id="org7e050c0"><span class="section-number-3">1.3</span> 选择排序</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
-<div id="outline-container-org52194fb" class="outline-4">
-<h4 id="org52194fb"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
+<div id="outline-container-orgcd58db9" class="outline-4">
+<h4 id="orgcd58db9"><span class="section-number-4">1.3.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <p>
-直接选择排序: 适当重新安排记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>；在完成排序后，它们的键码将是有序的K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。排序是以上边指出的方法为基础，但改为首选最大最大元素，紧接着选择第二个最大的，等等，这样做证明是更为方便的。
+直接选择排序: 适当重新安排记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>；在完成排序后，它们的键码
+将是有序的K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。排序是以上边指出的方法为基础，但改为首选最大
+最大元素，紧接着选择第二个最大的，等等，这样做证明是更为方便的。
 </p>
 
 <p>
 S1. [对j进行循环] 对 j=N, N-1, &#x2026;, 2执行步骤S2和S3；
-S2. [找max(K<sub>1</sub>, &#x2026;, K<sub>j</sub>)] 查一遍K<sub>j</sub>, K<sub>j-1</sub>, &#x2026;, K<sub>1</sub> 以找出极大者，设它为K<sub>i</sub>，其中i尽可能地大；
+S2. [找max(K<sub>1</sub>, &#x2026;, K<sub>j</sub>)] 查一遍K<sub>j</sub>, K<sub>j-1</sub>, &#x2026;, K<sub>1</sub> 以找出极大者，
+设它为K<sub>i</sub>，其中i尽可能地大；
 S3. [同R<sub>j</sub>进行交换] 交换记录R<sub>i</sub>&harr;R<sub>j</sub>（现在诸记录R<sub>j</sub>, &#x2026;,
 R<sub>N</sub>都处于它们的最后位置处）。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0da4ce9" class="outline-4">
-<h4 id="org0da4ce9"><span class="section-number-4">1.3.2</span> C语言实现</h4>
+<div id="outline-container-orgba78dc8" class="outline-4">
+<h4 id="orgba78dc8"><span class="section-number-4">1.3.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -495,16 +515,16 @@ R<sub>N</sub>都处于它们的最后位置处）。
 </div>
 </div>
 
-<div id="outline-container-org096cdc7" class="outline-3">
-<h3 id="org096cdc7"><span class="section-number-3">1.4</span> 合并排序</h3>
+<div id="outline-container-org425e0ac" class="outline-3">
+<h3 id="org425e0ac"><span class="section-number-3">1.4</span> 合并排序</h3>
 <div class="outline-text-3" id="text-1-4">
 </div>
-<div id="outline-container-org0931862" class="outline-4">
-<h4 id="org0931862"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
+<div id="outline-container-org27c19f9" class="outline-4">
+<h4 id="org27c19f9"><span class="section-number-4">1.4.1</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-4-1">
 </div>
-<div id="outline-container-org18d4806" class="outline-5">
-<h5 id="org18d4806"><span class="section-number-5">1.4.1.1</span> 有序文件两路合并</h5>
+<div id="outline-container-org297c50e" class="outline-5">
+<h5 id="org297c50e"><span class="section-number-5">1.4.1.1</span> 有序文件两路合并</h5>
 <div class="outline-text-5" id="text-1-4-1-1">
 <p>
 两路合并：本算法把有序文件x<sub>1</sub>&le;x<sub>2</sub>&le;&#x2026;&le;x<sub>m</sub>和
@@ -515,18 +535,20 @@ z<sub>1</sub>&le;z<sub>2</sub>&le;&#x2026;&le;z<sub>m+n</sub>。
 <p>
 M1. [初始化] 置 i&larr;1, j&larr;1, k&larr;1；<br />
 M2. [找较小者] 如果x<sub>i</sub>&le;y<sub>i</sub>，则转到步骤3，否则转到步骤5；<br />
-M3. [输出x<sub>i</sub>] 置z<sub>k</sub>&larr;x<sub>i</sub>，k&larr;k+1，i&larr;i+1，如果i&le;m，返回M2；<br />
+M3. [输出x<sub>i</sub>] 置z<sub>k</sub>&larr;x<sub>i</sub>，k&larr;k+1，i&larr;i+1，
+如果i&le;m，返回M2；<br />
 M4. [传送y<sub>j</sub>, &#x2026;, y<sub>n</sub>] 置(z<sub>k</sub>, &#x2026;, z<sub>m+n</sub>)&larr;(y<sub>j</sub>, &#x2026;,
 y<sub>n</sub>)并终止此算法；
-M5. [输出y<sub>j</sub>] 置z<sub>k</sub>&larr;y<sub>j</sub>，k&larr;k+1，j&larr;j+1，如果j&le;n，返回M2；<br />
+M5. [输出y<sub>j</sub>] 置z<sub>k</sub>&larr;y<sub>j</sub>，k&larr;k+1，j&larr;j+1，
+如果j&le;n，返回M2；<br />
 M6. [传送x<sub>i</sub>, &#x2026;, x<sub>m</sub>] 置(z<sub>k</sub>, &#x2026;, z<sub>m+n</sub>)&larr;(x<sub>i</sub>, &#x2026;,
 x<sub>m</sub>)并终止此算法。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgbf29c7a" class="outline-5">
-<h5 id="orgbf29c7a"><span class="section-number-5">1.4.1.2</span> 自然的两路合并排序</h5>
+<div id="outline-container-org843aabc" class="outline-5">
+<h5 id="org843aabc"><span class="section-number-5">1.4.1.2</span> 自然的两路合并排序</h5>
 <div class="outline-text-5" id="text-1-4-1-2">
 <p>
 自然的两路合并排序: 使用两个存储区域，对记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>排序，
@@ -535,8 +557,8 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org581fa6a" class="outline-4">
-<h4 id="org581fa6a"><span class="section-number-4">1.4.2</span> C语言实现</h4>
+<div id="outline-container-org3eb155b" class="outline-4">
+<h4 id="org3eb155b"><span class="section-number-4">1.4.2</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-4-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;errno.h&gt;</span>
@@ -676,12 +698,12 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-orgbdc6eb4" class="outline-3">
-<h3 id="orgbdc6eb4"><span class="section-number-3">1.5</span> 快速排序</h3>
+<div id="outline-container-org4fcd5b9" class="outline-3">
+<h3 id="org4fcd5b9"><span class="section-number-3">1.5</span> 快速排序</h3>
 <div class="outline-text-3" id="text-1-5">
 </div>
-<div id="outline-container-org591482b" class="outline-4">
-<h4 id="org591482b"><span class="section-number-4">1.5.1</span> 算法导论</h4>
+<div id="outline-container-orgbbca8b8" class="outline-4">
+<h4 id="orgbbca8b8"><span class="section-number-4">1.5.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-5-1">
 <p>
 利用分治思想实现。分三步处理：
@@ -690,7 +712,8 @@ x<sub>m</sub>)并终止此算法。
 <dt>分解</dt><dd>数组$A[p..r]$划分为两个子数组$A[p..q-1]$与$A[q+1..r]$，使得\(A[p..q-1]\)</dd>
 </dl>
 <p>
-中的每一个元素都小于等于$A[q]$，$A[q+1..r]$每个元素都大于等于$A[q]$；其中，计算下标$q$也是划分过程的一部分；
+中的每一个元素都小于等于$A[q]$，$A[q+1..r]$每个元素都大于等于$A[q]$；其中，计算
+下标$q$也是划分过程的一部分；
 </p>
 <dl class="org-dl">
 <dt>解决</dt><dd>递归调用快速排序，对子数组$A[p..q-1]$和$A[q+1..r]$进行排序；</dd>
@@ -699,17 +722,19 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org6c97279" class="outline-4">
-<h4 id="org6c97279"><span class="section-number-4">1.5.2</span> 优化</h4>
+<div id="outline-container-org158aa57" class="outline-4">
+<h4 id="org158aa57"><span class="section-number-4">1.5.2</span> 优化</h4>
 <div class="outline-text-4" id="text-1-5-2">
 <p>
-快排预期时间复杂度$O(nlgn)$，但如果数组已经是有序的，则会退化为$O(n^2)$。考虑随机化或中位化，但这个过程会引入一次数据交换，可能导致快排退化为非稳定排序。稳定的排序算法，是指关键字相同的记录，经过排序后相对次序保持不变。
+快排预期时间复杂度$O(nlgn)$，但如果数组已经是有序的，则会退化为$O(n^2)$。
+考虑随机化或中位化，但这个过程会引入一次数据交换，可能导致快排退化为非稳定
+排序。稳定的排序算法，是指关键字相同的记录，经过排序后相对次序保持不变。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1508546" class="outline-4">
-<h4 id="org1508546"><span class="section-number-4">1.5.3</span> C语言实现</h4>
+<div id="outline-container-orgcb1ebba" class="outline-4">
+<h4 id="orgcb1ebba"><span class="section-number-4">1.5.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-5-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -795,26 +820,28 @@ x<sub>m</sub>)并终止此算法。
 </div>
 </div>
 
-<div id="outline-container-org2f94eb5" class="outline-3">
-<h3 id="org2f94eb5"><span class="section-number-3">1.6</span> 堆排序</h3>
+<div id="outline-container-org4c259eb" class="outline-3">
+<h3 id="org4c259eb"><span class="section-number-3">1.6</span> 堆排序</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-orge89021f" class="outline-4">
-<h4 id="orge89021f"><span class="section-number-4">1.6.1</span> 算法导论</h4>
+<div id="outline-container-org143e628" class="outline-4">
+<h4 id="org143e628"><span class="section-number-4">1.6.1</span> 算法导论</h4>
 <div class="outline-text-4" id="text-1-6-1">
 </div>
-<div id="outline-container-org4a0afb9" class="outline-5">
-<h5 id="org4a0afb9"><span class="section-number-5">1.6.1.1</span> 堆数据结构</h5>
+<div id="outline-container-org11acd45" class="outline-5">
+<h5 id="org11acd45"><span class="section-number-5">1.6.1.1</span> 堆数据结构</h5>
 <div class="outline-text-5" id="text-1-6-1-1">
 <p>
-堆数据结构是一组数组对象，可以被视为一颗完全二叉树。除最后一层外，树的每一层都是填满的，且最后一层从左向右填充。对于给定的任意下标，其左子树为2*i，右子树为2*i+1。考虑C数组起始下标为0，左子树为2*i + 1，右子树为2*(i+1)。
+堆数据结构是一组数组对象，可以被视为一颗完全二叉树。除最后一层外，树的每一层
+都是填满的，且最后一层从左向右填充。对于给定的任意下标，其左子树为2*i，右子树
+为2*i+1。考虑C数组起始下标为0，左子树为2*i + 1，右子树为2*(i+1)。
 FIXME: Add Graphviz Here draw a tree and array.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7179887" class="outline-5">
-<h5 id="org7179887"><span class="section-number-5">1.6.1.2</span> 保持堆的性质</h5>
+<div id="outline-container-org235db89" class="outline-5">
+<h5 id="org235db89"><span class="section-number-5">1.6.1.2</span> 保持堆的性质</h5>
 <div class="outline-text-5" id="text-1-6-1-2">
 <p>
 对于一个数组A和下标i，对其调用max-heapify时，要求左子树left[i]和右子树right[i]
@@ -823,34 +850,38 @@ FIXME: Add Graphviz Here draw a tree and array.
 </div>
 </div>
 
-<div id="outline-container-org4c6ea31" class="outline-5">
-<h5 id="org4c6ea31"><span class="section-number-5">1.6.1.3</span> 建堆</h5>
+<div id="outline-container-org51443eb" class="outline-5">
+<h5 id="org51443eb"><span class="section-number-5">1.6.1.3</span> 建堆</h5>
 <div class="outline-text-5" id="text-1-6-1-3">
 <p>
-自底向上地对数组A执行max-heapify。因为在最开始，对叶子节点执行max-heapify时，不存在左子树和右子树，因此满足最大堆，此后逐渐减小索引i调用max-heapify，堆性质得以满足。当i为0时，则整个数组满足最大堆，数组第一个元素是数组中的最大元素。
+自底向上地对数组A执行max-heapify。因为在最开始，对叶子节点执行max-heapify时，不
+存在左子树和右子树，因此满足最大堆，此后逐渐减小索引i调用max-heapify，堆性质得以
+满足。当i为0时，则整个数组满足最大堆，数组第一个元素是数组中的最大元素。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org6fe815d" class="outline-5">
-<h5 id="org6fe815d"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
+<div id="outline-container-orgfaf3f34" class="outline-5">
+<h5 id="orgfaf3f34"><span class="section-number-5">1.6.1.4</span> 堆排序</h5>
 <div class="outline-text-5" id="text-1-6-1-4">
 <p>
-先建堆，此后将第1个元素（最大元素）与数组最后一个元素交换，并使得数组大小减1，以此迭代直到数组大小为1，此时整个数组是有序的。
+先建堆，此后将第1个元素（最大元素）与数组最后一个元素交换，并使得数组大小减1，
+以此迭代直到数组大小为1，此时整个数组是有序的。
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org88dd6ab" class="outline-4">
-<h4 id="org88dd6ab"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
+<div id="outline-container-orgeb126d2" class="outline-4">
+<h4 id="orgeb126d2"><span class="section-number-4">1.6.2</span> 计算机编程艺术</h4>
 <div class="outline-text-4" id="text-1-6-2">
 </div>
-<div id="outline-container-org2d0b99e" class="outline-5">
-<h5 id="org2d0b99e"><span class="section-number-5">1.6.2.1</span> 描述</h5>
+<div id="outline-container-org3f68f5c" class="outline-5">
+<h5 id="org3f68f5c"><span class="section-number-5">1.6.2.1</span> 描述</h5>
 <div class="outline-text-5" id="text-1-6-2-1">
 <p>
-5.2.3节《选择排序》中树选择节讨论堆排序。堆排序：一个由键K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>组成的文件称为一个堆，如果：
+5.2.3节《选择排序》中树选择节讨论堆排序。
+堆排序：一个由键K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>组成的文件称为一个堆，如果：
 </p>
 <div class="org-center">
 <p>
@@ -864,11 +895,13 @@ K<sub>1</sub> = max{K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>}。
 </div>
 </div>
 
-<div id="outline-container-orgdcc77d2" class="outline-5">
-<h5 id="orgdcc77d2"><span class="section-number-5">1.6.2.2</span> 算法描述</h5>
+<div id="outline-container-orgb8b2dac" class="outline-5">
+<h5 id="orgb8b2dac"><span class="section-number-5">1.6.2.2</span> 算法描述</h5>
 <div class="outline-text-5" id="text-1-6-2-2">
 <p>
-算法H（堆排序，弗洛伊德）：重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后它们的键将处于有序状态：K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。首先重新排列输入文件构成一个堆，然后重复移动堆的顶节点，把它传送到正确位置。假定N&ge;2。
+算法H（堆排序，弗洛伊德）：重新排列记录R<sub>1</sub>, &#x2026;, R<sub>N</sub>到适当位置，排序完成后
+它们的键将处于有序状态：K<sub>1</sub>&le;&#x2026;&le;K<sub>N</sub>。首先重新排列输入文件构成一个
+堆，然后重复移动堆的顶节点，把它传送到正确位置。假定N&ge;2。
 </p>
 
 <ul class="org-ul">
@@ -876,7 +909,8 @@ K<sub>1</sub> = max{K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>N</sub>}。
 <li>H2 [减小l或r] 如果l&gt;1，则置l&larr;l-1，R&larr;R<sub>l</sub>，</li>
 </ul>
 <p>
-K&larr;K<sub>l</sub>，（如果l&lt;1，则处于把输入文件变化为堆的过程，另一方面，如果l\eq{}1，则键K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>r</sub>已构成一个堆）；否则置
+K&larr;K<sub>l</sub>，（如果l&lt;1，则处于把输入文件变化为堆的过程，另一方面，
+如果l\eq{}1，则键K<sub>1</sub>, K<sub>2</sub>, &#x2026;, K<sub>r</sub>已构成一个堆）；否则置
 R&larr;R{r}，K&larr;K<sub>r</sub>，R<sub>r</sub>&larr;R<sub>1</sub>，
 r&larr;r-1，如果这使得r\eq{}1，则置R<sub>1</sub>&larr;R，并终止算法。
 </p>
@@ -891,8 +925,8 @@ FIXME: &lt;Unfinished&gt;
 </div>
 </div>
 
-<div id="outline-container-org4ca5adc" class="outline-4">
-<h4 id="org4ca5adc"><span class="section-number-4">1.6.3</span> C语言实现</h4>
+<div id="outline-container-org61ed6bf" class="outline-4">
+<h4 id="org61ed6bf"><span class="section-number-4">1.6.3</span> C语言实现</h4>
 <div class="outline-text-4" id="text-1-6-3">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -970,41 +1004,35 @@ FIXME: &lt;Unfinished&gt;
 </div>
 </div>
 
-<div id="outline-container-orge9d68a5" class="outline-3">
-<h3 id="orge9d68a5"><span class="section-number-3">1.7</span> 希尔排序</h3>
+<div id="outline-container-org19eb795" class="outline-3">
+<h3 id="org19eb795"><span class="section-number-3">1.7</span> 希尔排序</h3>
 <div class="outline-text-3" id="text-1-7">
 </div>
 </div>
-<div id="outline-container-org157f5bb" class="outline-3">
-<h3 id="org157f5bb"><span class="section-number-3">1.8</span> 基数排序</h3>
+<div id="outline-container-org98664c4" class="outline-3">
+<h3 id="org98664c4"><span class="section-number-3">1.8</span> 基数排序</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 FIXME:
 </p>
 </div>
 </div>
-<div id="outline-container-org6ae8cf8" class="outline-3">
-<h3 id="org6ae8cf8"><span class="section-number-3">1.9</span> 桶排序</h3>
+<div id="outline-container-org5e7590b" class="outline-3">
+<h3 id="org5e7590b"><span class="section-number-3">1.9</span> 桶排序</h3>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/algos-sort.html';
-    this.page.identifier = 'algos-sort.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

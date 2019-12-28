@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>Linux Systemd Introduce and Analysis</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,69 +29,71 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgad85763">1. 介绍</a></li>
-<li><a href="#orgfd0725e">2. 使用命令</a>
+<li><a href="#orge70d03f">1. 介绍</a></li>
+<li><a href="#org585c504">2. 使用命令</a>
 <ul>
-<li><a href="#org85585fa">2.1. 版本：systemctl &#x2013;version</a></li>
-<li><a href="#orgcef705f">2.2. 主机名称控制：hostnamectl</a>
+<li><a href="#org1711fa4">2.1. 版本：systemctl &#x2013;version</a></li>
+<li><a href="#org9d40d9c">2.2. 主机名称控制：hostnamectl</a>
 <ul>
-<li><a href="#org3837b06">2.2.1. Example</a></li>
-<li><a href="#org74cb435">2.2.2. Manpage</a></li>
+<li><a href="#org6d4c098">2.2.1. Example</a></li>
+<li><a href="#org083d35e">2.2.2. Manpage</a></li>
 </ul>
 </li>
-<li><a href="#orgab3fded">2.3. 系统本地化与键盘布局：localectl</a>
+<li><a href="#org2b74aef">2.3. 系统本地化与键盘布局：localectl</a>
 <ul>
-<li><a href="#org37a375e">2.3.1. example</a></li>
-<li><a href="#org86362c6">2.3.2. Manpage</a></li>
+<li><a href="#orgcc031ef">2.3.1. example</a></li>
+<li><a href="#orgc5e2212">2.3.2. Manpage</a></li>
 </ul>
 </li>
-<li><a href="#orgd84e5fb">2.4. 系统时间和日期：timedatectl</a>
+<li><a href="#org309e9e6">2.4. 系统时间和日期：timedatectl</a>
 <ul>
-<li><a href="#orgc566ce4">2.4.1. example</a></li>
-<li><a href="#org2f2fbf4">2.4.2. help</a></li>
+<li><a href="#orgf573166">2.4.1. example</a></li>
+<li><a href="#orgd15e989">2.4.2. help</a></li>
 </ul>
 </li>
-<li><a href="#orgae00972">2.5. 系统登录管理：loginctl</a>
+<li><a href="#org5bce554">2.5. 系统登录管理：loginctl</a>
 <ul>
-<li><a href="#org74db5be">2.5.1. example</a></li>
-<li><a href="#org9b4069d">2.5.2. help</a></li>
+<li><a href="#orgfe60ee1">2.5.1. example</a></li>
+<li><a href="#orgfcbec75">2.5.2. help</a></li>
 </ul>
 </li>
-<li><a href="#org5cb15cc">2.6. Systemd系统和服务管理：systemctl</a>
+<li><a href="#org77caddd">2.6. Systemd系统和服务管理：systemctl</a>
 <ul>
-<li><a href="#org1395f75">2.6.1. example</a>
+<li><a href="#orgaa36ade">2.6.1. example</a>
 <ul>
-<li><a href="#orgb16ebd4">2.6.1.1. 显示已知units：systemctl list-units [PATTERN&#x2026;]</a></li>
-<li><a href="#org63b1329">2.6.1.2. 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</a></li>
-<li><a href="#org0525382">2.6.1.3. systemctl candidates: systemctl with two tabs</a></li>
+<li><a href="#org69c9e60">2.6.1.1. 显示已知units：systemctl list-units [PATTERN&#x2026;]</a></li>
+<li><a href="#org85f617a">2.6.1.2. 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</a></li>
+<li><a href="#org59b87da">2.6.1.3. systemctl candidates: systemctl with two tabs</a></li>
 </ul>
 </li>
-<li><a href="#org1dd76a4">2.6.2. help</a></li>
+<li><a href="#orgef0e08b">2.6.2. help</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org33d5e8d">3. 学习笔记</a></li>
-<li><a href="#org8c098bc">4. 作者</a></li>
-<li><a href="#org3560938">5. References</a></li>
+<li><a href="#orgcd23a60">3. 学习笔记</a></li>
+<li><a href="#org6e28ed2">4. 作者</a></li>
+<li><a href="#org37e6bb7">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgad85763" class="outline-2">
-<h2 id="orgad85763"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orge70d03f" class="outline-2">
+<h2 id="orge70d03f"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-一言以蔽之，<a href="https://freedesktop.org/wiki/Software/systemd/">systemd</a>是<a href="https://savannah.nongnu.org/projects/sysvinit">sysvinit</a>的后继，通过并行启动方式，提供更快的系统启动速度。缺点是庞大复杂，不如sysvinit清晰。目前主流发行版本已全部切换到Systemd。
+一言以蔽之，<a href="https://freedesktop.org/wiki/Software/systemd/">systemd</a>是<a href="https://savannah.nongnu.org/projects/sysvinit">sysvinit</a>的后继，通过并行启动方式，提供更快的系统启动速度。
+缺点是庞大复杂，不如sysvinit清晰。目前主流发行版本已全部切换到Systemd。
 </p>
 
 <p>
 Homepage: <a href="https://freedesktop.org/wiki/Software/systemd/">https://freedesktop.org/wiki/Software/systemd/</a>
-ArchWiki: <a href="https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">https://wiki.archlinux.org/index.php/systemd_(简体中文)</a>
+ArchWiki: <a href="https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</a>
 </p>
 
 <p>
-systemd是一个Linux系统基础组件的集合，提供了一个系统和服务管理器，运行为PID 1并负责启动其它程序。功能包括：
+systemd是一个Linux系统基础组件的集合，提供了一个系统和服务管理器，运行为PID 1并
+负责启动其它程序。功能包括：
 </p>
 <ul class="org-ul">
 <li>支持并行化任务；</li>
@@ -106,7 +106,9 @@ systemd是一个Linux系统基础组件的集合，提供了一个系统和服�
 </ul>
 
 <p>
-systemd 支持 SysV 和 LSB 初始脚本，可以替代 sysvinit。除此之外，功能还包括日志进程、控制基础系统配置，维护登陆用户列表以及系统账户、运行时目录和设置，可以运行容器和虚拟机，可以简单的管理网络配置、网络时间同步、日志转发和名称解析等。
+systemd 支持 SysV 和 LSB 初始脚本，可以替代 sysvinit。除此之外，功能还包括日志
+进程、控制基础系统配置，维护登陆用户列表以及系统账户、运行时目录和设置，可以
+运行容器和虚拟机，可以简单的管理网络配置、网络时间同步、日志转发和名称解析等。
 </p>
 
 <blockquote>
@@ -132,12 +134,12 @@ article</a>. If you are wondering whether systemd is for you, please have a look
 </div>
 </div>
 
-<div id="outline-container-orgfd0725e" class="outline-2">
-<h2 id="orgfd0725e"><span class="section-number-2">2</span> 使用命令</h2>
+<div id="outline-container-org585c504" class="outline-2">
+<h2 id="org585c504"><span class="section-number-2">2</span> 使用命令</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org85585fa" class="outline-3">
-<h3 id="org85585fa"><span class="section-number-3">2.1</span> 版本：systemctl &#x2013;version</h3>
+<div id="outline-container-org1711fa4" class="outline-3">
+<h3 id="org1711fa4"><span class="section-number-3">2.1</span> 版本：systemctl &#x2013;version</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>--version
@@ -148,12 +150,12 @@ systemd<span class="org-whitespace-space"> </span>215
 </div>
 </div>
 
-<div id="outline-container-orgcef705f" class="outline-3">
-<h3 id="orgcef705f"><span class="section-number-3">2.2</span> 主机名称控制：hostnamectl</h3>
+<div id="outline-container-org9d40d9c" class="outline-3">
+<h3 id="org9d40d9c"><span class="section-number-3">2.2</span> 主机名称控制：hostnamectl</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org3837b06" class="outline-4">
-<h4 id="org3837b06"><span class="section-number-4">2.2.1</span> Example</h4>
+<div id="outline-container-org6d4c098" class="outline-4">
+<h4 id="org6d4c098"><span class="section-number-4">2.2.1</span> Example</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>hostnamectl
@@ -171,8 +173,8 @@ systemd<span class="org-whitespace-space"> </span>215
 </div>
 </div>
 
-<div id="outline-container-org74cb435" class="outline-4">
-<h4 id="org74cb435"><span class="section-number-4">2.2.2</span> Manpage</h4>
+<div id="outline-container-org083d35e" class="outline-4">
+<h4 id="org083d35e"><span class="section-number-4">2.2.2</span> Manpage</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <blockquote>
 <p>
@@ -314,12 +316,12 @@ EXIT STATUS
 </div>
 </div>
 
-<div id="outline-container-orgab3fded" class="outline-3">
-<h3 id="orgab3fded"><span class="section-number-3">2.3</span> 系统本地化与键盘布局：localectl</h3>
+<div id="outline-container-org2b74aef" class="outline-3">
+<h3 id="org2b74aef"><span class="section-number-3">2.3</span> 系统本地化与键盘布局：localectl</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org37a375e" class="outline-4">
-<h4 id="org37a375e"><span class="section-number-4">2.3.1</span> example</h4>
+<div id="outline-container-orgcc031ef" class="outline-4">
+<h4 id="orgcc031ef"><span class="section-number-4">2.3.1</span> example</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>localectl
@@ -334,8 +336,8 @@ EXIT STATUS
 </div>
 </div>
 
-<div id="outline-container-org86362c6" class="outline-4">
-<h4 id="org86362c6"><span class="section-number-4">2.3.2</span> Manpage</h4>
+<div id="outline-container-orgc5e2212" class="outline-4">
+<h4 id="orgc5e2212"><span class="section-number-4">2.3.2</span> Manpage</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <blockquote>
 <p>
@@ -488,12 +490,12 @@ $SYSTEMD_LESS
 </div>
 </div>
 
-<div id="outline-container-orgd84e5fb" class="outline-3">
-<h3 id="orgd84e5fb"><span class="section-number-3">2.4</span> 系统时间和日期：timedatectl</h3>
+<div id="outline-container-org309e9e6" class="outline-3">
+<h3 id="org309e9e6"><span class="section-number-3">2.4</span> 系统时间和日期：timedatectl</h3>
 <div class="outline-text-3" id="text-2-4">
 </div>
-<div id="outline-container-orgc566ce4" class="outline-4">
-<h4 id="orgc566ce4"><span class="section-number-4">2.4.1</span> example</h4>
+<div id="outline-container-orgf573166" class="outline-4">
+<h4 id="orgf573166"><span class="section-number-4">2.4.1</span> example</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>timedatectl
@@ -515,8 +517,8 @@ NTP<span class="org-whitespace-space"> </span>synchronized:<span class="org-whit
 </div>
 </div>
 
-<div id="outline-container-org2f2fbf4" class="outline-4">
-<h4 id="org2f2fbf4"><span class="section-number-4">2.4.2</span> help</h4>
+<div id="outline-container-orgd15e989" class="outline-4">
+<h4 id="orgd15e989"><span class="section-number-4">2.4.2</span> help</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <div class="org-src-container">
 <pre class="src src-sh">timedatectl<span class="org-whitespace-space"> </span>--help
@@ -545,12 +547,12 @@ Commands:
 </div>
 </div>
 
-<div id="outline-container-orgae00972" class="outline-3">
-<h3 id="orgae00972"><span class="section-number-3">2.5</span> 系统登录管理：loginctl</h3>
+<div id="outline-container-org5bce554" class="outline-3">
+<h3 id="org5bce554"><span class="section-number-3">2.5</span> 系统登录管理：loginctl</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-org74db5be" class="outline-4">
-<h4 id="org74db5be"><span class="section-number-4">2.5.1</span> example</h4>
+<div id="outline-container-orgfe60ee1" class="outline-4">
+<h4 id="orgfe60ee1"><span class="section-number-4">2.5.1</span> example</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>loginctl<span class="org-whitespace-space"> </span>show-user<span class="org-whitespace-space"> </span>yanyg
@@ -579,8 +581,8 @@ Commands:
 </div>
 </div>
 
-<div id="outline-container-org9b4069d" class="outline-4">
-<h4 id="org9b4069d"><span class="section-number-4">2.5.2</span> help</h4>
+<div id="outline-container-orgfcbec75" class="outline-4">
+<h4 id="orgfcbec75"><span class="section-number-4">2.5.2</span> help</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>loginctl<span class="org-whitespace-space"> </span>--help
@@ -631,16 +633,16 @@ Send<span class="org-whitespace-space"> </span>control<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org5cb15cc" class="outline-3">
-<h3 id="org5cb15cc"><span class="section-number-3">2.6</span> Systemd系统和服务管理：systemctl</h3>
+<div id="outline-container-org77caddd" class="outline-3">
+<h3 id="org77caddd"><span class="section-number-3">2.6</span> Systemd系统和服务管理：systemctl</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-org1395f75" class="outline-4">
-<h4 id="org1395f75"><span class="section-number-4">2.6.1</span> example</h4>
+<div id="outline-container-orgaa36ade" class="outline-4">
+<h4 id="orgaa36ade"><span class="section-number-4">2.6.1</span> example</h4>
 <div class="outline-text-4" id="text-2-6-1">
 </div>
-<div id="outline-container-orgb16ebd4" class="outline-5">
-<h5 id="orgb16ebd4"><span class="section-number-5">2.6.1.1</span> 显示已知units：systemctl list-units [PATTERN&#x2026;]</h5>
+<div id="outline-container-org69c9e60" class="outline-5">
+<h5 id="org69c9e60"><span class="section-number-5">2.6.1.1</span> 显示已知units：systemctl list-units [PATTERN&#x2026;]</h5>
 <div class="outline-text-5" id="text-2-6-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-units
@@ -688,8 +690,8 @@ To<span class="org-whitespace-space"> </span>show<span class="org-whitespace-spa
 </div>
 </div>
 
-<div id="outline-container-org63b1329" class="outline-5">
-<h5 id="org63b1329"><span class="section-number-5">2.6.1.2</span> 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</h5>
+<div id="outline-container-org85f617a" class="outline-5">
+<h5 id="org85f617a"><span class="section-number-5">2.6.1.2</span> 显示安装的unit文件：list-unit-files [PATTERN&#x2026;]</h5>
 <div class="outline-text-5" id="text-2-6-1-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>list-unit-files<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>wc<span class="org-whitespace-space"> </span>-l
@@ -713,8 +715,8 @@ systemd-ask-password-console.path<span class="org-whitespace-space">          </
 </div>
 </div>
 
-<div id="outline-container-org0525382" class="outline-5">
-<h5 id="org0525382"><span class="section-number-5">2.6.1.3</span> systemctl candidates: systemctl with two tabs</h5>
+<div id="outline-container-org59b87da" class="outline-5">
+<h5 id="org59b87da"><span class="section-number-5">2.6.1.3</span> systemctl candidates: systemctl with two tabs</h5>
 <div class="outline-text-5" id="text-2-6-1-3">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl
@@ -743,8 +745,8 @@ hybrid-sleep<span class="org-whitespace-space">           </span>reload
 </div>
 </div>
 
-<div id="outline-container-org1dd76a4" class="outline-4">
-<h4 id="org1dd76a4"><span class="section-number-4">2.6.2</span> help</h4>
+<div id="outline-container-orgef0e08b" class="outline-4">
+<h4 id="orgef0e08b"><span class="section-number-4">2.6.2</span> help</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>[OPTIONS...]<span class="org-whitespace-space"> </span>{COMMAND}<span class="org-whitespace-space"> </span>...
@@ -884,8 +886,8 @@ Query<span class="org-whitespace-space"> </span>or<span class="org-whitespace-sp
 </div>
 </div>
 
-<div id="outline-container-org33d5e8d" class="outline-2">
-<h2 id="org33d5e8d"><span class="section-number-2">3</span> 学习笔记</h2>
+<div id="outline-container-orgcd23a60" class="outline-2">
+<h2 id="orgcd23a60"><span class="section-number-2">3</span> 学习笔记</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 参考：<a href="systemd.html">systemd学习笔记</a>。
@@ -893,8 +895,8 @@ Query<span class="org-whitespace-space"> </span>or<span class="org-whitespace-sp
 </div>
 </div>
 
-<div id="outline-container-org8c098bc" class="outline-2">
-<h2 id="org8c098bc"><span class="section-number-2">4</span> 作者</h2>
+<div id="outline-container-org6e28ed2" class="outline-2">
+<h2 id="org6e28ed2"><span class="section-number-2">4</span> 作者</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Systemd作者<a href="http://0pointer.net/blog/">Lennart Poettering</a>(<a href="http://0pointer.de/lennart/">Homepage</a>, <a href="https://github.com/poettering">GitHub</a>)。
@@ -1037,8 +1039,8 @@ about this again on a public forum.
 </div>
 </div>
 
-<div id="outline-container-org3560938" class="outline-2">
-<h2 id="org3560938"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org37e6bb7" class="outline-2">
+<h2 id="org37e6bb7"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>IBM developer works</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html">https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html</a></dd>
@@ -1047,7 +1049,7 @@ about this again on a public forum.
 
 <dt>CoolShell LINUX PID 1 and Systemd</dt><dd><a href="https://coolshell.cn/articles/17998.html">https://coolshell.cn/articles/17998.html</a></dd>
 
-<dt>ArchLinux Wiki</dt><dd><a href="https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">https://wiki.archlinux.org/index.php/systemd_(简体中文)</a></dd>
+<dt>ArchLinux Wiki</dt><dd><a href="https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">https://wiki.archlinux.org/index.php/systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</a></dd>
 
 <dt>阮一峰博客</dt><dd><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html">http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html</a></dd>
 
@@ -1059,24 +1061,18 @@ about this again on a public forum.
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/linux-boot-systemd.html';
-    this.page.identifier = 'linux-boot-systemd.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

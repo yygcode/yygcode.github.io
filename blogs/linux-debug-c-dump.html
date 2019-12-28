@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,21 +29,22 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5950426">1. 描述</a></li>
-<li><a href="#org29bda95">2. signal</a></li>
-<li><a href="#org7c3592e">3. assert</a></li>
-<li><a href="#orgc6dbd23">4. 实例代码</a></li>
-<li><a href="#org18379f8">5. References</a></li>
+<li><a href="#org36ab9a8">1. 描述</a></li>
+<li><a href="#org409a3ce">2. signal</a></li>
+<li><a href="#orgbafb107">3. assert</a></li>
+<li><a href="#orge5b9dd3">4. 实例代码</a></li>
+<li><a href="#org31330ad">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5950426" class="outline-2">
-<h2 id="org5950426"><span class="section-number-2">1</span> 描述</h2>
+<div id="outline-container-org36ab9a8" class="outline-2">
+<h2 id="org36ab9a8"><span class="section-number-2">1</span> 描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 进程执行某些异常指令（比如除0或非法内存访问），或者其他进程或进程自己通过kill
-调用向进程发送信号时，操作系统强制进程对信号作出处理。进程启动时操作系统设置默认的信号处理函数，通过signal、sigaction函数进程可以更改信号处理策略。Linux
+调用向进程发送信号时，操作系统强制进程对信号作出处理。进程启动时操作系统设置
+默认的信号处理函数，通过signal、sigaction函数进程可以更改信号处理策略。Linux
 系统提供有64种信号，使用kill -l可查看：
 </p>
 <div class="org-src-container">
@@ -112,15 +111,20 @@
 </table>
 <p>
 并非所有信号均可Ign或Cont，部分信号在处理后，操作系统会强制进程退出，比如SIGKILL
-或SIGSEGV信号。SIGKILL信号即不能被捕获，也不能被忽略。进程常见的信号包括终端挂起(SIGHUP)、键盘中断(SIGINT)、非法地址访问(SIGSEGV)、总线错误(SIGBUS)、杀死进程(SIGKILL)。
+或SIGSEGV信号。SIGKILL信号即不能被捕获，也不能被忽略。进程常见的信号包括
+终端挂起(SIGHUP)、键盘中断(SIGINT)、非法地址访问(SIGSEGV)、总线错误(SIGBUS)、
+杀死进程(SIGKILL)。
 </p>
 
 <p>
-默认的信号处理函数在退出时，通常不能给出足够的信息帮助快速定位问题。同时，主动防御的编程技术中，在关键点会插入assert确保软件符合预期。无论信号或者assert，在退出时如能打印当前进程的调用栈，对于快速分析问题均有较大帮助。
+默认的信号处理函数在退出时，通常不能给出足够的信息帮助快速定位问题。同时，主动
+防御的编程技术中，在关键点会插入assert确保软件符合预期。无论信号或者assert，在
+退出时如能打印当前进程的调用栈，对于快速分析问题均有较大帮助。
 </p>
 
 <p>
-本文描述进程在退出前（无论因信号或assert），打印调用栈的方法。预期实现如下几个目标：
+本文描述进程在退出前（无论因信号或assert），打印调用栈的方法。预期实现如下几个
+目标：
 </p>
 <ul class="org-ul">
 <li>准确记录调用栈，帮助快速定位分析问题；</li>
@@ -132,15 +136,16 @@
 </div>
 </div>
 
-<div id="outline-container-org29bda95" class="outline-2">
-<h2 id="org29bda95"><span class="section-number-2">2</span> signal</h2>
+<div id="outline-container-org409a3ce" class="outline-2">
+<h2 id="org409a3ce"><span class="section-number-2">2</span> signal</h2>
 </div>
 
-<div id="outline-container-org7c3592e" class="outline-2">
-<h2 id="org7c3592e"><span class="section-number-2">3</span> assert</h2>
+<div id="outline-container-orgbafb107" class="outline-2">
+<h2 id="orgbafb107"><span class="section-number-2">3</span> assert</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-assert是主动防御机制，用于检测不可能发生的情况，记录信息包括assert所在的文件名、函数名、代码行与调用栈。考虑可扩展，允许提供回调函数，辅助打印更多信息。
+assert是主动防御机制，用于检测不可能发生的情况，记录信息包括assert所在的文件名、
+函数名、代码行与调用栈。考虑可扩展，允许提供回调函数，辅助打印更多信息。
 </p>
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">_GNU_SOURCE</span>
@@ -267,31 +272,25 @@ assert是主动防御机制，用于检测不可能发生的情况，记录信�
 </div>
 </div>
 
-<div id="outline-container-orgc6dbd23" class="outline-2">
-<h2 id="orgc6dbd23"><span class="section-number-2">4</span> 实例代码</h2>
+<div id="outline-container-orge5b9dd3" class="outline-2">
+<h2 id="orge5b9dd3"><span class="section-number-2">4</span> 实例代码</h2>
 </div>
 
-<div id="outline-container-org18379f8" class="outline-2">
-<h2 id="org18379f8"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org31330ad" class="outline-2">
+<h2 id="org31330ad"><span class="section-number-2">5</span> References</h2>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/linux-debug-c-dump.html';
-    this.page.identifier = 'linux-debug-c-dump.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

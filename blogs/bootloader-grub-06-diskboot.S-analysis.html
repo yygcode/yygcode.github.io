@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>深入理解 GNU GRUB - 03 diskboot.S</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -53,9 +51,9 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga278b00">1. diskboot.S执行时的环境</a></li>
-<li><a href="#orgc9479f3">2. diskboot.S代码结构</a></li>
-<li><a href="#orgdd76bf2">3. diskboot.S详细注释</a></li>
+<li><a href="#org9d8415d">1. diskboot.S执行时的环境</a></li>
+<li><a href="#org06c97de">2. diskboot.S代码结构</a></li>
+<li><a href="#org99200ed">3. diskboot.S详细注释</a></li>
 </ul>
 </div>
 </div>
@@ -79,8 +77,8 @@ diskboot.img加载GRUB内核到0x8200开始的内存位置，并将系统控制�
 本章最后也模拟一个diskboot的实现。
 </p>
 
-<div id="outline-container-orga278b00" class="outline-2">
-<h2 id="orga278b00"><span class="section-number-2">1</span> diskboot.S执行时的环境</h2>
+<div id="outline-container-org9d8415d" class="outline-2">
+<h2 id="org9d8415d"><span class="section-number-2">1</span> diskboot.S执行时的环境</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 boot.img跳转到bootdisk.img之前，已经配置好堆栈和一些寄存器及参数值。因此diskboot假设如下条件已经是满足的：
@@ -93,16 +91,21 @@ boot.img跳转到bootdisk.img之前，已经配置好堆栈和一些寄存器及
 </ol>
 <p>
 事实上，在跳转到diskboot.img之前，boot.img确实做好了配置。堆栈SS:SP=0x0000:0x2000；
-DL中包含正确的引导驱动器；SI指向DAP地址，因此-1(%si)确定磁盘读取模式（LBA为1，CHS为0），如果是CHS读取，磁盘CHS参数含有正确值；数据段寄存器DS=0。
+DL中包含正确的引导驱动器；SI指向DAP地址，因此-1(%si)确定磁盘读取模式（LBA为1，CHS为0），
+如果是CHS读取，磁盘CHS参数含有正确值；数据段寄存器DS=0。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgc9479f3" class="outline-2">
-<h2 id="orgc9479f3"><span class="section-number-2">2</span> diskboot.S代码结构</h2>
+<div id="outline-container-org06c97de" class="outline-2">
+<h2 id="org06c97de"><span class="section-number-2">2</span> diskboot.S代码结构</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-diskboot.S生成512字节机器码，其中0x0~0x147共328字节是指令，0x148~0x1FF共184字节用来保存数据集，每个数据集占用12字节，可以保存15个数据集。对于每个数据集，其中0~7字节表示起始扇区数，在安装时候指定；8~9字节表示扇区数，10~11字节表示目的段地址，都在生成镜像（grub-mkimage）时确定。必须存在一个扇区数为0的数据集表示数据集读取结束，因此可以存在14个有效数据集。当前只使用了一个。我反解了一个安装后的diskboot.img，显示只用了一个数据集，其值如下：
+diskboot.S生成512字节机器码，其中0x0~0x147共328字节是指令，0x148~0x1FF共184字节用来保存数据集，
+每个数据集占用12字节，可以保存15个数据集。对于每个数据集，其中0~7字节表示起始扇区数，在安装时候
+指定；8~9字节表示扇区数，10~11字节表示目的段地址，都在生成镜像（grub-mkimage）时确定。必须存在
+一个扇区数为0的数据集表示数据集读取结束，因此可以存在14个有效数据集。当前只使用了一个。我反解了
+一个安装后的diskboot.img，显示只用了一个数据集，其值如下：
 </p>
 <ul class="org-ul">
 <li>起始扇区LBA地址: 0x0000 0000 0000 0002</li>
@@ -111,22 +114,30 @@ diskboot.S生成512字节机器码，其中0x0~0x147共328字节是指令，0x14
 </ul>
 
 <p>
-可知，grub内核的起始扇区是2扇区，扇区数46（0x2E==46），加载到0x8200起始内存处。这个grub内核的大小为46*512=23KiB。
+可知，grub内核的起始扇区是2扇区，扇区数46（0x2E==46），加载到0x8200起始内存处。这个grub内核的
+大小为46*512=23KiB。
 </p>
 
 <p>
-diskboot.S压栈首先保存驱动器。输出提示信息”loading”，设置第一个数据集的地址，然后进入循环读取数据。根据boot.img中设置的读取模式（LBA/CHS）和数据集中的起始扇区、扇区数、目的段地址，读取数据并保存到内存中（偏移量为0，因此目的段地址唯一确定内存地址）。每调用一次读中断，都提示一个”.”到终端，对于慢速存储设备，用户可以快速得到反馈，以免在加载数据期间，用户误以为死机而进行强制性关机措施等。在一个数据集内循环读取时，循环标签是LOCAL(setup_sectors)，一个数据集完成后，设置处理上一数据集，并跳转到LOCAL(bootloop)开始处理，如果这个数据集的扇区数为0，则跳转到LOCAL(bootit)，否则继续数据集内的循环LOCAL(setup_sectors)。
+diskboot.S压栈首先保存驱动器。输出提示信息”loading”，设置第一个数据集的地址，然后进入循环读取数据。
+根据boot.img中设置的读取模式（LBA/CHS）和数据集中的起始扇区、扇区数、目的段地址，读取数据并保存到
+内存中（偏移量为0，因此目的段地址唯一确定内存地址）。每调用一次读中断，都提示一个”.”到终端，对于
+慢速存储设备，用户可以快速得到反馈，以免在加载数据期间，用户误以为死机而进行强制性关机措施等。
+在一个数据集内循环读取时，循环标签是LOCAL(setup_sectors)，一个数据集完成后，设置处理上一数据集，并
+跳转到LOCAL(bootloop)开始处理，如果这个数据集的扇区数为0，则跳转到LOCAL(bootit)，否则继续数据集内的
+循环LOCAL(setup_sectors)。
 </p>
 
 <p>
-数据读取完毕后，执行LOCAL(bootit)处代码，这里将输出提示信息”\r\n”，还原DX寄存器（保存引导驱动器），并以CS:IP=0x0000:0x8200跳转执行，这里正是kernel.img所在内存地址。
+数据读取完毕后，执行LOCAL(bootit)处代码，这里将输出提示信息”\r\n”，还原DX寄存器（保存引导驱动器），
+并以CS:IP=0x0000:0x8200跳转执行，这里正是kernel.img所在内存地址。
 BIOS读中断过程（LBA/CHS）参考boot.S中的注释，此处不再重复。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgdd76bf2" class="outline-2">
-<h2 id="orgdd76bf2"><span class="section-number-2">3</span> diskboot.S详细注释</h2>
+<div id="outline-container-org99200ed" class="outline-2">
+<h2 id="org99200ed"><span class="section-number-2">3</span> diskboot.S详细注释</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 CSDN：<a href="https://blog.csdn.net/cppgp/article/details/6408235">https://blog.csdn.net/cppgp/article/details/6408235</a>
@@ -16044,24 +16055,18 @@ CSDN：<a href="https://blog.csdn.net/cppgp/article/details/6408235">https://blo
 </div>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/bootloader-grub-06-diskboot.S-analysis.html';
-    this.page.identifier = 'bootloader-grub-06-diskboot.S-analysis.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

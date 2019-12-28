@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:57 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>加密工具 - GPG入门</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -53,44 +51,44 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4d48bfd">1. GPG是什么</a></li>
-<li><a href="#org539af89">2. 安装</a>
+<li><a href="#org1e94e3a">1. GPG是什么</a></li>
+<li><a href="#org9765499">2. 安装</a>
 <ul>
-<li><a href="#org3ee52a8">2.1. Debian</a></li>
-<li><a href="#org0b634a8">2.2. msys</a></li>
-<li><a href="#org4f75251">2.3. 源码安装</a></li>
+<li><a href="#org77c5dd6">2.1. Debian</a></li>
+<li><a href="#orgbbd4f7c">2.2. msys</a></li>
+<li><a href="#org398096d">2.3. 源码安装</a></li>
 </ul>
 </li>
-<li><a href="#org9eb9658">3. 使用介绍</a>
+<li><a href="#org2e1d946">3. 使用介绍</a>
 <ul>
-<li><a href="#org23f02d4">3.1. 生成密钥</a></li>
-<li><a href="#org7786a94">3.2. 密钥管理</a>
+<li><a href="#org57bf4eb">3.1. 生成密钥</a></li>
+<li><a href="#org545b7b0">3.2. 密钥管理</a>
 <ul>
-<li><a href="#org46ddb94">3.2.1. 密钥列表</a></li>
-<li><a href="#orgd0e951c">3.2.2. 删除密钥</a></li>
-<li><a href="#orge8b2848">3.2.3. 导出公钥</a></li>
-<li><a href="#org46df864">3.2.4. 上传公钥</a></li>
-<li><a href="#orgab7cd44">3.2.5. 导入公钥</a></li>
-<li><a href="#orga95c93d">3.2.6. 导入私钥</a></li>
+<li><a href="#org1bc867d">3.2.1. 密钥列表</a></li>
+<li><a href="#org9758718">3.2.2. 删除密钥</a></li>
+<li><a href="#orgfb4ae6b">3.2.3. 导出公钥</a></li>
+<li><a href="#org9ac199d">3.2.4. 上传公钥</a></li>
+<li><a href="#orgc71342e">3.2.5. 导入公钥</a></li>
+<li><a href="#orga41b3d6">3.2.6. 导入私钥</a></li>
 </ul>
 </li>
-<li><a href="#org00a910b">3.3. 签名与签名验证</a></li>
-<li><a href="#org73a714c">3.4. 加密解密</a></li>
-<li><a href="#org24b6050">3.5. 加密同时签名</a></li>
+<li><a href="#orgdcff673">3.3. 签名与签名验证</a></li>
+<li><a href="#orgbe3eef9">3.4. 加密解密</a></li>
+<li><a href="#orgc2d2206">3.5. 加密同时签名</a></li>
 </ul>
 </li>
-<li><a href="#org93a3acf">4. 其他</a>
+<li><a href="#org22717e7">4. 其他</a>
 <ul>
-<li><a href="#org1174f8c">4.1. 私钥备份保护</a></li>
+<li><a href="#orgd0cd2ea">4.1. 私钥备份保护</a></li>
 </ul>
 </li>
-<li><a href="#org114694a">5. References</a></li>
+<li><a href="#orga0ebbc8">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org4d48bfd" class="outline-2">
-<h2 id="org4d48bfd"><span class="section-number-2">1</span> GPG是什么</h2>
+<div id="outline-container-org1e94e3a" class="outline-2">
+<h2 id="org1e94e3a"><span class="section-number-2">1</span> GPG是什么</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://zh.wikipedia.org/zh-cn/GnuPG">GPG</a>即<a href="https://gnupg.org/">GnuPG</a>(the GNU Privacy Guard, GNU加密保护)，是一款开源加密软件，遵循
@@ -127,12 +125,12 @@ The current version of Gpg4win is 3.1.1.
 </div>
 </div>
 
-<div id="outline-container-org539af89" class="outline-2">
-<h2 id="org539af89"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-org9765499" class="outline-2">
+<h2 id="org9765499"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3ee52a8" class="outline-3">
-<h3 id="org3ee52a8"><span class="section-number-3">2.1</span> Debian</h3>
+<div id="outline-container-org77c5dd6" class="outline-3">
+<h3 id="org77c5dd6"><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>gnupg
@@ -141,8 +139,8 @@ The current version of Gpg4win is 3.1.1.
 </div>
 </div>
 
-<div id="outline-container-org0b634a8" class="outline-3">
-<h3 id="org0b634a8"><span class="section-number-3">2.2</span> msys</h3>
+<div id="outline-container-orgbbd4f7c" class="outline-3">
+<h3 id="orgbbd4f7c"><span class="section-number-3">2.2</span> msys</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>pacman<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>gnupg
@@ -153,8 +151,8 @@ The current version of Gpg4win is 3.1.1.
 </div>
 </div>
 
-<div id="outline-container-org4f75251" class="outline-3">
-<h3 id="org4f75251"><span class="section-number-3">2.3</span> 源码安装</h3>
+<div id="outline-container-org398096d" class="outline-3">
+<h3 id="org398096d"><span class="section-number-3">2.3</span> 源码安装</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 使用Git获取源码：
@@ -193,7 +191,8 @@ autogen.sh:<span class="org-whitespace-space"> </span>You<span class="org-whites
 </pre>
 </div>
 <p>
-如果系统太老，库版本兼容性不满足报错，建议直接安装二进制，或下载较老版本gnupg，或者尝试升级操作系统。例如：
+如果系统太老，库版本兼容性不满足报错，建议直接安装二进制，或下载较老版本gnupg，
+或者尝试升级操作系统。例如：
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>./configure<span class="org-whitespace-space"> </span>--sysconfdir=/etc<span class="org-whitespace-space"> </span>--enable-maintainer-mode<span class="org-whitespace-space">  </span>&amp;&amp;<span class="org-whitespace-space"> </span>make
@@ -215,12 +214,12 @@ configure:<span class="org-whitespace-space"> </span>error:
 </div>
 </div>
 
-<div id="outline-container-org9eb9658" class="outline-2">
-<h2 id="org9eb9658"><span class="section-number-2">3</span> 使用介绍</h2>
+<div id="outline-container-org2e1d946" class="outline-2">
+<h2 id="org2e1d946"><span class="section-number-2">3</span> 使用介绍</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org23f02d4" class="outline-3">
-<h3 id="org23f02d4"><span class="section-number-3">3.1</span> 生成密钥</h3>
+<div id="outline-container-org57bf4eb" class="outline-3">
+<h3 id="org57bf4eb"><span class="section-number-3">3.1</span> 生成密钥</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--gen-key
@@ -300,12 +299,12 @@ sub<span class="org-whitespace-space">   </span>rsa4096<span class="org-whitespa
 </div>
 </div>
 
-<div id="outline-container-org7786a94" class="outline-3">
-<h3 id="org7786a94"><span class="section-number-3">3.2</span> 密钥管理</h3>
+<div id="outline-container-org545b7b0" class="outline-3">
+<h3 id="org545b7b0"><span class="section-number-3">3.2</span> 密钥管理</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org46ddb94" class="outline-4">
-<h4 id="org46ddb94"><span class="section-number-4">3.2.1</span> 密钥列表</h4>
+<div id="outline-container-org1bc867d" class="outline-4">
+<h4 id="org1bc867d"><span class="section-number-4">3.2.1</span> 密钥列表</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 其中 <i>gpgtest</i> 是新生成的。
@@ -343,8 +342,8 @@ sub<span class="org-whitespace-space">   </span>rsa4096/2EF4FC4B<span class="org
 </div>
 </div>
 
-<div id="outline-container-orgd0e951c" class="outline-4">
-<h4 id="orgd0e951c"><span class="section-number-4">3.2.2</span> 删除密钥</h4>
+<div id="outline-container-org9758718" class="outline-4">
+<h4 id="org9758718"><span class="section-number-4">3.2.2</span> 删除密钥</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--delete-key<span class="org-whitespace-space"> </span>[UID]
@@ -357,8 +356,8 @@ sub<span class="org-whitespace-space">   </span>rsa4096/2EF4FC4B<span class="org
 </div>
 </div>
 
-<div id="outline-container-orge8b2848" class="outline-4">
-<h4 id="orge8b2848"><span class="section-number-4">3.2.3</span> 导出公钥</h4>
+<div id="outline-container-orgfb4ae6b" class="outline-4">
+<h4 id="orgfb4ae6b"><span class="section-number-4">3.2.3</span> 导出公钥</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <div class="org-src-container">
 <pre class="src src-sh"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">binary</span><span class="org-whitespace-space"> </span><span class="org-comment">pub</span><span class="org-whitespace-space"> </span><span class="org-comment">key</span>
@@ -370,8 +369,8 @@ sub<span class="org-whitespace-space">   </span>rsa4096/2EF4FC4B<span class="org
 </div>
 </div>
 
-<div id="outline-container-org46df864" class="outline-4">
-<h4 id="org46df864"><span class="section-number-4">3.2.4</span> 上传公钥</h4>
+<div id="outline-container-org9ac199d" class="outline-4">
+<h4 id="org9ac199d"><span class="section-number-4">3.2.4</span> 上传公钥</h4>
 <div class="outline-text-4" id="text-3-2-4">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--keyserver<span class="org-whitespace-space"> </span>certserver.pgp.com<span class="org-whitespace-space"> </span>--send-key<span class="org-whitespace-space"> </span>82159169CFBF69E6
@@ -394,8 +393,8 @@ sub<span class="org-whitespace-space">   </span>rsa4096/9D5CD5E32EF4FC4B<span cl
 </div>
 </div>
 
-<div id="outline-container-orgab7cd44" class="outline-4">
-<h4 id="orgab7cd44"><span class="section-number-4">3.2.5</span> 导入公钥</h4>
+<div id="outline-container-orgc71342e" class="outline-4">
+<h4 id="orgc71342e"><span class="section-number-4">3.2.5</span> 导入公钥</h4>
 <div class="outline-text-4" id="text-3-2-5">
 <p>
 导入：
@@ -480,8 +479,8 @@ Please<span class="org-whitespace-space"> </span>decide<span class="org-whitespa
 </div>
 </div>
 
-<div id="outline-container-orga95c93d" class="outline-4">
-<h4 id="orga95c93d"><span class="section-number-4">3.2.6</span> 导入私钥</h4>
+<div id="outline-container-orga41b3d6" class="outline-4">
+<h4 id="orga41b3d6"><span class="section-number-4">3.2.6</span> 导入私钥</h4>
 <div class="outline-text-4" id="text-3-2-6">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gpg<span class="org-whitespace-space"> </span>--export-secret-keys<span class="org-whitespace-space"> </span>gpgtest<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>gpgtest.priv
@@ -558,8 +557,8 @@ Please<span class="org-whitespace-space"> </span>decide<span class="org-whitespa
 </div>
 </div>
 
-<div id="outline-container-org00a910b" class="outline-3">
-<h3 id="org00a910b"><span class="section-number-3">3.3</span> 签名与签名验证</h3>
+<div id="outline-container-orgdcff673" class="outline-3">
+<h3 id="orgdcff673"><span class="section-number-3">3.3</span> 签名与签名验证</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 对文件进行签名：
@@ -691,8 +690,8 @@ gpg:<span class="org-whitespace-space"> </span>BAD<span class="org-whitespace-sp
 </div>
 </div>
 
-<div id="outline-container-org73a714c" class="outline-3">
-<h3 id="org73a714c"><span class="section-number-3">3.4</span> 加密解密</h3>
+<div id="outline-container-orgbe3eef9" class="outline-3">
+<h3 id="orgbe3eef9"><span class="section-number-3">3.4</span> 加密解密</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 使用 <i>&#x2013;encrypt</i> 参数加密， <i>&#x2013;decrypt</i> 参数解密：
@@ -740,8 +739,8 @@ plain<span class="org-whitespace-space"> </span>text
 </div>
 </div>
 
-<div id="outline-container-org24b6050" class="outline-3">
-<h3 id="org24b6050"><span class="section-number-3">3.5</span> 加密同时签名</h3>
+<div id="outline-container-orgc2d2206" class="outline-3">
+<h3 id="orgc2d2206"><span class="section-number-3">3.5</span> 加密同时签名</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 使用本地私钥签名，使用接收者公钥加密：
@@ -758,18 +757,19 @@ plain<span class="org-whitespace-space"> </span>text
 </p>
 
 <p>
-加密同时采用分离签名(<i>&#x2013;detach-sign</i>)，无法进行解密验证。或者我未找到正确组合参数。
+加密同时采用分离签名(<i>&#x2013;detach-sign</i>)，无法进行解密验证。或者我未找到正确组合
+参数。
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org93a3acf" class="outline-2">
-<h2 id="org93a3acf"><span class="section-number-2">4</span> 其他</h2>
+<div id="outline-container-org22717e7" class="outline-2">
+<h2 id="org22717e7"><span class="section-number-2">4</span> 其他</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org1174f8c" class="outline-3">
-<h3 id="org1174f8c"><span class="section-number-3">4.1</span> 私钥备份保护</h3>
+<div id="outline-container-orgd0cd2ea" class="outline-3">
+<h3 id="orgd0cd2ea"><span class="section-number-3">4.1</span> 私钥备份保护</h3>
 <div class="outline-text-3" id="text-4-1">
 <ul class="org-ul">
 <li>没有完美的方法</li>
@@ -780,8 +780,8 @@ plain<span class="org-whitespace-space"> </span>text
 </div>
 </div>
 
-<div id="outline-container-org114694a" class="outline-2">
-<h2 id="org114694a"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-orga0ebbc8" class="outline-2">
+<h2 id="orga0ebbc8"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>阮一峰GPG入门教程</dt><dd><a href="http://www.ruanyifeng.com/blog/2013/07/gpg.html">http://www.ruanyifeng.com/blog/2013/07/gpg.html</a></dd>
@@ -790,24 +790,18 @@ plain<span class="org-whitespace-space"> </span>text
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/tools-encrypt-gpg.html';
-    this.page.identifier = 'tools-encrypt-gpg.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:57 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>Binary Tree - 二叉树最大宽度与最大距离</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,31 +29,31 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org661ecbd">1. 问题描述</a>
+<li><a href="#org25ca144">1. 问题描述</a>
 <ul>
 <li><a href="#btree-max-width">1.1. 最大宽度</a></li>
 <li><a href="#btree-max-distance">1.2. 最大距离</a></li>
 </ul>
 </li>
-<li><a href="#org509b3c5">2. <span class="todo TODO">TODO</span> 问题求解</a>
+<li><a href="#org416d4ce">2. <span class="todo TODO">TODO</span> 问题求解</a>
 <ul>
-<li><a href="#orga03d9cd">2.1. 最大宽度用树的广度遍历解决</a></li>
-<li><a href="#orgbc741ef">2.2. 最大距离是一个最优子结构问题的迭代</a></li>
+<li><a href="#orgdf5e90b">2.1. 最大宽度用树的广度遍历解决</a></li>
+<li><a href="#orgc3bcfd1">2.2. 最大距离是一个最优子结构问题的迭代</a></li>
 </ul>
 </li>
-<li><a href="#org862bac8">3. 进一步问题</a></li>
-<li><a href="#orgaf21e76">4. References</a></li>
+<li><a href="#org5a2003a">3. 进一步问题</a></li>
+<li><a href="#org2625f9f">4. References</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-org661ecbd" class="outline-2">
-<h2 id="org661ecbd"><span class="section-number-2">1</span> 问题描述</h2>
+<div id="outline-container-org25ca144" class="outline-2">
+<h2 id="org25ca144"><span class="section-number-2">1</span> 问题描述</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org71f0e13" class="outline-3">
-<h3 id="btree-max-width"><a id="org71f0e13"></a><span class="section-number-3">1.1</span> 最大宽度</h3>
+<div id="outline-container-org1632087" class="outline-3">
+<h3 id="btree-max-width"><span class="section-number-3">1.1</span> 最大宽度</h3>
 <div class="outline-text-3" id="text-btree-max-width">
 <p>
 二叉树所有层中节点个数的最大值。例如下图二叉树最大宽度3，在第3层：
@@ -73,8 +71,8 @@
 </div>
 </div>
 
-<div id="outline-container-org3c206da" class="outline-3">
-<h3 id="btree-max-distance"><a id="org3c206da"></a><span class="section-number-3">1.2</span> 最大距离</h3>
+<div id="outline-container-org3083b47" class="outline-3">
+<h3 id="btree-max-distance"><span class="section-number-3">1.2</span> 最大距离</h3>
 <div class="outline-text-3" id="text-btree-max-distance">
 <p>
 二叉树中节点距离是指两个节点之间边的个数。例如下图二叉树最大距离为9，节点对是100
@@ -100,20 +98,20 @@
 </div>
 </div>
 
-<div id="outline-container-org509b3c5" class="outline-2">
-<h2 id="org509b3c5"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> 问题求解</h2>
+<div id="outline-container-org416d4ce" class="outline-2">
+<h2 id="org416d4ce"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> 问题求解</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga03d9cd" class="outline-3">
-<h3 id="orga03d9cd"><span class="section-number-3">2.1</span> 最大宽度用树的广度遍历解决</h3>
+<div id="outline-container-orgdf5e90b" class="outline-3">
+<h3 id="orgdf5e90b"><span class="section-number-3">2.1</span> 最大宽度用树的广度遍历解决</h3>
 </div>
-<div id="outline-container-orgbc741ef" class="outline-3">
-<h3 id="orgbc741ef"><span class="section-number-3">2.2</span> 最大距离是一个最优子结构问题的迭代</h3>
+<div id="outline-container-orgc3bcfd1" class="outline-3">
+<h3 id="orgc3bcfd1"><span class="section-number-3">2.2</span> 最大距离是一个最优子结构问题的迭代</h3>
 </div>
 </div>
 
-<div id="outline-container-org862bac8" class="outline-2">
-<h2 id="org862bac8"><span class="section-number-2">3</span> 进一步问题</h2>
+<div id="outline-container-org5a2003a" class="outline-2">
+<h2 id="org5a2003a"><span class="section-number-2">3</span> 进一步问题</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>获取二叉树两个节点的距离</li>
@@ -121,8 +119,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgaf21e76" class="outline-2">
-<h2 id="orgaf21e76"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-org2625f9f" class="outline-2">
+<h2 id="org2625f9f"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>leetcode</dt><dd><a href="https://leetcode.com/problems/maximum-width-of-binary-tree/description/">https://leetcode.com/problems/maximum-width-of-binary-tree/description/</a></dd>
@@ -131,24 +129,18 @@
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/algos-btree-maximum-width-and-distance.html';
-    this.page.identifier = 'algos-btree-maximum-width-and-distance.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>Shell脚本嵌入到二进制代码中</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,44 +29,48 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7e8c41e">1. 描述</a></li>
-<li><a href="#org4de9157">2. 技术点备忘</a>
+<li><a href="#org836de69">1. 描述</a></li>
+<li><a href="#org545169f">2. 技术点备忘</a>
 <ul>
-<li><a href="#org72826a9">2.1. openssl加解密</a></li>
-<li><a href="#orgd3ace67">2.2. objcopy转换任意文件为二进制目标对象</a></li>
-<li><a href="#orgb95f078">2.3. strip symbol</a></li>
-<li><a href="#org55be5e8">2.4. gpg howto</a></li>
+<li><a href="#orgc897f9f">2.1. openssl加解密</a></li>
+<li><a href="#orgc2afc23">2.2. objcopy转换任意文件为二进制目标对象</a></li>
+<li><a href="#orgd4217a0">2.3. strip symbol</a></li>
+<li><a href="#orga893d2f">2.4. gpg howto</a></li>
 </ul>
 </li>
-<li><a href="#orgff3a1b2">3. 其他设计事项</a>
+<li><a href="#orge63eac7">3. 其他设计事项</a>
 <ul>
-<li><a href="#org095b788">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
-<li><a href="#orgac256e1">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
-<li><a href="#orgfc9e71e">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
-<li><a href="#orgee9caaf">3.4. 充分应用非对称加密提高可靠性</a></li>
+<li><a href="#org4d7ec3d">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
+<li><a href="#org7917ae1">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
+<li><a href="#orgdefaeac">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
+<li><a href="#orgcda125d">3.4. 充分应用非对称加密提高可靠性</a></li>
 </ul>
 </li>
-<li><a href="#orgca70029">4. References</a></li>
+<li><a href="#org75b7111">4. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org7e8c41e" class="outline-2">
-<h2 id="org7e8c41e"><span class="section-number-2">1</span> 描述</h2>
+<div id="outline-container-org836de69" class="outline-2">
+<h2 id="org836de69"><span class="section-number-2">1</span> 描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-最近需要完成一个小的加密工具，有较高安全要求，并要求快速完成，但对加解密性能不敏感。为简化实现，规划使用Bash Shell封装，调用现有工具<a href="https://gnupg.org/">GPG</a>完成。使用<a href="https://github.com/Distrotech/tar">tar</a>和
-<a href="http://www.bzip.org/">bzip2</a>压缩，使用<a href="https://www.openssl.org/">openssl</a>对tar包执行对称加密，使用<a href="https://github.com/bminor/binutils-gdb/blob/master/binutils/objcopy.c">objcopy</a>转为二进制对象，与C语言链接生成可执行二进制程序。C语言使用系统调用<a href="http://man7.org/linux/man-pages/man2/unshare.2.html">unshare NewNamespace</a>保护挂载，在挂载点内执行openssl解密、解压缩，并执行具体的非对称安全加密任务。为进一步保证安全，对二进制程序执行移除所有符号。
+最近需要完成一个小的加密工具，有较高安全要求，并要求快速完成，但对加解密性能
+不敏感。为简化实现，规划使用Bash Shell封装，调用现有工具<a href="https://gnupg.org/">GPG</a>完成。使用<a href="https://github.com/Distrotech/tar">tar</a>和
+<a href="http://www.bzip.org/">bzip2</a>压缩，使用<a href="https://www.openssl.org/">openssl</a>对tar包执行对称加密，使用<a href="https://github.com/bminor/binutils-gdb/blob/master/binutils/objcopy.c">objcopy</a>转为二进制对象，与C语言
+链接生成可执行二进制程序。C语言使用系统调用<a href="http://man7.org/linux/man-pages/man2/unshare.2.html">unshare NewNamespace</a>保护挂载，在挂载
+点内执行openssl解密、解压缩，并执行具体的非对称安全加密任务。为进一步保证安全，
+对二进制程序执行移除所有符号。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org4de9157" class="outline-2">
-<h2 id="org4de9157"><span class="section-number-2">2</span> 技术点备忘</h2>
+<div id="outline-container-org545169f" class="outline-2">
+<h2 id="org545169f"><span class="section-number-2">2</span> 技术点备忘</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org72826a9" class="outline-3">
-<h3 id="org72826a9"><span class="section-number-3">2.1</span> openssl加解密</h3>
+<div id="outline-container-orgc897f9f" class="outline-3">
+<h3 id="orgc897f9f"><span class="section-number-3">2.1</span> openssl加解密</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>openssl<span class="org-whitespace-space"> </span>enc<span class="org-whitespace-space"> </span>-pass<span class="org-whitespace-space"> </span>pass:123<span class="org-whitespace-space"> </span>-e<span class="org-whitespace-space"> </span>-aes-256-cbc<span class="org-whitespace-space"> </span>-in<span class="org-whitespace-space"> </span>test.txt<span class="org-whitespace-space"> </span>-out<span class="org-whitespace-space"> </span>test.txt.enc
@@ -104,8 +106,8 @@ Cipher<span class="org-whitespace-space"> </span>Types
 </div>
 </div>
 
-<div id="outline-container-orgd3ace67" class="outline-3">
-<h3 id="orgd3ace67"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
+<div id="outline-container-orgc2afc23" class="outline-3">
+<h3 id="orgc2afc23"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>objcopy<span class="org-whitespace-space"> </span>-I<span class="org-whitespace-space"> </span>binary<span class="org-whitespace-space"> </span>-O<span class="org-whitespace-space"> </span>elf64-x86-64<span class="org-whitespace-space"> </span>-B<span class="org-whitespace-space"> </span>i386<span class="org-whitespace-space"> </span>file.in<span class="org-whitespace-space"> </span>file.o
@@ -131,8 +133,8 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-orgb95f078" class="outline-3">
-<h3 id="orgb95f078"><span class="section-number-3">2.3</span> strip symbol</h3>
+<div id="outline-container-orgd4217a0" class="outline-3">
+<h3 id="orgd4217a0"><span class="section-number-3">2.3</span> strip symbol</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>strip<span class="org-whitespace-space"> </span>--strip-all<span class="org-whitespace-space"> </span>test
@@ -141,8 +143,8 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org55be5e8" class="outline-3">
-<h3 id="org55be5e8"><span class="section-number-3">2.4</span> gpg howto</h3>
+<div id="outline-container-orga893d2f" class="outline-3">
+<h3 id="orga893d2f"><span class="section-number-3">2.4</span> gpg howto</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li>See <a href="tools-encrypt-gpg.html">tools-encrypt-gpg.html</a></li>
@@ -151,50 +153,44 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-orgff3a1b2" class="outline-2">
-<h2 id="orgff3a1b2"><span class="section-number-2">3</span> 其他设计事项</h2>
+<div id="outline-container-orge63eac7" class="outline-2">
+<h2 id="orge63eac7"><span class="section-number-2">3</span> 其他设计事项</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org095b788" class="outline-3">
-<h3 id="org095b788"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
+<div id="outline-container-org4d7ec3d" class="outline-3">
+<h3 id="org4d7ec3d"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
 </div>
-<div id="outline-container-orgac256e1" class="outline-3">
-<h3 id="orgac256e1"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
+<div id="outline-container-org7917ae1" class="outline-3">
+<h3 id="org7917ae1"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
 </div>
-<div id="outline-container-orgfc9e71e" class="outline-3">
-<h3 id="orgfc9e71e"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
+<div id="outline-container-orgdefaeac" class="outline-3">
+<h3 id="orgdefaeac"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
 </div>
-<div id="outline-container-orgee9caaf" class="outline-3">
-<h3 id="orgee9caaf"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
+<div id="outline-container-orgcda125d" class="outline-3">
+<h3 id="orgcda125d"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
 </div>
 </div>
 
-<div id="outline-container-orgca70029" class="outline-2">
-<h2 id="orgca70029"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-org75b7111" class="outline-2">
+<h2 id="org75b7111"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>GPG入门：<a href="tools-encrypt-gpg.html">GPG - encrypt tools in this site</a></li>
 </ul>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/sh-imbed-to-binary-exec.html';
-    this.page.identifier = 'sh-imbed-to-binary-exec.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

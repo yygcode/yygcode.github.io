@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>Mac新手配置记录 - 开发环境诉求</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,48 +29,48 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd62b2f7">1. Software Install</a>
+<li><a href="#orgd2dd57a">1. Software Install</a>
 <ul>
-<li><a href="#org1bdde86">1.1. Editor</a></li>
-<li><a href="#orgdc04a91">1.2. Homebrew</a>
+<li><a href="#org618aaaf">1.1. Editor</a></li>
+<li><a href="#org7703208">1.2. Homebrew</a>
 <ul>
-<li><a href="#orgb63d369">1.2.1. list</a></li>
+<li><a href="#org5ecf067">1.2.1. list</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orge535170">2. Conventient Config</a>
+<li><a href="#org861fac3">2. Conventient Config</a>
 <ul>
-<li><a href="#org57ef9b5">2.1. Defualts Shortcuts</a></li>
-<li><a href="#org3e0ff99">2.2. Customize Shortcuts</a></li>
-<li><a href="#orgd1b199a">2.3. Move alt-command dock(menu) bar to external display</a></li>
+<li><a href="#org0d37b3e">2.1. Defualts Shortcuts</a></li>
+<li><a href="#org16a805b">2.2. Customize Shortcuts</a></li>
+<li><a href="#org5e24188">2.3. Move alt-command dock(menu) bar to external display</a></li>
 </ul>
 </li>
-<li><a href="#orgd8700db">3. Developer Tools</a>
+<li><a href="#org27a67d1">3. Developer Tools</a>
 <ul>
-<li><a href="#org134f3b0">3.1. terminal</a>
+<li><a href="#org4221543">3.1. terminal</a>
 <ul>
-<li><a href="#org475eb13">3.1.1. iterm2</a></li>
-<li><a href="#org50658fd">3.1.2. tmux2</a></li>
+<li><a href="#org36e96aa">3.1.1. iterm2</a></li>
+<li><a href="#org52aebbd">3.1.2. tmux2</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga216d2b">4. FAQ</a>
+<li><a href="#orgff6da52">4. FAQ</a>
 <ul>
-<li><a href="#org5c34136">4.1. Update Problem xcrun: error: invalid active developer path, missing xcrun</a></li>
+<li><a href="#org2820eef">4.1. Update Problem xcrun: error: invalid active developer path, missing xcrun</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd62b2f7" class="outline-2">
-<h2 id="orgd62b2f7"><span class="section-number-2">1</span> Software Install</h2>
+<div id="outline-container-orgd2dd57a" class="outline-2">
+<h2 id="orgd2dd57a"><span class="section-number-2">1</span> Software Install</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org1bdde86" class="outline-3">
-<h3 id="org1bdde86"><span class="section-number-3">1.1</span> Editor</h3>
+<div id="outline-container-org618aaaf" class="outline-3">
+<h3 id="org618aaaf"><span class="section-number-3">1.1</span> Editor</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 自己编译安装，或使用brew安装的Emacs，没有对应的Application链接。直接安装
@@ -81,11 +79,12 @@ EmacsForMacOSX(<a href="https://emacsformacosx.com/">https://emacsformacosx.com/
 </div>
 </div>
 
-<div id="outline-container-orgdc04a91" class="outline-3">
-<h3 id="orgdc04a91"><span class="section-number-3">1.2</span> Homebrew</h3>
+<div id="outline-container-org7703208" class="outline-3">
+<h3 id="org7703208"><span class="section-number-3">1.2</span> Homebrew</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-包管理器维护一系列工具软件，自动处理其安装、移除、依赖、升级、配置等事项，降低操作系统维护难度。例如GNU/Linux发行版Debian的<a href="https://www.debian.org/doc/manuals/debian-reference/ch02.en.html">apt</a>。
+包管理器维护一系列工具软件，自动处理其安装、移除、依赖、升级、配置等事项，降低
+操作系统维护难度。例如GNU/Linux发行版Debian的<a href="https://www.debian.org/doc/manuals/debian-reference/ch02.en.html">apt</a>。
 </p>
 
 <p>
@@ -106,8 +105,8 @@ Apple没有给MacOS开发包管理器。brew是三方开发的MacOS包管理器�
 </div>
 </div>
 
-<div id="outline-container-orgb63d369" class="outline-4">
-<h4 id="orgb63d369"><span class="section-number-4">1.2.1</span> list</h4>
+<div id="outline-container-org5ecf067" class="outline-4">
+<h4 id="org5ecf067"><span class="section-number-4">1.2.1</span> list</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">brew<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>global<span class="org-whitespace-space"> </span>cmake<span class="org-whitespace-space"> </span>wget
@@ -118,16 +117,16 @@ Apple没有给MacOS开发包管理器。brew是三方开发的MacOS包管理器�
 </div>
 </div>
 
-<div id="outline-container-orge535170" class="outline-2">
-<h2 id="orge535170"><span class="section-number-2">2</span> Conventient Config</h2>
+<div id="outline-container-org861fac3" class="outline-2">
+<h2 id="org861fac3"><span class="section-number-2">2</span> Conventient Config</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org57ef9b5" class="outline-3">
-<h3 id="org57ef9b5"><span class="section-number-3">2.1</span> Defualts Shortcuts</h3>
+<div id="outline-container-org0d37b3e" class="outline-3">
+<h3 id="org0d37b3e"><span class="section-number-3">2.1</span> Defualts Shortcuts</h3>
 </div>
 
-<div id="outline-container-org3e0ff99" class="outline-3">
-<h3 id="org3e0ff99"><span class="section-number-3">2.2</span> Customize Shortcuts</h3>
+<div id="outline-container-org16a805b" class="outline-3">
+<h3 id="org16a805b"><span class="section-number-3">2.2</span> Customize Shortcuts</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 日常使用的软件，习惯于用一个快捷键启动。MacOS Keyboard定制的，按照如下教程创建一个快捷键：
@@ -232,8 +231,8 @@ you want.
 </div>
 </div>
 
-<div id="outline-container-orgd1b199a" class="outline-3">
-<h3 id="orgd1b199a"><span class="section-number-3">2.3</span> Move alt-command dock(menu) bar to external display</h3>
+<div id="outline-container-org5e24188" class="outline-3">
+<h3 id="org5e24188"><span class="section-number-3">2.3</span> Move alt-command dock(menu) bar to external display</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li>Open: Apple-&gt;System Preferences&#x2026;-&gt;Displays-&gt;Arrangement
@@ -244,28 +243,28 @@ Drag top white bar from builtin display to external display</li>
 </div>
 </div>
 
-<div id="outline-container-orgd8700db" class="outline-2">
-<h2 id="orgd8700db"><span class="section-number-2">3</span> Developer Tools</h2>
+<div id="outline-container-org27a67d1" class="outline-2">
+<h2 id="org27a67d1"><span class="section-number-2">3</span> Developer Tools</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org134f3b0" class="outline-3">
-<h3 id="org134f3b0"><span class="section-number-3">3.1</span> terminal</h3>
+<div id="outline-container-org4221543" class="outline-3">
+<h3 id="org4221543"><span class="section-number-3">3.1</span> terminal</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org475eb13" class="outline-4">
-<h4 id="org475eb13"><span class="section-number-4">3.1.1</span> iterm2</h4>
+<div id="outline-container-org36e96aa" class="outline-4">
+<h4 id="org36e96aa"><span class="section-number-4">3.1.1</span> iterm2</h4>
 </div>
-<div id="outline-container-org50658fd" class="outline-4">
-<h4 id="org50658fd"><span class="section-number-4">3.1.2</span> tmux2</h4>
+<div id="outline-container-org52aebbd" class="outline-4">
+<h4 id="org52aebbd"><span class="section-number-4">3.1.2</span> tmux2</h4>
 </div>
 </div>
 </div>
-<div id="outline-container-orga216d2b" class="outline-2">
-<h2 id="orga216d2b"><span class="section-number-2">4</span> FAQ</h2>
+<div id="outline-container-orgff6da52" class="outline-2">
+<h2 id="orgff6da52"><span class="section-number-2">4</span> FAQ</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org5c34136" class="outline-3">
-<h3 id="org5c34136"><span class="section-number-3">4.1</span> Update Problem xcrun: error: invalid active developer path, missing xcrun</h3>
+<div id="outline-container-org2820eef" class="outline-3">
+<h3 id="org2820eef"><span class="section-number-3">4.1</span> Update Problem xcrun: error: invalid active developer path, missing xcrun</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 After Update MAC os, Compile(e.g. make) error:
@@ -294,24 +293,18 @@ Exec follow if problem still exist:
 </div>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/mac-beginner.html';
-    this.page.identifier = 'mac-beginner.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>

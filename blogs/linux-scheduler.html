@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-13 Wed 00:58 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 13:44 -->
+<meta charset="utf-8" />
 <title>LINUX调度器/Linux Scheduler</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="../r/org-code.css" />
-<link rel="stylesheet" type="text/css" href="../r/blog-bluetopbar.css" />
-<script type="text/javascript" src="../r/MathJax.js?config=TeX-AMS_HTML"> </script>
-<script type="text/javascript" src="../r/bootstrap.min.js"></script>
-<script type="text/javascript" src="../r/jquery.stickytableheaders.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -31,23 +29,23 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org49c921b">1. Scheduler Abbreviation</a></li>
-<li><a href="#org1065481">2. Scheduler Config and Options</a>
+<li><a href="#orgbeca8e1">1. Scheduler Abbreviation</a></li>
+<li><a href="#org2f08c72">2. Scheduler Config and Options</a>
 <ul>
-<li><a href="#org61644c3">2.1. config</a></li>
-<li><a href="#org8cd6cb6">2.2. proc/sys/kernel/</a></li>
-<li><a href="#org5c6319c">2.3. boot arguments</a></li>
+<li><a href="#orgd9ce39e">2.1. config</a></li>
+<li><a href="#org6b731be">2.2. proc/sys/kernel/</a></li>
+<li><a href="#org8a02c8a">2.3. boot arguments</a></li>
 </ul>
 </li>
-<li><a href="#org3da58f8">3. Schedule initialize Trace</a></li>
-<li><a href="#org7ed9eb4">4. Schedule Routine Analysis</a></li>
-<li><a href="#org7157b27">5. References</a></li>
+<li><a href="#org1c7f37d">3. Schedule initialize Trace</a></li>
+<li><a href="#org30fcc29">4. Schedule Routine Analysis</a></li>
+<li><a href="#orga3f35e8">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org49c921b" class="outline-2">
-<h2 id="org49c921b"><span class="section-number-2">1</span> Scheduler Abbreviation</h2>
+<div id="outline-container-orgbeca8e1" class="outline-2">
+<h2 id="orgbeca8e1"><span class="section-number-2">1</span> Scheduler Abbreviation</h2>
 <div class="outline-text-2" id="text-1">
 <dl class="org-dl">
 <dt>rt</dt><dd>realtime</dd>
@@ -57,12 +55,12 @@
 </div>
 </div>
 
-<div id="outline-container-org1065481" class="outline-2">
-<h2 id="org1065481"><span class="section-number-2">2</span> Scheduler Config and Options</h2>
+<div id="outline-container-org2f08c72" class="outline-2">
+<h2 id="org2f08c72"><span class="section-number-2">2</span> Scheduler Config and Options</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org61644c3" class="outline-3">
-<h3 id="org61644c3"><span class="section-number-3">2.1</span> config</h3>
+<div id="outline-container-orgd9ce39e" class="outline-3">
+<h3 id="orgd9ce39e"><span class="section-number-3">2.1</span> config</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>CONFIG_SCHEDSTATS</li>
@@ -70,11 +68,11 @@
 </div>
 </div>
 
-<div id="outline-container-org8cd6cb6" class="outline-3">
-<h3 id="org8cd6cb6"><span class="section-number-3">2.2</span> proc/sys/kernel/</h3>
+<div id="outline-container-org6b731be" class="outline-3">
+<h3 id="org6b731be"><span class="section-number-3">2.2</span> proc/sys/kernel/</h3>
 </div>
-<div id="outline-container-org5c6319c" class="outline-3">
-<h3 id="org5c6319c"><span class="section-number-3">2.3</span> boot arguments</h3>
+<div id="outline-container-org8a02c8a" class="outline-3">
+<h3 id="org8a02c8a"><span class="section-number-3">2.3</span> boot arguments</h3>
 <div class="outline-text-3" id="text-2-3">
 <dl class="org-dl">
 <dt>schedstats</dt><dd>schedstats=[enable|disable]</dd>
@@ -83,8 +81,8 @@
 </div>
 </div>
 
-<div id="outline-container-org3da58f8" class="outline-2">
-<h2 id="org3da58f8"><span class="section-number-2">3</span> Schedule initialize Trace</h2>
+<div id="outline-container-org1c7f37d" class="outline-2">
+<h2 id="org1c7f37d"><span class="section-number-2">3</span> Schedule initialize Trace</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In <code>start_kernel</code> routine, call <code>sched_init</code> initialize scheduler:
@@ -150,8 +148,8 @@ Then call <code>init_idle</code> and <code>init_sched_fair_class</code> do botto
 </div>
 </div>
 
-<div id="outline-container-org7ed9eb4" class="outline-2">
-<h2 id="org7ed9eb4"><span class="section-number-2">4</span> Schedule Routine Analysis</h2>
+<div id="outline-container-org30fcc29" class="outline-2">
+<h2 id="org30fcc29"><span class="section-number-2">4</span> Schedule Routine Analysis</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Here is the entry:
@@ -240,32 +238,26 @@ And now disable and do schedule:
 </div>
 </div>
 
-<div id="outline-container-org7157b27" class="outline-2">
-<h2 id="org7157b27"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-orga3f35e8" class="outline-2">
+<h2 id="orga3f35e8"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>linux pi_futex</dt><dd><a href="http://kouucocu.lofter.com/post/1cdb8c4b_50f62fe">http://kouucocu.lofter.com/post/1cdb8c4b_50f62fe</a></dd>
 </dl>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-dark-orange"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/blogs/linux-scheduler.html';
-    this.page.identifier = 'linux-scheduler.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 <div class="copyright">
 2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
