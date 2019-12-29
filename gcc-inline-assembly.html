@@ -1,19 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>GCC内联汇编</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -38,36 +30,40 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">GCC内联汇编</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge785165">1. 什么是内联汇编</a></li>
-<li><a href="#orgb512b16">2. 为什么使用内联汇编</a></li>
-<li><a href="#org5e9a5d0">3. 内联汇编语法格式</a>
+<li><a href="#org2723b31">1. 什么是内联汇编</a></li>
+<li><a href="#orgb68486b">2. 为什么使用内联汇编</a></li>
+<li><a href="#orgb65c633">3. 内联汇编语法格式</a>
 <ul>
-<li><a href="#org09e66b5">3.1. Basic Asm</a></li>
-<li><a href="#orgf709810">3.2. Extend Asm</a>
+<li><a href="#org8f317e9">3.1. Basic Asm</a></li>
+<li><a href="#org16e7c8a">3.2. Extend Asm</a>
 <ul>
-<li><a href="#org52f4376">3.2.1. volatile</a></li>
-<li><a href="#org73aced6">3.2.2. goto</a></li>
-<li><a href="#org21a1681">3.2.3. AssemblerTemplate</a></li>
+<li><a href="#orgdf1779f">3.2.1. volatile</a></li>
+<li><a href="#org7fd68e5">3.2.2. goto</a></li>
+<li><a href="#orgb3a2202">3.2.3. AssemblerTemplate</a></li>
 </ul>
 </li>
-<li><a href="#org3410302">3.3. Output Operands</a></li>
-<li><a href="#org5756d94">3.4. Input Operands</a></li>
+<li><a href="#orgede7a7f">3.3. Output Operands</a></li>
+<li><a href="#orga4af6fa">3.4. Input Operands</a></li>
 </ul>
 </li>
-<li><a href="#orgdebf657">4. 内联汇编示例</a></li>
-<li><a href="#org35ebbeb">5. References</a></li>
+<li><a href="#org460900f">4. 内联汇编示例</a></li>
+<li><a href="#org608ef0e">5. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge785165" class="outline-2">
-<h2 id="orge785165"><span class="section-number-2">1</span> 什么是内联汇编</h2>
+<div id="outline-container-org2723b31" class="outline-2">
+<h2 id="org2723b31"><span class="section-number-2">1</span> 什么是内联汇编</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 通过C标准或编译器特有的语法规则，用汇编语言编写函数，称为内联汇编(Inline
@@ -76,8 +72,8 @@ Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="
 </div>
 </div>
 
-<div id="outline-container-orgb512b16" class="outline-2">
-<h2 id="orgb512b16"><span class="section-number-2">2</span> 为什么使用内联汇编</h2>
+<div id="outline-container-orgb68486b" class="outline-2">
+<h2 id="orgb68486b"><span class="section-number-2">2</span> 为什么使用内联汇编</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 使用内联汇编基于两个原因：
@@ -89,15 +85,15 @@ Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="
 </div>
 </div>
 
-<div id="outline-container-org5e9a5d0" class="outline-2">
-<h2 id="org5e9a5d0"><span class="section-number-2">3</span> 内联汇编语法格式</h2>
+<div id="outline-container-orgb65c633" class="outline-2">
+<h2 id="orgb65c633"><span class="section-number-2">3</span> 内联汇编语法格式</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 完整的清单请查看<a href="https://gcc.gnu.org/onlinedocs/gcc/Using-Assembly-Language-with-C.html#Using-Assembly-Language-with-C">GCC Mnaual - For Using Assembly Language with C</a>。
 </p>
 </div>
-<div id="outline-container-org09e66b5" class="outline-3">
-<h3 id="org09e66b5"><span class="section-number-3">3.1</span> Basic Asm</h3>
+<div id="outline-container-org8f317e9" class="outline-3">
+<h3 id="org8f317e9"><span class="section-number-3">3.1</span> Basic Asm</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>[<span class="org-keyword">volatile</span>]<span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>AssemblerInstruction<span class="org-whitespace-space"> </span>)
@@ -108,11 +104,13 @@ Assembly)。C标准定义关键词__asm__，GCC扩展关键词为asm（<a href="
 </p>
 
 <p>
-AssemblerInstruction是字符串形式的汇编码，GCC不解析basic asm汇编字符串含义。如果有多条汇编指令，请添加分隔符，一般是"\n\t"。
+AssemblerInstruction是字符串形式的汇编码，GCC不解析basic asm汇编字符串含义。如果
+有多条汇编指令，请添加分隔符，一般是"\n\t"。
 </p>
 
 <p>
-通常建议使用extended asm，它能够生成更小、更安全、更快速的代码。但如果想在文件级别使用内联汇编（比如定义汇编宏或修改汇编指令），必须使用basic asm，因为
+通常建议使用extended asm，它能够生成更小、更安全、更快速的代码。但如果想在文件
+级别使用内联汇编（比如定义汇编宏或修改汇编指令），必须使用basic asm，因为
 extended asm只能在C函数内部使用。
 </p>
 
@@ -122,7 +120,8 @@ extend asm，<a href="https://gcc.gnu.org/wiki/ConvertBasicAsmToExtended">参考
 </p>
 
 <p>
-GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇编中定义符号，可能导致编译错误。
+GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇编中定义符号，可能导致
+编译错误。
 </p>
 
 <p>
@@ -149,8 +148,8 @@ GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇�
 </div>
 </div>
 
-<div id="outline-container-orgf709810" class="outline-3">
-<h3 id="orgf709810"><span class="section-number-3">3.2</span> Extend Asm</h3>
+<div id="outline-container-org16e7c8a" class="outline-3">
+<h3 id="org16e7c8a"><span class="section-number-3">3.2</span> Extend Asm</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">asm</span><span class="org-whitespace-space"> </span>[<span class="org-keyword">volatile</span>]<span class="org-whitespace-space"> </span>(<span class="org-whitespace-space"> </span>AssemblerTemplate
@@ -168,11 +167,12 @@ GCC可能会在优化时复制或消除一些汇编语句，因此如果在汇�
 </div>
 </div>
 
-<div id="outline-container-org52f4376" class="outline-4">
-<h4 id="org52f4376"><span class="section-number-4">3.2.1</span> volatile</h4>
+<div id="outline-container-orgdf1779f" class="outline-4">
+<h4 id="orgdf1779f"><span class="section-number-4">3.2.1</span> volatile</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
-volatile和C语言中的一致，如果汇编指令产生边界效应，需要添加volatile禁止优化。如下示例：
+volatile和C语言中的一致，如果汇编指令产生边界效应，需要添加volatile禁止优化。
+如下示例：
 </p>
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -371,8 +371,8 @@ errors during compilation if your asm code defines symbols or labels. Using ‘%
 </div>
 </div>
 
-<div id="outline-container-org73aced6" class="outline-4">
-<h4 id="org73aced6"><span class="section-number-4">3.2.2</span> goto</h4>
+<div id="outline-container-org7fd68e5" class="outline-4">
+<h4 id="org7fd68e5"><span class="section-number-4">3.2.2</span> goto</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 允许汇编指令跳转到C语言定义的GotoLabels任一个，多个GotoLabels用逗号分割。允许
@@ -502,8 +502,8 @@ The following example shows an asm goto that uses a memory clobber.
 </div>
 </div>
 
-<div id="outline-container-org21a1681" class="outline-4">
-<h4 id="org21a1681"><span class="section-number-4">3.2.3</span> AssemblerTemplate</h4>
+<div id="outline-container-orgb3a2202" class="outline-4">
+<h4 id="orgb3a2202"><span class="section-number-4">3.2.3</span> AssemblerTemplate</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <blockquote>
 <ul class="org-ul">
@@ -571,7 +571,9 @@ these tokens have special meanings in the assembler template:
 </p>
 
 <p>
-‘%{’‘%|’‘%}’
+‘%{’
+‘%|’
+‘%}’
     Outputs ‘{’, ‘|’, and ‘}’ characters (respectively) into the assembler code.
     When unescaped, these characters have special meaning to indicate multiple
     assembler dialects, as described below.
@@ -647,8 +649,8 @@ There is no support for nesting dialect alternatives.
 </div>
 </div>
 
-<div id="outline-container-org3410302" class="outline-3">
-<h3 id="org3410302"><span class="section-number-3">3.3</span> Output Operands</h3>
+<div id="outline-container-orgede7a7f" class="outline-3">
+<h3 id="orgede7a7f"><span class="section-number-3">3.3</span> Output Operands</h3>
 <div class="outline-text-3" id="text-3-3">
 <blockquote>
 <ul class="org-ul">
@@ -853,8 +855,8 @@ constraints.
 </div>
 </div>
 
-<div id="outline-container-org5756d94" class="outline-3">
-<h3 id="org5756d94"><span class="section-number-3">3.4</span> Input Operands</h3>
+<div id="outline-container-orga4af6fa" class="outline-3">
+<h3 id="orga4af6fa"><span class="section-number-3">3.4</span> Input Operands</h3>
 <div class="outline-text-3" id="text-3-4">
 <blockquote>
 <ul class="org-ul">
@@ -987,11 +989,11 @@ Here is an example using symbolic names.
 </div>
 </div>
 
-<div id="outline-container-orgdebf657" class="outline-2">
-<h2 id="orgdebf657"><span class="section-number-2">4</span> 内联汇编示例</h2>
+<div id="outline-container-org460900f" class="outline-2">
+<h2 id="org460900f"><span class="section-number-2">4</span> 内联汇编示例</h2>
 </div>
-<div id="outline-container-org35ebbeb" class="outline-2">
-<h2 id="org35ebbeb"><span class="section-number-2">5</span> References</h2>
+<div id="outline-container-org608ef0e" class="outline-2">
+<h2 id="org608ef0e"><span class="section-number-2">5</span> References</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>GCC Manual</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html</a></dd>
@@ -1017,27 +1019,6 @@ Here is an example using symbolic names.
 <a href="https://abcdxyzk.github.io/blog/2013/06/07/assembly-base-5/">https://abcdxyzk.github.io/blog/2013/06/07/assembly-base-5/</a>
 </p>
 </div>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/gcc-inline-assembly.html';
-    this.page.identifier = 'gcc-inline-assembly.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

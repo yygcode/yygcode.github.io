@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-14 Thu 01:33 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Linux Proc Filesystem/Linux Proc文件系统</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
@@ -27,58 +25,60 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1d4ca41">1. 介绍</a></li>
-<li><a href="#orgc5b7401">2. 分类描述</a>
+<li><a href="#orgff234ae">1. 介绍</a></li>
+<li><a href="#org9aaff03">2. 分类描述</a>
 <ul>
-<li><a href="#orgedea9c3">2.1. 内存相关</a></li>
+<li><a href="#orgf9f89b9">2.1. 内存相关</a></li>
 </ul>
 </li>
-<li><a href="#org0fcfbf5">3. 清单化呈现(字母顺序排序)</a>
+<li><a href="#orgdaf5287">3. 清单化呈现(字母顺序排序)</a>
 <ul>
 <li><a href="#buddyinfo">3.1. proc/buddyinfo</a></li>
-<li><a href="#orgc86c7aa">3.2. proc/cgroups</a></li>
-<li><a href="#orgec91223">3.3. proc/cmdline</a></li>
-<li><a href="#orgdf059df">3.4. proc/consoles</a></li>
-<li><a href="#org4026a1b">3.5. proc/cpuinfo</a></li>
-<li><a href="#orgd874653">3.6. proc/crypto</a></li>
-<li><a href="#org17df211">3.7. proc/devices</a></li>
-<li><a href="#org6b161cd">3.8. proc/diskstats</a></li>
-<li><a href="#org883e48a">3.9. proc/dma</a></li>
-<li><a href="#org49a3bf7">3.10. proc/execdomains</a></li>
-<li><a href="#org8151505">3.11. proc/fb</a></li>
-<li><a href="#org6884369">3.12. proc/filesystems</a></li>
-<li><a href="#orgdeb47d6">3.13. proc/fs</a></li>
-<li><a href="#orgcf0f2f7">3.14. proc/interrups</a></li>
+<li><a href="#orgaaebe4c">3.2. proc/cgroups</a></li>
+<li><a href="#org01290a5">3.3. proc/cmdline</a></li>
+<li><a href="#orgc0897d9">3.4. proc/consoles</a></li>
+<li><a href="#org7ee8a32">3.5. proc/cpuinfo</a></li>
+<li><a href="#org8307278">3.6. proc/crypto</a></li>
+<li><a href="#org8595ecc">3.7. proc/devices</a></li>
+<li><a href="#org4d750ba">3.8. proc/diskstats</a></li>
+<li><a href="#org6525fa4">3.9. proc/dma</a></li>
+<li><a href="#org6b4fd7e">3.10. proc/execdomains</a></li>
+<li><a href="#orgbb07458">3.11. proc/fb</a></li>
+<li><a href="#orgd39d5a8">3.12. proc/filesystems</a></li>
+<li><a href="#orgad47562">3.13. proc/fs</a></li>
+<li><a href="#org44b827e">3.14. proc/interrups</a></li>
 <li><a href="#iomem">3.15. iomem</a></li>
-<li><a href="#org92a15c3">3.16. proc/ioports</a></li>
-<li><a href="#orgbeb1fa6">3.17. proc/kallsyms</a></li>
-<li><a href="#org3522b40">3.18. proc/meminfo</a></li>
-<li><a href="#org1b4996a">3.19. proc/&lt;pid&gt;</a></li>
-<li><a href="#org5306b71">3.20. proc/self</a></li>
-<li><a href="#org0126384">3.21. oom_score</a></li>
+<li><a href="#org23eefee">3.16. proc/ioports</a></li>
+<li><a href="#org5a3f584">3.17. proc/kallsyms</a></li>
+<li><a href="#org298d692">3.18. proc/meminfo</a></li>
+<li><a href="#org8bd929e">3.19. proc/&lt;pid&gt;</a></li>
+<li><a href="#orged21d47">3.20. proc/self</a></li>
+<li><a href="#org2fc753a">3.21. oom_score</a></li>
 </ul>
 </li>
-<li><a href="#org1dee46d">4. 内核实现</a></li>
-<li><a href="#org2af8850">5. 参考资料</a></li>
+<li><a href="#org7c55a1f">4. 内核实现</a></li>
+<li><a href="#orge8e9a82">5. 参考资料</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1d4ca41" class="outline-2">
-<h2 id="org1d4ca41"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgff234ae" class="outline-2">
+<h2 id="orgff234ae"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-proc虚拟文件系统提供用户态与内核态数据交互的方式，一般挂载在/proc，由initrd启动初始化时挂载。proc下绝大多数文件用以导出内核信息，但也有部分允许修改，这些改变一般用于控制内核模块的功能或行为。
+proc虚拟文件系统提供用户态与内核态数据交互的方式，一般挂载在/proc，由initrd启动
+初始化时挂载。proc下绝大多数文件用以导出内核信息，但也有部分允许修改，这些改变
+一般用于控制内核模块的功能或行为。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgc5b7401" class="outline-2">
-<h2 id="orgc5b7401"><span class="section-number-2">2</span> 分类描述</h2>
+<div id="outline-container-org9aaff03" class="outline-2">
+<h2 id="org9aaff03"><span class="section-number-2">2</span> 分类描述</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgedea9c3" class="outline-3">
-<h3 id="orgedea9c3"><span class="section-number-3">2.1</span> 内存相关</h3>
+<div id="outline-container-orgf9f89b9" class="outline-3">
+<h3 id="orgf9f89b9"><span class="section-number-3">2.1</span> 内存相关</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li><a href="#buddyinfo">proc/buddyinfo</a></li>
@@ -91,12 +91,12 @@ proc虚拟文件系统提供用户态与内核态数据交互的方式，一般�
 </div>
 </div>
 
-<div id="outline-container-org0fcfbf5" class="outline-2">
-<h2 id="org0fcfbf5"><span class="section-number-2">3</span> 清单化呈现(字母顺序排序)</h2>
+<div id="outline-container-orgdaf5287" class="outline-2">
+<h2 id="orgdaf5287"><span class="section-number-2">3</span> 清单化呈现(字母顺序排序)</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf6b20d7" class="outline-3">
-<h3 id="buddyinfo"><a id="orgf6b20d7"></a><span class="section-number-3">3.1</span> proc/buddyinfo</h3>
+<div id="outline-container-org8fb9bcf" class="outline-3">
+<h3 id="buddyinfo"><span class="section-number-3">3.1</span> proc/buddyinfo</h3>
 <div class="outline-text-3" id="text-buddyinfo">
 <p>
 buddyinfo的内容是Linux系统伙伴管理系统的内存呈现，10列分别表示2<sup>nil</sup>0至2^10{} PAGE
@@ -125,11 +125,12 @@ Node<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-spa
 </div>
 </div>
 
-<div id="outline-container-orgc86c7aa" class="outline-3">
-<h3 id="orgc86c7aa"><span class="section-number-3">3.2</span> proc/cgroups</h3>
+<div id="outline-container-orgaaebe4c" class="outline-3">
+<h3 id="orgaaebe4c"><span class="section-number-3">3.2</span> proc/cgroups</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行资源限制和监控。通过伪文件系统cgroupfs提供交互接口。<a href="http://man7.org/linux/man-pages/man7/cgroups.7.html">man 7 cgroups</a>获取详细信息。
+cgroups(Control Groups)是Linux资源管理的特性，实现分级分组进行资源限制和监控。
+通过伪文件系统cgroupfs提供交互接口。<a href="http://man7.org/linux/man-pages/man7/cgroups.7.html">man 7 cgroups</a>获取详细信息。
 </p>
 
 <p>
@@ -399,8 +400,8 @@ Documentation/cgroup-v1/rdma.txt.
 </div>
 </div>
 
-<div id="outline-container-orgec91223" class="outline-3">
-<h3 id="orgec91223"><span class="section-number-3">3.3</span> proc/cmdline</h3>
+<div id="outline-container-org01290a5" class="outline-3">
+<h3 id="org01290a5"><span class="section-number-3">3.3</span> proc/cmdline</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Linux系统引导参数：
@@ -444,8 +445,8 @@ Linux系统引导参数：
 </div>
 </div>
 
-<div id="outline-container-orgdf059df" class="outline-3">
-<h3 id="orgdf059df"><span class="section-number-3">3.4</span> proc/consoles</h3>
+<div id="outline-container-orgc0897d9" class="outline-3">
+<h3 id="orgc0897d9"><span class="section-number-3">3.4</span> proc/consoles</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 consoles显示系统中所有可见的console信息。
@@ -485,8 +486,8 @@ consoles显示系统中所有可见的console信息。
 </div>
 </div>
 
-<div id="outline-container-org4026a1b" class="outline-3">
-<h3 id="org4026a1b"><span class="section-number-3">3.5</span> proc/cpuinfo</h3>
+<div id="outline-container-org7ee8a32" class="outline-3">
+<h3 id="org7ee8a32"><span class="section-number-3">3.5</span> proc/cpuinfo</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 cpuinfo显示CPU相关信息：
@@ -561,8 +562,8 @@ stepping<span class="org-whitespace-space">        </span>:<span class="org-whit
 </div>
 </div>
 
-<div id="outline-container-orgd874653" class="outline-3">
-<h3 id="orgd874653"><span class="section-number-3">3.6</span> proc/crypto</h3>
+<div id="outline-container-org8307278" class="outline-3">
+<h3 id="org8307278"><span class="section-number-3">3.6</span> proc/crypto</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 crypto显示系统支持的密码算法。部分内容示例如下：
@@ -630,8 +631,8 @@ digestsize<span class="org-whitespace-space">   </span>:<span class="org-whitesp
 </div>
 </div>
 
-<div id="outline-container-org17df211" class="outline-3">
-<h3 id="org17df211"><span class="section-number-3">3.7</span> proc/devices</h3>
+<div id="outline-container-org8595ecc" class="outline-3">
+<h3 id="org8595ecc"><span class="section-number-3">3.7</span> proc/devices</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 devices显示字符设备和块设备主设备号。如下：
@@ -760,8 +761,8 @@ Block<span class="org-whitespace-space"> </span>devices:
 </div>
 </div>
 
-<div id="outline-container-org6b161cd" class="outline-3">
-<h3 id="org6b161cd"><span class="section-number-3">3.8</span> proc/diskstats</h3>
+<div id="outline-container-org4d750ba" class="outline-3">
+<h3 id="org4d750ba"><span class="section-number-3">3.8</span> proc/diskstats</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 diskstats显示disk统计信息。如下是示例，输出内容解析参考<a href="https://elixir.bootlin.com/linux/v4.15.4/source/Documentation/iostats.txt">Documentation/iostats.txt</a>：
@@ -934,8 +935,8 @@ Field 11 &#x2013; weighted # of milliseconds spent doing I/Os<br />
 </div>
 </div>
 
-<div id="outline-container-org883e48a" class="outline-3">
-<h3 id="org883e48a"><span class="section-number-3">3.9</span> proc/dma</h3>
+<div id="outline-container-org6525fa4" class="outline-3">
+<h3 id="org6525fa4"><span class="section-number-3">3.9</span> proc/dma</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 This is a list of the registered ISA DMA (direct memory access) channels in use.
@@ -995,8 +996,8 @@ This is a list of the registered ISA DMA (direct memory access) channels in use.
 </div>
 </div>
 
-<div id="outline-container-org49a3bf7" class="outline-3">
-<h3 id="org49a3bf7"><span class="section-number-3">3.10</span> proc/execdomains</h3>
+<div id="outline-container-org6b4fd7e" class="outline-3">
+<h3 id="org6b4fd7e"><span class="section-number-3">3.10</span> proc/execdomains</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 execdomains显示当前支持的可执行文件domains(ABI)。当前总是显示Linux [kernel]：
@@ -1052,8 +1053,8 @@ execdomains显示当前支持的可执行文件domains(ABI)。当前总是显示
 </div>
 </div>
 
-<div id="outline-container-org8151505" class="outline-3">
-<h3 id="org8151505"><span class="section-number-3">3.11</span> proc/fb</h3>
+<div id="outline-container-orgbb07458" class="outline-3">
+<h3 id="orgbb07458"><span class="section-number-3">3.11</span> proc/fb</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 fb(frame buffer)显示当前系统fb信息：
@@ -1102,8 +1103,8 @@ fb(frame buffer)显示当前系统fb信息：
 </div>
 </div>
 
-<div id="outline-container-org6884369" class="outline-3">
-<h3 id="org6884369"><span class="section-number-3">3.12</span> proc/filesystems</h3>
+<div id="outline-container-orgd39d5a8" class="outline-3">
+<h3 id="orgd39d5a8"><span class="section-number-3">3.12</span> proc/filesystems</h3>
 <div class="outline-text-3" id="text-3-12">
 <p>
 filesystems列举当前支持的文件系统类型：
@@ -1184,11 +1185,12 @@ nodev<span class="org-whitespace-space">   </span>fusectl
 </div>
 </div>
 
-<div id="outline-container-orgdeb47d6" class="outline-3">
-<h3 id="orgdeb47d6"><span class="section-number-3">3.13</span> proc/fs</h3>
+<div id="outline-container-orgad47562" class="outline-3">
+<h3 id="orgad47562"><span class="section-number-3">3.13</span> proc/fs</h3>
 <div class="outline-text-3" id="text-3-13">
 <p>
-fs目录下包含子目录，每个子目录是一种当前正在使用的文件系统名称（比如ext4），每个文件系统子目录下二级子目录是每个挂载的块设备（比如sda2），其下文件是其属性。
+fs目录下包含子目录，每个子目录是一种当前正在使用的文件系统名称（比如ext4），每个
+文件系统子目录下二级子目录是每个挂载的块设备（比如sda2），其下文件是其属性。
 </p>
 
 <p>
@@ -1293,8 +1295,8 @@ proc/fs是由<a href="https://elixir.bootlin.com/linux/v4.15.4/source/fs/proc/ro
 </div>
 </div>
 
-<div id="outline-container-orgcf0f2f7" class="outline-3">
-<h3 id="orgcf0f2f7"><span class="section-number-3">3.14</span> proc/interrups</h3>
+<div id="outline-container-org44b827e" class="outline-3">
+<h3 id="org44b827e"><span class="section-number-3">3.14</span> proc/interrups</h3>
 <div class="outline-text-3" id="text-3-14">
 <p>
 interrupts显示每CPU每设备的中断数，此文件信息可用来分析中断是否均衡：
@@ -1453,11 +1455,12 @@ PIW:<span class="org-whitespace-space">          </span>0<span class="org-whites
 </div>
 </div>
 
-<div id="outline-container-org0ea24fc" class="outline-3">
-<h3 id="iomem"><a id="org0ea24fc"></a><span class="section-number-3">3.15</span> iomem</h3>
+<div id="outline-container-orgba4fe6a" class="outline-3">
+<h3 id="iomem"><span class="section-number-3">3.15</span> iomem</h3>
 <div class="outline-text-3" id="text-iomem">
 <p>
-I/O内存映射表。包括预留、BIOS、显卡、内存、PCI地址空间等。部分PCIe地址空间因安全原因，BIOS不暴露给OS，此时显示为reserved。
+I/O内存映射表。包括预留、BIOS、显卡、内存、PCI地址空间等。部分PCIe地址空间因安全
+原因，BIOS不暴露给OS，此时显示为reserved。
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/iomem
@@ -1654,8 +1657,8 @@ ffc00000-ffffffff<span class="org-whitespace-space"> </span>:<span class="org-wh
 </div>
 </div>
 
-<div id="outline-container-org92a15c3" class="outline-3">
-<h3 id="org92a15c3"><span class="section-number-3">3.16</span> proc/ioports</h3>
+<div id="outline-container-org23eefee" class="outline-3">
+<h3 id="org23eefee"><span class="section-number-3">3.16</span> proc/ioports</h3>
 <div class="outline-text-3" id="text-3-16">
 <p>
 注册的IO端口区间，用inb、outb访问：
@@ -1724,8 +1727,8 @@ ffc00000-ffffffff<span class="org-whitespace-space"> </span>:<span class="org-wh
 </div>
 </div>
 
-<div id="outline-container-orgbeb1fa6" class="outline-3">
-<h3 id="orgbeb1fa6"><span class="section-number-3">3.17</span> proc/kallsyms</h3>
+<div id="outline-container-org5a3f584" class="outline-3">
+<h3 id="org5a3f584"><span class="section-number-3">3.17</span> proc/kallsyms</h3>
 <div class="outline-text-3" id="text-3-17">
 <p>
 内核导出的符号定义，供module(X)工具链接和绑定使用：
@@ -1771,8 +1774,8 @@ ffffffff811403c0<span class="org-whitespace-space"> </span>T<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org3522b40" class="outline-3">
-<h3 id="org3522b40"><span class="section-number-3">3.18</span> proc/meminfo</h3>
+<div id="outline-container-org298d692" class="outline-3">
+<h3 id="org298d692"><span class="section-number-3">3.18</span> proc/meminfo</h3>
 <div class="outline-text-3" id="text-3-18">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/meminfo
@@ -1801,24 +1804,27 @@ AnonPages:<span class="org-whitespace-space">        </span>902604<span class="o
 </div>
 </div>
 
-<div id="outline-container-org1b4996a" class="outline-3">
-<h3 id="org1b4996a"><span class="section-number-3">3.19</span> proc/&lt;pid&gt;</h3>
+<div id="outline-container-org8bd929e" class="outline-3">
+<h3 id="org8bd929e"><span class="section-number-3">3.19</span> proc/&lt;pid&gt;</h3>
 <div class="outline-text-3" id="text-3-19">
 </div>
-<div id="outline-container-org468e188" class="outline-4">
-<h4 id="org468e188"><span class="section-number-4">3.19.1</span> proc/&lt;pid&gt;/oom_adj</h4>
+<div id="outline-container-org8d71e0c" class="outline-4">
+<h4 id="org8d71e0c"><span class="section-number-4">3.19.1</span> proc/&lt;pid&gt;/oom_adj</h4>
 <div class="outline-text-4" id="text-3-19-1">
 <p>
-调整进程OOM-killing亲和度。有效范围[-17, +15]。-17是特殊值，禁止OOM-Killing。数值越大，OOM时被选中的可能性越大。默认为0，需要CAP_SYS_RESOURCE权限修改此值。2.6.36之后版本不建议使用此方式，请使用/proc/&lt;pid&gt;/oom_score_adj代替。
+调整进程OOM-killing亲和度。有效范围[-17, +15]。-17是特殊值，禁止OOM-Killing。
+数值越大，OOM时被选中的可能性越大。默认为0，需要CAP_SYS_RESOURCE权限修改此
+值。2.6.36之后版本不建议使用此方式，请使用/proc/&lt;pid&gt;/oom_score_adj代替。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org74ca80c" class="outline-4">
-<h4 id="org74ca80c"><span class="section-number-4">3.19.2</span> proc/&lt;pid&gt;/oom_score</h4>
+<div id="outline-container-org2878af8" class="outline-4">
+<h4 id="org2878af8"><span class="section-number-4">3.19.2</span> proc/&lt;pid&gt;/oom_score</h4>
 <div class="outline-text-4" id="text-3-19-2">
 <p>
-查看当前进程OOM-killer分值。分数越高越容易被OOM-Killer选中。基本分值与进程占用内存相关，且随着fork数量、CPU占用、nice、privileged、是否直接存取硬件调整：
+查看当前进程OOM-killer分值。分数越高越容易被OOM-Killer选中。基本分值与进程占用
+内存相关，且随着fork数量、CPU占用、nice、privileged、是否直接存取硬件调整：
 </p>
 <blockquote>
 <p>
@@ -1842,11 +1848,12 @@ process.
 </div>
 </div>
 
-<div id="outline-container-orga6d148d" class="outline-4">
-<h4 id="orga6d148d"><span class="section-number-4">3.19.3</span> proc/&lt;pid&gt;/oom_score_adj</h4>
+<div id="outline-container-orgcb8611a" class="outline-4">
+<h4 id="orgcb8611a"><span class="section-number-4">3.19.3</span> proc/&lt;pid&gt;/oom_score_adj</h4>
 <div class="outline-text-4" id="text-3-19-3">
 <p>
-调整OOM-killer选择该进程的坏值。数值范围[-1000, +1000]。-1000表示禁止被选中。重要的常驻程序可以设置-1000禁止进程被OOM-killer选中杀死：
+调整OOM-killer选择该进程的坏值。数值范围[-1000, +1000]。-1000表示禁止被选中。重要的
+常驻程序可以设置-1000禁止进程被OOM-killer选中杀死：
 </p>
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;errno.h&gt;</span>
@@ -1884,13 +1891,12 @@ process.
 
 <pre class="example">
 disable oom success
-
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgd2b620f" class="outline-4">
-<h4 id="orgd2b620f"><span class="section-number-4">3.19.4</span> proc/&lt;pid&gt;/stack</h4>
+<div id="outline-container-org291824a" class="outline-4">
+<h4 id="org291824a"><span class="section-number-4">3.19.4</span> proc/&lt;pid&gt;/stack</h4>
 <div class="outline-text-4" id="text-3-19-4">
 <p>
 进程内核态栈调用符号跟踪。
@@ -1927,8 +1933,8 @@ disable oom success
 </div>
 </div>
 
-<div id="outline-container-org75125d5" class="outline-4">
-<h4 id="org75125d5"><span class="section-number-4">3.19.5</span> proc/&lt;pid&gt;/stat</h4>
+<div id="outline-container-org81ca62f" class="outline-4">
+<h4 id="org81ca62f"><span class="section-number-4">3.19.5</span> proc/&lt;pid&gt;/stat</h4>
 <div class="outline-text-4" id="text-3-19-5">
 <p>
 进程状态信息，ps使用此处信息，对应代码<a href="https://elixir.bootlin.com/linux/v4.15.14/source/fs/proc/array.c">kernel/fs/proc/array.c</a>，截取部分意义代码：
@@ -2387,8 +2393,8 @@ The format for this field was %lu before Linux 2.6.22.
 </div>
 </div>
 
-<div id="outline-container-org676c69d" class="outline-4">
-<h4 id="org676c69d"><span class="section-number-4">3.19.6</span> proc/&lt;pid&gt;/statm</h4>
+<div id="outline-container-org71d7ab7" class="outline-4">
+<h4 id="org71d7ab7"><span class="section-number-4">3.19.6</span> proc/&lt;pid&gt;/statm</h4>
 <div class="outline-text-4" id="text-3-19-6">
 <p>
 进程内存使用评估，以Page为单位。
@@ -2421,8 +2427,8 @@ dt         (7) dirty pages (unused in Linux 2.6)
 </div>
 </div>
 
-<div id="outline-container-org4289172" class="outline-4">
-<h4 id="org4289172"><span class="section-number-4">3.19.7</span> proc/&lt;pid&gt;/status</h4>
+<div id="outline-container-org9a94abd" class="outline-4">
+<h4 id="org9a94abd"><span class="section-number-4">3.19.7</span> proc/&lt;pid&gt;/status</h4>
 <div class="outline-text-4" id="text-3-19-7">
 <p>
 可读方式提供更多进程信息：
@@ -2552,8 +2558,8 @@ voluntary and involuntary context switches (since Linux 2.6.23).</li>
 </div>
 </div>
 
-<div id="outline-container-orgdf165b6" class="outline-4">
-<h4 id="orgdf165b6"><span class="section-number-4">3.19.8</span> proc/&lt;pid&gt;/syscall</h4>
+<div id="outline-container-orgc607dac" class="outline-4">
+<h4 id="orgc607dac"><span class="section-number-4">3.19.8</span> proc/&lt;pid&gt;/syscall</h4>
 <div class="outline-text-4" id="text-3-19-8">
 <p>
 进程最近系统调用的信息。第一列为调用号，其后是stack地址、ecx，和6个通用寄存器信息。
@@ -2567,8 +2573,8 @@ voluntary and involuntary context switches (since Linux 2.6.23).</li>
 </div>
 </div>
 
-<div id="outline-container-org5306b71" class="outline-3">
-<h3 id="org5306b71"><span class="section-number-3">3.20</span> proc/self</h3>
+<div id="outline-container-orged21d47" class="outline-3">
+<h3 id="orged21d47"><span class="section-number-3">3.20</span> proc/self</h3>
 <div class="outline-text-3" id="text-3-20">
 <p>
 proc/self是一个符号链接，总是指向执行进程本身(/proc/&lt;pid&gt;)。
@@ -2582,8 +2588,8 @@ lrwxrwxrwx<span class="org-whitespace-space"> </span>1<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org0126384" class="outline-3">
-<h3 id="org0126384"><span class="section-number-3">3.21</span> oom_score</h3>
+<div id="outline-container-org2fc753a" class="outline-3">
+<h3 id="org2fc753a"><span class="section-number-3">3.21</span> oom_score</h3>
 <div class="outline-text-3" id="text-3-21">
 <div class="org-src-container">
 <pre class="src src-C">
@@ -2593,39 +2599,18 @@ lrwxrwxrwx<span class="org-whitespace-space"> </span>1<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org1dee46d" class="outline-2">
-<h2 id="org1dee46d"><span class="section-number-2">4</span> 内核实现</h2>
+<div id="outline-container-org7c55a1f" class="outline-2">
+<h2 id="org7c55a1f"><span class="section-number-2">4</span> 内核实现</h2>
 </div>
 
-<div id="outline-container-org2af8850" class="outline-2">
-<h2 id="org2af8850"><span class="section-number-2">5</span> 参考资料</h2>
+<div id="outline-container-orge8e9a82" class="outline-2">
+<h2 id="orge8e9a82"><span class="section-number-2">5</span> 参考资料</h2>
 <div class="outline-text-2" id="text-5">
 <dl class="org-dl">
 <dt>IBM developer procfs、seq_file、debugfs and relayfs</dt><dd><a href="https://www.ibm.com/developerworks/cn/linux/l-kerns-usrs2/">https://www.ibm.com/developerworks/cn/linux/l-kerns-usrs2/</a></dd>
 <dt>LWN Driver porting: The seq_file interface</dt><dd><a href="https://lwn.net/Articles/22355/">https://lwn.net/Articles/22355/</a></dd>
 </dl>
 </div>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/linux-proc.html';
-    this.page.identifier = 'linux-proc.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div id="copyright" class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

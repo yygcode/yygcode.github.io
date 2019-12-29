@@ -1,71 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Disk Testing Data</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">Disk Testing Data</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1020138">1. Test tools</a>
+<li><a href="#org475b253">1. Test tools</a>
 <ul>
-<li><a href="#org997c0ad">1.1. dd</a></li>
-<li><a href="#orga45875d">1.2. fio</a></li>
-<li><a href="#org6eb1222">1.3. iometer</a></li>
+<li><a href="#org7629559">1.1. dd</a></li>
+<li><a href="#orgf3f1055">1.2. fio</a></li>
+<li><a href="#orgd20eaf6">1.3. iometer</a></li>
 </ul>
 </li>
-<li><a href="#org262b518">2. Basic Rules</a></li>
-<li><a href="#org8a93e37">3. SATA HDD</a>
+<li><a href="#org49d6442">2. Basic Rules</a></li>
+<li><a href="#org40fe17c">3. SATA HDD</a>
 <ul>
-<li><a href="#org7795c31">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
+<li><a href="#org7d9a4ac">3.1. T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</a>
 <ul>
-<li><a href="#orged77dbb">3.1.1. Disk infomation</a></li>
-<li><a href="#orgcc2ee08">3.1.2. dd test</a></li>
-<li><a href="#org89bc311">3.1.3. FIO</a></li>
+<li><a href="#org4d4b120">3.1.1. Disk infomation</a></li>
+<li><a href="#org76af598">3.1.2. dd test</a></li>
+<li><a href="#orga243d2d">3.1.3. FIO</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org8d27596">4. SAS HDD</a></li>
-<li><a href="#orga3b6721">5. SATA SSD</a></li>
-<li><a href="#org6f2c087">6. SAS SSD</a></li>
-<li><a href="#org70e52d3">7. NVMe SSD</a></li>
+<li><a href="#orgcaa82d0">4. SAS HDD</a></li>
+<li><a href="#org0a31243">5. SATA SSD</a></li>
+<li><a href="#org99068b5">6. SAS SSD</a></li>
+<li><a href="#org048c5da">7. NVMe SSD</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1020138" class="outline-2">
-<h2 id="org1020138"><span class="section-number-2">1</span> Test tools</h2>
+<div id="outline-container-org475b253" class="outline-2">
+<h2 id="org475b253"><span class="section-number-2">1</span> Test tools</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org997c0ad" class="outline-3">
-<h3 id="org997c0ad"><span class="section-number-3">1.1</span> dd</h3>
+<div id="outline-container-org7629559" class="outline-3">
+<h3 id="org7629559"><span class="section-number-3">1.1</span> dd</h3>
 </div>
-<div id="outline-container-orga45875d" class="outline-3">
-<h3 id="orga45875d"><span class="section-number-3">1.2</span> fio</h3>
+<div id="outline-container-orgf3f1055" class="outline-3">
+<h3 id="orgf3f1055"><span class="section-number-3">1.2</span> fio</h3>
 </div>
-<div id="outline-container-org6eb1222" class="outline-3">
-<h3 id="org6eb1222"><span class="section-number-3">1.3</span> iometer</h3>
+<div id="outline-container-orgd20eaf6" class="outline-3">
+<h3 id="orgd20eaf6"><span class="section-number-3">1.3</span> iometer</h3>
 </div>
 </div>
 
-<div id="outline-container-org262b518" class="outline-2">
-<h2 id="org262b518"><span class="section-number-2">2</span> Basic Rules</h2>
+<div id="outline-container-org49d6442" class="outline-2">
+<h2 id="org49d6442"><span class="section-number-2">2</span> Basic Rules</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 访问硬盘时, LBA数值越小(靠近外圈), 块越大, 顺序特征越好, 读写性能越好.
@@ -73,16 +69,16 @@
 </div>
 </div>
 
-<div id="outline-container-org8a93e37" class="outline-2">
-<h2 id="org8a93e37"><span class="section-number-2">3</span> SATA HDD</h2>
+<div id="outline-container-org40fe17c" class="outline-2">
+<h2 id="org40fe17c"><span class="section-number-2">3</span> SATA HDD</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org7795c31" class="outline-3">
-<h3 id="org7795c31"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
+<div id="outline-container-org7d9a4ac" class="outline-3">
+<h3 id="org7d9a4ac"><span class="section-number-3">3.1</span> T440P硬盘光驱位接入HGST 7.2K/1TB硬盘的测试数据, 64K性能是512B性能的</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-orged77dbb" class="outline-4">
-<h4 id="orged77dbb"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
+<div id="outline-container-org4d4b120" class="outline-4">
+<h4 id="org4d4b120"><span class="section-number-4">3.1.1</span> Disk infomation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-conf">Model Family:     HGST Travelstar 7K1000
@@ -104,8 +100,8 @@ SMART support is: Enabled
 </div>
 </div>
 </div>
-<div id="outline-container-orgcc2ee08" class="outline-4">
-<h4 id="orgcc2ee08"><span class="section-number-4">3.1.2</span> dd test</h4>
+<div id="outline-container-org76af598" class="outline-4">
+<h4 id="org76af598"><span class="section-number-4">3.1.2</span> dd test</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 简单查看结果可知, 64K性能是512B性能的15倍.
@@ -145,47 +141,26 @@ SMART support is: Enabled
 </div>
 </div>
 
-<div id="outline-container-org89bc311" class="outline-4">
-<h4 id="org89bc311"><span class="section-number-4">3.1.3</span> FIO</h4>
+<div id="outline-container-orga243d2d" class="outline-4">
+<h4 id="orga243d2d"><span class="section-number-4">3.1.3</span> FIO</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8d27596" class="outline-2">
-<h2 id="org8d27596"><span class="section-number-2">4</span> SAS HDD</h2>
+<div id="outline-container-orgcaa82d0" class="outline-2">
+<h2 id="orgcaa82d0"><span class="section-number-2">4</span> SAS HDD</h2>
 </div>
 
-<div id="outline-container-orga3b6721" class="outline-2">
-<h2 id="orga3b6721"><span class="section-number-2">5</span> SATA SSD</h2>
+<div id="outline-container-org0a31243" class="outline-2">
+<h2 id="org0a31243"><span class="section-number-2">5</span> SATA SSD</h2>
 </div>
 
-<div id="outline-container-org6f2c087" class="outline-2">
-<h2 id="org6f2c087"><span class="section-number-2">6</span> SAS SSD</h2>
+<div id="outline-container-org99068b5" class="outline-2">
+<h2 id="org99068b5"><span class="section-number-2">6</span> SAS SSD</h2>
 </div>
 
-<div id="outline-container-org70e52d3" class="outline-2">
-<h2 id="org70e52d3"><span class="section-number-2">7</span> NVMe SSD</h2>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/storage-disk-test-data.html';
-    this.page.identifier = 'storage-disk-test-data.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+<div id="outline-container-org048c5da" class="outline-2">
+<h2 id="org048c5da"><span class="section-number-2">7</span> NVMe SSD</h2>
 </div>
 </div>
 </body>

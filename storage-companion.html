@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>存储指南</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
@@ -14,64 +12,62 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="js/readtheorg.js"></script>
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">存储指南</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1e6b6f6">1. 介绍</a>
+<li><a href="#org6e08a5a">1. 介绍</a>
 <ul>
-<li><a href="#orge6c25cf">1.1. 发展历史</a></li>
-<li><a href="#orgc271fce">1.2. 衡量评测</a></li>
+<li><a href="#orgfe24c49">1.1. 发展历史</a></li>
+<li><a href="#org0a8d686">1.2. 衡量评测</a></li>
 </ul>
 </li>
-<li><a href="#org893d913">2. 测试工具</a>
+<li><a href="#orgdd24e01">2. 测试工具</a>
 <ul>
-<li><a href="#org0142e8e">2.1. SPC(SPC-1/SPC-2)</a></li>
-<li><a href="#orgd39e54a">2.2. IOMeter</a></li>
-<li><a href="#org2b4f586">2.3. IOZone</a></li>
-<li><a href="#orgaec3596">2.4. dd</a></li>
-<li><a href="#orgb47b26d">2.5. Oracle Orion</a></li>
-<li><a href="#org19f6c95">2.6. SNIA XAM</a></li>
-<li><a href="#org29020e4">2.7. vdbench</a></li>
+<li><a href="#orga1a5fba">2.1. SPC(SPC-1/SPC-2)</a></li>
+<li><a href="#orgd54c2a0">2.2. IOMeter</a></li>
+<li><a href="#orgc4157ea">2.3. IOZone</a></li>
+<li><a href="#orgec7a51e">2.4. dd</a></li>
+<li><a href="#orge3ecbe8">2.5. Oracle Orion</a></li>
+<li><a href="#orgeeb2daf">2.6. SNIA XAM</a></li>
+<li><a href="#org03af7a0">2.7. vdbench</a></li>
 </ul>
 </li>
-<li><a href="#org5479ee2">3. 存储产品分析</a>
+<li><a href="#org921ca75">3. 存储产品分析</a>
 <ul>
-<li><a href="#org7b78978">3.1. IBM V7000</a></li>
+<li><a href="#org9f7092e">3.1. IBM V7000</a></li>
 </ul>
 </li>
-<li><a href="#orgd554e4e">4. 软件架构</a></li>
-<li><a href="#org445342c">5. 机箱管理</a></li>
-<li><a href="#org742c881">6. 驱动</a>
+<li><a href="#org432c425">4. 软件架构</a></li>
+<li><a href="#org53500c5">5. 机箱管理</a></li>
+<li><a href="#org0a23a58">6. 驱动</a>
 <ul>
-<li><a href="#org28b69c8">6.1. 双控互联NTB</a></li>
-<li><a href="#orgca63e14">6.2. FC卡</a></li>
-<li><a href="#orgebceb97">6.3. SAS卡</a></li>
-<li><a href="#org09ae10d">6.4. 网卡</a></li>
-<li><a href="#org4bbc70a">6.5. IB卡</a></li>
+<li><a href="#org201c6de">6.1. 双控互联NTB</a></li>
+<li><a href="#org55e1aae">6.2. FC卡</a></li>
+<li><a href="#orge8a3eee">6.3. SAS卡</a></li>
+<li><a href="#orgd350457">6.4. 网卡</a></li>
+<li><a href="#orgc7b59a3">6.5. IB卡</a></li>
 </ul>
 </li>
-<li><a href="#orgb745d32">7. SCSI协议</a></li>
-<li><a href="#org7077031">8. BACKUP</a></li>
-<li><a href="#org5d71cbd">9. 方案</a>
+<li><a href="#orgfbde53b">7. SCSI协议</a></li>
+<li><a href="#org10d1059">8. BACKUP</a></li>
+<li><a href="#orge2d46ee">9. 方案</a>
 <ul>
-<li><a href="#org0f34454">9.1. 容灾</a>
+<li><a href="#orga10f384">9.1. 容灾</a>
 <ul>
-<li><a href="#orgb865fd5">9.1.1. 介绍</a></li>
-<li><a href="#orgddb592c">9.1.2. 技术点</a></li>
-<li><a href="#org37f3019">9.1.3. 两地三中心</a></li>
-<li><a href="#orge99d9e2">9.1.4. 双活</a></li>
-<li><a href="#org2272d42">9.1.5. 关键词</a></li>
+<li><a href="#org508eb00">9.1.1. 介绍</a></li>
+<li><a href="#orgd41027e">9.1.2. 技术点</a></li>
+<li><a href="#org94032a9">9.1.3. 两地三中心</a></li>
+<li><a href="#orge38efc9">9.1.4. 双活</a></li>
+<li><a href="#org8ece556">9.1.5. 关键词</a></li>
 </ul>
 </li>
 </ul>
@@ -83,20 +79,20 @@
 本文尚未完成。
 </p>
 
-<div id="outline-container-org1e6b6f6" class="outline-2">
-<h2 id="org1e6b6f6"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org6e08a5a" class="outline-2">
+<h2 id="org6e08a5a"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 统一存储分数据面与管里面。机箱管理使用exp实现。
 </p>
 </div>
 
-<div id="outline-container-orge6c25cf" class="outline-3">
-<h3 id="orge6c25cf"><span class="section-number-3">1.1</span> 发展历史</h3>
+<div id="outline-container-orgfe24c49" class="outline-3">
+<h3 id="orgfe24c49"><span class="section-number-3">1.1</span> 发展历史</h3>
 </div>
 
-<div id="outline-container-orgc271fce" class="outline-3">
-<h3 id="orgc271fce"><span class="section-number-3">1.2</span> 衡量评测</h3>
+<div id="outline-container-org0a8d686" class="outline-3">
+<h3 id="org0a8d686"><span class="section-number-3">1.2</span> 衡量评测</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 SAN存储需要关注如下几个方面:
@@ -114,39 +110,39 @@ SAN存储需要关注如下几个方面:
 </div>
 </div>
 
-<div id="outline-container-org893d913" class="outline-2">
-<h2 id="org893d913"><span class="section-number-2">2</span> 测试工具</h2>
+<div id="outline-container-orgdd24e01" class="outline-2">
+<h2 id="orgdd24e01"><span class="section-number-2">2</span> 测试工具</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org0142e8e" class="outline-3">
-<h3 id="org0142e8e"><span class="section-number-3">2.1</span> SPC(SPC-1/SPC-2)</h3>
+<div id="outline-container-orga1a5fba" class="outline-3">
+<h3 id="orga1a5fba"><span class="section-number-3">2.1</span> SPC(SPC-1/SPC-2)</h3>
 </div>
-<div id="outline-container-orgd39e54a" class="outline-3">
-<h3 id="orgd39e54a"><span class="section-number-3">2.2</span> IOMeter</h3>
+<div id="outline-container-orgd54c2a0" class="outline-3">
+<h3 id="orgd54c2a0"><span class="section-number-3">2.2</span> IOMeter</h3>
 </div>
-<div id="outline-container-org2b4f586" class="outline-3">
-<h3 id="org2b4f586"><span class="section-number-3">2.3</span> IOZone</h3>
+<div id="outline-container-orgc4157ea" class="outline-3">
+<h3 id="orgc4157ea"><span class="section-number-3">2.3</span> IOZone</h3>
 </div>
-<div id="outline-container-orgaec3596" class="outline-3">
-<h3 id="orgaec3596"><span class="section-number-3">2.4</span> dd</h3>
+<div id="outline-container-orgec7a51e" class="outline-3">
+<h3 id="orgec7a51e"><span class="section-number-3">2.4</span> dd</h3>
 </div>
-<div id="outline-container-orgb47b26d" class="outline-3">
-<h3 id="orgb47b26d"><span class="section-number-3">2.5</span> Oracle Orion</h3>
+<div id="outline-container-orge3ecbe8" class="outline-3">
+<h3 id="orge3ecbe8"><span class="section-number-3">2.5</span> Oracle Orion</h3>
 </div>
-<div id="outline-container-org19f6c95" class="outline-3">
-<h3 id="org19f6c95"><span class="section-number-3">2.6</span> SNIA XAM</h3>
+<div id="outline-container-orgeeb2daf" class="outline-3">
+<h3 id="orgeeb2daf"><span class="section-number-3">2.6</span> SNIA XAM</h3>
 </div>
-<div id="outline-container-org29020e4" class="outline-3">
-<h3 id="org29020e4"><span class="section-number-3">2.7</span> vdbench</h3>
+<div id="outline-container-org03af7a0" class="outline-3">
+<h3 id="org03af7a0"><span class="section-number-3">2.7</span> vdbench</h3>
 </div>
 </div>
 
-<div id="outline-container-org5479ee2" class="outline-2">
-<h2 id="org5479ee2"><span class="section-number-2">3</span> 存储产品分析</h2>
+<div id="outline-container-org921ca75" class="outline-2">
+<h2 id="org921ca75"><span class="section-number-2">3</span> 存储产品分析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org7b78978" class="outline-3">
-<h3 id="org7b78978"><span class="section-number-3">3.1</span> IBM V7000</h3>
+<div id="outline-container-org9f7092e" class="outline-3">
+<h3 id="org9f7092e"><span class="section-number-3">3.1</span> IBM V7000</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 V7.8: <a href="http://www.redbooks.ibm.com/abstracts/sg247938.html?Open">Redbooks</a>
@@ -156,14 +152,15 @@ V8.1: <a href="http://www.redbooks.ibm.com/Redbooks.nsf/RedpieceAbstracts/sg2479
 </div>
 </div>
 
-<div id="outline-container-orgd554e4e" class="outline-2">
-<h2 id="orgd554e4e"><span class="section-number-2">4</span> 软件架构</h2>
+<div id="outline-container-org432c425" class="outline-2">
+<h2 id="org432c425"><span class="section-number-2">4</span> 软件架构</h2>
 </div>
-<div id="outline-container-org445342c" class="outline-2">
-<h2 id="org445342c"><span class="section-number-2">5</span> 机箱管理</h2>
+<div id="outline-container-org53500c5" class="outline-2">
+<h2 id="org53500c5"><span class="section-number-2">5</span> 机箱管理</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic)设备，控制器向Expander sg设备发送SES命令管理机箱。NVMe管理芯片方案中，PSX支持SES封装进NVMe
+SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic)设备，控制器
+向Expander sg设备发送SES命令管理机箱。NVMe管理芯片方案中，PSX支持SES封装进NVMe
 中下发。PSX是否上报自己为只接收少量管理命令和SES命令的NVMe控制器？
 </p>
 <div class="org-src-container">
@@ -235,37 +232,37 @@ SAS拓扑的机箱管理方案中，Expander上报自己为一个sg(scsi generic
 </div>
 
 
-<div id="outline-container-org742c881" class="outline-2">
-<h2 id="org742c881"><span class="section-number-2">6</span> 驱动</h2>
+<div id="outline-container-org0a23a58" class="outline-2">
+<h2 id="org0a23a58"><span class="section-number-2">6</span> 驱动</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org28b69c8" class="outline-3">
-<h3 id="org28b69c8"><span class="section-number-3">6.1</span> 双控互联NTB</h3>
+<div id="outline-container-org201c6de" class="outline-3">
+<h3 id="org201c6de"><span class="section-number-3">6.1</span> 双控互联NTB</h3>
 </div>
-<div id="outline-container-orgca63e14" class="outline-3">
-<h3 id="orgca63e14"><span class="section-number-3">6.2</span> FC卡</h3>
+<div id="outline-container-org55e1aae" class="outline-3">
+<h3 id="org55e1aae"><span class="section-number-3">6.2</span> FC卡</h3>
 </div>
-<div id="outline-container-orgebceb97" class="outline-3">
-<h3 id="orgebceb97"><span class="section-number-3">6.3</span> SAS卡</h3>
+<div id="outline-container-orge8a3eee" class="outline-3">
+<h3 id="orge8a3eee"><span class="section-number-3">6.3</span> SAS卡</h3>
 </div>
-<div id="outline-container-org09ae10d" class="outline-3">
-<h3 id="org09ae10d"><span class="section-number-3">6.4</span> 网卡</h3>
+<div id="outline-container-orgd350457" class="outline-3">
+<h3 id="orgd350457"><span class="section-number-3">6.4</span> 网卡</h3>
 </div>
-<div id="outline-container-org4bbc70a" class="outline-3">
-<h3 id="org4bbc70a"><span class="section-number-3">6.5</span> IB卡</h3>
+<div id="outline-container-orgc7b59a3" class="outline-3">
+<h3 id="orgc7b59a3"><span class="section-number-3">6.5</span> IB卡</h3>
 </div>
 </div>
 
-<div id="outline-container-orgb745d32" class="outline-2">
-<h2 id="orgb745d32"><span class="section-number-2">7</span> SCSI协议</h2>
+<div id="outline-container-orgfbde53b" class="outline-2">
+<h2 id="orgfbde53b"><span class="section-number-2">7</span> SCSI协议</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 hello world
 </p>
 </div>
 </div>
-<div id="outline-container-org7077031" class="outline-2">
-<h2 id="org7077031"><span class="section-number-2">8</span> BACKUP</h2>
+<div id="outline-container-org10d1059" class="outline-2">
+<h2 id="org10d1059"><span class="section-number-2">8</span> BACKUP</h2>
 <div class="outline-text-2" id="text-8">
 <ul class="org-ul">
 <li>ALUA, AP(Active-Passive)</li>
@@ -282,19 +279,28 @@ hello world
 </ul>
 </div>
 </div>
-<div id="outline-container-org5d71cbd" class="outline-2">
-<h2 id="org5d71cbd"><span class="section-number-2">9</span> 方案</h2>
+<div id="outline-container-orge2d46ee" class="outline-2">
+<h2 id="orge2d46ee"><span class="section-number-2">9</span> 方案</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-org0f34454" class="outline-3">
-<h3 id="org0f34454"><span class="section-number-3">9.1</span> 容灾</h3>
+<div id="outline-container-orga10f384" class="outline-3">
+<h3 id="orga10f384"><span class="section-number-3">9.1</span> 容灾</h3>
 <div class="outline-text-3" id="text-9-1">
 </div>
-<div id="outline-container-orgb865fd5" class="outline-4">
-<h4 id="orgb865fd5"><span class="section-number-4">9.1.1</span> 介绍</h4>
+<div id="outline-container-org508eb00" class="outline-4">
+<h4 id="org508eb00"><span class="section-number-4">9.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-9-1-1">
 <p>
-随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
+随着科技的发展进步，信息系统已成为政府和企业运作的基石。信息系统可能因硬件故障、
+电力故障、自然灾害、恐怖袭击等事件导致业务中断或数据丢失。在政务系统、金融行业、
+电子商务等行业，业务中断会导致严重损失，而数据丢失将导致不可估量的后果。因此在
+有限时间内保障业务恢复，是一个亟待解决的问题。中国于2007年6月14日正式发布国家
+标准《<a href="https://www.djbh.net/webdev/file/webFiles/File/cpzg/20122616046.pdf">信息安全技术 - 信息系统灾难规范</a>》GB/T 20988-2007对灾难恢复能力做出了等级
+划分，共分为6级，最高等级第6级要求“远程实时备份，实现数据零丢失；具备远程集群
+系统的实时监控和自动切换能力；有相应的经过完整测试和演练的灾难恢复预案”，并要求
+恢复时间目标RTO在数分钟内，恢复点目标RPO为0。不同等级的容灾中心建设投入差异
+巨大，政府和企业应基于业务连续性和数据重要性决定容灾等级。下表是IDC对停机时间的
+损失统计<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>：
 </p>
 <table border="2" rules="all :frame: border">
 <caption class="t-above"><span class="table-number">&#34920;1&nbsp;</span> IDC宕机损失统计</caption>
@@ -362,16 +368,21 @@ hello world
 </table>
 
 <p>
-“两地三中心”是业界认可的容灾建设方案。两地是指同城和异地，三中心是指生产数据中心、同城灾备中心、异地灾备中心。部署客户主要是国内外银行等高端客户。
+“两地三中心”是业界认可的容灾建设方案。两地是指同城和异地，三中心是指生产数据
+中心、同城灾备中心、异地灾备中心。部署客户主要是国内外银行等高端客户。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgddb592c" class="outline-4">
-<h4 id="orgddb592c"><span class="section-number-4">9.1.2</span> 技术点</h4>
+<div id="outline-container-orgd41027e" class="outline-4">
+<h4 id="orgd41027e"><span class="section-number-4">9.1.2</span> 技术点</h4>
 <div class="outline-text-4" id="text-9-1-2">
 <p>
-容灾技术用以解决这类异常将导致严重的后果。不同行业对业务连续性和数据可靠性有不同的要求，
+容灾技术
+用以解决
+这类异常将导致严重的后果。
+不同行业对业务连续性
+和数据可靠性有不同的要求，
 </p>
 
 <p>
@@ -387,23 +398,24 @@ hello world
 </p>
 
 <p>
-分布式系统CAP理论（定理）。多活，数据中心CAP原理：Consist, Availability, Partition
+分布式系统CAP理论（定理）。
+多活，数据中心CAP原理：Consist, Availability, Partition
 </p>
 </div>
 </div>
-<div id="outline-container-org37f3019" class="outline-4">
-<h4 id="org37f3019"><span class="section-number-4">9.1.3</span> 两地三中心</h4>
+<div id="outline-container-org94032a9" class="outline-4">
+<h4 id="org94032a9"><span class="section-number-4">9.1.3</span> 两地三中心</h4>
 <div class="outline-text-4" id="text-9-1-3">
 <p>
 “两地三中心”是指生产数据中心、同城灾备中心、异地灾备中心建设方案。
 </p>
 </div>
 </div>
-<div id="outline-container-orge99d9e2" class="outline-4">
-<h4 id="orge99d9e2"><span class="section-number-4">9.1.4</span> 双活</h4>
+<div id="outline-container-orge38efc9" class="outline-4">
+<h4 id="orge38efc9"><span class="section-number-4">9.1.4</span> 双活</h4>
 </div>
-<div id="outline-container-org2272d42" class="outline-4">
-<h4 id="org2272d42"><span class="section-number-4">9.1.5</span> 关键词</h4>
+<div id="outline-container-org8ece556" class="outline-4">
+<h4 id="org8ece556"><span class="section-number-4">9.1.5</span> 关键词</h4>
 <div class="outline-text-4" id="text-9-1-5">
 <ul class="org-ul">
 <li>CAP</li>
@@ -425,26 +437,5 @@ hello world
 
 </div>
 </div></div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/storage-companion.html';
-    this.page.identifier = 'storage-companion.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
-</div>
-</div>
 </body>
 </html>

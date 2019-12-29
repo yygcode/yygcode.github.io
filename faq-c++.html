@@ -1,38 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>C++ FAQ</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">C++ FAQ</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbe551b2">1. <span class="done DONE">DONE</span> Virtual函数是否不会被Inlined？</a></li>
-<li><a href="#org3041f5e">2. Reference</a></li>
+<li><a href="#orgb5de601">1. <span class="done DONE">DONE</span> Virtual函数是否不会被Inlined？</a></li>
+<li><a href="#org7f6a3cc">2. Reference</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgbe551b2" class="outline-2">
-<h2 id="orgbe551b2"><span class="section-number-2">1</span> <span class="done DONE">DONE</span> Virtual函数是否不会被Inlined？</h2>
+<div id="outline-container-orgb5de601" class="outline-2">
+<h2 id="orgb5de601"><span class="section-number-2">1</span> <span class="done DONE">DONE</span> Virtual函数是否不会被Inlined？</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
-<li>当编译器准确地知道对象的准确类时，虚函数可能会被内联。这要求编译器有一个实际的对象而不是对象指针，例如一个本地对象，或者一个全局的，或静态的对象。</li>
+<li>当编译器准确地知道对象的准确类时，虚函数可能会被内联。这要求编译器有一个实际的
+对象而不是对象指针，例如一个本地对象，或者一个全局的，或静态的对象。</li>
 <li>Refer: <a href="http://www.cs.technion.ac.il/users/yechiel/c++-faq/inline-virtuals.html">http://www.cs.technion.ac.il/users/yechiel/c++-faq/inline-virtuals.html</a></li>
 <li>Test Code 适用-O1编译，某机器运行结果为400、2500、2200，确实有inline差异</li>
 </ul>
@@ -113,34 +110,13 @@
 </div>
 </div>
 
-<div id="outline-container-org3041f5e" class="outline-2">
-<h2 id="org3041f5e"><span class="section-number-2">2</span> Reference</h2>
+<div id="outline-container-org7f6a3cc" class="outline-2">
+<h2 id="org7f6a3cc"><span class="section-number-2">2</span> Reference</h2>
 <div class="outline-text-2" id="text-2">
 <dl class="org-dl">
 <dt>C++FAQ</dt><dd><a href="http://www.cs.technion.ac.il/users/yechiel/c++-faq/index.html">http://www.cs.technion.ac.il/users/yechiel/c++-faq/index.html</a></dd>
 </dl>
 </div>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/faq-c++.html';
-    this.page.identifier = 'faq-c++.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

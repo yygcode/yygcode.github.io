@@ -1,19 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>OS安装与基本配置</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 <link rel="stylesheet" type="text/css" href="css/htmlize.css" />
 <link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -44,7 +36,11 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">OS安装与基本配置</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
@@ -52,16 +48,16 @@
 <ul>
 <li><a href="#win">1. Windows</a>
 <ul>
-<li><a href="#org0a65014">1.1. 安装</a></li>
-<li><a href="#org5277a17">1.2. 配置</a>
+<li><a href="#org3be10f6">1.1. 安装</a></li>
+<li><a href="#org9cad5a4">1.2. 配置</a>
 <ul>
-<li><a href="#org2a36b2d">1.2.1. 输入法</a></li>
-<li><a href="#org946ab4e">1.2.2. Shell环境</a></li>
-<li><a href="#org2d93506">1.2.3. 快捷键(热键)</a></li>
-<li><a href="#orgdb3935b">1.2.4. 文件搜索</a></li>
-<li><a href="#org39f8f79">1.2.5. Win7鼠标设置自然滚动（反方向滚动）</a></li>
-<li><a href="#org2fc35ad">1.2.6. C盘空间管理（使用一段时间后空间占用变大）</a></li>
-<li><a href="#org1e3cd04">1.2.7. 其他</a></li>
+<li><a href="#orgdf0d221">1.2.1. 输入法</a></li>
+<li><a href="#org42388be">1.2.2. Shell环境</a></li>
+<li><a href="#org32cd0a9">1.2.3. 快捷键(热键)</a></li>
+<li><a href="#org8df3415">1.2.4. 文件搜索</a></li>
+<li><a href="#orgce49d55">1.2.5. Win7鼠标设置自然滚动（反方向滚动）</a></li>
+<li><a href="#org7e4a0d0">1.2.6. C盘空间管理（使用一段时间后空间占用变大）</a></li>
+<li><a href="#org0c83878">1.2.7. 其他</a></li>
 </ul>
 </li>
 </ul>
@@ -70,26 +66,26 @@
 <ul>
 <li><a href="#linux-debian">2.1. Debian</a>
 <ul>
-<li><a href="#orga626624">2.1.1. 20181025 updates</a></li>
+<li><a href="#orgd086227">2.1.1. 20181025 updates</a></li>
 <li><a href="#debian-install">2.1.2. 安装</a></li>
-<li><a href="#org1e855e7">2.1.3. 配置(9.3.0)</a></li>
-<li><a href="#orgaf26e46">2.1.4. 配置(8.x.x)</a></li>
+<li><a href="#orgf5a2389">2.1.3. 配置(9.3.0)</a></li>
+<li><a href="#org7aaeec9">2.1.4. 配置(8.x.x)</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgd6dc670">3. Common</a>
+<li><a href="#org1944ec7">3. Common</a>
 <ul>
-<li><a href="#orge8ad826">3.1. Google</a></li>
+<li><a href="#org845cb63">3.1. Google</a></li>
 </ul>
 </li>
 <li><a href="#partition">4. Partition</a></li>
 <li><a href="#usb-stick">5. <span class="todo TODO">TODO</span> 随身USB盘</a>
 <ul>
-<li><a href="#orgaf308e7">5.1. 工作原理</a></li>
-<li><a href="#org13cb183">5.2. 制作方式</a>
+<li><a href="#orgfbf04ae">5.1. 工作原理</a></li>
+<li><a href="#org2bed3d8">5.2. 制作方式</a>
 <ul>
-<li><a href="#org935c4cb">5.2.1. 分区</a></li>
+<li><a href="#org47370ee">5.2.1. 分区</a></li>
 </ul>
 </li>
 </ul>
@@ -98,20 +94,24 @@
 </div>
 </div>
 
-<div id="outline-container-orgf9a3254" class="outline-2">
-<h2 id="win"><a id="orgf9a3254"></a><span class="section-number-2">1</span> Windows</h2>
+<div id="outline-container-org39142fa" class="outline-2">
+<h2 id="win"><span class="section-number-2">1</span> Windows</h2>
 <div class="outline-text-2" id="text-win">
 </div>
-<div id="outline-container-org0a65014" class="outline-3">
-<h3 id="org0a65014"><span class="section-number-3">1.1</span> 安装</h3>
+<div id="outline-container-org3be10f6" class="outline-3">
+<h3 id="org3be10f6"><span class="section-number-3">1.1</span> 安装</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-新的设备一般不再提供CD/DVD驱动器，而只有USB接口。<a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是微软提供的USB安装盘制作工具。USB盘分区复杂或异常可能导致引导失败。最简单可靠的分区是只保留一个分区，格式化为NTFS。如果想用一个大容量USB制作随身USB盘，请参考
+新的设备一般不再提供CD/DVD驱动器，而只有USB接口。<a href="https://www.microsoft.com/zh-cn/download/windows-usb-dvd-download-tool">Windows USB DVD Download Tool</a>是
+微软提供的USB安装盘制作工具。USB盘分区复杂或异常可能导致引导失败。最简单可靠的
+分区是只保留一个分区，格式化为NTFS。如果想用一个大容量USB制作随身USB盘，请参考
 <a href="#usb-stick">随身USB盘</a>。
 </p>
 
 <p>
-Win7/Win10在安装时会自动生成一个小的隐藏分区，存放引导文件。对分区无特殊规划的用户，这不会有问题。如果要控制分区方式，需安装前完成分区，此时Win7/Win10把引导分区内容放置到系统分区内(C盘)。定制分区参见<a href="#partition">Partition</a>。
+Win7/Win10在安装时会自动生成一个小的隐藏分区，存放引导文件。对分区无特殊规划的
+用户，这不会有问题。如果要控制分区方式，需安装前完成分区，此时Win7/Win10把引导
+分区内容放置到系统分区内(C盘)。定制分区参见<a href="#partition">Partition</a>。
 </p>
 
 <p>
@@ -120,45 +120,53 @@ Win单系统安装十分简单。制作USB安装盘，(可选的)准备分区，
 </p>
 
 <p>
-部分用户使用盗版系统，Win7破解程序(比如WIN7 Activation.exe)，需要引导分区可见，右键“我的电脑”，选择“管理”-&gt;“磁盘管理”，右键引导分区，分配驱动器号。
+部分用户使用盗版系统，Win7破解程序(比如WIN7 Activation.exe)，需要引导分区可见，
+右键“我的电脑”，选择“管理”-&gt;“磁盘管理”，右键引导分区，分配驱动器号。
 </p>
 
 <p>
 Win/Linux双系统参考<a href="#partition">Partition</a>分区。先安装Win系统，完成后安装Linux系统，设置GRUB
 引导两个系统，细节参见<a href="#debian-install">Debian Install</a>。如已安装好Linux系统，先在Linux系统下准备好
 Windows系统分区，备份磁盘前1MB数据，之后正常Windows，安装完成后使用Live Linux或
-Linux安装盘引导，重新刷入备份的1MB数据，调用"update-grub"更新grub，即可完成双系统引导。
+Linux安装盘引导，重新刷入备份的1MB数据，调用"update-grub"更新grub，即可完成双
+系统引导。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5277a17" class="outline-3">
-<h3 id="org5277a17"><span class="section-number-3">1.2</span> 配置</h3>
+<div id="outline-container-org9cad5a4" class="outline-3">
+<h3 id="org9cad5a4"><span class="section-number-3">1.2</span> 配置</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-org2a36b2d" class="outline-4">
-<h4 id="org2a36b2d"><span class="section-number-4">1.2.1</span> 输入法</h4>
+<div id="outline-container-orgdf0d221" class="outline-4">
+<h4 id="orgdf0d221"><span class="section-number-4">1.2.1</span> 输入法</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
-谷歌拼音(google pinyin)输入法是我一直在用的输入法，高效安静。默认配置英文输入，使用Ctrl+Shift切换，去除Ctrl+Space等配置(因<a href="emacs.html">Emacs</a>频繁使用Ctrl+Space)。
+谷歌拼音(google pinyin)输入法是我一直在用的输入法，高效安静。默认配置英文输入，
+使用Ctrl+Shift切换，去除Ctrl+Space等配置(因<a href="emacs.html">Emacs</a>频繁使用Ctrl+Space)。
 </p>
 
 <p>
-谷歌拼音配置关闭状态切换，初始状态中文语言、标点，半角。皮肤黑白分明。词典自动记录自造词，并调整词频。状态栏取消浮动状态栏。
+谷歌拼音配置关闭状态切换，初始状态中文语言、标点，半角。皮肤黑白分明。词典
+自动记录自造词，并调整词频。状态栏取消浮动状态栏。
 </p>
 
 <p>
-Window 10热键设置路径控制面板\时钟、语言和区域\语言\高级设置\更改语言栏热键。操作“在输入语言之间”配置为Ctrl+Shift，中英标点符号配置"Ctrl+."，全半角切换
+Window 10热键设置路径控制面板\时钟、语言和区域\语言\高级设置\更改语言栏热键。
+操作“在输入语言之间”配置为Ctrl+Shift，中英标点符号配置"Ctrl+."，全半角切换
 "Shift+Space"。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org946ab4e" class="outline-4">
-<h4 id="org946ab4e"><span class="section-number-4">1.2.2</span> Shell环境</h4>
+<div id="outline-container-org42388be" class="outline-4">
+<h4 id="org42388be"><span class="section-number-4">1.2.2</span> Shell环境</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <p>
-大量文件需分类在各级文件夹下保存，相对Linux下的Shell(cd)，Windows的目录切换操作非常低效。<a href="software.html#msys2">MSYS2</a>和<a href="software.html#cygwin">Cygwin</a>均可提供功能Shell环境。之前多年一直在用Cygwin，后切换到MSYS2，因为Cygwin缺少一个良好的包管理器(参见分析什么是好的<a href="software-design.html#package-manage">包管理器</a>)，且性能较MSYS2差，切换到了MSYS2，MSYS2的pacman在安装各类软件时，速度和便捷性都不错。
+大量文件需分类在各级文件夹下保存，相对Linux下的Shell(cd)，Windows的目录切换操作
+非常低效。<a href="software.html#msys2">MSYS2</a>和<a href="software.html#cygwin">Cygwin</a>均可提供功能Shell环境。之前多年一直在用Cygwin，后切换
+到MSYS2，因为Cygwin缺少一个良好的包管理器(参见分析什么是好的<a href="software-design.html#package-manage">包管理器</a>)，且性能
+较MSYS2差，切换到了MSYS2，MSYS2的pacman在安装各类软件时，速度和便捷性都不错。
 </p>
 
 <p>
@@ -167,11 +175,12 @@ Window 10热键设置路径控制面板\时钟、语言和区域\语言\高级�
 </div>
 </div>
 
-<div id="outline-container-org2d93506" class="outline-4">
-<h4 id="org2d93506"><span class="section-number-4">1.2.3</span> 快捷键(热键)</h4>
+<div id="outline-container-org32cd0a9" class="outline-4">
+<h4 id="org32cd0a9"><span class="section-number-4">1.2.3</span> 快捷键(热键)</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <p>
-每天需要频繁重复打开切换多个可执行程序和文件夹，操作乏味低效。自定义丰富的组合热键，快速启动/退出/切换软件、进入指定文件夹，能大幅度提高效率和工作愉悦度。
+每天需要频繁重复打开切换多个可执行程序和文件夹，操作乏味低效。自定义丰富的组合
+热键，快速启动/退出/切换软件、进入指定文件夹，能大幅度提高效率和工作愉悦度。
 </p>
 
 <p>
@@ -185,8 +194,8 @@ AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.htm
 </div>
 </div>
 
-<div id="outline-container-orgdb3935b" class="outline-4">
-<h4 id="orgdb3935b"><span class="section-number-4">1.2.4</span> 文件搜索</h4>
+<div id="outline-container-org8df3415" class="outline-4">
+<h4 id="org8df3415"><span class="section-number-4">1.2.4</span> 文件搜索</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <p>
 在硬盘空间动辄TB级的大数据时代，Windows的文件搜索效率导致其已不具有可用性。
@@ -194,8 +203,8 @@ AutoHotKey是Windows平台好用的工具之一，请参考<a href="software.htm
 </p>
 </div>
 </div>
-<div id="outline-container-org39f8f79" class="outline-4">
-<h4 id="org39f8f79"><span class="section-number-4">1.2.5</span> Win7鼠标设置自然滚动（反方向滚动）</h4>
+<div id="outline-container-orgce49d55" class="outline-4">
+<h4 id="orgce49d55"><span class="section-number-4">1.2.5</span> Win7鼠标设置自然滚动（反方向滚动）</h4>
 <div class="outline-text-4" id="text-1-2-5">
 <ul class="org-ul">
 <li><a href="http://www.vvse.com/blog/blog/2012/02/27/reverse-scrolling-on-windows-7/">http://www.vvse.com/blog/blog/2012/02/27/reverse-scrolling-on-windows-7/</a></li>
@@ -219,8 +228,8 @@ Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
 </div>
 </div>
 
-<div id="outline-container-org2fc35ad" class="outline-4">
-<h4 id="org2fc35ad"><span class="section-number-4">1.2.6</span> C盘空间管理（使用一段时间后空间占用变大）</h4>
+<div id="outline-container-org7e4a0d0" class="outline-4">
+<h4 id="org7e4a0d0"><span class="section-number-4">1.2.6</span> C盘空间管理（使用一段时间后空间占用变大）</h4>
 <div class="outline-text-4" id="text-1-2-6">
 <ul class="org-ul">
 <li>Windows.ecb
@@ -243,8 +252,8 @@ Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
 </div>
 </div>
 
-<div id="outline-container-org1e3cd04" class="outline-4">
-<h4 id="org1e3cd04"><span class="section-number-4">1.2.7</span> 其他</h4>
+<div id="outline-container-org0c83878" class="outline-4">
+<h4 id="org0c83878"><span class="section-number-4">1.2.7</span> 其他</h4>
 <div class="outline-text-4" id="text-1-2-7">
 <p>
 请参考<a href="software.html">我的软件</a>。
@@ -254,20 +263,20 @@ Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
 </div>
 </div>
 
-<div id="outline-container-org76b2a47" class="outline-2">
-<h2 id="linux"><a id="org76b2a47"></a><span class="section-number-2">2</span> Linux</h2>
+<div id="outline-container-org35b2f8d" class="outline-2">
+<h2 id="linux"><span class="section-number-2">2</span> Linux</h2>
 <div class="outline-text-2" id="text-linux">
 </div>
-<div id="outline-container-org3d495e9" class="outline-3">
-<h3 id="linux-debian"><a id="org3d495e9"></a><span class="section-number-3">2.1</span> Debian</h3>
+<div id="outline-container-org1e7dc6f" class="outline-3">
+<h3 id="linux-debian"><span class="section-number-3">2.1</span> Debian</h3>
 <div class="outline-text-3" id="text-linux-debian">
 </div>
-<div id="outline-container-orga626624" class="outline-4">
-<h4 id="orga626624"><span class="section-number-4">2.1.1</span> 20181025 updates</h4>
+<div id="outline-container-orgd086227" class="outline-4">
+<h4 id="orgd086227"><span class="section-number-4">2.1.1</span> 20181025 updates</h4>
 <div class="outline-text-4" id="text-2-1-1">
 </div>
-<div id="outline-container-org120ae0d" class="outline-5">
-<h5 id="org120ae0d"><span class="section-number-5">2.1.1.1</span> Download debian 9.5.0</h5>
+<div id="outline-container-orgf4cc58c" class="outline-5">
+<h5 id="orgf4cc58c"><span class="section-number-5">2.1.1.1</span> Download debian 9.5.0</h5>
 <div class="outline-text-5" id="text-2-1-1-1">
 <dl class="org-dl">
 <dt>From official websites</dt><dd><a href="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso">https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso</a></dd>
@@ -277,8 +286,8 @@ Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
 </div>
 </div>
 
-<div id="outline-container-orgc306976" class="outline-5">
-<h5 id="orgc306976"><span class="section-number-5">2.1.1.2</span> Makeing usb-install stick</h5>
+<div id="outline-container-orgff52d80" class="outline-5">
+<h5 id="orgff52d80"><span class="section-number-5">2.1.1.2</span> Makeing usb-install stick</h5>
 <div class="outline-text-5" id="text-2-1-1-2">
 <ul class="org-ul">
 <li>Be carefully. We assume /dev/sdc is your usb stick</li>
@@ -290,11 +299,11 @@ Windows8以下不支持直接配置自然滚动。需要自行更改注册表。
 </div>
 </div>
 
-<div id="outline-container-orgee76398" class="outline-5">
-<h5 id="orgee76398"><span class="section-number-5">2.1.1.3</span> Install progress ignore</h5>
+<div id="outline-container-org11150d3" class="outline-5">
+<h5 id="org11150d3"><span class="section-number-5">2.1.1.3</span> Install progress ignore</h5>
 </div>
-<div id="outline-container-org09b98d3" class="outline-5">
-<h5 id="org09b98d3"><span class="section-number-5">2.1.1.4</span> Config</h5>
+<div id="outline-container-orgc2df4aa" class="outline-5">
+<h5 id="orgc2df4aa"><span class="section-number-5">2.1.1.4</span> Config</h5>
 <div class="outline-text-5" id="text-2-1-1-4">
 <ul class="org-ul">
 <li>/etc/apt/sources.list</li>
@@ -357,15 +366,16 @@ See <a href="#debian-install-devel">Install Debian Development Env</a>.</li>
 </div>
 </div>
 
-<div id="outline-container-org13cff76" class="outline-4">
-<h4 id="debian-install"><a id="org13cff76"></a><span class="section-number-4">2.1.2</span> 安装</h4>
+<div id="outline-container-orge409d9d" class="outline-4">
+<h4 id="debian-install"><span class="section-number-4">2.1.2</span> 安装</h4>
 <div class="outline-text-4" id="text-debian-install">
 <p>
 使用<a href="https://unetbootin.github.io/">unetbootin</a>制作USB安装盘，U盘引导安装。当前unetbootin支持FAT32，不支持NTFS。
 </p>
 
 <p>
-Linux分区尝试过将/、boot、swap、home使用不同分区，多年使用经验证明几乎没有必要。将home分区分离一定程度是有价值的————将来重格做新系统时，只格系统分区，保留home
+Linux分区尝试过将/、boot、swap、home使用不同分区，多年使用经验证明几乎没有必要。
+将home分区分离一定程度是有价值的————将来重格做新系统时，只格系统分区，保留home
 分区，避免数据备份工作。
 </p>
 
@@ -377,24 +387,28 @@ Debian和Windows，一般更改/boot/grub/grub.cfg <code>set defaults="2"</code>
 </p>
 
 <p>
-GRUB图形配置和Windows图形配置在部分平台上有缺陷，会导致Windows开机过程中出现花屏死机。设置GRUB为console模式解决此问题。Debian系统修改/etc/default/grub文件，去掉 <code>GRUB_TERMINAL=console</code> 行注释，如没有此行直接在最后加入。修改完成后，需执行 <code>update-grub</code> 使其生效。
+GRUB图形配置和Windows图形配置在部分平台上有缺陷，会导致Windows开机过程中出现
+花屏死机。设置GRUB为console模式解决此问题。Debian系统修改/etc/default/grub文件，
+去掉 <code>GRUB_TERMINAL=console</code> 行注释，如没有此行直接在最后加入。修改完成后，需
+执行 <code>update-grub</code> 使其生效。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1e855e7" class="outline-4">
-<h4 id="org1e855e7"><span class="section-number-4">2.1.3</span> 配置(9.3.0)</h4>
+<div id="outline-container-orgf5a2389" class="outline-4">
+<h4 id="orgf5a2389"><span class="section-number-4">2.1.3</span> 配置(9.3.0)</h4>
 <div class="outline-text-4" id="text-2-1-3">
 </div>
-<div id="outline-container-orgaf75616" class="outline-5">
-<h5 id="orgaf75616"><span class="section-number-5">2.1.3.1</span> APT源(apt source)</h5>
+<div id="outline-container-org7c14f4b" class="outline-5">
+<h5 id="org7c14f4b"><span class="section-number-5">2.1.3.1</span> APT源(apt source)</h5>
 <div class="outline-text-5" id="text-2-1-3-1">
 <p>
 打开终端，使用su升级为root用户，执行本节操作。
 </p>
 
 <p>
-参考<a href="https://wiki.debian.org/SourcesList">https://wiki.debian.org/SourcesList</a>。修改/etc/apt/sources.list如下，该文件其他内容可用#打头注释或直接移除。
+参考<a href="https://wiki.debian.org/SourcesList">https://wiki.debian.org/SourcesList</a>。修改/etc/apt/sources.list如下，该文件
+其他内容可用#打头注释或直接移除。
 </p>
 <div class="org-src-container">
 <pre class="src src-conf">deb  http://deb.debian.org/debian stretch main contrib non-free
@@ -409,7 +423,8 @@ deb-src http://security.debian.org/ stretch/updates main contrib non-free
 </div>
 
 <p>
-9.3.0版本自启动服务unattended-upgrades后台更新，这会占用/var/lib/dpkg/lock锁，导致后面的安装失败。我个人更喜欢自己控制更新与软件包安装，因此直接停掉该服务：
+9.3.0版本自启动服务unattended-upgrades后台更新，这会占用/var/lib/dpkg/lock锁，
+导致后面的安装失败。我个人更喜欢自己控制更新与软件包安装，因此直接停掉该服务：
 </p>
 <dl class="org-dl">
 <dt>Step 1</dt><dd>修改文件/etc/apt/apt.conf.d/20auto-upgrades停止自动升级：<br /></dd>
@@ -459,15 +474,16 @@ yanyg<span class="org-whitespace-space">   </span><span class="org-variable-name
 </div>
 </div>
 
-<div id="outline-container-orgbe9bbdb" class="outline-5">
-<h5 id="debian-install-devel"><a id="orgbe9bbdb"></a><span class="section-number-5">2.1.3.2</span> 安装研发环境</h5>
+<div id="outline-container-org4a32311" class="outline-5">
+<h5 id="debian-install-devel"><span class="section-number-5">2.1.3.2</span> 安装研发环境</h5>
 <div class="outline-text-5" id="text-debian-install-devel">
 <p>
 APT源已配置好sudo，请使用添加了sudo的普通用户安装如下软件包。
 </p>
 
 <p>
-研发环境软件包下载大小为200MB~300MB，安装后占用在600MB~1GB之间。如下开发环境安装后可构建Emacs、内核、模块。
+研发环境软件包下载大小为200MB~300MB，安装后占用在600MB~1GB之间。如下开发环境安装
+后可构建Emacs、内核、模块。
 </p>
 
 <div class="org-src-container">
@@ -515,8 +531,8 @@ APT源已配置好sudo，请使用添加了sudo的普通用户安装如下软件
 </div>
 </div>
 
-<div id="outline-container-orgbf895c7" class="outline-5">
-<h5 id="orgbf895c7"><span class="section-number-5">2.1.3.3</span> 配置上网环境</h5>
+<div id="outline-container-org1613fe4" class="outline-5">
+<h5 id="org1613fe4"><span class="section-number-5">2.1.3.3</span> 配置上网环境</h5>
 <div class="outline-text-5" id="text-2-1-3-3">
 <p>
 安装Google Chrome浏览器，并安装lantern代理：
@@ -538,8 +554,8 @@ APT源已配置好sudo，请使用添加了sudo的普通用户安装如下软件
 </div>
 </div>
 
-<div id="outline-container-org09cd168" class="outline-5">
-<h5 id="org09cd168"><span class="section-number-5">2.1.3.4</span> 配置X11界面</h5>
+<div id="outline-container-org4fb09ae" class="outline-5">
+<h5 id="org4fb09ae"><span class="section-number-5">2.1.3.4</span> 配置X11界面</h5>
 <div class="outline-text-5" id="text-2-1-3-4">
 <p>
 启动tweak tool配置自己预期的X桌面环境：
@@ -552,8 +568,8 @@ APT源已配置好sudo，请使用添加了sudo的普通用户安装如下软件
 </div>
 </div>
 
-<div id="outline-container-org7444826" class="outline-5">
-<h5 id="org7444826"><span class="section-number-5">2.1.3.5</span> 时间配置</h5>
+<div id="outline-container-org1808605" class="outline-5">
+<h5 id="org1808605"><span class="section-number-5">2.1.3.5</span> 时间配置</h5>
 <div class="outline-text-5" id="text-2-1-3-5">
 <p>
 通常会遇到时间Linux/Windows下时间不一致问题。这是因为两者一个使用UTC，一个使用
@@ -576,13 +592,14 @@ Local-RTC导致，修改为一致即可。修改时间与时区命令如下：
 </div>
 </div>
 
-<div id="outline-container-org7ff9b18" class="outline-5">
-<h5 id="debian-config-font"><a id="org7ff9b18"></a><span class="section-number-5">2.1.3.6</span> 字体增强</h5>
+<div id="outline-container-orge84932d" class="outline-5">
+<h5 id="debian-config-font"><span class="section-number-5">2.1.3.6</span> 字体增强</h5>
 <div class="outline-text-5" id="text-debian-config-font">
 <p>
 Windows微软雅黑字体设计良好，是我的Emacs默认配置。Linux系统下创建
 /usr/share/fonts/windows目录，从Windows系统目录Windows/Fonts(一般是
-c:\Windows\Fonts)拷贝文件到新建目录/usr/share/fonts/windows，执行 <code>sudo fc-cache -fsrv</code> 更新缓存。
+c:\Windows\Fonts)拷贝文件到新建目录/usr/share/fonts/windows，
+执行 <code>sudo fc-cache -fsrv</code> 更新缓存。
 </p>
 
 <p>
@@ -599,14 +616,15 @@ Debian APT有提供更多字体，使用如下方式查找安装：
 </div>
 </div>
 
-<div id="outline-container-org3c17d34" class="outline-5">
-<h5 id="org3c17d34"><span class="section-number-5">2.1.3.7</span> 其他配置</h5>
+<div id="outline-container-org34b8468" class="outline-5">
+<h5 id="org34b8468"><span class="section-number-5">2.1.3.7</span> 其他配置</h5>
 <div class="outline-text-5" id="text-2-1-3-7">
 <ul class="org-ul">
 <li>参考<a href="software.html">我的软件</a></li>
 <li>Emacs参考<a href="emacs.html">Emacs笔记</a>
 <ul class="org-ul">
-<li>Debian 9.3 + emacs 26.0.90 en_US.UTF-8安装，需要安装zh_CN.UTF-8 locales、配置 LC_CTYPE=zh_CN.UTF-8、设置 fcitx后才可输入中文。</li>
+<li>Debian 9.3 + emacs 26.0.90 en_US.UTF-8安装，需要安装zh_CN.UTF-8 locales、
+配置 LC_CTYPE=zh_CN.UTF-8、设置 fcitx后才可输入中文。</li>
 </ul></li>
 <li>Alt-Tab切换只显示当前workspace窗口
 <ul class="org-ul">
@@ -631,12 +649,12 @@ Debian APT有提供更多字体，使用如下方式查找安装：
 </div>
 </div>
 
-<div id="outline-container-orgaf26e46" class="outline-4">
-<h4 id="orgaf26e46"><span class="section-number-4">2.1.4</span> 配置(8.x.x)</h4>
+<div id="outline-container-org7aaeec9" class="outline-4">
+<h4 id="org7aaeec9"><span class="section-number-4">2.1.4</span> 配置(8.x.x)</h4>
 <div class="outline-text-4" id="text-2-1-4">
 </div>
-<div id="outline-container-org52d0215" class="outline-5">
-<h5 id="org52d0215"><span class="section-number-5">2.1.4.1</span> APT源(apt source)</h5>
+<div id="outline-container-org986c777" class="outline-5">
+<h5 id="org986c777"><span class="section-number-5">2.1.4.1</span> APT源(apt source)</h5>
 <div class="outline-text-5" id="text-2-1-4-1">
 <p>
 配置 <code>/etc/apt/sources.list</code>
@@ -655,8 +673,8 @@ deb-src http://security.debian.org/ jessie/updates main contrib non-free
 </div>
 </div>
 
-<div id="outline-container-orgd33ea34" class="outline-5">
-<h5 id="orgd33ea34"><span class="section-number-5">2.1.4.2</span> Thinkpad Trackpoint(小红点)配置</h5>
+<div id="outline-container-orgc61795d" class="outline-5">
+<h5 id="orgc61795d"><span class="section-number-5">2.1.4.2</span> Thinkpad Trackpoint(小红点)配置</h5>
 <div class="outline-text-5" id="text-2-1-4-2">
 <p>
 <a href="https://wiki.debian.org/InstallingDebianOn/Thinkpad/Trackpoint">Debian WIKI</a>中配置介绍, 不同Debian配置方式有差异. 示例如下:
@@ -691,12 +709,12 @@ Linux<span class="org-whitespace-space"> </span>t400<span class="org-whitespace-
 </div>
 </div>
 
-<div id="outline-container-orgd6dc670" class="outline-2">
-<h2 id="orgd6dc670"><span class="section-number-2">3</span> Common</h2>
+<div id="outline-container-org1944ec7" class="outline-2">
+<h2 id="org1944ec7"><span class="section-number-2">3</span> Common</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orge8ad826" class="outline-3">
-<h3 id="orge8ad826"><span class="section-number-3">3.1</span> Google</h3>
+<div id="outline-container-org845cb63" class="outline-3">
+<h3 id="org845cb63"><span class="section-number-3">3.1</span> Google</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 使用代理设置时，google会选择错误的位置，默认搜索优先当地语言结果。通过链接
@@ -706,8 +724,8 @@ Linux<span class="org-whitespace-space"> </span>t400<span class="org-whitespace-
 </div>
 </div>
 
-<div id="outline-container-orgc49762c" class="outline-2">
-<h2 id="partition"><a id="orgc49762c"></a><span class="section-number-2">4</span> Partition</h2>
+<div id="outline-container-orgd75f8e0" class="outline-2">
+<h2 id="partition"><span class="section-number-2">4</span> Partition</h2>
 <div class="outline-text-2" id="text-partition">
 <p>
 T440分区清单示例如下。sda1安装Windows，sda2安装Debian，sdb做数据盘：
@@ -748,16 +766,17 @@ Device<span class="org-whitespace-space">     </span>Boot<span class="org-whites
 </div>
 </div>
 
-<div id="outline-container-orgad5861a" class="outline-2">
-<h2 id="usb-stick"><a id="orgad5861a"></a><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
+<div id="outline-container-orgf726dd0" class="outline-2">
+<h2 id="usb-stick"><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> 随身USB盘</h2>
 <div class="outline-text-2" id="text-usb-stick">
 <p>
 随身携带一个大容量USB(32G/64G), 包含完整可引导的操作系统, 以及Debian, Redhat,
-CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB系统工作, 或者解决系统引导异常. 这在开发底层系统, 或对系统做深度定制时是常见的.
+CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB系统工作, 或者
+解决系统引导异常. 这在开发底层系统, 或对系统做深度定制时是常见的.
 </p>
 </div>
-<div id="outline-container-orgaf308e7" class="outline-3">
-<h3 id="orgaf308e7"><span class="section-number-3">5.1</span> 工作原理</h3>
+<div id="outline-container-orgfbf04ae" class="outline-3">
+<h3 id="orgfbf04ae"><span class="section-number-3">5.1</span> 工作原理</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 用<a href="https://www.gnu.org/software/grub/">GRUB</a>和<a href="https://sourceforge.net/projects/grub4dos/">grub4dos</a>提供多系统引导, 安装Linux到USB盘, 或用<a href="http://www.linuxfromscratch.org/">LFS</a>制作自己的系统.
@@ -765,16 +784,17 @@ CentOS, Win 7, Win 10操作系统的安装包, 在特定环境下直接运行USB
 </div>
 </div>
 
-<div id="outline-container-org13cb183" class="outline-3">
-<h3 id="org13cb183"><span class="section-number-3">5.2</span> 制作方式</h3>
+<div id="outline-container-org2bed3d8" class="outline-3">
+<h3 id="org2bed3d8"><span class="section-number-3">5.2</span> 制作方式</h3>
 <div class="outline-text-3" id="text-5-2">
 </div>
-<div id="outline-container-org935c4cb" class="outline-4">
-<h4 id="org935c4cb"><span class="section-number-4">5.2.1</span> 分区</h4>
+<div id="outline-container-org47370ee" class="outline-4">
+<h4 id="org47370ee"><span class="section-number-4">5.2.1</span> 分区</h4>
 <div class="outline-text-4" id="text-5-2-1">
 <p>
 使用fdisk分区. part1用做grub, part2用做live linux, part3用做Linux安装系统, part4
-是扩展分区, part5/6分别用做win安装盘和win下数据盘. 各分区大小根据USB和安装盘大小进行随意调整. 如下是64GB USB示例:
+是扩展分区, part5/6分别用做win安装盘和win下数据盘. 各分区大小根据USB和安装盘
+大小进行随意调整. 如下是64GB USB示例:
 </p>
 <div class="org-src-container">
 <pre class="src src-shell">yanyg@t:~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>fdisk<span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>/dev/sdc
@@ -803,32 +823,11 @@ Device<span class="org-whitespace-space">     </span>Boot<span class="org-whites
 <h2 class="footnotes">&#33050;&#27880;: </h2>
 <div id="text-footnotes">
 
-<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara">Win10游戏录制占用该快捷键，进入
-开始-&gt;设置-&gt;游戏-&gt;关掉“使用游戏栏记录游戏剪辑、屏幕截图和广播”。</div></div>
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">Win10游戏录制占用该快捷键，进入
+开始-&gt;设置-&gt;游戏-&gt;关掉“使用游戏栏记录游戏剪辑、屏幕截图和广播”。</p></div></div>
 
 
 </div>
 </div></div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/os-install.html';
-    this.page.identifier = 'os-install.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
-</div>
-</div>
 </body>
 </html>

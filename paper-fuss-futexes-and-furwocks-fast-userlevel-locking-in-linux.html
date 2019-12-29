@@ -1,47 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Fuss, Futexes and Furwocks: Fast Userlevel Locking in Linux</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">Fuss, Futexes and Furwocks: Fast Userlevel Locking in Linux</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf47f6f1">1. Author</a>
+<li><a href="#org7927558">1. Author</a>
 <ul>
-<li><a href="#org52bcd37">1.1. Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</a></li>
-<li><a href="#org977b24c">1.2. Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</a></li>
-<li><a href="#org7849c27">1.3. Matthew Kirkwood, matthew@hairy.beasts.org</a></li>
+<li><a href="#org7b3bee9">1.1. Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</a></li>
+<li><a href="#orgcc2f484">1.2. Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</a></li>
+<li><a href="#org1d67338">1.3. Matthew Kirkwood, matthew@hairy.beasts.org</a></li>
 </ul>
 </li>
-<li><a href="#org08cb403">2. Abstract</a></li>
-<li><a href="#orgae58243">3. Introduction</a></li>
-<li><a href="#org7bf4b86">4. Requirements</a></li>
+<li><a href="#orged915ae">2. Abstract</a></li>
+<li><a href="#org2d5ef7d">3. Introduction</a></li>
+<li><a href="#org861fc98">4. Requirements</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf47f6f1" class="outline-2">
-<h2 id="orgf47f6f1"><span class="section-number-2">1</span> Author</h2>
+<div id="outline-container-org7927558" class="outline-2">
+<h2 id="org7927558"><span class="section-number-2">1</span> Author</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org52bcd37" class="outline-3">
-<h3 id="org52bcd37"><span class="section-number-3">1.1</span> Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</h3>
+<div id="outline-container-org7b3bee9" class="outline-3">
+<h3 id="org7b3bee9"><span class="section-number-3">1.1</span> Hubertus Franke, IBM Thomas J. Watson Research Center, frankeh@watson.ibm.com</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>Homepage: <a href="https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1">https://researcher.watson.ibm.com/researcher/view_person_pubs.php?person=us-frankeh&amp;t=1</a></li>
@@ -49,8 +45,8 @@
 </div>
 </div>
 
-<div id="outline-container-org977b24c" class="outline-3">
-<h3 id="org977b24c"><span class="section-number-3">1.2</span> Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</h3>
+<div id="outline-container-orgcc2f484" class="outline-3">
+<h3 id="orgcc2f484"><span class="section-number-3">1.2</span> Rusty Russell, IBM Linux Technology Center, rusty@rustcorp.com.au</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>Blog(may right?): <a href="https://rusty.ozlabs.org/">https://rusty.ozlabs.org/</a></li>
@@ -58,13 +54,13 @@
 </div>
 </div>
 
-<div id="outline-container-org7849c27" class="outline-3">
-<h3 id="org7849c27"><span class="section-number-3">1.3</span> Matthew Kirkwood, matthew@hairy.beasts.org</h3>
+<div id="outline-container-org1d67338" class="outline-3">
+<h3 id="org1d67338"><span class="section-number-3">1.3</span> Matthew Kirkwood, matthew@hairy.beasts.org</h3>
 </div>
 </div>
 
-<div id="outline-container-org08cb403" class="outline-2">
-<h2 id="org08cb403"><span class="section-number-2">2</span> Abstract</h2>
+<div id="outline-container-orged915ae" class="outline-2">
+<h2 id="orged915ae"><span class="section-number-2">2</span> Abstract</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Fast userlevel locking is an alternative locking mechanism to the typically
@@ -81,8 +77,8 @@ the "futex" interface.
 </div>
 </div>
 
-<div id="outline-container-orgae58243" class="outline-2">
-<h2 id="orgae58243"><span class="section-number-2">3</span> Introduction</h2>
+<div id="outline-container-org2d5ef7d" class="outline-2">
+<h2 id="org2d5ef7d"><span class="section-number-2">3</span> Introduction</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Linux<sup>TM</sup><sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> has seen significant(重要的) growth as a server operating system
@@ -165,8 +161,8 @@ section 5 we elaborate on current and future efforts and in 6 we conclude.
 </div>
 </div>
 
-<div id="outline-container-org7bf4b86" class="outline-2">
-<h2 id="org7bf4b86"><span class="section-number-2">4</span> Requirements</h2>
+<div id="outline-container-org861fc98" class="outline-2">
+<h2 id="org861fc98"><span class="section-number-2">4</span> Requirements</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 In this section we are stating some of the requirements of a fast userlevel
@@ -231,26 +227,5 @@ UNIX is a trademark of The Open Group
 
 </div>
 </div></div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/paper-fuss-futexes-and-furwocks-fast-userlevel-locking-in-linux.html';
-    this.page.identifier = 'paper-fuss-futexes-and-furwocks-fast-userlevel-locking-in-linux.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
-</div>
-</div>
 </body>
 </html>

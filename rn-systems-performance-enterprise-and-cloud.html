@@ -1,33 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>性能之巅：洞悉系统、企业与云计算</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">性能之巅：洞悉系统、企业与云计算</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc16aef3">1. 笔记</a>
+<li><a href="#orgeb9ef3b">1. 笔记</a>
 <ul>
-<li><a href="#orgf32a21b">1.1. chapter 5 应用程序</a>
+<li><a href="#org3a5a1df">1.1. chapter 5 应用程序</a>
 <ul>
-<li><a href="#org73f7abb">1.1.1. 伪共享</a></li>
-<li><a href="#org23bb105">1.1.2. CPU绑定(CPU affinity)</a></li>
+<li><a href="#org22166f2">1.1.1. 伪共享</a></li>
+<li><a href="#org2a0641c">1.1.2. CPU绑定(CPU affinity)</a></li>
 </ul>
 </li>
 </ul>
@@ -36,24 +32,26 @@
 </div>
 </div>
 
-<div id="outline-container-orgc16aef3" class="outline-2">
-<h2 id="orgc16aef3"><span class="section-number-2">1</span> 笔记</h2>
+<div id="outline-container-orgeb9ef3b" class="outline-2">
+<h2 id="orgeb9ef3b"><span class="section-number-2">1</span> 笔记</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgf32a21b" class="outline-3">
-<h3 id="orgf32a21b"><span class="section-number-3">1.1</span> chapter 5 应用程序</h3>
+<div id="outline-container-org3a5a1df" class="outline-3">
+<h3 id="org3a5a1df"><span class="section-number-3">1.1</span> chapter 5 应用程序</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org73f7abb" class="outline-4">
-<h4 id="org73f7abb"><span class="section-number-4">1.1.1</span> 伪共享</h4>
+<div id="outline-container-org22166f2" class="outline-4">
+<h4 id="org22166f2"><span class="section-number-4">1.1.1</span> 伪共享</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
-期望锁的竞争降低时，使用多个锁（锁hash）是比较好的方案。为了最大程度并行，哈希表桶的数目应该大于等于CPU数目。哈希冲突时，可开链解决。
+期望锁的竞争降低时，使用多个锁（锁hash）是比较好的方案。为了最大程度并行，哈希表
+桶的数目应该大于等于CPU数目。哈希冲突时，可开链解决。
 </p>
 
 <p>
 放置于相邻内存中的锁列表，当多个锁落在同一个缓存行时会产生性能问题。因为两个CPU
-更新同一缓存行的锁，会引起缓存一致性开销。这称为伪共享(false sharing)。一般通过填充无效字节对齐解决。也可使用编译器特性。例如内核代码：
+更新同一缓存行的锁，会引起缓存一致性开销。这称为伪共享(false sharing)。一般通过
+填充无效字节对齐解决。也可使用编译器特性。例如内核代码：
 </p>
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#if</span><span class="org-negation-char"><span class="org-preprocessor">n</span></span><span class="org-preprocessor">def</span><span class="org-whitespace-space"> </span>SMP_CACHE_BYTES
@@ -76,36 +74,16 @@
 </div>
 </div>
 
-<div id="outline-container-org23bb105" class="outline-4">
-<h4 id="org23bb105"><span class="section-number-4">1.1.2</span> CPU绑定(CPU affinity)</h4>
+<div id="outline-container-org2a0641c" class="outline-4">
+<h4 id="org2a0641c"><span class="section-number-4">1.1.2</span> CPU绑定(CPU affinity)</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
-绑定到特定CPU，提高内存本地性。错误的绑定（比如和中断或其他进程冲突）也会显著降低性能。
+绑定到特定CPU，提高内存本地性。错误的绑定（比如和中断或其他进程冲突）也会显著
+降低性能。
 </p>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/rn-systems-performance-enterprise-and-cloud.html';
-    this.page.identifier = 'rn-systems-performance-enterprise-and-cloud.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

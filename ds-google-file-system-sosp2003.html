@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-03-21 Thu 00:00 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Google File System</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Sanjay Ghemawat, Howard Gobioff, and Shun-Tak Leung, Google" />
@@ -27,40 +25,40 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd0c640d">1. DECLARATION</a></li>
-<li><a href="#orgda28580">2. Abstract</a></li>
-<li><a href="#org5651d81">3. Categories and Subject Descriptors</a></li>
-<li><a href="#org0f4212d">4. General Terms</a></li>
-<li><a href="#org35212bc">5. Keywords</a></li>
-<li><a href="#org8944918">6. Copyright</a></li>
-<li><a href="#org98d49f1">7. INTRODUCTION</a></li>
-<li><a href="#org6b64ce1">8. DESIGN OVERVIEW</a>
+<li><a href="#org1f20f23">1. DECLARATION</a></li>
+<li><a href="#org2a505f3">2. Abstract</a></li>
+<li><a href="#org4831e42">3. Categories and Subject Descriptors</a></li>
+<li><a href="#org93c6eac">4. General Terms</a></li>
+<li><a href="#orgeec5baf">5. Keywords</a></li>
+<li><a href="#org007fae1">6. Copyright</a></li>
+<li><a href="#orge4c43b0">7. INTRODUCTION</a></li>
+<li><a href="#orga9ee108">8. DESIGN OVERVIEW</a>
 <ul>
-<li><a href="#org657dfd4">8.1. Assumptions</a></li>
-<li><a href="#orga2b07ba">8.2. Interface</a></li>
-<li><a href="#orgcf552a5">8.3. Architecture</a></li>
-<li><a href="#org12dd01e">8.4. Single Master</a></li>
-<li><a href="#orgfd83652">8.5. Chunk Size</a></li>
-<li><a href="#orgd91b95a">8.6. Metadata</a></li>
-<li><a href="#orgf301cc3">8.7. Consistency Model</a></li>
+<li><a href="#org2a6baea">8.1. Assumptions</a></li>
+<li><a href="#orgffcee88">8.2. Interface</a></li>
+<li><a href="#orgb6a8ce3">8.3. Architecture</a></li>
+<li><a href="#org42694b6">8.4. Single Master</a></li>
+<li><a href="#orga1824fe">8.5. Chunk Size</a></li>
+<li><a href="#org80cb917">8.6. Metadata</a></li>
+<li><a href="#orge41e91c">8.7. Consistency Model</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd0c640d" class="outline-2">
-<h2 id="orgd0c640d"><span class="section-number-2">1</span> DECLARATION</h2>
+<div id="outline-container-org1f20f23" class="outline-2">
+<h2 id="org1f20f23"><span class="section-number-2">1</span> DECLARATION</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This page is the paper <a id="org756fb91"></a>. Original Paper Link is:
+This page is the paper <a id="org321fb24"></a>. Original Paper Link is:
 <a href="https://research.google.com/archive/gfs-sosp2003.pdf">https://research.google.com/archive/gfs-sosp2003.pdf</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgda28580" class="outline-2">
-<h2 id="orgda28580"><span class="section-number-2">2</span> Abstract</h2>
+<div id="outline-container-org2a505f3" class="outline-2">
+<h2 id="org2a505f3"><span class="section-number-2">2</span> Abstract</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We have designed and implemented the Google File System, a scalable distributed
@@ -94,8 +92,8 @@ measurements from both micro-benchmarks and real world use.
 </div>
 </div>
 
-<div id="outline-container-org5651d81" class="outline-2">
-<h2 id="org5651d81"><span class="section-number-2">3</span> Categories and Subject Descriptors</h2>
+<div id="outline-container-org4831e42" class="outline-2">
+<h2 id="org4831e42"><span class="section-number-2">3</span> Categories and Subject Descriptors</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 D [4]: 3 - Distributed File Systems
@@ -103,8 +101,8 @@ D [4]: 3 - Distributed File Systems
 </div>
 </div>
 
-<div id="outline-container-org0f4212d" class="outline-2">
-<h2 id="org0f4212d"><span class="section-number-2">4</span> General Terms</h2>
+<div id="outline-container-org93c6eac" class="outline-2">
+<h2 id="org93c6eac"><span class="section-number-2">4</span> General Terms</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Design, reliability, performance, measurement
@@ -112,8 +110,8 @@ Design, reliability, performance, measurement
 </div>
 </div>
 
-<div id="outline-container-org35212bc" class="outline-2">
-<h2 id="org35212bc"><span class="section-number-2">5</span> Keywords</h2>
+<div id="outline-container-orgeec5baf" class="outline-2">
+<h2 id="orgeec5baf"><span class="section-number-2">5</span> Keywords</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Fault tolerance, scalability, data storage, clustered storage
@@ -121,8 +119,8 @@ Fault tolerance, scalability, data storage, clustered storage
 </div>
 </div>
 
-<div id="outline-container-org8944918" class="outline-2">
-<h2 id="org8944918"><span class="section-number-2">6</span> Copyright</h2>
+<div id="outline-container-org007fae1" class="outline-2">
+<h2 id="org007fae1"><span class="section-number-2">6</span> Copyright</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The authors can be reached at the following addresses:
@@ -145,8 +143,8 @@ Copyright 2003 ACM 1-58113-757-5/03/0010 $5.00.
 </div>
 </div>
 
-<div id="outline-container-org98d49f1" class="outline-2">
-<h2 id="org98d49f1"><span class="section-number-2">7</span> INTRODUCTION</h2>
+<div id="outline-container-orge4c43b0" class="outline-2">
+<h2 id="orge4c43b0"><span class="section-number-2">7</span> INTRODUCTION</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 We have designed and implemented the Google File System (GFS) to meet the
@@ -212,12 +210,12 @@ accessed by hundreds of clients on distinct machines on a continuous basis.
 </div>
 </div>
 
-<div id="outline-container-org6b64ce1" class="outline-2">
-<h2 id="org6b64ce1"><span class="section-number-2">8</span> DESIGN OVERVIEW</h2>
+<div id="outline-container-orga9ee108" class="outline-2">
+<h2 id="orga9ee108"><span class="section-number-2">8</span> DESIGN OVERVIEW</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org657dfd4" class="outline-3">
-<h3 id="org657dfd4"><span class="section-number-3">8.1</span> Assumptions</h3>
+<div id="outline-container-org2a6baea" class="outline-3">
+<h3 id="org2a6baea"><span class="section-number-3">8.1</span> Assumptions</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 In designing a file system for our needs, we have been guided by assumptions
@@ -285,8 +283,8 @@ write.
 </div>
 </div>
 
-<div id="outline-container-orga2b07ba" class="outline-3">
-<h3 id="orga2b07ba"><span class="section-number-3">8.2</span> Interface</h3>
+<div id="outline-container-orgffcee88" class="outline-3">
+<h3 id="orgffcee88"><span class="section-number-3">8.2</span> Interface</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 GFS provides a familiar file system interface, though it does not implement a
@@ -308,8 +306,8 @@ append are discussed further in Sections 3.4 and 3.3 respectively.
 </div>
 </div>
 
-<div id="outline-container-orgcf552a5" class="outline-3">
-<h3 id="orgcf552a5"><span class="section-number-3">8.3</span> Architecture</h3>
+<div id="outline-container-orgb6a8ce3" class="outline-3">
+<h3 id="orgb6a8ce3"><span class="section-number-3">8.3</span> Architecture</h3>
 <div class="outline-text-3" id="text-8-3">
 <p>
 A GFS cluster consists of a single master and multiple chunkservers and is
@@ -346,8 +344,8 @@ accessed data in memory.
 </div>
 </div>
 
-<div id="outline-container-org12dd01e" class="outline-3">
-<h3 id="org12dd01e"><span class="section-number-3">8.4</span> Single Master</h3>
+<div id="outline-container-org42694b6" class="outline-3">
+<h3 id="org42694b6"><span class="section-number-3">8.4</span> Single Master</h3>
 <div class="outline-text-3" id="text-8-4">
 <p>
 Having a single master vastly simplifies our design and enables the master to
@@ -375,8 +373,8 @@ no extra cost.
 </div>
 </div>
 
-<div id="outline-container-orgfd83652" class="outline-3">
-<h3 id="orgfd83652"><span class="section-number-3">8.5</span> Chunk Size</h3>
+<div id="outline-container-orga1824fe" class="outline-3">
+<h3 id="orga1824fe"><span class="section-number-3">8.5</span> Chunk Size</h3>
 <div class="outline-text-3" id="text-8-5">
 <p>
 Chunk size is one of the key design parameters. We have chosen 64 MB, which is
@@ -422,8 +420,8 @@ situations.
 </div>
 </div>
 
-<div id="outline-container-orgd91b95a" class="outline-3">
-<h3 id="orgd91b95a"><span class="section-number-3">8.6</span> Metadata</h3>
+<div id="outline-container-org80cb917" class="outline-3">
+<h3 id="org80cb917"><span class="section-number-3">8.6</span> Metadata</h3>
 <div class="outline-text-3" id="text-8-6">
 <p>
 The master stores three major types of metadata: the file and chunk namespaces,
@@ -438,8 +436,8 @@ chunkserver about its chunks at master startup and whenever a chunkserver joins
 the cluster.
 </p>
 </div>
-<div id="outline-container-orgb45f1ef" class="outline-4">
-<h4 id="orgb45f1ef"><span class="section-number-4">8.6.1</span> In-Memory Data Structures</h4>
+<div id="outline-container-org525b597" class="outline-4">
+<h4 id="org525b597"><span class="section-number-4">8.6.1</span> In-Memory Data Structures</h4>
 <div class="outline-text-4" id="text-8-6-1">
 <p>
 Since metadata is stored in memory, master operations are fast. Furthermore, it
@@ -468,8 +466,8 @@ performance, and flexibility we gain by storing the metadata in memory.
 </div>
 </div>
 
-<div id="outline-container-org313b79b" class="outline-4">
-<h4 id="org313b79b"><span class="section-number-4">8.6.2</span> Chunk Locations</h4>
+<div id="outline-container-org26dc999" class="outline-4">
+<h4 id="org26dc999"><span class="section-number-4">8.6.2</span> Chunk Locations</h4>
 <div class="outline-text-4" id="text-8-6-2">
 <p>
 The master does not keep a persistent record of which chunkservers have a
@@ -499,8 +497,8 @@ rename a chunkserver.
 </div>
 </div>
 
-<div id="outline-container-orgee8a299" class="outline-4">
-<h4 id="orgee8a299"><span class="section-number-4">8.6.3</span> Operation Log</h4>
+<div id="outline-container-org145a212" class="outline-4">
+<h4 id="org145a212"><span class="section-number-4">8.6.3</span> Operation Log</h4>
 <div class="outline-text-4" id="text-8-6-3">
 <p>
 The operation log contains a historical record of critical metadata changes. It
@@ -557,8 +555,8 @@ checkpoints.
 </div>
 </div>
 
-<div id="outline-container-orgf301cc3" class="outline-3">
-<h3 id="orgf301cc3"><span class="section-number-3">8.7</span> Consistency Model</h3>
+<div id="outline-container-orge41e91c" class="outline-3">
+<h3 id="orge41e91c"><span class="section-number-3">8.7</span> Consistency Model</h3>
 <div class="outline-text-3" id="text-8-7">
 <p>
 GFS has a relaxed consistency model that supports our highly distributed
@@ -569,8 +567,8 @@ parts of the paper.
 </p>
 </div>
 
-<div id="outline-container-org2cfb119" class="outline-4">
-<h4 id="org2cfb119"><span class="section-number-4">8.7.1</span> Guarantees by GFS</h4>
+<div id="outline-container-org943bee2" class="outline-4">
+<h4 id="org943bee2"><span class="section-number-4">8.7.1</span> Guarantees by GFS</h4>
 <div class="outline-text-4" id="text-8-7-1">
 <p>
 File namespace mutations (e.g., file creation) are atomic. They are handled
@@ -645,8 +643,8 @@ rather than corrupt data.
 </div>
 </div>
 
-<div id="outline-container-orga23e1f4" class="outline-4">
-<h4 id="orga23e1f4"><span class="section-number-4">8.7.2</span> Implications for Applications</h4>
+<div id="outline-container-orga28201a" class="outline-4">
+<h4 id="orga28201a"><span class="section-number-4">8.7.2</span> Implications for Applications</h4>
 <div class="outline-text-4" id="text-8-7-2">
 <p>
 GFS applications can accommodate the relaxed consistency model with a few simple
@@ -693,27 +691,6 @@ delivered to the record reader.
 </div>
 </div>
 </div>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/ds-google-file-system-sosp2003.html';
-    this.page.identifier = 'ds-google-file-system-sosp2003.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

@@ -1,52 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>存储系统设计观点</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">存储系统设计观点</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7751a5a">1. 统一存储</a>
+<li><a href="#org5082efe">1. 统一存储</a>
 <ul>
-<li><a href="#orgda83415">1.1. 系统设计目标</a>
+<li><a href="#org61245a8">1.1. 系统设计目标</a>
 <ul>
-<li><a href="#org67f4015">1.1.1. 数据安全是第一考虑因素</a></li>
-<li><a href="#orgaffc3f6">1.1.2. 性能</a></li>
-<li><a href="#org1f97f0f">1.1.3. 成本</a></li>
-<li><a href="#orgb1cef34">1.1.4. 功能完整性</a></li>
-<li><a href="#org0828356">1.1.5. 可维护性</a>
+<li><a href="#org940e460">1.1.1. 数据安全是第一考虑因素</a></li>
+<li><a href="#org175027f">1.1.2. 性能</a></li>
+<li><a href="#org3ef539e">1.1.3. 成本</a></li>
+<li><a href="#orga134ef3">1.1.4. 功能完整性</a></li>
+<li><a href="#orgfbcb793">1.1.5. 可维护性</a>
 <ul>
-<li><a href="#org1cf5109">1.1.5.1. 热升级</a></li>
-<li><a href="#orgd96ae17">1.1.5.2. 横向扩展</a></li>
+<li><a href="#org35ce4a5">1.1.5.1. 热升级</a></li>
+<li><a href="#orga97afaf">1.1.5.2. 横向扩展</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgd0f016e">2. 分布式存储</a>
+<li><a href="#org9bf58ec">2. 分布式存储</a>
 <ul>
-<li><a href="#org0bd909f">2.1. 系统设计目标</a></li>
-<li><a href="#org9b73c8b">2.2. 实现案例分析</a>
+<li><a href="#org2bff9c3">2.1. 系统设计目标</a></li>
+<li><a href="#org261450e">2.2. 实现案例分析</a>
 <ul>
-<li><a href="#org682ec16">2.2.1. ceph</a></li>
-<li><a href="#org1cb6035">2.2.2. aliyun</a></li>
+<li><a href="#org1c03d4b">2.2.1. ceph</a></li>
+<li><a href="#org289134d">2.2.2. aliyun</a></li>
 </ul>
 </li>
 </ul>
@@ -55,16 +51,16 @@
 </div>
 </div>
 
-<div id="outline-container-org7751a5a" class="outline-2">
-<h2 id="org7751a5a"><span class="section-number-2">1</span> 统一存储</h2>
+<div id="outline-container-org5082efe" class="outline-2">
+<h2 id="org5082efe"><span class="section-number-2">1</span> 统一存储</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgda83415" class="outline-3">
-<h3 id="orgda83415"><span class="section-number-3">1.1</span> 系统设计目标</h3>
+<div id="outline-container-org61245a8" class="outline-3">
+<h3 id="org61245a8"><span class="section-number-3">1.1</span> 系统设计目标</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org67f4015" class="outline-4">
-<h4 id="org67f4015"><span class="section-number-4">1.1.1</span> 数据安全是第一考虑因素</h4>
+<div id="outline-container-org940e460" class="outline-4">
+<h4 id="org940e460"><span class="section-number-4">1.1.1</span> 数据安全是第一考虑因素</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 没有数据安全保障，其他功能特性都是没有意义的。
@@ -78,8 +74,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgaffc3f6" class="outline-4">
-<h4 id="orgaffc3f6"><span class="section-number-4">1.1.2</span> 性能</h4>
+<div id="outline-container-org175027f" class="outline-4">
+<h4 id="org175027f"><span class="section-number-4">1.1.2</span> 性能</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>吞吐量与IOPS</li>
@@ -89,8 +85,8 @@
 </div>
 </div>
 
-<div id="outline-container-org1f97f0f" class="outline-4">
-<h4 id="org1f97f0f"><span class="section-number-4">1.1.3</span> 成本</h4>
+<div id="outline-container-org3ef539e" class="outline-4">
+<h4 id="org3ef539e"><span class="section-number-4">1.1.3</span> 成本</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <ul class="org-ul">
 <li>优化厂家设备整体或每GB或每IOPS物料成本/制造成本</li>
@@ -100,8 +96,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgb1cef34" class="outline-4">
-<h4 id="orgb1cef34"><span class="section-number-4">1.1.4</span> 功能完整性</h4>
+<div id="outline-container-orga134ef3" class="outline-4">
+<h4 id="orga134ef3"><span class="section-number-4">1.1.4</span> 功能完整性</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <ul class="org-ul">
 <li>灾备</li>
@@ -110,12 +106,12 @@
 </div>
 </div>
 
-<div id="outline-container-org0828356" class="outline-4">
-<h4 id="org0828356"><span class="section-number-4">1.1.5</span> 可维护性</h4>
+<div id="outline-container-orgfbcb793" class="outline-4">
+<h4 id="orgfbcb793"><span class="section-number-4">1.1.5</span> 可维护性</h4>
 <div class="outline-text-4" id="text-1-1-5">
 </div>
-<div id="outline-container-org1cf5109" class="outline-5">
-<h5 id="org1cf5109"><span class="section-number-5">1.1.5.1</span> 热升级</h5>
+<div id="outline-container-org35ce4a5" class="outline-5">
+<h5 id="org35ce4a5"><span class="section-number-5">1.1.5.1</span> 热升级</h5>
 <div class="outline-text-5" id="text-1-1-5-1">
 <ul class="org-ul">
 <li>业务不中断是必须的保障</li>
@@ -124,8 +120,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgd96ae17" class="outline-5">
-<h5 id="orgd96ae17"><span class="section-number-5">1.1.5.2</span> 横向扩展</h5>
+<div id="outline-container-orga97afaf" class="outline-5">
+<h5 id="orga97afaf"><span class="section-number-5">1.1.5.2</span> 横向扩展</h5>
 <div class="outline-text-5" id="text-1-1-5-2">
 <ul class="org-ul">
 <li>增加JBOD</li>
@@ -136,45 +132,24 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgd0f016e" class="outline-2">
-<h2 id="orgd0f016e"><span class="section-number-2">2</span> 分布式存储</h2>
+<div id="outline-container-org9bf58ec" class="outline-2">
+<h2 id="org9bf58ec"><span class="section-number-2">2</span> 分布式存储</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org0bd909f" class="outline-3">
-<h3 id="org0bd909f"><span class="section-number-3">2.1</span> 系统设计目标</h3>
+<div id="outline-container-org2bff9c3" class="outline-3">
+<h3 id="org2bff9c3"><span class="section-number-3">2.1</span> 系统设计目标</h3>
 </div>
-<div id="outline-container-org9b73c8b" class="outline-3">
-<h3 id="org9b73c8b"><span class="section-number-3">2.2</span> 实现案例分析</h3>
+<div id="outline-container-org261450e" class="outline-3">
+<h3 id="org261450e"><span class="section-number-3">2.2</span> 实现案例分析</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org682ec16" class="outline-4">
-<h4 id="org682ec16"><span class="section-number-4">2.2.1</span> ceph</h4>
+<div id="outline-container-org1c03d4b" class="outline-4">
+<h4 id="org1c03d4b"><span class="section-number-4">2.2.1</span> ceph</h4>
 </div>
-<div id="outline-container-org1cb6035" class="outline-4">
-<h4 id="org1cb6035"><span class="section-number-4">2.2.2</span> aliyun</h4>
-</div>
-</div>
+<div id="outline-container-org289134d" class="outline-4">
+<h4 id="org289134d"><span class="section-number-4">2.2.2</span> aliyun</h4>
 </div>
 </div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/storage-system-design.html';
-    this.page.identifier = 'storage-system-design.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

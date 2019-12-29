@@ -1,30 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Terminal Technology</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">Terminal Technology</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0989982">1. terminfo</a></li>
-<li><a href="#org86bab1c">2. LINUX boot init</a></li>
-<li><a href="#orge2fe76a">3. fb</a></li>
+<li><a href="#org698832f">1. terminfo</a></li>
+<li><a href="#org38c2432">2. LINUX boot init</a></li>
+<li><a href="#org2f0488e">3. fb</a></li>
 </ul>
 </div>
 </div>
@@ -44,7 +40,8 @@ shell = command line interpreter
 </p>
 
 <p>
-Linux内核给虚拟终端分配的字形(glyph)数组只有512个，因此无法显示完整的UTF字符。限制512的原因是这些信息保存在内核内存中。
+Linux内核给虚拟终端分配的字形(glyph)数组只有512个，因此无法显示完整的UTF字符。
+限制512的原因是这些信息保存在内核内存中。
 </p>
 
 <p>
@@ -55,12 +52,12 @@ vt/consolemap.c
 glyph
 </p>
 
-<div id="outline-container-org0989982" class="outline-2">
-<h2 id="org0989982"><span class="section-number-2">1</span> terminfo</h2>
+<div id="outline-container-org698832f" class="outline-2">
+<h2 id="org698832f"><span class="section-number-2">1</span> terminfo</h2>
 </div>
 
-<div id="outline-container-org86bab1c" class="outline-2">
-<h2 id="org86bab1c"><span class="section-number-2">2</span> LINUX boot init</h2>
+<div id="outline-container-org38c2432" class="outline-2">
+<h2 id="org38c2432"><span class="section-number-2">2</span> LINUX boot init</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 early_serial_base: 3f8; TXR:0, LSR:5
@@ -72,29 +69,8 @@ vidport 3b4
 </div>
 
 
-<div id="outline-container-orge2fe76a" class="outline-2">
-<h2 id="orge2fe76a"><span class="section-number-2">3</span> fb</h2>
-</div>
-</div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/terminal.html';
-    this.page.identifier = 'terminal.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+<div id="outline-container-org2f0488e" class="outline-2">
+<h2 id="org2f0488e"><span class="section-number-2">3</span> fb</h2>
 </div>
 </div>
 </body>

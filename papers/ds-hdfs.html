@@ -1,49 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-04-03 Wed 01:27 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 21:58 -->
+<meta charset="utf-8" />
 <title>The Hadoop Distributed Filesystem</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Konstantin Shvachko, Hairong Kuang, Sanjay Radia, Robert Chansler, Yahoo!" />
-<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/readtheorg.css"/>
-<script src="../styles/jquery/2.1.3/jquery.min.js"></script>
-<script src="../styles/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../styles/lib/js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="../styles/readtheorg/js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/readtheorg.css"/>
+<script src="/themes/jquery/2.1.3/jquery.min.js"></script>
+<script src="/themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/styles/readtheorg/js/readtheorg.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
+ <a accesskey="h" href="../index.html"> UP </a>
  |
- <a accesskey="H" href="paper-index.html"> HOME </a>
+ <a accesskey="H" href="paperlist.html"> HOME </a>
 </div><div id="content">
 <h1 class="title">The Hadoop Distributed Filesystem</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3abdb44">DECLARATION</a></li>
-<li><a href="#org3794982">Abstract</a></li>
-<li><a href="#org183e136">Keywords:</a></li>
-<li><a href="#orga7c5db1">1. INTRODUCTION AND RELATED WORK</a></li>
-<li><a href="#org5eca297">2. ARCHITECTURE</a>
+<li><a href="#orgb18128e">DECLARATION</a></li>
+<li><a href="#org6c017d6">Abstract</a></li>
+<li><a href="#orgc8c7725">Keywords:</a></li>
+<li><a href="#org3071a1c">1. INTRODUCTION AND RELATED WORK</a></li>
+<li><a href="#orgd239e95">2. ARCHITECTURE</a>
 <ul>
-<li><a href="#orgc9ccea7">2.1. NameNode</a></li>
-<li><a href="#org7c82ffb">2.2. DataNodes</a></li>
-<li><a href="#org9d191b3">2.3. HDFS Client</a></li>
+<li><a href="#org2fb2c1a">2.1. NameNode</a></li>
+<li><a href="#orge4b22c5">2.2. DataNodes</a></li>
+<li><a href="#orgd68a857">2.3. HDFS Client</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org3abdb44" class="outline-2">
-<h2 id="org3abdb44">DECLARATION</h2>
-<div class="outline-text-2" id="text-org3abdb44">
+<div id="outline-container-orgb18128e" class="outline-2">
+<h2 id="orgb18128e">DECLARATION</h2>
+<div class="outline-text-2" id="text-orgb18128e">
 <p>
 This page is the The Hadoop Distributed Filesystem paper. Original Paper Link
 is: <a href="http://storageconference.us/2010/Papers/MSST/Shvachko.pdf">http://storageconference.us/2010/Papers/MSST/Shvachko.pdf</a>
@@ -62,9 +60,9 @@ Sunnyvale, California USA
 </div>
 </div>
 
-<div id="outline-container-org3794982" class="outline-2">
-<h2 id="org3794982">Abstract</h2>
-<div class="outline-text-2" id="text-org3794982">
+<div id="outline-container-org6c017d6" class="outline-2">
+<h2 id="org6c017d6">Abstract</h2>
+<div class="outline-text-2" id="text-org6c017d6">
 <p>
 The Hadoop Distributed File System (HDFS) is designed to store very large data
 sets reliably, and to stream those data sets at high bandwidth to user
@@ -78,17 +76,17 @@ Yahoo!.
 </div>
 </div>
 
-<div id="outline-container-org183e136" class="outline-2">
-<h2 id="org183e136">Keywords:</h2>
-<div class="outline-text-2" id="text-org183e136">
+<div id="outline-container-orgc8c7725" class="outline-2">
+<h2 id="orgc8c7725">Keywords:</h2>
+<div class="outline-text-2" id="text-orgc8c7725">
 <p>
 Hadoop, HDFS, distributed file system
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga7c5db1" class="outline-2">
-<h2 id="orga7c5db1"><span class="section-number-2">1</span> INTRODUCTION AND RELATED WORK</h2>
+<div id="outline-container-org3071a1c" class="outline-2">
+<h2 id="org3071a1c"><span class="section-number-2">1</span> INTRODUCTION AND RELATED WORK</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Hadoop [1][16][19] provides a distributed file system and a framework for the
@@ -200,12 +198,12 @@ using a hash function on the file name.
 </div>
 </div>
 
-<div id="outline-container-org5eca297" class="outline-2">
-<h2 id="org5eca297"><span class="section-number-2">2</span> ARCHITECTURE</h2>
+<div id="outline-container-orgd239e95" class="outline-2">
+<h2 id="orgd239e95"><span class="section-number-2">2</span> ARCHITECTURE</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgc9ccea7" class="outline-3">
-<h3 id="orgc9ccea7"><span class="section-number-3">2.1</span> NameNode</h3>
+<div id="outline-container-org2fb2c1a" class="outline-3">
+<h3 id="org2fb2c1a"><span class="section-number-3">2.1</span> NameNode</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 The HDFS namespace is a hierarchy of files and directories. Files and
@@ -240,8 +238,8 @@ change over time and are not part of the persistent checkpoint.
 </div>
 </div>
 
-<div id="outline-container-org7c82ffb" class="outline-3">
-<h3 id="org7c82ffb"><span class="section-number-3">2.2</span> DataNodes</h3>
+<div id="outline-container-orge4b22c5" class="outline-3">
+<h3 id="orge4b22c5"><span class="section-number-3">2.2</span> DataNodes</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Each block replica on a DataNode is represented by two files in the local host’s
@@ -330,8 +328,8 @@ NameNode operations.
 </div>
 </div>
 
-<div id="outline-container-org9d191b3" class="outline-3">
-<h3 id="org9d191b3"><span class="section-number-3">2.3</span> HDFS Client</h3>
+<div id="outline-container-orgd68a857" class="outline-3">
+<h3 id="orgd68a857"><span class="section-number-3">2.3</span> HDFS Client</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 User applications access the file system using the HDFS client, a code library
@@ -359,23 +357,21 @@ pipeline is organized, and the
 </div>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/papers/ds-hdfs.html';
-    this.page.identifier = 'ds-hdfs.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

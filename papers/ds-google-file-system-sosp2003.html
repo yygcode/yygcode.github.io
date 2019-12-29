@@ -1,23 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-31 Sun 19:43 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-29 Sun 21:45 -->
+<meta charset="utf-8" />
 <title>The Google File System</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Sanjay Ghemawat, Howard Gobioff, and Shun-Tak Leung, Google" />
-<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="../styles/readtheorg/css/readtheorg.css"/>
-<script src="../styles/jquery/2.1.3/jquery.min.js"></script>
-<script src="../styles/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../styles/lib/js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="../styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript"> var disqus_developer = 1; </script>
+<link rel="stylesheet" type="text/css" href="../themes/readtheorg/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="../themes/readtheorg/styles/readtheorg/css/readtheorg.css"/>
+<script src="../themes/jquery/2.1.3/jquery.min.js"></script>
+<script src="../themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="../themes/readtheorg/styles/readtheorg/js/readtheorg.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
+ <a accesskey="h" href="index.html"> UP </a>
  |
  <a accesskey="H" href="paper-index.html"> HOME </a>
 </div><div id="content">
@@ -26,67 +25,67 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org020edba">DECLARATION</a></li>
-<li><a href="#org3121754">ABSTRACT</a></li>
-<li><a href="#org135f0c1">Categories and Subject Descriptors</a></li>
-<li><a href="#org95f0f37">General Terms</a></li>
-<li><a href="#org8b401ba">Keywords</a></li>
-<li><a href="#org3e8505d">Copyright</a></li>
-<li><a href="#orge881b30">1. INTRODUCTION</a></li>
-<li><a href="#orgac3a8ae">2. DESIGN OVERVIEW</a>
+<li><a href="#orgd8cbfbe">DECLARATION</a></li>
+<li><a href="#org14d3333">ABSTRACT</a></li>
+<li><a href="#orgd943342">Categories and Subject Descriptors</a></li>
+<li><a href="#orgd27b8f7">General Terms</a></li>
+<li><a href="#org9a82e19">Keywords</a></li>
+<li><a href="#orgf69d126">Copyright</a></li>
+<li><a href="#orgc3c5213">1. INTRODUCTION</a></li>
+<li><a href="#orgcffeabb">2. DESIGN OVERVIEW</a>
 <ul>
-<li><a href="#org529ae17">2.1. Assumptions</a></li>
-<li><a href="#org01267e7">2.2. Interface</a></li>
-<li><a href="#org126b89b">2.3. Architecture</a></li>
-<li><a href="#orgf6a4160">2.4. Single Master</a></li>
-<li><a href="#org262f5a6">2.5. Chunk Size</a></li>
-<li><a href="#org9dfc7d5">2.6. Metadata</a></li>
-<li><a href="#org51d26e9">2.7. Consistency Model</a></li>
+<li><a href="#org4c98ffe">2.1. Assumptions</a></li>
+<li><a href="#org37fb813">2.2. Interface</a></li>
+<li><a href="#orgc34d3ec">2.3. Architecture</a></li>
+<li><a href="#org34e81d6">2.4. Single Master</a></li>
+<li><a href="#org9c51288">2.5. Chunk Size</a></li>
+<li><a href="#orgc7905b0">2.6. Metadata</a></li>
+<li><a href="#org5211857">2.7. Consistency Model</a></li>
 </ul>
 </li>
-<li><a href="#orgebd8f0f">3. SYSTEM INTERACTIONS</a>
+<li><a href="#org5e70faf">3. SYSTEM INTERACTIONS</a>
 <ul>
-<li><a href="#org534018d">3.1. Leases and Mutation Order</a></li>
-<li><a href="#org4e45308">3.2. Data Flow</a></li>
-<li><a href="#orga276fb2">3.3. Atomic Record Appends</a></li>
-<li><a href="#org4d5e4b7">3.4. Snapshot</a></li>
+<li><a href="#orgaf1e322">3.1. Leases and Mutation Order</a></li>
+<li><a href="#org3f012e1">3.2. Data Flow</a></li>
+<li><a href="#orgf749549">3.3. Atomic Record Appends</a></li>
+<li><a href="#org51691e2">3.4. Snapshot</a></li>
 </ul>
 </li>
-<li><a href="#orge9d98e6">4. MASTER OPERATION</a>
+<li><a href="#org82cf9d6">4. MASTER OPERATION</a>
 <ul>
-<li><a href="#orga3a4bf0">4.1. Namespace Management and Locking</a></li>
-<li><a href="#orgbe7fc27">4.2. Replica Placement</a></li>
-<li><a href="#orgccc2774">4.3. Creation, Re-replication, Rebalancing</a></li>
-<li><a href="#org95fd6c8">4.4. Garbage Collection</a></li>
-<li><a href="#org1965647">4.5. Stale Replica Detection</a></li>
+<li><a href="#org5d259c8">4.1. Namespace Management and Locking</a></li>
+<li><a href="#org9df8d12">4.2. Replica Placement</a></li>
+<li><a href="#org44894e3">4.3. Creation, Re-replication, Rebalancing</a></li>
+<li><a href="#org7314f39">4.4. Garbage Collection</a></li>
+<li><a href="#orgffa02ad">4.5. Stale Replica Detection</a></li>
 </ul>
 </li>
-<li><a href="#orgf502576">5. FAULT TOLERANCE AND DIAGNOSIS</a>
+<li><a href="#org7aed8e8">5. FAULT TOLERANCE AND DIAGNOSIS</a>
 <ul>
-<li><a href="#orgb883dc7">5.1. High Availability</a></li>
-<li><a href="#org4d1a6e5">5.2. Data Integrity</a></li>
-<li><a href="#org2322260">5.3. Diagnostic Tools</a></li>
+<li><a href="#org07d85ea">5.1. High Availability</a></li>
+<li><a href="#orgfa0086d">5.2. Data Integrity</a></li>
+<li><a href="#org4239809">5.3. Diagnostic Tools</a></li>
 </ul>
 </li>
-<li><a href="#org2d0bae3">6. MEASUREMENTS</a>
+<li><a href="#org7dff323">6. MEASUREMENTS</a>
 <ul>
-<li><a href="#orga80eb9b">6.1. Micro-benchmarks</a></li>
-<li><a href="#org586e21f">6.2. Real World Clusters</a></li>
-<li><a href="#orgf0276b4">6.3. Workload Breakdown</a></li>
+<li><a href="#org14caca6">6.1. Micro-benchmarks</a></li>
+<li><a href="#org6b73213">6.2. Real World Clusters</a></li>
+<li><a href="#org082efe7">6.3. Workload Breakdown</a></li>
 </ul>
 </li>
-<li><a href="#orge61772f">7. EXPERIENCES</a></li>
-<li><a href="#orgdc682e5">8. RELATED WORK</a></li>
-<li><a href="#org3c4ab0b">9. CONCLUSIONS</a></li>
-<li><a href="#orgf90fd4f">ACKNOWLEDGMENTS</a></li>
-<li><a href="#org18c8157">REFERENCES</a></li>
+<li><a href="#orgb4b3d85">7. EXPERIENCES</a></li>
+<li><a href="#orga0eb09b">8. RELATED WORK</a></li>
+<li><a href="#org04a3faf">9. CONCLUSIONS</a></li>
+<li><a href="#org1a82351">ACKNOWLEDGMENTS</a></li>
+<li><a href="#orged92000">REFERENCES</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org020edba" class="outline-2">
-<h2 id="org020edba">DECLARATION</h2>
-<div class="outline-text-2" id="text-org020edba">
+<div id="outline-container-orgd8cbfbe" class="outline-2">
+<h2 id="orgd8cbfbe">DECLARATION</h2>
+<div class="outline-text-2" id="text-orgd8cbfbe">
 <p>
 This page is the Google File System paper. Original Paper Link is:
 <a href="https://research.google.com/archive/gfs-sosp2003.pdf">https://research.google.com/archive/gfs-sosp2003.pdf</a>
@@ -98,9 +97,9 @@ This page is the Google File System paper. Original Paper Link is:
 </div>
 </div>
 
-<div id="outline-container-org3121754" class="outline-2">
-<h2 id="org3121754">ABSTRACT</h2>
-<div class="outline-text-2" id="text-org3121754">
+<div id="outline-container-org14d3333" class="outline-2">
+<h2 id="org14d3333">ABSTRACT</h2>
+<div class="outline-text-2" id="text-org14d3333">
 <p>
 We have designed and implemented the Google File System, a scalable distributed
 file system for large distributed data-intensive applications. It provides fault
@@ -133,36 +132,36 @@ measurements from both micro-benchmarks and real world use.
 </div>
 </div>
 
-<div id="outline-container-org135f0c1" class="outline-2">
-<h2 id="org135f0c1">Categories and Subject Descriptors</h2>
-<div class="outline-text-2" id="text-org135f0c1">
+<div id="outline-container-orgd943342" class="outline-2">
+<h2 id="orgd943342">Categories and Subject Descriptors</h2>
+<div class="outline-text-2" id="text-orgd943342">
 <p>
 D [4]: 3 - Distributed File Systems
 </p>
 </div>
 </div>
 
-<div id="outline-container-org95f0f37" class="outline-2">
-<h2 id="org95f0f37">General Terms</h2>
-<div class="outline-text-2" id="text-org95f0f37">
+<div id="outline-container-orgd27b8f7" class="outline-2">
+<h2 id="orgd27b8f7">General Terms</h2>
+<div class="outline-text-2" id="text-orgd27b8f7">
 <p>
 Design, reliability, performance, measurement
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8b401ba" class="outline-2">
-<h2 id="org8b401ba">Keywords</h2>
-<div class="outline-text-2" id="text-org8b401ba">
+<div id="outline-container-org9a82e19" class="outline-2">
+<h2 id="org9a82e19">Keywords</h2>
+<div class="outline-text-2" id="text-org9a82e19">
 <p>
 Fault tolerance, scalability, data storage, clustered storage
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3e8505d" class="outline-2">
-<h2 id="org3e8505d">Copyright</h2>
-<div class="outline-text-2" id="text-org3e8505d">
+<div id="outline-container-orgf69d126" class="outline-2">
+<h2 id="orgf69d126">Copyright</h2>
+<div class="outline-text-2" id="text-orgf69d126">
 <p>
 The authors can be reached at the following addresses:
 {sanjay,hgobioff,shuntak}@google.com.
@@ -184,8 +183,8 @@ Copyright 2003 ACM 1-58113-757-5/03/0010 $5.00.
 </div>
 </div>
 
-<div id="outline-container-orge881b30" class="outline-2">
-<h2 id="orge881b30"><span class="section-number-2">1</span> INTRODUCTION</h2>
+<div id="outline-container-orgc3c5213" class="outline-2">
+<h2 id="orgc3c5213"><span class="section-number-2">1</span> INTRODUCTION</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We have designed and implemented the Google File System (GFS) to meet the
@@ -251,12 +250,12 @@ accessed by hundreds of clients on distinct machines on a continuous basis.
 </div>
 </div>
 
-<div id="outline-container-orgac3a8ae" class="outline-2">
-<h2 id="orgac3a8ae"><span class="section-number-2">2</span> DESIGN OVERVIEW</h2>
+<div id="outline-container-orgcffeabb" class="outline-2">
+<h2 id="orgcffeabb"><span class="section-number-2">2</span> DESIGN OVERVIEW</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org529ae17" class="outline-3">
-<h3 id="org529ae17"><span class="section-number-3">2.1</span> Assumptions</h3>
+<div id="outline-container-org4c98ffe" class="outline-3">
+<h3 id="org4c98ffe"><span class="section-number-3">2.1</span> Assumptions</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 In designing a file system for our needs, we have been guided by assumptions
@@ -324,8 +323,8 @@ write.
 </div>
 </div>
 
-<div id="outline-container-org01267e7" class="outline-3">
-<h3 id="org01267e7"><span class="section-number-3">2.2</span> Interface</h3>
+<div id="outline-container-org37fb813" class="outline-3">
+<h3 id="org37fb813"><span class="section-number-3">2.2</span> Interface</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 GFS provides a familiar file system interface, though it does not implement a
@@ -347,8 +346,8 @@ append are discussed further in Sections 3.4 and 3.3 respectively.
 </div>
 </div>
 
-<div id="outline-container-org126b89b" class="outline-3">
-<h3 id="org126b89b"><span class="section-number-3">2.3</span> Architecture</h3>
+<div id="outline-container-orgc34d3ec" class="outline-3">
+<h3 id="orgc34d3ec"><span class="section-number-3">2.3</span> Architecture</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 A GFS cluster consists of a single master and multiple chunkservers and is
@@ -360,7 +359,7 @@ application code is acceptable.
 </p>
 
 
-<div id="org2cbfc52" class="figure">
+<div id="orgd6115d5" class="figure">
 <p><img src="img/ds-gfs-figure1.jpg" alt="ds-gfs-figure1.jpg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Figure 1: GFS Archicture</p>
@@ -402,8 +401,8 @@ accessed data in memory.
 </div>
 </div>
 
-<div id="outline-container-orgf6a4160" class="outline-3">
-<h3 id="orgf6a4160"><span class="section-number-3">2.4</span> Single Master</h3>
+<div id="outline-container-org34e81d6" class="outline-3">
+<h3 id="org34e81d6"><span class="section-number-3">2.4</span> Single Master</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Having a single master vastly simplifies our design and enables the master to
@@ -431,8 +430,8 @@ no extra cost.
 </div>
 </div>
 
-<div id="outline-container-org262f5a6" class="outline-3">
-<h3 id="org262f5a6"><span class="section-number-3">2.5</span> Chunk Size</h3>
+<div id="outline-container-org9c51288" class="outline-3">
+<h3 id="org9c51288"><span class="section-number-3">2.5</span> Chunk Size</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Chunk size is one of the key design parameters. We have chosen 64 MB, which is
@@ -478,8 +477,8 @@ situations.
 </div>
 </div>
 
-<div id="outline-container-org9dfc7d5" class="outline-3">
-<h3 id="org9dfc7d5"><span class="section-number-3">2.6</span> Metadata</h3>
+<div id="outline-container-orgc7905b0" class="outline-3">
+<h3 id="orgc7905b0"><span class="section-number-3">2.6</span> Metadata</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 The master stores three major types of metadata: the file and chunk namespaces,
@@ -494,8 +493,8 @@ chunkserver about its chunks at master startup and whenever a chunkserver joins
 the cluster.
 </p>
 </div>
-<div id="outline-container-orgbfc795e" class="outline-4">
-<h4 id="orgbfc795e"><span class="section-number-4">2.6.1</span> In-Memory Data Structures</h4>
+<div id="outline-container-org5cfd65e" class="outline-4">
+<h4 id="org5cfd65e"><span class="section-number-4">2.6.1</span> In-Memory Data Structures</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 Since metadata is stored in memory, master operations are fast. Furthermore, it
@@ -528,8 +527,8 @@ performance, and flexibility we gain by storing the metadata in memory.
 </div>
 </div>
 
-<div id="outline-container-orgd584d44" class="outline-4">
-<h4 id="orgd584d44"><span class="section-number-4">2.6.2</span> Chunk Locations</h4>
+<div id="outline-container-org1fc22ae" class="outline-4">
+<h4 id="org1fc22ae"><span class="section-number-4">2.6.2</span> Chunk Locations</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 The master does not keep a persistent record of which chunkservers have a
@@ -559,8 +558,8 @@ rename a chunkserver.
 </div>
 </div>
 
-<div id="outline-container-org9b6335c" class="outline-4">
-<h4 id="org9b6335c"><span class="section-number-4">2.6.3</span> Operation Log</h4>
+<div id="outline-container-org61ad744" class="outline-4">
+<h4 id="org61ad744"><span class="section-number-4">2.6.3</span> Operation Log</h4>
 <div class="outline-text-4" id="text-2-6-3">
 <p>
 The operation log contains a historical record of critical metadata changes. It
@@ -651,8 +650,8 @@ checkpoints.
 </div>
 </div>
 
-<div id="outline-container-org51d26e9" class="outline-3">
-<h3 id="org51d26e9"><span class="section-number-3">2.7</span> Consistency Model</h3>
+<div id="outline-container-org5211857" class="outline-3">
+<h3 id="org5211857"><span class="section-number-3">2.7</span> Consistency Model</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 GFS has a relaxed consistency model that supports our highly distributed
@@ -663,8 +662,8 @@ parts of the paper.
 </p>
 </div>
 
-<div id="outline-container-orge600743" class="outline-4">
-<h4 id="orge600743"><span class="section-number-4">2.7.1</span> Guarantees by GFS</h4>
+<div id="outline-container-org487256d" class="outline-4">
+<h4 id="org487256d"><span class="section-number-4">2.7.1</span> Guarantees by GFS</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <p>
 File namespace mutations (e.g., file creation) are atomic. They are handled
@@ -739,8 +738,8 @@ rather than corrupt data.
 </div>
 </div>
 
-<div id="outline-container-orge998015" class="outline-4">
-<h4 id="orge998015"><span class="section-number-4">2.7.2</span> Implications for Applications</h4>
+<div id="outline-container-org54176f0" class="outline-4">
+<h4 id="org54176f0"><span class="section-number-4">2.7.2</span> Implications for Applications</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
 GFS applications can accommodate the relaxed consistency model with a few simple
@@ -783,8 +782,8 @@ of records, plus rare duplicates, is always delivered to the record reader.
 </div>
 </div>
 
-<div id="outline-container-orgebd8f0f" class="outline-2">
-<h2 id="orgebd8f0f"><span class="section-number-2">3</span> SYSTEM INTERACTIONS</h2>
+<div id="outline-container-org5e70faf" class="outline-2">
+<h2 id="org5e70faf"><span class="section-number-2">3</span> SYSTEM INTERACTIONS</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 We designed the system to minimize the master’s involvement in all operations.
@@ -793,8 +792,8 @@ interact to implement data mutations, atomic record append, and snapshot.
 </p>
 </div>
 
-<div id="outline-container-org534018d" class="outline-3">
-<h3 id="org534018d"><span class="section-number-3">3.1</span> Leases and Mutation Order</h3>
+<div id="outline-container-orgaf1e322" class="outline-3">
+<h3 id="orgaf1e322"><span class="section-number-3">3.1</span> Leases and Mutation Order</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A mutation is an operation that changes the contents or metadata of a chunk such
@@ -820,7 +819,7 @@ another replica after the old lease expires.
 </p>
 
 
-<div id="org97f1148" class="figure">
+<div id="org6e16935" class="figure">
 <p><img src="img/ds-gfs-figure2.jpg" alt="ds-gfs-figure2.jpg" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Write Control and Data Flow</p>
@@ -897,8 +896,8 @@ undefined state as noted in Section 2.7.
 </div>
 </div>
 
-<div id="outline-container-org4e45308" class="outline-3">
-<h3 id="org4e45308"><span class="section-number-3">3.2</span> Data Flow</h3>
+<div id="outline-container-org3f012e1" class="outline-3">
+<h3 id="org3f012e1"><span class="section-number-3">3.2</span> Data Flow</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 We decouple the flow of data from the flow of control to use the network
@@ -938,8 +937,8 @@ distributed in about 80 ms.
 </div>
 </div>
 
-<div id="outline-container-orga276fb2" class="outline-3">
-<h3 id="orga276fb2"><span class="section-number-3">3.3</span> Atomic Record Appends</h3>
+<div id="outline-container-orgf749549" class="outline-3">
+<h3 id="orgf749549"><span class="section-number-3">3.3</span> Atomic Record Appends</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 GFS provides an atomic append operation called record append. In a traditional
@@ -996,8 +995,8 @@ regions as we discussed in Section 2.7.2.
 </div>
 </div>
 
-<div id="outline-container-org4d5e4b7" class="outline-3">
-<h3 id="org4d5e4b7"><span class="section-number-3">3.4</span> Snapshot</h3>
+<div id="outline-container-org51691e2" class="outline-3">
+<h3 id="org51691e2"><span class="section-number-3">3.4</span> Snapshot</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The snapshot operation makes a copy of a file or a directory tree (the “source”)
@@ -1041,8 +1040,8 @@ created from an existing chunk.
 </div>
 </div>
 
-<div id="outline-container-orge9d98e6" class="outline-2">
-<h2 id="orge9d98e6"><span class="section-number-2">4</span> MASTER OPERATION</h2>
+<div id="outline-container-org82cf9d6" class="outline-2">
+<h2 id="org82cf9d6"><span class="section-number-2">4</span> MASTER OPERATION</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The master executes all namespace operations. In addition, it manages chunk
@@ -1053,8 +1052,8 @@ reclaim unused storage. We now discuss each of these topics.
 </p>
 </div>
 
-<div id="outline-container-orga3a4bf0" class="outline-3">
-<h3 id="orga3a4bf0"><span class="section-number-3">4.1</span> Namespace Management and Locking</h3>
+<div id="outline-container-org5d259c8" class="outline-3">
+<h3 id="org5d259c8"><span class="section-number-3">4.1</span> Namespace Management and Locking</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Many master operations can take a long time: for example, a snapshot operation
@@ -1114,8 +1113,8 @@ the namespace tree and lexicographically within the same level.
 </div>
 </div>
 
-<div id="outline-container-orgbe7fc27" class="outline-3">
-<h3 id="orgbe7fc27"><span class="section-number-3">4.2</span> Replica Placement</h3>
+<div id="outline-container-org9df8d12" class="outline-3">
+<h3 id="org9df8d12"><span class="section-number-3">4.2</span> Replica Placement</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 A GFS cluster is highly distributed at more levels than one. It typically has
@@ -1144,8 +1143,8 @@ willingly.
 </div>
 </div>
 
-<div id="outline-container-orgccc2774" class="outline-3">
-<h3 id="orgccc2774"><span class="section-number-3">4.3</span> Creation, Re-replication, Rebalancing</h3>
+<div id="outline-container-org44894e3" class="outline-3">
+<h3 id="org44894e3"><span class="section-number-3">4.3</span> Creation, Re-replication, Rebalancing</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Chunk replicas are created for three reasons: chunk creation, re-replication,
@@ -1204,8 +1203,8 @@ chunkservers with below-average free space so as to equalize disk space usage.
 </div>
 </div>
 
-<div id="outline-container-org95fd6c8" class="outline-3">
-<h3 id="org95fd6c8"><span class="section-number-3">4.4</span> Garbage Collection</h3>
+<div id="outline-container-org7314f39" class="outline-3">
+<h3 id="org7314f39"><span class="section-number-3">4.4</span> Garbage Collection</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 After a file is deleted, GFS does not immediately reclaim the available physical
@@ -1215,8 +1214,8 @@ and more reliable.
 </p>
 </div>
 
-<div id="outline-container-org0ef58ab" class="outline-4">
-<h4 id="org0ef58ab"><span class="section-number-4">4.4.1</span> Mechanism</h4>
+<div id="outline-container-orgaf01855" class="outline-4">
+<h4 id="orgaf01855"><span class="section-number-4">4.4.1</span> Mechanism</h4>
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 When a file is deleted by the application, the master logs the deletion
@@ -1241,8 +1240,8 @@ The chunkserver is free to delete its replicas of such chunks.
 </div>
 </div>
 
-<div id="outline-container-org115e616" class="outline-4">
-<h4 id="org115e616"><span class="section-number-4">4.4.2</span> Discussion</h4>
+<div id="outline-container-orge4a37f0" class="outline-4">
+<h4 id="orge4a37f0"><span class="section-number-4">4.4.2</span> Discussion</h4>
 <div class="outline-text-4" id="text-4-4-2">
 <p>
 Although distributed garbage collection is a hard problem that demands
@@ -1286,8 +1285,8 @@ files are immediately and irrevocably removed from the file system state.
 </div>
 </div>
 
-<div id="outline-container-org1965647" class="outline-3">
-<h3 id="org1965647"><span class="section-number-3">4.5</span> Stale Replica Detection</h3>
+<div id="outline-container-orgffa02ad" class="outline-3">
+<h3 id="orgffa02ad"><span class="section-number-3">4.5</span> Stale Replica Detection</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Chunk replicas may become stale if a chunkserver fails and misses mutations to
@@ -1322,8 +1321,8 @@ it is always accessing up-to-date data.
 </div>
 </div>
 
-<div id="outline-container-orgf502576" class="outline-2">
-<h2 id="orgf502576"><span class="section-number-2">5</span> FAULT TOLERANCE AND DIAGNOSIS</h2>
+<div id="outline-container-org7aed8e8" class="outline-2">
+<h2 id="org7aed8e8"><span class="section-number-2">5</span> FAULT TOLERANCE AND DIAGNOSIS</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 One of our greatest challenges in designing the system is dealing with frequent
@@ -1336,8 +1335,8 @@ they inevitably occur.
 </p>
 </div>
 
-<div id="outline-container-orgb883dc7" class="outline-3">
-<h3 id="orgb883dc7"><span class="section-number-3">5.1</span> High Availability</h3>
+<div id="outline-container-org07d85ea" class="outline-3">
+<h3 id="org07d85ea"><span class="section-number-3">5.1</span> High Availability</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Among hundreds of servers in a GFS cluster, some are bound to be unavailable at
@@ -1346,8 +1345,8 @@ effective strategies: fast recovery and replication.
 </p>
 </div>
 
-<div id="outline-container-org460d15f" class="outline-4">
-<h4 id="org460d15f"><span class="section-number-4">5.1.1</span> Fast Recovery</h4>
+<div id="outline-container-org176cc72" class="outline-4">
+<h4 id="org176cc72"><span class="section-number-4">5.1.1</span> Fast Recovery</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 Both the master and the chunkserver are designed to restore their state and
@@ -1360,8 +1359,8 @@ retry. Section 6.2.2 reports observed startup times.
 </div>
 </div>
 
-<div id="outline-container-orga48da28" class="outline-4">
-<h4 id="orga48da28"><span class="section-number-4">5.1.2</span> Chunk Replication</h4>
+<div id="outline-container-orgad42216" class="outline-4">
+<h4 id="orgad42216"><span class="section-number-4">5.1.2</span> Chunk Replication</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 As discussed earlier, each chunk is replicated on multiple chunkservers on
@@ -1379,8 +1378,8 @@ reads rather than small random writes.
 </div>
 </div>
 
-<div id="outline-container-org59184c6" class="outline-4">
-<h4 id="org59184c6"><span class="section-number-4">5.1.3</span> Master Replication</h4>
+<div id="outline-container-org5e277f4" class="outline-4">
+<h4 id="org5e277f4"><span class="section-number-4">5.1.3</span> Master Replication</h4>
 <div class="outline-text-4" id="text-5-1-3">
 <p>
 The master state is replicated for reliability. Its operation log and
@@ -1419,8 +1418,8 @@ to create and delete replicas.
 </div>
 </div>
 
-<div id="outline-container-org4d1a6e5" class="outline-3">
-<h3 id="org4d1a6e5"><span class="section-number-3">5.2</span> Data Integrity</h3>
+<div id="outline-container-orgfa0086d" class="outline-3">
+<h3 id="orgfa0086d"><span class="section-number-3">5.2</span> Data Integrity</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Each chunkserver uses checksumming to detect corruption of stored data. Given
@@ -1493,8 +1492,8 @@ of a chunk.
 </div>
 </div>
 
-<div id="outline-container-org2322260" class="outline-3">
-<h3 id="org2322260"><span class="section-number-3">5.3</span> Diagnostic Tools</h3>
+<div id="outline-container-org4239809" class="outline-3">
+<h3 id="org4239809"><span class="section-number-3">5.3</span> Diagnostic Tools</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 Extensive and detailed diagnostic logging has helped immeasurably in problem
@@ -1525,8 +1524,8 @@ monitoring.
 </div>
 </div>
 
-<div id="outline-container-org2d0bae3" class="outline-2">
-<h2 id="org2d0bae3"><span class="section-number-2">6</span> MEASUREMENTS</h2>
+<div id="outline-container-org7dff323" class="outline-2">
+<h2 id="org7dff323"><span class="section-number-2">6</span> MEASUREMENTS</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 In this section we present a few micro-benchmarks to illustrate the bottlenecks
@@ -1535,8 +1534,8 @@ real clusters in use at Google.
 </p>
 </div>
 
-<div id="outline-container-orga80eb9b" class="outline-3">
-<h3 id="orga80eb9b"><span class="section-number-3">6.1</span> Micro-benchmarks</h3>
+<div id="outline-container-org14caca6" class="outline-3">
+<h3 id="org14caca6"><span class="section-number-3">6.1</span> Micro-benchmarks</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 We measured performance on a GFS cluster consisting of one master, two master
@@ -1550,8 +1549,8 @@ switches are connected with a 1 Gbps link.
 </p>
 </div>
 
-<div id="outline-container-orgd8b992a" class="outline-4">
-<h4 id="orgd8b992a"><span class="section-number-4">6.1.1</span> Reads</h4>
+<div id="outline-container-org5a299b4" class="outline-4">
+<h4 id="org5a299b4"><span class="section-number-4">6.1.1</span> Reads</h4>
 <div class="outline-text-4" id="text-6-1-1">
 <p>
 N clients read simultaneously from the file system. Each client reads a randomly
@@ -1562,7 +1561,7 @@ cache. Our results should be close to cold cache results.
 </p>
 
 
-<div id="org6a42be7" class="figure">
+<div id="org693aecc" class="figure">
 <p><img src="img/ds-gfs-figure3.jpg" alt="ds-gfs-figure3.jpg" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Figure 3: Aggregate Throughputs</p>
@@ -1589,8 +1588,8 @@ simultaneously read from the same chunkserver.
 </div>
 </div>
 
-<div id="outline-container-orgf986be0" class="outline-4">
-<h4 id="orgf986be0"><span class="section-number-4">6.1.2</span> Writes</h4>
+<div id="outline-container-orgc17b063" class="outline-4">
+<h4 id="orgc17b063"><span class="section-number-4">6.1.2</span> Writes</h4>
 <div class="outline-text-4" id="text-6-1-2">
 <p>
 N clients write simultaneously to N distinct files. Each client writes 1 GB of
@@ -1624,8 +1623,8 @@ delivered by the system to a large number of clients.
 </div>
 </div>
 
-<div id="outline-container-orgd83b6f4" class="outline-4">
-<h4 id="orgd83b6f4"><span class="section-number-4">6.1.3</span> Record Appends</h4>
+<div id="outline-container-orgf558746" class="outline-4">
+<h4 id="orgf558746"><span class="section-number-4">6.1.3</span> Record Appends</h4>
 <div class="outline-text-4" id="text-6-1-3">
 <p>
 Figure 3(c) shows record append performance. N clients append simultaneously to
@@ -1648,8 +1647,8 @@ busy.
 </div>
 </div>
 
-<div id="outline-container-org586e21f" class="outline-3">
-<h3 id="org586e21f"><span class="section-number-3">6.2</span> Real World Clusters</h3>
+<div id="outline-container-org6b73213" class="outline-3">
+<h3 id="org6b73213"><span class="section-number-3">6.2</span> Real World Clusters</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 We now examine two clusters in use within Google that are representative of
@@ -1734,8 +1733,8 @@ many processes on many machines reading and writing many files simultaneously.
 </table>
 </div>
 
-<div id="outline-container-org0137a84" class="outline-4">
-<h4 id="org0137a84"><span class="section-number-4">6.2.1</span> Storage</h4>
+<div id="outline-container-org4e6aee9" class="outline-4">
+<h4 id="org4e6aee9"><span class="section-number-4">6.2.1</span> Storage</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <p>
 As shown by the first five entries in the table, both clusters have hundreds of
@@ -1754,8 +1753,8 @@ files tend to be larger.
 </div>
 </div>
 
-<div id="outline-container-org1dcdd3a" class="outline-4">
-<h4 id="org1dcdd3a"><span class="section-number-4">6.2.2</span> Metadata</h4>
+<div id="outline-container-org9ea08df" class="outline-4">
+<h4 id="org9ea08df"><span class="section-number-4">6.2.2</span> Metadata</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 The chunkservers in aggregate store tens of GBs of metadata, mostly the
@@ -1783,8 +1782,8 @@ it has fetched chunk location information from all chunkservers.
 </div>
 </div>
 
-<div id="outline-container-org6a53c56" class="outline-4">
-<h4 id="org6a53c56"><span class="section-number-4">6.2.3</span> Read and Write Rates</h4>
+<div id="outline-container-orgd236180" class="outline-4">
+<h4 id="orgd236180"><span class="section-number-4">6.2.3</span> Read and Write Rates</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <p>
 Table 3 shows read and write rates for various time periods. Both clusters had
@@ -1884,8 +1883,8 @@ read rates of 1300 MB/s, but its applications were using just 380 MB/s.
 </div>
 </div>
 
-<div id="outline-container-orgc72893b" class="outline-4">
-<h4 id="orgc72893b"><span class="section-number-4">6.2.4</span> Master Load</h4>
+<div id="outline-container-org018c8d0" class="outline-4">
+<h4 id="org018c8d0"><span class="section-number-4">6.2.4</span> Master Load</h4>
 <div class="outline-text-4" id="text-6-2-4">
 <p>
 Table 3 also shows that the rate of operations sent to the master was around 200
@@ -1905,8 +1904,8 @@ further by placing name lookup caches in front of the namespace data structures.
 </div>
 </div>
 
-<div id="outline-container-org68ac284" class="outline-4">
-<h4 id="org68ac284"><span class="section-number-4">6.2.5</span> Recovery Time</h4>
+<div id="outline-container-org6b7fca6" class="outline-4">
+<h4 id="org6b7fca6"><span class="section-number-4">6.2.5</span> Recovery Time</h4>
 <div class="outline-text-4" id="text-6-2-5">
 <p>
 After a chunkserver fails, some chunks will become under-replicated and must be
@@ -1932,8 +1931,8 @@ loss.
 </div>
 </div>
 
-<div id="outline-container-orgf0276b4" class="outline-3">
-<h3 id="orgf0276b4"><span class="section-number-3">6.3</span> Workload Breakdown</h3>
+<div id="outline-container-org082efe7" class="outline-3">
+<h3 id="org082efe7"><span class="section-number-3">6.3</span> Workload Breakdown</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 In this section, we present a detailed breakdown of the workloads on two GFS
@@ -1942,8 +1941,8 @@ research and development while cluster Y is for production data processing.
 </p>
 </div>
 
-<div id="outline-container-org3bf3a85" class="outline-4">
-<h4 id="org3bf3a85"><span class="section-number-4">6.3.1</span> Methodology and Caveats</h4>
+<div id="outline-container-orgab16d84" class="outline-4">
+<h4 id="orgab16d84"><span class="section-number-4">6.3.1</span> Methodology and Caveats</h4>
 <div class="outline-text-4" id="text-6-3-1">
 <p>
 These results include only client originated requests so that they reflect the
@@ -1973,8 +1972,8 @@ but the effect is likely more pronounced in our case.
 </div>
 </div>
 
-<div id="outline-container-org7401e1b" class="outline-4">
-<h4 id="org7401e1b"><span class="section-number-4">6.3.2</span> Chunkserver Workload</h4>
+<div id="outline-container-org4e2b024" class="outline-4">
+<h4 id="org4e2b024"><span class="section-number-4">6.3.2</span> Chunkserver Workload</h4>
 <div class="outline-text-4" id="text-6-3-2">
 <p>
 Table 4 shows the distribution of operations by size. Read sizes exhibit a
@@ -2204,8 +2203,8 @@ random seek workload.
 </div>
 </div>
 
-<div id="outline-container-org38bfa12" class="outline-4">
-<h4 id="org38bfa12"><span class="section-number-4">6.3.3</span> Appends versus Writes</h4>
+<div id="outline-container-org9559bbc" class="outline-4">
+<h4 id="org9559bbc"><span class="section-number-4">6.3.3</span> Appends versus Writes</h4>
 <div class="outline-text-4" id="text-6-3-3">
 <p>
 Record appends are heavily used especially in our production systems. For
@@ -2232,8 +2231,8 @@ se but a consequence of the retry mechanism.
 </div>
 </div>
 
-<div id="outline-container-org2cc2ec9" class="outline-4">
-<h4 id="org2cc2ec9"><span class="section-number-4">6.3.4</span> Master Workload</h4>
+<div id="outline-container-orgefced14" class="outline-4">
+<h4 id="orgefced14"><span class="section-number-4">6.3.4</span> Master Workload</h4>
 <div class="outline-text-4" id="text-6-3-4">
 <table>
 <caption class="t-above"><span class="table-number">Table 6:</span> Master Requests Breakdown by Type (%)</caption>
@@ -2319,8 +2318,8 @@ all needed files in advance.
 </div>
 </div>
 
-<div id="outline-container-orge61772f" class="outline-2">
-<h2 id="orge61772f"><span class="section-number-2">7</span> EXPERIENCES</h2>
+<div id="outline-container-orgb4b3d85" class="outline-2">
+<h2 id="orgb4b3d85"><span class="section-number-2">7</span> EXPERIENCES</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 In the process of building and deploying GFS, we have experienced a variety of
@@ -2375,8 +2374,8 @@ improve the kernel and share the changes with the open source community.
 </div>
 </div>
 
-<div id="outline-container-orgdc682e5" class="outline-2">
-<h2 id="orgdc682e5"><span class="section-number-2">8</span> RELATED WORK</h2>
+<div id="outline-container-orga0eb09b" class="outline-2">
+<h2 id="orga0eb09b"><span class="section-number-2">8</span> RELATED WORK</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Like other large distributed file systems such as AFS [5], GFS provides a
@@ -2453,8 +2452,8 @@ to partition the incoming load.
 </div>
 </div>
 
-<div id="outline-container-org3c4ab0b" class="outline-2">
-<h2 id="org3c4ab0b"><span class="section-number-2">9</span> CONCLUSIONS</h2>
+<div id="outline-container-org04a3faf" class="outline-2">
+<h2 id="org04a3faf"><span class="section-number-2">9</span> CONCLUSIONS</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 The Google File System demonstrates the qualities essential for supporting
@@ -2504,9 +2503,9 @@ attack problems on the scale of the entire web.
 </div>
 </div>
 
-<div id="outline-container-orgf90fd4f" class="outline-2">
-<h2 id="orgf90fd4f">ACKNOWLEDGMENTS</h2>
-<div class="outline-text-2" id="text-orgf90fd4f">
+<div id="outline-container-org1a82351" class="outline-2">
+<h2 id="org1a82351">ACKNOWLEDGMENTS</h2>
+<div class="outline-text-2" id="text-org1a82351">
 <p>
 We wish to thank the following people for their contributions to the system or
 the paper. Brain Bershad (our shepherd) and the anonymous reviewers gave us
@@ -2522,9 +2521,9 @@ gave us useful feedback. Yoshka helped with early testing.
 </div>
 </div>
 
-<div id="outline-container-org18c8157" class="outline-2">
-<h2 id="org18c8157">REFERENCES</h2>
-<div class="outline-text-2" id="text-org18c8157">
+<div id="outline-container-orged92000" class="outline-2">
+<h2 id="orged92000">REFERENCES</h2>
+<div class="outline-text-2" id="text-orged92000">
 <p>
 [1] Thomas Anderson, Michael Dahlin, Jeanna Neefe, David Patterson,
 Drew Roselli, and Randolph Wang. Serverless network file systems. In Proceedings
@@ -2603,23 +2602,21 @@ Operating System Principles, pages 224–237, Saint-Malo, France, October 1997.
 </p>
 </div>
 </div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
 </div>
 <div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/papers/ds-google-file-system-sosp2003.html';
-    this.page.identifier = 'ds-google-file-system-sosp2003.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
 </div>
 </body>
 </html>

@@ -1,157 +1,153 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-01-07 Mon 00:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2019-12-22 Sun 21:49 -->
+<meta charset="utf-8" />
 <title>Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
-<link rel="stylesheet" type="text/css" href="css/htmlize.css" />
-<link rel="stylesheet" type="text/css" href="css/readtheorg.css" />
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="js/readtheorg.js"></script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="https://ycode.org"> HOME </a>
+</div><div id="content">
 <h1 class="title">Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org6981b84">1. ABSTRACT</a></li>
-<li><a href="#orgff60945">2. Keywords</a></li>
-<li><a href="#org89c3de8">3. Introduction</a></li>
-<li><a href="#org1e81a81">4. OS Block Layer</a>
+<li><a href="#orgb87600c">1. ABSTRACT</a></li>
+<li><a href="#org264626f">2. Keywords</a></li>
+<li><a href="#org5d28695">3. Introduction</a></li>
+<li><a href="#org783d464">4. OS Block Layer</a>
 <ul>
-<li><a href="#orgafc86d1">4.1. Architecture</a></li>
-<li><a href="#orge281e70">4.2. Scalability</a></li>
+<li><a href="#org1e97fac">4.1. Architecture</a></li>
+<li><a href="#org887ddf0">4.2. Scalability</a></li>
 </ul>
 </li>
-<li><a href="#org0f966d6">5. Multi-Queue Block Layer</a></li>
-<li><a href="#orgcaafb4f">6. English Words</a>
+<li><a href="#org4c660b1">5. Multi-Queue Block Layer</a></li>
+<li><a href="#org61bd317">6. English Words</a>
 <ul>
-<li><a href="#orgf777a1c">6.1. graciously ['greiʃəsli] adv. 优雅地</a>
+<li><a href="#org46c122c">6.1. graciously ['greiʃəsli] adv. 优雅地</a>
 <ul>
-<li><a href="#org7591deb">6.1.1. Basic Explains</a></li>
-<li><a href="#orgcd3bb3a">6.1.2. Web References</a></li>
+<li><a href="#orge8c7899">6.1.1. Basic Explains</a></li>
+<li><a href="#org84226cb">6.1.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orgb1f0f97">6.2. commonplace ['kɒmənpleɪs] n. 司空见惯的事</a>
+<li><a href="#org1968555">6.2. commonplace ['kɒmənpleɪs] n. 司空见惯的事</a>
 <ul>
-<li><a href="#orge9624e6">6.2.1. Basic Explains</a></li>
-<li><a href="#org1639b9a">6.2.2. Web References</a></li>
+<li><a href="#org8038ef4">6.2.1. Basic Explains</a></li>
+<li><a href="#orge3453b0">6.2.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orge764b32">6.3. synonymous [sɪ'nɒnɪməs] adj. 同义的</a>
+<li><a href="#org684071f">6.3. synonymous [sɪ'nɒnɪməs] adj. 同义的</a>
 <ul>
-<li><a href="#org32c5105">6.3.1. Basic Explains</a></li>
-<li><a href="#orgd32b08e">6.3.2. Web References</a></li>
+<li><a href="#org9a02c78">6.3.1. Basic Explains</a></li>
+<li><a href="#org98dd692">6.3.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orge962b9d">6.4. advent ['ædvənt] n. 出现</a>
+<li><a href="#org066d593">6.4. advent ['ædvənt] n. 出现</a>
 <ul>
-<li><a href="#org629339f">6.4.1. Basic Explains</a></li>
-<li><a href="#org660beee">6.4.2. Web References</a></li>
+<li><a href="#orgdaa8447">6.4.1. Basic Explains</a></li>
+<li><a href="#orgeb95bba">6.4.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orgc8f7e81">6.5. magnetic [mæg'netɪk] adj. 有磁性的</a>
+<li><a href="#orgf7b9d7e">6.5. magnetic [mæg'netɪk] adj. 有磁性的</a>
 <ul>
-<li><a href="#org3c5cc7b">6.5.1. Basic Explains</a></li>
-<li><a href="#orge4d2c02">6.5.2. Web References</a></li>
+<li><a href="#orgc60f9fc">6.5.1. Basic Explains</a></li>
+<li><a href="#orgdaaa39b">6.5.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org22b2ebc">6.6. couple['kʌp(ə)l] of years n. 几年</a>
+<li><a href="#org278556c">6.6. couple['kʌp(ə)l] of years n. 几年</a>
 <ul>
-<li><a href="#orgdd26620">6.6.1. Basic Explains</a></li>
-<li><a href="#org152424b">6.6.2. Web References</a></li>
+<li><a href="#orgeec800c">6.6.1. Basic Explains</a></li>
+<li><a href="#org491b022">6.6.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org1fe46eb">6.7. albeit [ɔːl'biːɪt] conj. 虽然，即使</a>
+<li><a href="#orgcb02890">6.7. albeit [ɔːl'biːɪt] conj. 虽然，即使</a>
 <ul>
-<li><a href="#org20db606">6.7.1. Basic Explains</a></li>
-<li><a href="#org875cc3b">6.7.2. Web References</a></li>
+<li><a href="#org81c68b2">6.7.1. Basic Explains</a></li>
+<li><a href="#orgdeae065">6.7.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org4dd7266">6.8. witness [ˈwɪtnɪs] n. 证人；vt. 证明</a>
+<li><a href="#org6b6d67d">6.8. witness [ˈwɪtnɪs] n. 证人；vt. 证明</a>
 <ul>
-<li><a href="#org5d54860">6.8.1. Basic Explains</a></li>
-<li><a href="#org261e62b">6.8.2. Web References</a></li>
+<li><a href="#org957f8d3">6.8.1. Basic Explains</a></li>
+<li><a href="#org3ca33de">6.8.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org86ac814">6.9. steadily ['stedɪlɪ] adv. 稳定地，稳固地</a>
+<li><a href="#org3944744">6.9. steadily ['stedɪlɪ] adv. 稳定地，稳固地</a>
 <ul>
-<li><a href="#orge785130">6.9.1. Basic Explains</a></li>
-<li><a href="#org35e5381">6.9.2. Web References</a></li>
+<li><a href="#org75bf4a2">6.9.1. Basic Explains</a></li>
+<li><a href="#org596778f">6.9.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orgdcbb926">6.10. sustain [sə'steɪn] vt. 维持，支撑</a>
+<li><a href="#org8cc0c88">6.10. sustain [sə'steɪn] vt. 维持，支撑</a>
 <ul>
-<li><a href="#org1344a8b">6.10.1. Basic Explains</a></li>
-<li><a href="#orgc5a1c0d">6.10.2. Web References</a></li>
+<li><a href="#orgc1033dd">6.10.1. Basic Explains</a></li>
+<li><a href="#orgdfe15ae">6.10.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org5a661ba">6.11. propose [prə'pəʊz] vt. 提出</a>
+<li><a href="#orgd551159">6.11. propose [prə'pəʊz] vt. 提出</a>
 <ul>
-<li><a href="#org45309ef">6.11.1. Basic Explains</a></li>
-<li><a href="#org0ad3e58">6.11.2. Web References</a></li>
+<li><a href="#org79dee0b">6.11.1. Basic Explains</a></li>
+<li><a href="#orgd8983d1">6.11.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org08e931c">6.12. investigate [ɪn'vestɪgeɪt] v. 调查，研究</a>
+<li><a href="#org36816a5">6.12. investigate [ɪn'vestɪgeɪt] v. 调查，研究</a>
 <ul>
-<li><a href="#org860e0a0">6.12.1. Basic Explains</a></li>
-<li><a href="#org761f3fd">6.12.2. Web References</a></li>
+<li><a href="#orgc80045c">6.12.1. Basic Explains</a></li>
+<li><a href="#org26e9834">6.12.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orga00f1d3">6.13. propose [prə'pəʊz] vi. 建议</a>
+<li><a href="#orga244b5f">6.13. propose [prə'pəʊz] vi. 建议</a>
 <ul>
-<li><a href="#orge0c2602">6.13.1. Basic Explains</a></li>
-<li><a href="#org7823b34">6.13.2. Web References</a></li>
+<li><a href="#orgdc2ca73">6.13.1. Basic Explains</a></li>
+<li><a href="#org69bccda">6.13.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org970e230">6.14. shepherd ['ʃepəd] vt. 牧羊</a>
+<li><a href="#orgae71713">6.14. shepherd ['ʃepəd] vt. 牧羊</a>
 <ul>
-<li><a href="#org04da70a">6.14.1. Basic Explains</a></li>
-<li><a href="#org736ed3f">6.14.2. Web References</a></li>
+<li><a href="#orge52e459">6.14.1. Basic Explains</a></li>
+<li><a href="#orge38a434">6.14.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org4a23be3">6.15. malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</a>
+<li><a href="#orgf634b0a">6.15. malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</a>
 <ul>
-<li><a href="#orgd70bda2">6.15.1. Basic Explains</a></li>
-<li><a href="#org8242af0">6.15.2. Web References</a></li>
+<li><a href="#orgd33124e">6.15.1. Basic Explains</a></li>
+<li><a href="#org310b039">6.15.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org55b99c6">6.16. proportionally [prəu'pɔ:ʃənəli] adv. 适当地</a>
+<li><a href="#org78897f7">6.16. proportionally [prəu'pɔ:ʃənəli] adv. 适当地</a>
 <ul>
-<li><a href="#org9a0f82f">6.16.1. Basic Explains</a></li>
-<li><a href="#org7a4ce5e">6.16.2. Web References</a></li>
+<li><a href="#orge20ae4a">6.16.1. Basic Explains</a></li>
+<li><a href="#org78fdf1d">6.16.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orge2b3b12">6.17. exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</a>
+<li><a href="#orga21a42f">6.17. exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</a>
 <ul>
-<li><a href="#orgcd64ade">6.17.1. Basic Explains</a></li>
-<li><a href="#org81de565">6.17.2. Web References</a></li>
+<li><a href="#org169f385">6.17.1. Basic Explains</a></li>
+<li><a href="#org0793048">6.17.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#orgc22ad32">6.18. depict [dɪ'pɪkt] vt. 描述，描画</a>
+<li><a href="#org0ee1807">6.18. depict [dɪ'pɪkt] vt. 描述，描画</a>
 <ul>
-<li><a href="#org91b5b91">6.18.1. Basic Explains</a></li>
-<li><a href="#orgad4439d">6.18.2. Web References</a></li>
+<li><a href="#orga348bdd">6.18.1. Basic Explains</a></li>
+<li><a href="#orgaf4e327">6.18.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org0d176c4">6.19. supplant [sə'plɑːnt] vt. 代替，排挤掉</a>
+<li><a href="#org1c2dd0b">6.19. supplant [sə'plɑːnt] vt. 代替，排挤掉</a>
 <ul>
-<li><a href="#orgad156ef">6.19.1. Basic Explains</a></li>
-<li><a href="#org00b3171">6.19.2. Web References</a></li>
+<li><a href="#org1b69845">6.19.1. Basic Explains</a></li>
+<li><a href="#org49f6f2b">6.19.2. Web References</a></li>
 </ul>
 </li>
-<li><a href="#org2489b17">6.20. substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</a>
+<li><a href="#org07af731">6.20. substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</a>
 <ul>
-<li><a href="#orgb264ff9">6.20.1. Basic Explains</a></li>
-<li><a href="#orgededcf8">6.20.2. Web References</a></li>
+<li><a href="#org8d92632">6.20.1. Basic Explains</a></li>
+<li><a href="#orgd4bd8c4">6.20.2. Web References</a></li>
 </ul>
 </li>
 </ul>
@@ -160,8 +156,8 @@
 </div>
 </div>
 
-<div id="outline-container-org6981b84" class="outline-2">
-<h2 id="org6981b84"><span class="section-number-2">1</span> ABSTRACT</h2>
+<div id="outline-container-orgb87600c" class="outline-2">
+<h2 id="orgb87600c"><span class="section-number-2">1</span> ABSTRACT</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The IO performance of storage devices has accelerated from hundreds of IOPS five
@@ -180,8 +176,8 @@ multiple sockets.
 </div>
 </div>
 
-<div id="outline-container-orgff60945" class="outline-2">
-<h2 id="orgff60945"><span class="section-number-2">2</span> Keywords</h2>
+<div id="outline-container-org264626f" class="outline-2">
+<h2 id="org264626f"><span class="section-number-2">2</span> Keywords</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Linux, Block Layer, Solid State Drives, Non-volatile Memory, Latency,
@@ -190,8 +186,8 @@ Throughput.
 </div>
 </div>
 
-<div id="outline-container-org89c3de8" class="outline-2">
-<h2 id="org89c3de8"><span class="section-number-2">3</span> Introduction</h2>
+<div id="outline-container-org5d28695" class="outline-2">
+<h2 id="org5d28695"><span class="section-number-2">3</span> Introduction</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 As long as secondary storage has been synonymous with hard disk drives (HDD), IO
@@ -306,8 +302,8 @@ Section 6, before drawing our conclusions in Section 7.
 </div>
 </div>
 
-<div id="outline-container-org1e81a81" class="outline-2">
-<h2 id="org1e81a81"><span class="section-number-2">4</span> OS Block Layer</h2>
+<div id="outline-container-org783d464" class="outline-2">
+<h2 id="org783d464"><span class="section-number-2">4</span> OS Block Layer</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Simply put, the operating system block layer is responsible for shepherding IO
@@ -323,8 +319,8 @@ malicious implementations of other applications or device drivers.
 </p>
 </div>
 
-<div id="outline-container-orgafc86d1" class="outline-3">
-<h3 id="orgafc86d1"><span class="section-number-3">4.1</span> Architecture</h3>
+<div id="outline-container-org1e97fac" class="outline-3">
+<h3 id="org1e97fac"><span class="section-number-3">4.1</span> Architecture</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Figure 2 illustrates the architecture of the current Linux block layer.
@@ -355,8 +351,8 @@ support IO scheduling across devices.
 </div>
 </div>
 
-<div id="outline-container-orge281e70" class="outline-3">
-<h3 id="orge281e70"><span class="section-number-3">4.2</span> Scalability</h3>
+<div id="outline-container-org887ddf0" class="outline-3">
+<h3 id="org887ddf0"><span class="section-number-3">4.2</span> Scalability</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 We analyzed the Linux kernel to evaluate the performance of the current block
@@ -438,8 +434,8 @@ the future, it is a significant problem being faced by HPC in practice today.
 </div>
 </div>
 
-<div id="outline-container-org0f966d6" class="outline-2">
-<h2 id="org0f966d6"><span class="section-number-2">5</span> Multi-Queue Block Layer</h2>
+<div id="outline-container-org4c660b1" class="outline-2">
+<h2 id="org4c660b1"><span class="section-number-2">5</span> Multi-Queue Block Layer</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 As we have seen in Section 2.2, reducing lock contention and remote memory
@@ -455,16 +451,16 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgcaafb4f" class="outline-2">
-<h2 id="orgcaafb4f"><span class="section-number-2">6</span> English Words</h2>
+<div id="outline-container-org61bd317" class="outline-2">
+<h2 id="org61bd317"><span class="section-number-2">6</span> English Words</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgf777a1c" class="outline-3">
-<h3 id="orgf777a1c"><span class="section-number-3">6.1</span> graciously ['greiʃəsli] adv. 优雅地</h3>
+<div id="outline-container-org46c122c" class="outline-3">
+<h3 id="org46c122c"><span class="section-number-3">6.1</span> graciously ['greiʃəsli] adv. 优雅地</h3>
 <div class="outline-text-3" id="text-6-1">
 </div>
-<div id="outline-container-org7591deb" class="outline-4">
-<h4 id="org7591deb"><span class="section-number-4">6.1.1</span> Basic Explains</h4>
+<div id="outline-container-orge8c7899" class="outline-4">
+<h4 id="orge8c7899"><span class="section-number-4">6.1.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-1-1">
 <ul class="org-ul">
 <li>adv. 和蔼地；仁慈地；雅致地</li>
@@ -472,8 +468,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgcd3bb3a" class="outline-4">
-<h4 id="orgcd3bb3a"><span class="section-number-4">6.1.2</span> Web References</h4>
+<div id="outline-container-org84226cb" class="outline-4">
+<h4 id="org84226cb"><span class="section-number-4">6.1.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-1-2">
 <dl class="org-dl">
 <dt>graciously</dt><dd>和蔼地; 优雅地; 雅致地</dd>
@@ -484,12 +480,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgb1f0f97" class="outline-3">
-<h3 id="orgb1f0f97"><span class="section-number-3">6.2</span> commonplace ['kɒmənpleɪs] n. 司空见惯的事</h3>
+<div id="outline-container-org1968555" class="outline-3">
+<h3 id="org1968555"><span class="section-number-3">6.2</span> commonplace ['kɒmənpleɪs] n. 司空见惯的事</h3>
 <div class="outline-text-3" id="text-6-2">
 </div>
-<div id="outline-container-orge9624e6" class="outline-4">
-<h4 id="orge9624e6"><span class="section-number-4">6.2.1</span> Basic Explains</h4>
+<div id="outline-container-org8038ef4" class="outline-4">
+<h4 id="org8038ef4"><span class="section-number-4">6.2.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <ul class="org-ul">
 <li>n. 老生常谈；司空见惯的事；普通的东西</li>
@@ -498,8 +494,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org1639b9a" class="outline-4">
-<h4 id="org1639b9a"><span class="section-number-4">6.2.2</span> Web References</h4>
+<div id="outline-container-orge3453b0" class="outline-4">
+<h4 id="orge3453b0"><span class="section-number-4">6.2.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <dl class="org-dl">
 <dt>commonplace</dt><dd>平凡的; 碌碌无为; 平庸的</dd>
@@ -510,12 +506,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orge764b32" class="outline-3">
-<h3 id="orge764b32"><span class="section-number-3">6.3</span> synonymous [sɪ'nɒnɪməs] adj. 同义的</h3>
+<div id="outline-container-org684071f" class="outline-3">
+<h3 id="org684071f"><span class="section-number-3">6.3</span> synonymous [sɪ'nɒnɪməs] adj. 同义的</h3>
 <div class="outline-text-3" id="text-6-3">
 </div>
-<div id="outline-container-org32c5105" class="outline-4">
-<h4 id="org32c5105"><span class="section-number-4">6.3.1</span> Basic Explains</h4>
+<div id="outline-container-org9a02c78" class="outline-4">
+<h4 id="org9a02c78"><span class="section-number-4">6.3.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-3-1">
 <ul class="org-ul">
 <li>adj. 同义的；同义词的；同义突变的</li>
@@ -523,8 +519,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgd32b08e" class="outline-4">
-<h4 id="orgd32b08e"><span class="section-number-4">6.3.2</span> Web References</h4>
+<div id="outline-container-org98dd692" class="outline-4">
+<h4 id="org98dd692"><span class="section-number-4">6.3.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-3-2">
 <dl class="org-dl">
 <dt>synonymous</dt><dd>同义的; 同义词; 震震</dd>
@@ -534,12 +530,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-orge962b9d" class="outline-3">
-<h3 id="orge962b9d"><span class="section-number-3">6.4</span> advent ['ædvənt] n. 出现</h3>
+<div id="outline-container-org066d593" class="outline-3">
+<h3 id="org066d593"><span class="section-number-3">6.4</span> advent ['ædvənt] n. 出现</h3>
 <div class="outline-text-3" id="text-6-4">
 </div>
-<div id="outline-container-org629339f" class="outline-4">
-<h4 id="org629339f"><span class="section-number-4">6.4.1</span> Basic Explains</h4>
+<div id="outline-container-orgdaa8447" class="outline-4">
+<h4 id="orgdaa8447"><span class="section-number-4">6.4.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-4-1">
 <ul class="org-ul">
 <li>n. 到来；出现；基督降临；基督降临节</li>
@@ -547,8 +543,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org660beee" class="outline-4">
-<h4 id="org660beee"><span class="section-number-4">6.4.2</span> Web References</h4>
+<div id="outline-container-orgeb95bba" class="outline-4">
+<h4 id="orgeb95bba"><span class="section-number-4">6.4.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-4-2">
 <dl class="org-dl">
 <dt>advent</dt><dd>出现; 将临期; 降临节</dd>
@@ -558,12 +554,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-orgc8f7e81" class="outline-3">
-<h3 id="orgc8f7e81"><span class="section-number-3">6.5</span> magnetic [mæg'netɪk] adj. 有磁性的</h3>
+<div id="outline-container-orgf7b9d7e" class="outline-3">
+<h3 id="orgf7b9d7e"><span class="section-number-3">6.5</span> magnetic [mæg'netɪk] adj. 有磁性的</h3>
 <div class="outline-text-3" id="text-6-5">
 </div>
-<div id="outline-container-org3c5cc7b" class="outline-4">
-<h4 id="org3c5cc7b"><span class="section-number-4">6.5.1</span> Basic Explains</h4>
+<div id="outline-container-orgc60f9fc" class="outline-4">
+<h4 id="orgc60f9fc"><span class="section-number-4">6.5.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-5-1">
 <ul class="org-ul">
 <li>adj. 地磁的；有磁性的；有吸引力的</li>
@@ -571,8 +567,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orge4d2c02" class="outline-4">
-<h4 id="orge4d2c02"><span class="section-number-4">6.5.2</span> Web References</h4>
+<div id="outline-container-orgdaaa39b" class="outline-4">
+<h4 id="orgdaaa39b"><span class="section-number-4">6.5.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-5-2">
 <dl class="org-dl">
 <dt>Magnetic</dt><dd>磁性; 磁的; 磁力</dd>
@@ -582,12 +578,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org22b2ebc" class="outline-3">
-<h3 id="org22b2ebc"><span class="section-number-3">6.6</span> couple['kʌp(ə)l] of years n. 几年</h3>
+<div id="outline-container-org278556c" class="outline-3">
+<h3 id="org278556c"><span class="section-number-3">6.6</span> couple['kʌp(ə)l] of years n. 几年</h3>
 <div class="outline-text-3" id="text-6-6">
 </div>
-<div id="outline-container-orgdd26620" class="outline-4">
-<h4 id="orgdd26620"><span class="section-number-4">6.6.1</span> Basic Explains</h4>
+<div id="outline-container-orgeec800c" class="outline-4">
+<h4 id="orgeec800c"><span class="section-number-4">6.6.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-6-1">
 <ul class="org-ul">
 <li>几年</li>
@@ -595,8 +591,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org152424b" class="outline-4">
-<h4 id="org152424b"><span class="section-number-4">6.6.2</span> Web References</h4>
+<div id="outline-container-org491b022" class="outline-4">
+<h4 id="org491b022"><span class="section-number-4">6.6.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-6-2">
 <dl class="org-dl">
 <dt>a couple of years</dt><dd>两年; 两三年的; 一两年</dd>
@@ -606,12 +602,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org1fe46eb" class="outline-3">
-<h3 id="org1fe46eb"><span class="section-number-3">6.7</span> albeit [ɔːl'biːɪt] conj. 虽然，即使</h3>
+<div id="outline-container-orgcb02890" class="outline-3">
+<h3 id="orgcb02890"><span class="section-number-3">6.7</span> albeit [ɔːl'biːɪt] conj. 虽然，即使</h3>
 <div class="outline-text-3" id="text-6-7">
 </div>
-<div id="outline-container-org20db606" class="outline-4">
-<h4 id="org20db606"><span class="section-number-4">6.7.1</span> Basic Explains</h4>
+<div id="outline-container-org81c68b2" class="outline-4">
+<h4 id="org81c68b2"><span class="section-number-4">6.7.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-7-1">
 <ul class="org-ul">
 <li>conj. 虽然；即使</li>
@@ -619,8 +615,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org875cc3b" class="outline-4">
-<h4 id="org875cc3b"><span class="section-number-4">6.7.2</span> Web References</h4>
+<div id="outline-container-orgdeae065" class="outline-4">
+<h4 id="orgdeae065"><span class="section-number-4">6.7.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-7-2">
 <dl class="org-dl">
 <dt>albeit</dt><dd>虽然; 尽管; 固然</dd>
@@ -630,12 +626,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org4dd7266" class="outline-3">
-<h3 id="org4dd7266"><span class="section-number-3">6.8</span> witness [ˈwɪtnɪs] n. 证人；vt. 证明</h3>
+<div id="outline-container-org6b6d67d" class="outline-3">
+<h3 id="org6b6d67d"><span class="section-number-3">6.8</span> witness [ˈwɪtnɪs] n. 证人；vt. 证明</h3>
 <div class="outline-text-3" id="text-6-8">
 </div>
-<div id="outline-container-org5d54860" class="outline-4">
-<h4 id="org5d54860"><span class="section-number-4">6.8.1</span> Basic Explains</h4>
+<div id="outline-container-org957f8d3" class="outline-4">
+<h4 id="org957f8d3"><span class="section-number-4">6.8.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-8-1">
 <ul class="org-ul">
 <li>n. 证人；目击者；证据</li>
@@ -646,8 +642,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org261e62b" class="outline-4">
-<h4 id="org261e62b"><span class="section-number-4">6.8.2</span> Web References</h4>
+<div id="outline-container-org3ca33de" class="outline-4">
+<h4 id="org3ca33de"><span class="section-number-4">6.8.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-8-2">
 <dl class="org-dl">
 <dt>Witnessed</dt><dd>亲眼目睹; 见证; 目击</dd>
@@ -657,12 +653,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org86ac814" class="outline-3">
-<h3 id="org86ac814"><span class="section-number-3">6.9</span> steadily ['stedɪlɪ] adv. 稳定地，稳固地</h3>
+<div id="outline-container-org3944744" class="outline-3">
+<h3 id="org3944744"><span class="section-number-3">6.9</span> steadily ['stedɪlɪ] adv. 稳定地，稳固地</h3>
 <div class="outline-text-3" id="text-6-9">
 </div>
-<div id="outline-container-orge785130" class="outline-4">
-<h4 id="orge785130"><span class="section-number-4">6.9.1</span> Basic Explains</h4>
+<div id="outline-container-org75bf4a2" class="outline-4">
+<h4 id="org75bf4a2"><span class="section-number-4">6.9.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-9-1">
 <ul class="org-ul">
 <li>adv. 稳定地；稳固地；有规则地</li>
@@ -670,8 +666,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org35e5381" class="outline-4">
-<h4 id="org35e5381"><span class="section-number-4">6.9.2</span> Web References</h4>
+<div id="outline-container-org596778f" class="outline-4">
+<h4 id="org596778f"><span class="section-number-4">6.9.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-9-2">
 <dl class="org-dl">
 <dt>Steadily</dt><dd>稳稳; 稳步; 稳中有升</dd>
@@ -681,12 +677,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-orgdcbb926" class="outline-3">
-<h3 id="orgdcbb926"><span class="section-number-3">6.10</span> sustain [sə'steɪn] vt. 维持，支撑</h3>
+<div id="outline-container-org8cc0c88" class="outline-3">
+<h3 id="org8cc0c88"><span class="section-number-3">6.10</span> sustain [sə'steɪn] vt. 维持，支撑</h3>
 <div class="outline-text-3" id="text-6-10">
 </div>
-<div id="outline-container-org1344a8b" class="outline-4">
-<h4 id="org1344a8b"><span class="section-number-4">6.10.1</span> Basic Explains</h4>
+<div id="outline-container-orgc1033dd" class="outline-4">
+<h4 id="orgc1033dd"><span class="section-number-4">6.10.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-10-1">
 <ul class="org-ul">
 <li>vt. 维持；支撑，承担；忍受；供养；证实</li>
@@ -694,8 +690,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgc5a1c0d" class="outline-4">
-<h4 id="orgc5a1c0d"><span class="section-number-4">6.10.2</span> Web References</h4>
+<div id="outline-container-orgdfe15ae" class="outline-4">
+<h4 id="orgdfe15ae"><span class="section-number-4">6.10.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-10-2">
 <dl class="org-dl">
 <dt>sustain</dt><dd>维持; 支撑; 保持</dd>
@@ -705,12 +701,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org5a661ba" class="outline-3">
-<h3 id="org5a661ba"><span class="section-number-3">6.11</span> propose [prə'pəʊz] vt. 提出</h3>
+<div id="outline-container-orgd551159" class="outline-3">
+<h3 id="orgd551159"><span class="section-number-3">6.11</span> propose [prə'pəʊz] vt. 提出</h3>
 <div class="outline-text-3" id="text-6-11">
 </div>
-<div id="outline-container-org45309ef" class="outline-4">
-<h4 id="org45309ef"><span class="section-number-4">6.11.1</span> Basic Explains</h4>
+<div id="outline-container-org79dee0b" class="outline-4">
+<h4 id="org79dee0b"><span class="section-number-4">6.11.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-11-1">
 <ul class="org-ul">
 <li>vi. 建议；求婚；打算</li>
@@ -719,8 +715,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org0ad3e58" class="outline-4">
-<h4 id="org0ad3e58"><span class="section-number-4">6.11.2</span> Web References</h4>
+<div id="outline-container-orgd8983d1" class="outline-4">
+<h4 id="orgd8983d1"><span class="section-number-4">6.11.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-11-2">
 <dl class="org-dl">
 <dt>Propose</dt><dd>求婚; 提出; 提议</dd>
@@ -730,12 +726,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org08e931c" class="outline-3">
-<h3 id="org08e931c"><span class="section-number-3">6.12</span> investigate [ɪn'vestɪgeɪt] v. 调查，研究</h3>
+<div id="outline-container-org36816a5" class="outline-3">
+<h3 id="org36816a5"><span class="section-number-3">6.12</span> investigate [ɪn'vestɪgeɪt] v. 调查，研究</h3>
 <div class="outline-text-3" id="text-6-12">
 </div>
-<div id="outline-container-org860e0a0" class="outline-4">
-<h4 id="org860e0a0"><span class="section-number-4">6.12.1</span> Basic Explains</h4>
+<div id="outline-container-orgc80045c" class="outline-4">
+<h4 id="orgc80045c"><span class="section-number-4">6.12.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-12-1">
 <ul class="org-ul">
 <li>v. 调查；研究</li>
@@ -743,8 +739,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org761f3fd" class="outline-4">
-<h4 id="org761f3fd"><span class="section-number-4">6.12.2</span> Web References</h4>
+<div id="outline-container-org26e9834" class="outline-4">
+<h4 id="org26e9834"><span class="section-number-4">6.12.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-12-2">
 <dl class="org-dl">
 <dt>investigate</dt><dd>调查; 探讨; 追究</dd>
@@ -754,12 +750,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-orga00f1d3" class="outline-3">
-<h3 id="orga00f1d3"><span class="section-number-3">6.13</span> propose [prə'pəʊz] vi. 建议</h3>
+<div id="outline-container-orga244b5f" class="outline-3">
+<h3 id="orga244b5f"><span class="section-number-3">6.13</span> propose [prə'pəʊz] vi. 建议</h3>
 <div class="outline-text-3" id="text-6-13">
 </div>
-<div id="outline-container-orge0c2602" class="outline-4">
-<h4 id="orge0c2602"><span class="section-number-4">6.13.1</span> Basic Explains</h4>
+<div id="outline-container-orgdc2ca73" class="outline-4">
+<h4 id="orgdc2ca73"><span class="section-number-4">6.13.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-13-1">
 <ul class="org-ul">
 <li>vi. 建议；求婚；打算</li>
@@ -768,8 +764,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org7823b34" class="outline-4">
-<h4 id="org7823b34"><span class="section-number-4">6.13.2</span> Web References</h4>
+<div id="outline-container-org69bccda" class="outline-4">
+<h4 id="org69bccda"><span class="section-number-4">6.13.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-13-2">
 <dl class="org-dl">
 <dt>Propose</dt><dd>求婚; 提出; 提议</dd>
@@ -779,12 +775,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org970e230" class="outline-3">
-<h3 id="org970e230"><span class="section-number-3">6.14</span> shepherd ['ʃepəd] vt. 牧羊</h3>
+<div id="outline-container-orgae71713" class="outline-3">
+<h3 id="orgae71713"><span class="section-number-3">6.14</span> shepherd ['ʃepəd] vt. 牧羊</h3>
 <div class="outline-text-3" id="text-6-14">
 </div>
-<div id="outline-container-org04da70a" class="outline-4">
-<h4 id="org04da70a"><span class="section-number-4">6.14.1</span> Basic Explains</h4>
+<div id="outline-container-orge52e459" class="outline-4">
+<h4 id="orge52e459"><span class="section-number-4">6.14.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-14-1">
 <ul class="org-ul">
 <li>vt. 牧羊；带领；指导；看管</li>
@@ -794,8 +790,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org736ed3f" class="outline-4">
-<h4 id="org736ed3f"><span class="section-number-4">6.14.2</span> Web References</h4>
+<div id="outline-container-orge38a434" class="outline-4">
+<h4 id="orge38a434"><span class="section-number-4">6.14.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-14-2">
 <dl class="org-dl">
 <dt>shepherding</dt><dd>放牧; 看管</dd>
@@ -805,12 +801,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org4a23be3" class="outline-3">
-<h3 id="org4a23be3"><span class="section-number-3">6.15</span> malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</h3>
+<div id="outline-container-orgf634b0a" class="outline-3">
+<h3 id="orgf634b0a"><span class="section-number-3">6.15</span> malicious [mə'lɪʃəs] adj. 恶毒的，蓄意的</h3>
 <div class="outline-text-3" id="text-6-15">
 </div>
-<div id="outline-container-orgd70bda2" class="outline-4">
-<h4 id="orgd70bda2"><span class="section-number-4">6.15.1</span> Basic Explains</h4>
+<div id="outline-container-orgd33124e" class="outline-4">
+<h4 id="orgd33124e"><span class="section-number-4">6.15.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-15-1">
 <ul class="org-ul">
 <li>adj. 恶意的；恶毒的；蓄意的；怀恨的</li>
@@ -818,8 +814,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org8242af0" class="outline-4">
-<h4 id="org8242af0"><span class="section-number-4">6.15.2</span> Web References</h4>
+<div id="outline-container-org310b039" class="outline-4">
+<h4 id="org310b039"><span class="section-number-4">6.15.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-15-2">
 <dl class="org-dl">
 <dt>malicious</dt><dd>怀恶意的; 恶意的; 恶毒的</dd>
@@ -829,12 +825,12 @@ general block layer requirements.
 </div>
 </div>
 </div>
-<div id="outline-container-org55b99c6" class="outline-3">
-<h3 id="org55b99c6"><span class="section-number-3">6.16</span> proportionally [prəu'pɔ:ʃənəli] adv. 适当地</h3>
+<div id="outline-container-org78897f7" class="outline-3">
+<h3 id="org78897f7"><span class="section-number-3">6.16</span> proportionally [prəu'pɔ:ʃənəli] adv. 适当地</h3>
 <div class="outline-text-3" id="text-6-16">
 </div>
-<div id="outline-container-org9a0f82f" class="outline-4">
-<h4 id="org9a0f82f"><span class="section-number-4">6.16.1</span> Basic Explains</h4>
+<div id="outline-container-orge20ae4a" class="outline-4">
+<h4 id="orge20ae4a"><span class="section-number-4">6.16.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-16-1">
 <ul class="org-ul">
 <li>adv. 成比例地；相称地，适当地</li>
@@ -842,8 +838,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org7a4ce5e" class="outline-4">
-<h4 id="org7a4ce5e"><span class="section-number-4">6.16.2</span> Web References</h4>
+<div id="outline-container-org78fdf1d" class="outline-4">
+<h4 id="org78fdf1d"><span class="section-number-4">6.16.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-16-2">
 <dl class="org-dl">
 <dt>proportionally</dt><dd>按比例; 成比例地; 比例</dd>
@@ -854,12 +850,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orge2b3b12" class="outline-3">
-<h3 id="orge2b3b12"><span class="section-number-3">6.17</span> exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</h3>
+<div id="outline-container-orga21a42f" class="outline-3">
+<h3 id="orga21a42f"><span class="section-number-3">6.17</span> exacerbate [ɪg'zæsəbeɪt; ek'sæs-] vt. 使加剧，使恶化</h3>
 <div class="outline-text-3" id="text-6-17">
 </div>
-<div id="outline-container-orgcd64ade" class="outline-4">
-<h4 id="orgcd64ade"><span class="section-number-4">6.17.1</span> Basic Explains</h4>
+<div id="outline-container-org169f385" class="outline-4">
+<h4 id="org169f385"><span class="section-number-4">6.17.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-17-1">
 <ul class="org-ul">
 <li>vt. 使加剧；使恶化；激怒</li>
@@ -867,8 +863,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org81de565" class="outline-4">
-<h4 id="org81de565"><span class="section-number-4">6.17.2</span> Web References</h4>
+<div id="outline-container-org0793048" class="outline-4">
+<h4 id="org0793048"><span class="section-number-4">6.17.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-17-2">
 <dl class="org-dl">
 <dt>exacerbate</dt><dd>使加剧; 使恶化; 恶化</dd>
@@ -879,12 +875,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgc22ad32" class="outline-3">
-<h3 id="orgc22ad32"><span class="section-number-3">6.18</span> depict [dɪ'pɪkt] vt. 描述，描画</h3>
+<div id="outline-container-org0ee1807" class="outline-3">
+<h3 id="org0ee1807"><span class="section-number-3">6.18</span> depict [dɪ'pɪkt] vt. 描述，描画</h3>
 <div class="outline-text-3" id="text-6-18">
 </div>
-<div id="outline-container-org91b5b91" class="outline-4">
-<h4 id="org91b5b91"><span class="section-number-4">6.18.1</span> Basic Explains</h4>
+<div id="outline-container-orga348bdd" class="outline-4">
+<h4 id="orga348bdd"><span class="section-number-4">6.18.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-18-1">
 <ul class="org-ul">
 <li>vt. 描述；描画</li>
@@ -892,8 +888,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgad4439d" class="outline-4">
-<h4 id="orgad4439d"><span class="section-number-4">6.18.2</span> Web References</h4>
+<div id="outline-container-orgaf4e327" class="outline-4">
+<h4 id="orgaf4e327"><span class="section-number-4">6.18.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-18-2">
 <dl class="org-dl">
 <dt>depicted</dt><dd>描述; 描绘; 描写</dd>
@@ -904,12 +900,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org0d176c4" class="outline-3">
-<h3 id="org0d176c4"><span class="section-number-3">6.19</span> supplant [sə'plɑːnt] vt. 代替，排挤掉</h3>
+<div id="outline-container-org1c2dd0b" class="outline-3">
+<h3 id="org1c2dd0b"><span class="section-number-3">6.19</span> supplant [sə'plɑːnt] vt. 代替，排挤掉</h3>
 <div class="outline-text-3" id="text-6-19">
 </div>
-<div id="outline-container-orgad156ef" class="outline-4">
-<h4 id="orgad156ef"><span class="section-number-4">6.19.1</span> Basic Explains</h4>
+<div id="outline-container-org1b69845" class="outline-4">
+<h4 id="org1b69845"><span class="section-number-4">6.19.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-19-1">
 <ul class="org-ul">
 <li>vt. 代替；排挤掉</li>
@@ -917,8 +913,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org00b3171" class="outline-4">
-<h4 id="org00b3171"><span class="section-number-4">6.19.2</span> Web References</h4>
+<div id="outline-container-org49f6f2b" class="outline-4">
+<h4 id="org49f6f2b"><span class="section-number-4">6.19.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-19-2">
 <dl class="org-dl">
 <dt>supplanted</dt><dd>硫酸灰分; 禅代</dd>
@@ -928,12 +924,12 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-org2489b17" class="outline-3">
-<h3 id="org2489b17"><span class="section-number-3">6.20</span> substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</h3>
+<div id="outline-container-org07af731" class="outline-3">
+<h3 id="org07af731"><span class="section-number-3">6.20</span> substantially [səb'stænʃ(ə)lɪ] adv. 实质上，大体上，充分地；</h3>
 <div class="outline-text-3" id="text-6-20">
 </div>
-<div id="outline-container-orgb264ff9" class="outline-4">
-<h4 id="orgb264ff9"><span class="section-number-4">6.20.1</span> Basic Explains</h4>
+<div id="outline-container-org8d92632" class="outline-4">
+<h4 id="org8d92632"><span class="section-number-4">6.20.1</span> Basic Explains</h4>
 <div class="outline-text-4" id="text-6-20-1">
 <ul class="org-ul">
 <li>adv. 实质上；大体上；充分地</li>
@@ -941,8 +937,8 @@ general block layer requirements.
 </div>
 </div>
 
-<div id="outline-container-orgededcf8" class="outline-4">
-<h4 id="orgededcf8"><span class="section-number-4">6.20.2</span> Web References</h4>
+<div id="outline-container-orgd4bd8c4" class="outline-4">
+<h4 id="orgd4bd8c4"><span class="section-number-4">6.20.2</span> Web References</h4>
 <div class="outline-text-4" id="text-6-20-2">
 <dl class="org-dl">
 <dt>Substantially</dt><dd>大幅度; 幅度; 大幅</dd>
@@ -965,26 +961,5 @@ complete description of the Block IO data structure.
 
 </div>
 </div></div>
-<div id="postamble" class="status">
-<div id="disqus_thread" class="disqus container"></div>
-<script>
-  var disqus_config = function () {
-    this.page.url = 'http://ycode.org/paper-linux-block-io-introducing-mq-sdd.html';
-    this.page.identifier = 'paper-linux-block-io-introducing-mq-sdd.html';
-  };
-
-  (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yanyg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-<div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
-</div>
-</div>
 </body>
 </html>
