@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+xhtml4
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2020-01-01 Wed 22:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>字符串搜索算法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">字符串搜索算法</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb97ebf5">1. 问题定义</a></li>
+<li><a href="#orgac01b1d">2. 测试结果</a></li>
+<li><a href="#org0f0298c">3. glibc C库字符串算法</a>
+<ul>
+<li><a href="#orgbf16490">3.1. 概要介绍</a></li>
+<li><a href="#org661a0c5">3.2. 参考资料</a></li>
+</ul>
+</li>
+<li><a href="#orgeae1573">4. Boyer-Moore</a>
+<ul>
+<li><a href="#org38ef24c">4.1. 概要介绍</a></li>
+<li><a href="#orgbd179f5">4.2. 参考资料</a></li>
+<li><a href="#orga7745ac">4.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#org5ddc447">5. Boyer-Moore-Horspool</a>
+<ul>
+<li><a href="#orgf6425e2">5.1. 概要介绍</a></li>
+<li><a href="#org0f68ca1">5.2. 参考资料</a></li>
+<li><a href="#org0d5c352">5.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#org5df2860">6. Boyer-Moore-Sunday</a></li>
+<li><a href="#orgb52a9fa">7. Knuth-Morris-Pratt</a>
+<ul>
+<li><a href="#org7b44207">7.1. 概要介绍</a></li>
+<li><a href="#org5acfdec">7.2. 参考资料</a></li>
+<li><a href="#org80d0668">7.3. 代码实现</a></li>
+</ul>
+</li>
+<li><a href="#orgd3adc1c">8. References</a></li>
+</ul>
+</div>
+</div>
+<div class="PREVIEW">
+<p>
+字符串搜索是指在一个字符串中查找另一个字符串（子串）是常用的基本编程操作。协议
+解析、文本编辑都会用到大量字符串搜索操作。从1977年至今，人们对此进行了大量研究，
+本文介绍本领域典型算法：暴力搜索、two-way、KMP、BM、BMH、BMS，以及x86 CPU SSE2
+硬件加速实现。
+</p>
+
+</div>
+
+<div id="outline-container-orgb97ebf5" class="outline-2">
+<h2 id="orgb97ebf5"><span class="section-number-2">1</span> 问题定义</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+字符串搜索问题，又称为文本匹配问题。其定义如下：
+</p>
+<ol class="org-ol">
+<li>定义长度为\(n\)的字符数组\(text\)；</li>
+<li>定义长度为\(m\)的字符数组\(pattern\)，且\(m\le{}n\)；</li>
+<li>定义有限字符集\(\Sigma\)，\(text\)和\(pattern\)由\(\Sigma\)元素组成；</li>
+<li>在\(text\)中查找\(pattern\)出现的位置。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgac01b1d" class="outline-2">
+<h2 id="orgac01b1d"><span class="section-number-2">2</span> 测试结果</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+测试Linux系统glibc strstr，native, KMP, BM, BMH算法。使用大量随机字符串测试，其
+性能排名是：strstr、BMH、BM、native、KMP。KMP的实现应该是有问题，后期分析更正。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0f0298c" class="outline-2">
+<h2 id="org0f0298c"><span class="section-number-2">3</span> glibc C库字符串算法</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgbf16490" class="outline-3">
+<h3 id="orgbf16490"><span class="section-number-3">3.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+GLIBC库提供two-way搜索算法，以及针对各平台的硬件优化实现(X86平台是SSE2)。TWO WAY
+算法由<a href="http://www-igm.univ-mlv.fr/~mac/">Maxime Crochemore</a>和<a href="http://www-igm.univ-mlv.fr/~perrin/">Dominique Perrin</a>发表于<a href="https://dl.acm.org/citation.cfm?doid=116825.116845">1991年ACM</a>。主要包括一个关键分解
+理论(<a href="http://www.lifl.fr/SEQUOIA/Sequences/Talks/talk_perrin.pdf">critical factorization theorem pdf</a>)。
+</p>
+
+<p>
+代码实现参考Github <a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/string/strstr.c">string/strstr.c</a>、x86_64/multiarch <a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/sysdeps/x86_64/multiarch/strstr.c">strstr.c</a>和
+<a href="https://github.molgen.mpg.de/git-mirror/glibc/blob/master/sysdeps/x86_64/multiarch/strstr-sse2-unaligned.S">strstr-sse2-unaligned.S</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org661a0c5" class="outline-3">
+<h3 id="org661a0c5"><span class="section-number-3">3.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-3-2">
+<dl class="org-dl">
+<dt>TWO WAY ALGORITHM</dt><dd><a href="http://www-igm.univ-mlv.fr/~lecroq/string/node26.html">http://www-igm.univ-mlv.fr/~lecroq/string/node26.html</a></dd>
+<dt>TWO WAY STRING MATCHING (Maxime Crochemore, Dominique Perrin)</dt><dd><a href="https://dl.acm.org/citation.cfm?id=116845">https://dl.acm.org/citation.cfm?id=116845</a></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeae1573" class="outline-2">
+<h2 id="orgeae1573"><span class="section-number-2">4</span> Boyer-Moore</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+[BM 77]
+</p>
+</div>
+<div id="outline-container-org38ef24c" class="outline-3">
+<h3 id="org38ef24c"><span class="section-number-3">4.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+BM算法由<a href="https://www.cs.utexas.edu/users/boyer/">Robert S. Boyer</a>和<a href="https://www.cs.utexas.edu/users/moore/">J Strother Moore</a>于1977年发表。BM算法使用坏字符和好后缀
+规则，在失配后一次跳动多个字符，进行匹配加速。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbd179f5" class="outline-3">
+<h3 id="orgbd179f5"><span class="section-number-3">4.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-4-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm">https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm</a></dd>
+<dt>ACM</dt><dd><a href="http://dl.acm.org/citation.cfm?doid=359842.359859">http://dl.acm.org/citation.cfm?doid=359842.359859</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orga7745ac" class="outline-3">
+<h3 id="orga7745ac"><span class="section-number-3">4.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+2012/2/29实现此算法，发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbm.c">GitHub</a>：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">[BM</span><span class="org-whitespace-space"> </span><span class="org-comment">77]</span><span class="org-whitespace-space"> </span><span class="org-comment">A</span><span class="org-whitespace-space"> </span><span class="org-comment">fast</span><span class="org-whitespace-space"> </span><span class="org-comment">string</span><span class="org-whitespace-space"> </span><span class="org-comment">search</span><span class="org-whitespace-space"> </span><span class="org-comment">algorithm,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">         </span><span class="org-comment">R.</span><span class="org-whitespace-space"> </span><span class="org-comment">S.</span><span class="org-whitespace-space"> </span><span class="org-comment">Boyer</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">J.</span><span class="org-whitespace-space"> </span><span class="org-comment">S.</span><span class="org-whitespace-space"> </span><span class="org-comment">Moore,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">         </span><span class="org-comment">Comm.</span><span class="org-whitespace-space"> </span><span class="org-comment">ACM,</span><span class="org-whitespace-space"> </span><span class="org-comment">20,</span><span class="org-whitespace-space"> </span><span class="org-comment">1977,</span><span class="org-whitespace-space"> </span><span class="org-comment">pp.</span><span class="org-whitespace-space"> </span><span class="org-comment">762&#8211;772.</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">[Smit</span><span class="org-whitespace-space"> </span><span class="org-comment">1982]</span><span class="org-whitespace-space"> </span><span class="org-comment">A</span><span class="org-whitespace-space"> </span><span class="org-comment">Comparison</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">Three</span><span class="org-whitespace-space"> </span><span class="org-comment">String</span><span class="org-whitespace-space"> </span><span class="org-comment">Matching</span><span class="org-whitespace-space"> </span><span class="org-comment">Algorithms,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">             </span><span class="org-comment">Smit</span><span class="org-whitespace-space"> </span><span class="org-comment">G.</span><span class="org-whitespace-space"> </span><span class="org-comment">De</span><span class="org-whitespace-space"> </span><span class="org-comment">V.,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">             </span><span class="org-comment">Software-Practice</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">Experience,</span><span class="org-whitespace-space"> </span><span class="org-comment">12(1),</span><span class="org-whitespace-space"> </span><span class="org-comment">57-66,</span><span class="org-whitespace-space"> </span><span class="org-comment">1982</span>
+<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;config-os.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;ycc/common/debug.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">strbm_init</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">needle</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>,
+<span class="org-whitespace-space">                </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table_sgs</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table_ebc</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space">         </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">table_sgs:</span><span class="org-whitespace-space"> </span><span class="org-comment">strong</span><span class="org-whitespace-space"> </span><span class="org-comment">good</span><span class="org-whitespace-space"> </span><span class="org-comment">suffix</span>
+<span class="org-whitespace-space">         </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">ebc:</span><span class="org-whitespace-space"> </span><span class="org-comment">extended</span><span class="org-whitespace-space"> </span><span class="org-comment">bad</span><span class="org-whitespace-space"> </span><span class="org-comment">character</span>
+<span class="org-whitespace-space">         </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">k</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">backup</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table_sgs<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>n;
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">init</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>memset(table_sgs,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-type">n</span>*<span class="org-keyword">sizeof</span>(*table_sgs));
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">suffix</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">        </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n;
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>((<span class="org-type">size_t</span>)-1<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>i)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>backup[i]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>j;
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>needle[i]<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>needle[j])<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>table_sgs[j])
+<span class="org-whitespace-space">                                </span>table_sgs[j]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>i;
+
+<span class="org-whitespace-space">                        </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>backup[j];
+<span class="org-whitespace-space">                </span>}
+
+<span class="org-whitespace-space">                </span>--i;
+<span class="org-whitespace-space">                </span>--j;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">prefix</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>k<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>k;<span class="org-whitespace-space"> </span>++i)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>table_sgs[i])
+<span class="org-whitespace-space">                        </span>table_sgs[i]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>k;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>backup[j];
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(j<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>i)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>table_sgs[j])
+<span class="org-whitespace-space">                                </span>table_sgs[j]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+<span class="org-whitespace-space">                        </span>++j;
+<span class="org-whitespace-space">                </span>}
+<span class="org-whitespace-space">                </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>backup[i];
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">ebc</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>strbmh_init(needle,<span class="org-whitespace-space"> </span>n,<span class="org-whitespace-space"> </span>table_ebc);
+}
+
+<span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">strbm_find</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">haystack</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">needle</span>,
+<span class="org-whitespace-space">                 </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">h</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>,
+<span class="org-whitespace-space">                 </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table_sgs</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table_ebc</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">n1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>n)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)haystack;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(h<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>n1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>(<span class="org-type">size_t</span>)-1<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>haystack[i]<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>needle[i];<span class="org-whitespace-space"> </span>--i);
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>(<span class="org-type">size_t</span>)-1)<span class="org-whitespace-tab">    </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">[0,</span><span class="org-whitespace-space"> </span><span class="org-comment">n1]</span><span class="org-whitespace-space"> </span><span class="org-comment">are</span><span class="org-whitespace-space"> </span><span class="org-comment">equal.</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">                        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)haystack;
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(table_sgs[i]<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>table_ebc[(<span class="org-type">u_char</span>)haystack[n1]])
+<span class="org-whitespace-space">                        </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table_sgs[i];
+<span class="org-whitespace-space">                </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">                        </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table_ebc[(<span class="org-type">u_char</span>)haystack[n1]];
+<span class="org-whitespace-space">                </span>DBG_PR(<span class="org-string">"jump</span><span class="org-whitespace-space"> </span><span class="org-string">offset</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">%zu,</span><span class="org-whitespace-space"> </span><span class="org-string">h,n</span><span class="org-whitespace-space"> </span><span class="org-string">=</span><span class="org-whitespace-space"> </span><span class="org-string">%zu,</span><span class="org-whitespace-space"> </span><span class="org-string">%zu"</span>,<span class="org-whitespace-space"> </span>j,<span class="org-whitespace-space"> </span>h,<span class="org-whitespace-space"> </span>n);
+<span class="org-whitespace-space">                </span>h<span class="org-whitespace-space"> </span>-=<span class="org-whitespace-space"> </span>j;
+<span class="org-whitespace-space">                </span>haystack<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>j;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5ddc447" class="outline-2">
+<h2 id="org5ddc447"><span class="section-number-2">5</span> Boyer-Moore-Horspool</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+[Hor 80]
+</p>
+</div>
+
+<div id="outline-container-orgf6425e2" class="outline-3">
+<h3 id="orgf6425e2"><span class="section-number-3">5.1</span> 概要介绍</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+BMH算法由<a href="http://www.cs.uvic.ca/~nigelh">Nigel Horspool</a>发表于1980年。在随机测试结果中，比BM有更好的表现，性能
+提升10%左右。BMH是BM算法的简化。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0f68ca1" class="outline-3">
+<h3 id="org0f68ca1"><span class="section-number-3">5.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-5-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm">https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm</a></dd>
+<dt>Horsen</dt><dd><a href="http://www.iti.fh-flensburg.de/lang/algorithmen/pattern/horsen.htm">http://www.iti.fh-flensburg.de/lang/algorithmen/pattern/horsen.htm</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org0d5c352" class="outline-3">
+<h3 id="org0d5c352"><span class="section-number-3">5.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+2012/2/29发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strbmh.c">GitHub</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">[Hor</span><span class="org-whitespace-space"> </span><span class="org-comment">80]</span><span class="org-whitespace-space"> </span><span class="org-comment">Practical</span><span class="org-whitespace-space"> </span><span class="org-comment">Fast</span><span class="org-whitespace-space"> </span><span class="org-comment">Searching</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">Strings,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">          </span><span class="org-comment">R.</span><span class="org-whitespace-space"> </span><span class="org-comment">Nigel</span><span class="org-whitespace-space"> </span><span class="org-comment">Horspool,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">          </span><span class="org-comment">Softw.</span><span class="org-whitespace-space"> </span><span class="org-comment">Pratt.</span><span class="org-whitespace-space"> </span><span class="org-comment">Exp.,</span><span class="org-whitespace-space"> </span><span class="org-comment">10,</span><span class="org-whitespace-space"> </span><span class="org-comment">501&#8211;506</span><span class="org-whitespace-space"> </span><span class="org-comment">(1980).</span>
+<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;assert.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;limits.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stddef.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;sys/types.h&gt;</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;config-os.h&gt;</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">strbmh_init</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">needle</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>UCHAR_MAX;<span class="org-whitespace-space"> </span>++i)
+<span class="org-whitespace-space">                </span>table[i]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n;
+
+<span class="org-whitespace-space">        </span>--needle;
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)
+<span class="org-whitespace-space">                </span>table[(<span class="org-type">u_char</span>)needle[i]]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>i;
+}
+
+<span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">strbmh_find</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">haystack</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">needle</span>,
+<span class="org-whitespace-space">                  </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">h</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>,
+<span class="org-whitespace-space">                  </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">n1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>n)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)haystack;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(h<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>n1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>(<span class="org-type">size_t</span>)-1<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>haystack[i]<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>needle[i];<span class="org-whitespace-space"> </span>--i);
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>(<span class="org-type">size_t</span>)-1)<span class="org-whitespace-tab">    </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">[0,</span><span class="org-whitespace-space"> </span><span class="org-comment">n1]</span><span class="org-whitespace-space"> </span><span class="org-comment">are</span><span class="org-whitespace-space"> </span><span class="org-comment">equal.</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">                        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)haystack;
+
+<span class="org-whitespace-space">                </span>h<span class="org-whitespace-space"> </span>-=<span class="org-whitespace-space"> </span>table[(<span class="org-type">u_char</span>)haystack[n1]];
+<span class="org-whitespace-space">                </span>haystack<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>table[(<span class="org-type">u_char</span>)haystack[n1]];
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5df2860" class="outline-2">
+<h2 id="org5df2860"><span class="section-number-2">6</span> Boyer-Moore-Sunday</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+[Sun 90]
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb52a9fa" class="outline-2">
+<h2 id="orgb52a9fa"><span class="section-number-2">7</span> Knuth-Morris-Pratt</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+[KMP 77]
+</p>
+</div>
+<div id="outline-container-org7b44207" class="outline-3">
+<h3 id="org7b44207"><span class="section-number-3">7.1</span> 概要介绍</h3>
+</div>
+<div id="outline-container-org5acfdec" class="outline-3">
+<h3 id="org5acfdec"><span class="section-number-3">7.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-7-2">
+<dl class="org-dl">
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm</a></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org80d0668" class="outline-3">
+<h3 id="org80d0668"><span class="section-number-3">7.3</span> 代码实现</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+此算法测试结果十分糟糕，怀疑实现有问题。以后更正分析。
+2012/2/29发布于<a href="https://github.com/yygcode/ycc/blob/master/src/algos/strkmp.c">GitHub</a>：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">[KMP</span><span class="org-whitespace-space"> </span><span class="org-comment">77]</span><span class="org-whitespace-space"> </span><span class="org-comment">Fast</span><span class="org-whitespace-space"> </span><span class="org-comment">pattern</span><span class="org-whitespace-space"> </span><span class="org-comment">matching</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">strings,</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">          </span><span class="org-comment">D.</span><span class="org-whitespace-space"> </span><span class="org-comment">E.</span><span class="org-whitespace-space"> </span><span class="org-comment">Knuth,</span><span class="org-whitespace-space"> </span><span class="org-comment">J.</span><span class="org-whitespace-space"> </span><span class="org-comment">H.</span><span class="org-whitespace-space"> </span><span class="org-comment">Morris,</span><span class="org-whitespace-space"> </span><span class="org-comment">Jr</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">V.</span><span class="org-whitespace-space"> </span><span class="org-comment">B.</span><span class="org-whitespace-space"> </span><span class="org-comment">Pratt,</span><span class="org-whitespace-space"> </span><span class="org-comment">SIAM</span><span class="org-whitespace-space"> </span><span class="org-comment">J.</span>
+<span class="org-whitespace-space"> </span><span class="org-comment">*</span><span class="org-whitespace-space">          </span><span class="org-comment">Computing,</span><span class="org-whitespace-space"> </span><span class="org-comment">6,</span><span class="org-whitespace-space"> </span><span class="org-comment">1977,</span><span class="org-whitespace-space"> </span><span class="org-comment">pp.</span><span class="org-whitespace-space"> </span><span class="org-comment">323&#8211;350.</span>
+<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;assert.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stddef.h&gt;</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;config-os.h&gt;</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;ycc/algos/string.h&gt;</span>
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">strkmp_init</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">patn</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">t</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table;
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">s</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>patn<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1;
+
+<span class="org-whitespace-space">        </span>assert(patn<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>table);
+
+<span class="org-whitespace-space">        </span>*t++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>*s;<span class="org-whitespace-space"> </span>++s)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>patn[i]<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>*s)
+<span class="org-whitespace-space">                        </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table[i-1];
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(patn[i]<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>*s)
+<span class="org-whitespace-space">                        </span>++i;
+
+<span class="org-whitespace-space">                </span>*t++<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+<span class="org-whitespace-space">        </span>}
+}
+
+<span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">strkmp_find</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">text</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">patn</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">table</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">s</span>;
+
+<span class="org-whitespace-space">        </span>assert(text<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>patn<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>table);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>*patn)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)text;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>text;<span class="org-whitespace-space"> </span>*s;<span class="org-whitespace-space"> </span>++s)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(i<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>*s<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>patn[i])
+<span class="org-whitespace-space">                        </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>table[i-1];
+
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(*s<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>patn[i])<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>patn[i+1])
+<span class="org-whitespace-space">                                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">char</span>*)s<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>i;
+<span class="org-whitespace-space">                        </span>++i;
+<span class="org-whitespace-space">                </span>}
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3adc1c" class="outline-2">
+<h2 id="orgd3adc1c"><span class="section-number-2">8</span> References</h2>
+<div class="outline-text-2" id="text-8">
+<dl class="org-dl">
+<dt>why grep so fast</dt><dd><a href="https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html">https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html</a></dd>
+<dt>grep code</dt><dd><a href="https://savannah.gnu.org/git/?group=grep">https://savannah.gnu.org/git/?group=grep</a></dd>
+<dt>grep git url</dt><dd><code>git clone https://git.savannah.gnu.org/git/grep.git</code></dd>
+<dt>(no term)</dt><dd><a href="http://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html">http://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html</a></dd>
+<dt>WIKI</dt><dd><a href="https://en.wikipedia.org/wiki/String_searching_algorithm">https://en.wikipedia.org/wiki/String_searching_algorithm</a></dd>
+<dt>Stackoverflow Discuss</dt><dd><a href="https://stackoverflow.com/questions/7586990/strstr-faster-than-algorithms">https://stackoverflow.com/questions/7586990/strstr-faster-than-algorithms</a></dd>
+<dt>EXACT STRING MATCHING ALGORITHMS</dt><dd><a href="http://www-igm.univ-mlv.fr/~lecroq/string/index.html">http://www-igm.univ-mlv.fr/~lecroq/string/index.html</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

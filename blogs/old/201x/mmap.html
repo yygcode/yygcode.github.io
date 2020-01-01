@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+xhtml4
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2020-01-01 Wed 21:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>MMAP机制分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">MMAP机制分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org00030ad">1. 使用mmap读写文件</a></li>
+<li><a href="#orgcf4739b">2. mmap的内核实现</a></li>
+</ul>
+</div>
+</div>
+<p>
+#+PREVIEW_BEGIN
+用strace跟踪常见命令，可以看到有大量 <code>mmap</code> 调用：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>strace<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>2&gt;&amp;1<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>mmap
+<span class="org-function-name">mmap</span>(NULL,<span class="org-whitespace-space"> </span>12288,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_ANONYMOUS,<span class="org-whitespace-space"> </span>-1,<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0x7f<span class="org-whitespace-line">1da2f60000</span>
+<span class="org-function-name">mmap</span>(NULL,<span class="org-whitespace-space"> </span>152705,<span class="org-whitespace-space"> </span>PROT_READ,<span class="org-whitespace-space"> </span>MAP_PRIVATE,<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0x7f1da2f3a000
+<span class="org-function-name">mmap</span>(NULL,<span class="org-whitespace-space"> </span>2259664,<span class="org-whitespace-space"> </span>PROT_READ|PROT_EXEC,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_DENYWRITE,<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0x7f<span class="org-whitespace-line">1da2b18000</span>
+<span class="org-function-name">mmap</span>(0x7f1da2d3c000,<span class="org-whitespace-space"> </span>8192,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_FIXED|MAP_DENYW<span class="org-whitespace-line">RITE,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">3,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x24000)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x7f1da2d3c000</span>
+<span class="org-function-name">mmap</span>(0x7f1da2d3e000,<span class="org-whitespace-space"> </span>6864,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_FIXED|MAP_ANONY<span class="org-whitespace-line">MOUS,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-1,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x7f1da2d3e000</span>
+<span class="org-function-name">mmap</span>(NULL,<span class="org-whitespace-space"> </span>3795360,<span class="org-whitespace-space"> </span>PROT_READ|PROT_EXEC,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_DENYWRITE,<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0x7f<span class="org-whitespace-line">1da2779000</span>
+<span class="org-function-name">mmap</span>(0x7f1da2b0e000,<span class="org-whitespace-space"> </span>24576,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_FIXED|MAP_DENY<span class="org-whitespace-line">WRITE,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">3,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x195000)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x7f1da2b0e000</span>
+<span class="org-function-name">mmap</span>(0x7f1da2b14000,<span class="org-whitespace-space"> </span>14752,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_PRIVATE|MAP_FIXED|MAP_ANON<span class="org-whitespace-line">YMOUS,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-1,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">=</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0x7f1da2b14000</span>
+...
+</pre>
+</div>
+
+<p>
+通过 <code>/proc/&lt;pid&gt;/maps</code> 查看指定进程映射了哪几个文件：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/self/maps
+556e0e237000-556e0e23f000<span class="org-whitespace-space"> </span>r-xp<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>786434<span class="org-whitespace-space">                     </span>/bin/ca<span class="org-whitespace-line">t</span>
+556e0e43e000-556e0e43f000<span class="org-whitespace-space"> </span>r--p<span class="org-whitespace-space"> </span>00007000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>786434<span class="org-whitespace-space">                     </span>/bin/ca<span class="org-whitespace-line">t</span>
+556e0e43f000-556e0e440000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00008000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>786434<span class="org-whitespace-space">                     </span>/bin/ca<span class="org-whitespace-line">t</span>
+556e0fdb0000-556e0fdd1000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">                          </span>[heap]
+7f7a531df000-7f7a5352e000<span class="org-whitespace-space"> </span>r--p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>558542<span class="org-whitespace-space">                     </span>/usr/li<span class="org-whitespace-line">b/locale/locale-archive</span>
+7f7a5352e000-7f7a536c3000<span class="org-whitespace-space"> </span>r-xp<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699336<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/libc-2.24.so</span>
+7f7a536c3000-7f7a538c3000<span class="org-whitespace-space"> </span>---p<span class="org-whitespace-space"> </span>00195000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699336<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/libc-2.24.so</span>
+7f7a538c3000-7f7a538c7000<span class="org-whitespace-space"> </span>r--p<span class="org-whitespace-space"> </span>00195000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699336<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/libc-2.24.so</span>
+7f7a538c7000-7f7a538c9000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00199000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699336<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/libc-2.24.so</span>
+7f7a538c9000-7f7a538cd000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0
+7f7a538cd000-7f7a538f0000<span class="org-whitespace-space"> </span>r-xp<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699331<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/ld-2.24.so</span>
+7f7a53ac5000-7f7a53ac7000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0
+7f7a53acb000-7f7a53af0000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0
+7f7a53af0000-7f7a53af1000<span class="org-whitespace-space"> </span>r--p<span class="org-whitespace-space"> </span>00023000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699331<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/ld-2.24.so</span>
+7f7a53af1000-7f7a53af2000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00024000<span class="org-whitespace-space"> </span>08:02<span class="org-whitespace-space"> </span>9699331<span class="org-whitespace-space">                    </span>/lib/x8<span class="org-whitespace-line">6_64-linux-gnu/ld-2.24.so</span>
+7f7a53af2000-7f7a53af3000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0
+7ffc991b3000-7ffc991d4000<span class="org-whitespace-space"> </span>rw-p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">                          </span>[stack]
+7ffc991e8000-7ffc991ea000<span class="org-whitespace-space"> </span>r--p<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">                          </span>[vvar]
+7ffc991ea000-7ffc991ec000<span class="org-whitespace-space"> </span>r-xp<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">                          </span>[vdso]
+ffffffffff600000-ffffffffff601000<span class="org-whitespace-space"> </span>r-xp<span class="org-whitespace-space"> </span>00000000<span class="org-whitespace-space"> </span>00:00<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space">                  </span>[vsysca<span class="org-whitespace-line">ll]</span>
+</pre>
+</div>
+
+<p>
+#+PREVIEW_END
+</p>
+
+<div id="outline-container-org00030ad" class="outline-2">
+<h2 id="org00030ad"><span class="section-number-2">1</span> 使用mmap读写文件</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+如下程序更新一个文件，让文件内容在字母A-Z之间变动：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;errno.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;sys/mman.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;sys/stat.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;sys/types.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;fcntl.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unistd.h&gt;</span>
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fd</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">pid_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pid</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">stat</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sb</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">addr</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">val</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">cmdbuf</span>[128];
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">pathname</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">"/tmp/mmap.test"</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(argc<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>1)
+<span class="org-whitespace-space">                </span>pathname<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>argv[1];
+
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"pathname:</span><span class="org-whitespace-space"> </span><span class="org-string">%s\n"</span>,<span class="org-whitespace-space"> </span>pathname);
+<span class="org-whitespace-space">        </span>fd<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>open(pathname,<span class="org-whitespace-space"> </span>O_RDWR|O_CREAT,<span class="org-whitespace-space"> </span>S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(-1<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>fd)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>perror(<span class="org-string">"open</span><span class="org-whitespace-space"> </span><span class="org-string">failed"</span>);
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>EXIT_FAILURE;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">ensure</span><span class="org-whitespace-space"> </span><span class="org-comment">up</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">2MB</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>lseek(fd,<span class="org-whitespace-space"> </span>1024*1024*2,<span class="org-whitespace-space"> </span>SEEK_CUR);
+<span class="org-whitespace-space">        </span>write(fd,<span class="org-whitespace-space"> </span><span class="org-string">""</span>,<span class="org-whitespace-space"> </span>1);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(-1<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>fstat(fd,<span class="org-whitespace-space"> </span>&amp;sb))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>perror(<span class="org-string">"fstat</span><span class="org-whitespace-space"> </span><span class="org-string">failed"</span>);
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>EXIT_FAILURE;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>S_ISREG(sb.st_mode))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>perror(<span class="org-string">"Not</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">Regular</span><span class="org-whitespace-space"> </span><span class="org-string">file"</span>);
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>EXIT_FAILURE;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"file</span><span class="org-whitespace-space"> </span><span class="org-string">size:%lu\n"</span>,<span class="org-whitespace-space"> </span>sb.st_size);
+<span class="org-whitespace-space">        </span>addr<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>mmap(0,<span class="org-whitespace-space"> </span>sb.st_size,<span class="org-whitespace-space"> </span>PROT_READ|PROT_WRITE,<span class="org-whitespace-space"> </span>MAP_SHARED,<span class="org-whitespace-space"> </span>fd,<span class="org-whitespace-space"> </span>0);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>addr)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>perror(<span class="org-string">"mmap</span><span class="org-whitespace-space"> </span><span class="org-string">failed"</span>);
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>val<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>addr[0];
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-string">'A'</span><span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>val<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span><span class="org-string">'Z'</span><span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>val)
+<span class="org-whitespace-space">                </span>val<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">'A'</span>;
+<span class="org-whitespace-space">        </span>val<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">        </span>memset(addr,<span class="org-whitespace-space"> </span>val,<span class="org-whitespace-space"> </span>sb.st_size);
+
+<span class="org-whitespace-space">        </span>pid<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>getpid();
+<span class="org-whitespace-space">        </span>sprintf(cmdbuf,<span class="org-whitespace-space"> </span><span class="org-string">"ls</span><span class="org-whitespace-space"> </span><span class="org-string">-l</span><span class="org-whitespace-space"> </span><span class="org-string">/proc/%u/map_files/"</span>,<span class="org-whitespace-space"> </span>pid);
+<span class="org-whitespace-space">        </span>system(cmdbuf);
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"---------------------------\n"</span>);
+<span class="org-whitespace-space">        </span>sprintf(cmdbuf,<span class="org-whitespace-space"> </span><span class="org-string">"cat</span><span class="org-whitespace-space"> </span><span class="org-string">/proc/%u/maps"</span>,<span class="org-whitespace-space"> </span>pid);
+<span class="org-whitespace-space">        </span>system(cmdbuf);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<p class="verse">
+#+RESULTS:<br />
+total 0<br />
+pathname: /tmp/mmap.test<br />
+file size:2097153<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 555f1c428000-555f1c429000 -&gt; /tmp/babel-M94bzk/C-bin-W4q33F<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 555f1c629000-555f1c62a000 -&gt; /tmp/babel-M94bzk/C-bin-W4q33F<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 555f1c62a000-555f1c62b000 -&gt; /tmp/babel-M94bzk/C-bin-W4q33F<br />
+lrw--&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f04be000-7ff4f06bf000 -&gt; /tmp/mmap.test<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f06bf000-7ff4f0854000 -&gt; /lib/x86_64-linux-gnu/libc-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0854000-7ff4f0a54000 -&gt; /lib/x86_64-linux-gnu/libc-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0a54000-7ff4f0a58000 -&gt; /lib/x86_64-linux-gnu/libc-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0a58000-7ff4f0a5a000 -&gt; /lib/x86_64-linux-gnu/libc-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0a5e000-7ff4f0a81000 -&gt; /lib/x86_64-linux-gnu/ld-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0c81000-7ff4f0c82000 -&gt; /lib/x86_64-linux-gnu/ld-2.24.so<br />
+lr---&#x2013;&#x2014; 1 yanyg yanyg 64 Jan 26 15:20 7ff4f0c82000-7ff4f0c83000 -&gt; /lib/x86_64-linux-gnu/ld-2.24.so<br />
+555f1c428000-555f1c429000 r-xp 00000000 08:02 11927613                   /tmp/babel-M94bzk/C-bin-W4q33F<br />
+555f1c629000-555f1c62a000 r&#x2013;p 00001000 08:02 11927613                   /tmp/babel-M94bzk/C-bin-W4q33F<br />
+555f1c62a000-555f1c62b000 rw-p 00002000 08:02 11927613                   /tmp/babel-M94bzk/C-bin-W4q33F<br />
+555f1e396000-555f1e3b8000 rw-p 00000000 00:00 0                          [heap]<br />
+7ff4f04be000-7ff4f06bf000 rw-s 00000000 08:02 11796543                   /tmp/mmap.test<br />
+7ff4f06bf000-7ff4f0854000 r-xp 00000000 08:02 9699336                    /lib/x86_64-linux-gnu/libc-2.24.so<br />
+7ff4f0854000-7ff4f0a54000 &#x2014;p 00195000 08:02 9699336                    /lib/x86_64-linux-gnu/libc-2.24.so<br />
+7ff4f0a54000-7ff4f0a58000 r&#x2013;p 00195000 08:02 9699336                    /lib/x86_64-linux-gnu/libc-2.24.so<br />
+7ff4f0a58000-7ff4f0a5a000 rw-p 00199000 08:02 9699336                    /lib/x86_64-linux-gnu/libc-2.24.so<br />
+7ff4f0a5a000-7ff4f0a5e000 rw-p 00000000 00:00 0<br />
+7ff4f0a5e000-7ff4f0a81000 r-xp 00000000 08:02 9699331                    /lib/x86_64-linux-gnu/ld-2.24.so<br />
+7ff4f0c56000-7ff4f0c58000 rw-p 00000000 00:00 0<br />
+7ff4f0c7e000-7ff4f0c81000 rw-p 00000000 00:00 0<br />
+7ff4f0c81000-7ff4f0c82000 r&#x2013;p 00023000 08:02 9699331                    /lib/x86_64-linux-gnu/ld-2.24.so<br />
+7ff4f0c82000-7ff4f0c83000 rw-p 00024000 08:02 9699331                    /lib/x86_64-linux-gnu/ld-2.24.so<br />
+7ff4f0c83000-7ff4f0c84000 rw-p 00000000 00:00 0<br />
+7ffd5f9f2000-7ffd5fa13000 rw-p 00000000 00:00 0                          [stack]<br />
+7ffd5fadc000-7ffd5fade000 r&#x2013;p 00000000 00:00 0                          [vvar]<br />
+7ffd5fade000-7ffd5fae0000 r-xp 00000000 00:00 0                          [vdso]<br />
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]<br />
+</p>
+</div>
+</div>
+<div id="outline-container-orgcf4739b" class="outline-2">
+<h2 id="orgcf4739b"><span class="section-number-2">2</span> mmap的内核实现</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

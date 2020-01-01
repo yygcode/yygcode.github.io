@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+xhtml4
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2020-01-01 Wed 21:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">使用信号机制与系统_Unwind_Backtrace输出程序退出堆栈信息</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7c51e76">1. 描述</a></li>
+<li><a href="#orgdad9a10">2. signal</a></li>
+<li><a href="#org5dee633">3. assert</a></li>
+<li><a href="#org4ceab4f">4. 实例代码</a></li>
+<li><a href="#orge436afc">5. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7c51e76" class="outline-2">
+<h2 id="org7c51e76"><span class="section-number-2">1</span> 描述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+进程执行某些异常指令（比如除0或非法内存访问），或者其他进程或进程自己通过kill
+调用向进程发送信号时，操作系统强制进程对信号作出处理。进程启动时操作系统设置
+默认的信号处理函数，通过signal、sigaction函数进程可以更改信号处理策略。Linux
+系统提供有64种信号，使用kill -l可查看：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t:~$<span class="org-whitespace-space"> </span>kill<span class="org-whitespace-space"> </span>-l
+<span class="org-whitespace-space"> </span>1)<span class="org-whitespace-space"> </span>SIGHUP<span class="org-whitespace-space">       </span>2)<span class="org-whitespace-space"> </span>SIGINT<span class="org-whitespace-space">       </span>3)<span class="org-whitespace-space"> </span>SIGQUIT<span class="org-whitespace-space">      </span>4)<span class="org-whitespace-space"> </span>SIGILL<span class="org-whitespace-space">       </span>5)<span class="org-whitespace-space"> </span>SIGTRAP
+<span class="org-whitespace-space"> </span>6)<span class="org-whitespace-space"> </span>SIGABRT<span class="org-whitespace-space">      </span>7)<span class="org-whitespace-space"> </span>SIGBUS<span class="org-whitespace-space">       </span>8)<span class="org-whitespace-space"> </span>SIGFPE<span class="org-whitespace-space">       </span>9)<span class="org-whitespace-space"> </span>SIGKILL<span class="org-whitespace-space">     </span>10)<span class="org-whitespace-space"> </span>SIGUSR1
+11)<span class="org-whitespace-space"> </span>SIGSEGV<span class="org-whitespace-space">     </span>12)<span class="org-whitespace-space"> </span>SIGUSR2<span class="org-whitespace-space">     </span>13)<span class="org-whitespace-space"> </span>SIGPIPE<span class="org-whitespace-space">     </span>14)<span class="org-whitespace-space"> </span>SIGALRM<span class="org-whitespace-space">     </span>15)<span class="org-whitespace-space"> </span>SIGTERM
+16)<span class="org-whitespace-space"> </span>SIGSTKFLT<span class="org-whitespace-space">   </span>17)<span class="org-whitespace-space"> </span>SIGCHLD<span class="org-whitespace-space">     </span>18)<span class="org-whitespace-space"> </span>SIGCONT<span class="org-whitespace-space">     </span>19)<span class="org-whitespace-space"> </span>SIGSTOP<span class="org-whitespace-space">     </span>20)<span class="org-whitespace-space"> </span>SIGTSTP
+21)<span class="org-whitespace-space"> </span>SIGTTIN<span class="org-whitespace-space">     </span>22)<span class="org-whitespace-space"> </span>SIGTTOU<span class="org-whitespace-space">     </span>23)<span class="org-whitespace-space"> </span>SIGURG<span class="org-whitespace-space">      </span>24)<span class="org-whitespace-space"> </span>SIGXCPU<span class="org-whitespace-space">     </span>25)<span class="org-whitespace-space"> </span>SIGXFSZ
+26)<span class="org-whitespace-space"> </span>SIGVTALRM<span class="org-whitespace-space">   </span>27)<span class="org-whitespace-space"> </span>SIGPROF<span class="org-whitespace-space">     </span>28)<span class="org-whitespace-space"> </span>SIGWINCH<span class="org-whitespace-space">    </span>29)<span class="org-whitespace-space"> </span>SIGIO<span class="org-whitespace-space">       </span>30)<span class="org-whitespace-space"> </span>SIGPWR
+31)<span class="org-whitespace-space"> </span>SIGSYS<span class="org-whitespace-space">      </span>34)<span class="org-whitespace-space"> </span>SIGRTMIN<span class="org-whitespace-space">    </span>35)<span class="org-whitespace-space"> </span>SIGRTMIN+1<span class="org-whitespace-space">  </span>36)<span class="org-whitespace-space"> </span>SIGRTMIN+2<span class="org-whitespace-space">  </span>37)<span class="org-whitespace-space"> </span>SIGRTMIN+3
+38)<span class="org-whitespace-space"> </span>SIGRTMIN+4<span class="org-whitespace-space">  </span>39)<span class="org-whitespace-space"> </span>SIGRTMIN+5<span class="org-whitespace-space">  </span>40)<span class="org-whitespace-space"> </span>SIGRTMIN+6<span class="org-whitespace-space">  </span>41)<span class="org-whitespace-space"> </span>SIGRTMIN+7<span class="org-whitespace-space">  </span>42)<span class="org-whitespace-space"> </span>SIGRTMIN+8
+43)<span class="org-whitespace-space"> </span>SIGRTMIN+9<span class="org-whitespace-space">  </span>44)<span class="org-whitespace-space"> </span>SIGRTMIN+10<span class="org-whitespace-space"> </span>45)<span class="org-whitespace-space"> </span>SIGRTMIN+11<span class="org-whitespace-space"> </span>46)<span class="org-whitespace-space"> </span>SIGRTMIN+12<span class="org-whitespace-space"> </span>47)<span class="org-whitespace-space"> </span>SIGRTMIN+13
+48)<span class="org-whitespace-space"> </span>SIGRTMIN+14<span class="org-whitespace-space"> </span>49)<span class="org-whitespace-space"> </span>SIGRTMIN+15<span class="org-whitespace-space"> </span>50)<span class="org-whitespace-space"> </span>SIGRTMAX-14<span class="org-whitespace-space"> </span>51)<span class="org-whitespace-space"> </span>SIGRTMAX-13<span class="org-whitespace-space"> </span>52)<span class="org-whitespace-space"> </span>SIGRTMAX-12
+53)<span class="org-whitespace-space"> </span>SIGRTMAX-11<span class="org-whitespace-space"> </span>54)<span class="org-whitespace-space"> </span>SIGRTMAX-10<span class="org-whitespace-space"> </span>55)<span class="org-whitespace-space"> </span>SIGRTMAX-9<span class="org-whitespace-space">  </span>56)<span class="org-whitespace-space"> </span>SIGRTMAX-8<span class="org-whitespace-space">  </span>57)<span class="org-whitespace-space"> </span>SIGRTMAX-7
+58)<span class="org-whitespace-space"> </span>SIGRTMAX-6<span class="org-whitespace-space">  </span>59)<span class="org-whitespace-space"> </span>SIGRTMAX-5<span class="org-whitespace-space">  </span>60)<span class="org-whitespace-space"> </span>SIGRTMAX-4<span class="org-whitespace-space">  </span>61)<span class="org-whitespace-space"> </span>SIGRTMAX-3<span class="org-whitespace-space">  </span>62)<span class="org-whitespace-space"> </span>SIGRTMAX-2
+63)<span class="org-whitespace-space"> </span>SIGRTMAX-1<span class="org-whitespace-space">  </span>64)<span class="org-whitespace-space"> </span>SIGRTMAX
+</pre>
+</div>
+
+<p>
+不同信号默认行为不同，<a href="https://linux.die.net/man/7/signal">Man 7 Sginal</a>对此有完整描述，如下是可能的处理策略：
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">行为</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Term</td>
+<td class="org-left">进程退出</td>
+</tr>
+
+<tr>
+<td class="org-left">Ign</td>
+<td class="org-left">忽略</td>
+</tr>
+
+<tr>
+<td class="org-left">Core</td>
+<td class="org-left">生成Core文件，需要同时设置ulimit -c</td>
+</tr>
+
+<tr>
+<td class="org-left">Stop</td>
+<td class="org-left">进程停止运行</td>
+</tr>
+
+<tr>
+<td class="org-left">Cont</td>
+<td class="org-left">进程继续运行</td>
+</tr>
+</tbody>
+</table>
+<p>
+并非所有信号均可Ign或Cont，部分信号在处理后，操作系统会强制进程退出，比如SIGKILL
+或SIGSEGV信号。SIGKILL信号即不能被捕获，也不能被忽略。进程常见的信号包括
+终端挂起(SIGHUP)、键盘中断(SIGINT)、非法地址访问(SIGSEGV)、总线错误(SIGBUS)、
+杀死进程(SIGKILL)。
+</p>
+
+<p>
+默认的信号处理函数在退出时，通常不能给出足够的信息帮助快速定位问题。同时，主动
+防御的编程技术中，在关键点会插入assert确保软件符合预期。无论信号或者assert，在
+退出时如能打印当前进程的调用栈，对于快速分析问题均有较大帮助。
+</p>
+
+<p>
+本文描述进程在退出前（无论因信号或assert），打印调用栈的方法。预期实现如下几个
+目标：
+</p>
+<ul class="org-ul">
+<li>准确记录调用栈，帮助快速定位分析问题；</li>
+<li>能提供-g编译的二进制文件时，记录调用栈对应文件名、代码行；</li>
+<li>支持多线程，退出时记录每个线程的调用栈；</li>
+<li>如果进程已设置信号处理函数，在记录调用栈后调用；</li>
+<li>结束后还原系统默认信号处理函数，并再次触发信号。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdad9a10" class="outline-2">
+<h2 id="orgdad9a10"><span class="section-number-2">2</span> signal</h2>
+</div>
+
+<div id="outline-container-org5dee633" class="outline-2">
+<h2 id="org5dee633"><span class="section-number-2">3</span> assert</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+assert是主动防御机制，用于检测不可能发生的情况，记录信息包括assert所在的文件名、
+函数名、代码行与调用栈。考虑可扩展，允许提供回调函数，辅助打印更多信息。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">_GNU_SOURCE</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;dlfcn.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdint.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;signal.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;ucontext.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;unwind.h&gt;</span>
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">sig_err</span>(<span class="org-variable-name">str</span>)<span class="org-whitespace-space"> </span>write(STDERR_FILENO,<span class="org-whitespace-space"> </span>(str),<span class="org-whitespace-space"> </span>strlen(str))
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">sig_out</span>(<span class="org-variable-name">str</span>)<span class="org-whitespace-space"> </span>write(STDERR_FILENO,<span class="org-whitespace-space"> </span>(str),<span class="org-whitespace-space"> </span>strlen(str))
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pr_reg</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+
+<span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">func_name</span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">addr</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">buf</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">Dl_info</span><span class="org-whitespace-space"> </span><span class="org-variable-name">di</span>;
+<span class="org-whitespace-space">        </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">name</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">"_end"</span>;
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(0<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>dladdr(addr,<span class="org-whitespace-space"> </span>&amp;di))<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">error</span>
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-string">"nil"</span>;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(di.dli_sname)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>name<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>di.dli_sname;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span>sprintf(buf,<span class="org-whitespace-space"> </span><span class="org-string">"%s+%lx,</span><span class="org-whitespace-space"> </span><span class="org-string">base-offset</span><span class="org-whitespace-space"> </span><span class="org-string">%lx</span><span class="org-whitespace-space"> </span><span class="org-string">(%p)"</span>,
+<span class="org-whitespace-space">                </span>name,<span class="org-whitespace-space"> </span>addr<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>di.dli_saddr,
+<span class="org-whitespace-space">                </span>addr<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>di.dli_fbase,<span class="org-whitespace-space"> </span>di.dli_saddr);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>buf;
+}
+
+<span class="org-type">_Unwind_Reason_Code</span><span class="org-whitespace-space"> </span><span class="org-function-name">read_stacktrace</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">_Unwind_Context</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">uc</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">p</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">used</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">        </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-variable-name">buf</span>[1024],<span class="org-whitespace-space"> </span><span class="org-variable-name">fname</span>[256];
+<span class="org-whitespace-space">        </span><span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">regs</span>[16],<span class="org-whitespace-space"> </span><span class="org-variable-name">r</span>;
+<span class="org-whitespace-space">        </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>**<span class="org-variable-name">rt</span>,<span class="org-whitespace-space"> </span>*<span class="org-variable-name">caller</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-type">void</span>*)_Unwind_GetIP(uc);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>caller)
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>_URC_END_OF_STACK;
+
+<span class="org-whitespace-space">        </span>rt<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-type">void</span>**)uc;
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(r<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>r<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>16;<span class="org-whitespace-space"> </span>++r)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(rt[r]<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>)
+<span class="org-whitespace-space">                        </span>regs[r]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>_Unwind_GetGR(uc,<span class="org-whitespace-space"> </span>r);
+<span class="org-whitespace-space">                </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">                        </span>regs[r]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0xCCCCCCCCEEEEEEEEUL;
+<span class="org-whitespace-space">        </span>}
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(pr_reg)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                </span>pr_reg<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">                </span>used<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>snprintf(buf<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span>1024<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span><span class="org-string">"Regs:\n\t"</span>);
+<span class="org-whitespace-space">                </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(r<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>r<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>16;<span class="org-whitespace-space"> </span>++<span class="org-whitespace-space"> </span>r)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                        </span>n<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>snprintf(buf<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span>1024<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">%#018lx"</span>,<span class="org-whitespace-space"> </span>regs[r<span class="org-whitespace-line">]);</span>
+<span class="org-whitespace-space">                        </span>used<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>n;
+<span class="org-whitespace-space">                        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>((r+1)%4<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">                                </span>snprintf(buf<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span>1024<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span><span class="org-string">"\n\t"</span>);
+<span class="org-whitespace-space">                                </span>used<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>2;
+<span class="org-whitespace-space">                        </span>}
+<span class="org-whitespace-space">                </span>}
+<span class="org-whitespace-space">                </span>n<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>snprintf(buf<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span>1024-used,<span class="org-whitespace-space"> </span><span class="org-string">"\n"</span>);
+<span class="org-whitespace-space">                </span>used<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>n;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span>n<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>snprintf(buf<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span>1024<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>used,<span class="org-whitespace-space"> </span><span class="org-string">"Caller:</span><span class="org-whitespace-space"> </span><span class="org-string">%p(%s)\n"</span>,
+<span class="org-whitespace-space">                     </span>caller,<span class="org-whitespace-space"> </span>func_name(caller,<span class="org-whitespace-space"> </span>fname));
+<span class="org-whitespace-space">        </span>used<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>n;
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-comment">snprintf(buf</span><span class="org-whitespace-space"> </span><span class="org-comment">+</span><span class="org-whitespace-space"> </span><span class="org-comment">used,</span><span class="org-whitespace-space"> </span><span class="org-comment">1024</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">used,</span><span class="org-whitespace-space"> </span><span class="org-comment">"RIP=%lx,</span><span class="org-whitespace-space"> </span><span class="org-comment">RBP=%lx,</span><span class="org-whitespace-space"> </span><span class="org-comment">RSP=%lx\n",</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-tab">      </span><span class="org-whitespace-space"> </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RIP],</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-tab">      </span><span class="org-whitespace-space"> </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RBP],</span>
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-tab">      </span><span class="org-whitespace-space"> </span><span class="org-comment">((ucontext_t*)uc)-&gt;uc_mcontext.gregs[REG_RSP]);</span>
+
+<span class="org-whitespace-space">        </span>sig_out(buf);
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>_URC_NO_REASON;
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">stacktrace</span>()
+{
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">multithread</span><span class="org-whitespace-space"> </span><span class="org-comment">environment,</span><span class="org-whitespace-space"> </span><span class="org-comment">may</span><span class="org-whitespace-space"> </span><span class="org-comment">be</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">add</span><span class="org-whitespace-space"> </span><span class="org-comment">tid</span><span class="org-whitespace-space"> </span><span class="org-comment">here</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">        </span>_Unwind_Backtrace(read_stacktrace,<span class="org-whitespace-space"> </span>0);
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">__assert_stack</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">expr</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">file</span>,
+<span class="org-whitespace-space">                                  </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">func</span>,<span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">line</span>,
+<span class="org-whitespace-space">                                  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>(*<span class="org-function-name">cb</span>)(<span class="org-type">void</span>*),<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arg</span>)
+{
+<span class="org-whitespace-space">        </span><span class="org-type">ucontext_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">uc</span>;
+
+<span class="org-whitespace-space">        </span>fprintf(stderr,<span class="org-whitespace-space"> </span><span class="org-string">"Assert</span><span class="org-whitespace-space"> </span><span class="org-string">expr:</span><span class="org-whitespace-space"> </span><span class="org-string">%s</span><span class="org-whitespace-space"> </span><span class="org-string">[%s,</span><span class="org-whitespace-space"> </span><span class="org-string">%s,</span><span class="org-whitespace-space"> </span><span class="org-string">%zu]\n"</span>,
+<span class="org-whitespace-space">                </span>expr,<span class="org-whitespace-space"> </span>file,<span class="org-whitespace-space"> </span>func,<span class="org-whitespace-space"> </span>line);
+
+<span class="org-whitespace-space">        </span>getcontext(&amp;uc);
+<span class="org-whitespace-space">        </span>stacktrace();
+
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(cb)
+<span class="org-whitespace-space">                </span>cb(arg);
+
+<span class="org-whitespace-space">        </span>exit(1);
+}
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">__assert_string_expr</span>(<span class="org-variable-name">expr</span>)<span class="org-whitespace-tab">      </span>#expr
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">assert_stack</span>(<span class="org-variable-name">expr</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">callback</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">arg</span>)<span class="org-whitespace-tab">       </span>({<span class="org-whitespace-tab">                      </span>\
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(expr)<span class="org-whitespace-tab">                                               </span>\
+<span class="org-whitespace-space">                        </span>__assert_stack(#expr,<span class="org-whitespace-space"> </span>__FILE__,<span class="org-whitespace-space"> </span>__func__,<span class="org-whitespace-tab">       </span>\
+<span class="org-whitespace-space">                                       </span>__LINE__,<span class="org-whitespace-space"> </span>callback,<span class="org-whitespace-space"> </span>arg);<span class="org-whitespace-tab">        </span>\
+<span class="org-whitespace-space">                </span>(<span class="org-type">void</span>)<span class="org-constant">NULL</span>;<span class="org-whitespace-space"> </span>})
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[argc])
+{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>50,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>100;
+<span class="org-whitespace-space">        </span>assert_stack(i*2<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>j,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4ceab4f" class="outline-2">
+<h2 id="org4ceab4f"><span class="section-number-2">4</span> 实例代码</h2>
+</div>
+
+<div id="outline-container-orge436afc" class="outline-2">
+<h2 id="orge436afc"><span class="section-number-2">5</span> References</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

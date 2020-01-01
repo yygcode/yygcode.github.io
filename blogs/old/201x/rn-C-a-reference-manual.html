@@ -1,0 +1,1974 @@
+<?xml version="1.0" encoding="utf-8"?>
+xhtml4
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<!-- 2020-01-01 Wed 21:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>C Reference Manual Reading Notes</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/org-code.css" />
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog-bluetopbar.css" />
+<script type="text/javascript" src="/themes/mathjax/MathJax.js?config=TeX-AMS_HTML"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="theindex.html">Index</a> |
+  <a href="tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C Reference Manual Reading Notes</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb58689d">1. CHARACTER SET</a>
+<ul>
+<li><a href="#org7e1975d">1.1. Execution Character Set</a></li>
+<li><a href="#orgfa83478">1.2. Whitespace and Line Terminaton</a></li>
+<li><a href="#org5b31bf4">1.3. Character Encoding</a></li>
+<li><a href="#org719e089">1.4. Trigraphs</a></li>
+<li><a href="#orgaa54ebb">1.5. Digraphs</a></li>
+<li><a href="#org13ed4a4">1.6. Ended with Hello world program</a></li>
+</ul>
+</li>
+<li><a href="#org0f34118">2. Whitespace, Line Termination, and Lines Length Limits</a></li>
+<li><a href="#org3567b35">3. Multibyte and Wide Characters</a></li>
+<li><a href="#org7851fb9">4. Comments</a></li>
+<li><a href="#orgacd1d72">5. Tokens ( Without Constants )</a>
+<ul>
+<li><a href="#org8266ce7">5.1. operators and separators.</a></li>
+<li><a href="#orgc00362b">5.2. identifiers</a></li>
+<li><a href="#org9eb2683">5.3. Keywords</a></li>
+<li><a href="#orge3c71d1">5.4. Constants</a></li>
+</ul>
+</li>
+<li><a href="#org826b6c5">6. Constants</a>
+<ul>
+<li><a href="#org1765e94">6.1. Integer Constants.</a></li>
+<li><a href="#orgfc7bc4a">6.2. Floating-Point Constants</a></li>
+<li><a href="#orge527efd">6.3. Character Constants</a></li>
+<li><a href="#org1f593ca">6.4. String Constants</a></li>
+<li><a href="#orgcc144f6">6.5. Escape Characters</a></li>
+</ul>
+</li>
+<li><a href="#orga765feb">7. C++ Compatibility</a>
+<ul>
+<li><a href="#org702a8be">7.1. Character Sets</a></li>
+<li><a href="#org32c9c8e">7.2. Comments</a></li>
+<li><a href="#org542bf06">7.3. Operators</a></li>
+<li><a href="#org5ce6c19">7.4. Identifiers and Keywords</a></li>
+<li><a href="#org75b5b01">7.5. Character Constants</a></li>
+</ul>
+</li>
+<li><a href="#orgee29e94">8. The C Preprocessor and Preprocessor Commands</a>
+<ul>
+<li><a href="#orge6f75c5">8.1. The C preprocessor</a></li>
+<li><a href="#orgb8309b8">8.2. Preprocessor Commands</a></li>
+</ul>
+</li>
+<li><a href="#org23c84d3">9. Preprocessor Lexical Conventions</a></li>
+<li><a href="#org677d889">10. Definition and Replacement</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb58689d" class="outline-2">
+<h2 id="orgb58689d"><span class="section-number-2">1</span> CHARACTER SET</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A C source file is a sequence of characters selected from a character.
+C programs are written using the following characters:
+</p>
+
+<p>
+1). the 52 Latin capital and small letters: A~Z and a~z
+2). the 10 digits: 0~9
+3). the space
+4). the horizontal tab(HT), vertical tab(VT), form feed(FF) control characters.
+5). the 29 graphic character and their official names.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Character<span class="org-whitespace-space"> </span>Official<span class="org-whitespace-space"> </span>Names
+<span class="org-whitespace-space">     </span>!<span class="org-whitespace-space">    </span>execlamation<span class="org-whitespace-space"> </span>mark
+
+<span class="org-whitespace-space">     </span>\#<span class="org-whitespace-space">    </span>number<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>%<span class="org-whitespace-space">   </span>percent<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>^<span class="org-whitespace-space">    </span>circumflex<span class="org-whitespace-space"> </span>accent
+
+<span class="org-whitespace-space">     </span>&amp;<span class="org-whitespace-space">    </span>ampersand
+
+<span class="org-whitespace-space">     </span>*<span class="org-whitespace-space">    </span>asterisk
+
+<span class="org-whitespace-space">     </span>(<span class="org-whitespace-space">     </span>left<span class="org-whitespace-space"> </span>parenthesis
+
+<span class="org-whitespace-space">     </span>_<span class="org-whitespace-space">    </span>lowline(underscore)
+
+<span class="org-whitespace-space">     </span>)<span class="org-whitespace-space">     </span>right<span class="org-whitespace-space"> </span>parenthesis
+
+<span class="org-whitespace-space">     </span>-<span class="org-whitespace-space">     </span>hyphen-minus
+
+<span class="org-whitespace-space">     </span>+<span class="org-whitespace-space">    </span>plus<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>=<span class="org-whitespace-space">    </span>equals<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>~<span class="org-whitespace-space">    </span>tilde
+
+<span class="org-whitespace-space">     </span>[<span class="org-whitespace-space">     </span>left<span class="org-whitespace-space"> </span>square<span class="org-whitespace-space"> </span>bracket
+
+<span class="org-whitespace-space">     </span>]<span class="org-whitespace-space">     </span>right<span class="org-whitespace-space"> </span>square<span class="org-whitespace-space"> </span>bracket
+
+<span class="org-whitespace-space">     </span>'<span class="org-whitespace-space">     </span>apostrhphe
+
+<span class="org-whitespace-space">     </span>\|<span class="org-whitespace-space">     </span>vertical<span class="org-whitespace-space"> </span>line
+
+<span class="org-whitespace-space">     </span>/<span class="org-whitespace-space">     </span>reverse<span class="org-whitespace-space"> </span>solidus(backslash)
+
+<span class="org-whitespace-space">     </span>;<span class="org-whitespace-space">     </span>semicolon
+
+<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space">     </span>colon
+
+<span class="org-whitespace-space">     </span>"<span class="org-whitespace-space">     </span>quotation<span class="org-whitespace-space"> </span>mark
+
+<span class="org-whitespace-space">     </span>{<span class="org-whitespace-space">     </span>left<span class="org-whitespace-space"> </span>curly<span class="org-whitespace-space"> </span>bracket
+
+<span class="org-whitespace-space">     </span>}<span class="org-whitespace-space">     </span>right<span class="org-whitespace-space"> </span>curly<span class="org-whitespace-space"> </span>bracket
+
+<span class="org-whitespace-space">     </span>,<span class="org-whitespace-space">      </span>comma
+
+<span class="org-whitespace-space">     </span>.<span class="org-whitespace-space">      </span>full<span class="org-whitespace-space"> </span>stop
+
+<span class="org-whitespace-space">     </span>&lt;<span class="org-whitespace-space">     </span>less-than<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>&gt;<span class="org-whitespace-space">     </span>greater-than<span class="org-whitespace-space"> </span>sign
+
+<span class="org-whitespace-space">     </span>/<span class="org-whitespace-space">      </span>solidus(slash,<span class="org-whitespace-space"> </span>divide<span class="org-whitespace-space"> </span>sign)
+
+<span class="org-whitespace-space">     </span>?<span class="org-whitespace-space">      </span>question<span class="org-whitespace-space"> </span>mark
+</pre>
+</div>
+
+<p>
+Some countries have national character sets that do not include all the graphic
+character above defined trigraphs and token respelling to allow C programs to be
+written in the ISO 646-1083 Invariant Code Set.
+</p>
+
+<p>
+6). additional characters are sometimes used in C source programes, including
+formatting characters such as backspace(BS) and carriage return(CR) characters
+</p>
+<ul class="org-ul">
+<li>additional Basic Latin characters, include the character $,@,`(grave accent)</li>
+<li>The formatting characters are treated as spaces and do not otherwise affect
+the source program. The additional graphic characters may appear only in
+comments, character constants, string constants, and file names.</li>
+</ul>
+</div>
+
+<div id="outline-container-org7e1975d" class="outline-3">
+<h3 id="org7e1975d"><span class="section-number-3">1.1</span> Execution Character Set</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The character set interpreted during the execution of a C program is not
+necessarily the same as the one in which the C programe is written.(like as
+cross compiler tool). Character int the execution character set are represented
+by their equivalent int the source character set or by special character escape
+sequences(escape sequence 换码顺序) that begin with the backslash(/) character.
+</p>
+
+<p>
+In addition to the standard characters methioned before, the execution character
+set must also include:
+1). a null character that must be encoded as the value 0, which is used to mark
+the end of strings.
+2). a newline character that is used as the end-of-line marker whichi divide character streams into lines during input/output.
+3). the alert,backspace,and carriage return characters.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfa83478" class="outline-3">
+<h3 id="orgfa83478"><span class="section-number-3">1.2</span> Whitespace and Line Terminaton</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+In C source programs the blank(space), end-of-line, VT,FF,HT are known
+collectively as whitespace characters.(Comments are also whitespace) These
+characters are ignored except insofar as they are used to separate adjacent
+tokens.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5b31bf4" class="outline-3">
+<h3 id="org5b31bf4"><span class="section-number-3">1.3</span> Character Encoding</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+A common C programming error is to aussume a particular encoding is in use when
+another one holds in fact.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org719e089" class="outline-3">
+<h3 id="org719e089"><span class="section-number-3">1.4</span> Trigraphs</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+A set of trigraphs is included in Standard C so that programs may be written
+using only thew ISO 646-1083 Invariant Code Set, a subset of the seven-bit ASCII
+code set and a code set that is common to many non-english national character
+sets. The trigraphs, introduced by two consecutive question mark characters.
+listed in follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">??(<span class="org-whitespace-space">            </span>[
+
+??)<span class="org-whitespace-space">            </span>]
+
+??&lt;<span class="org-whitespace-space">           </span>{
+
+??&gt;<span class="org-whitespace-space">           </span>}
+
+??/<span class="org-whitespace-space">            </span>/
+
+??!<span class="org-whitespace-space">            </span>|
+
+??'<span class="org-whitespace-space">            </span>^
+
+??-<span class="org-whitespace-space">            </span>_
+
+??=<span class="org-whitespace-space">           </span>#
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaa54ebb" class="outline-3">
+<h3 id="orgaa54ebb"><span class="section-number-3">1.5</span> Digraphs</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-text">&lt;:<span class="org-whitespace-space">           </span>[
+
+:&gt;<span class="org-whitespace-space">           </span>]
+
+&lt;%<span class="org-whitespace-space">         </span>{
+
+%&gt;<span class="org-whitespace-space">         </span>}
+
+%:<span class="org-whitespace-space">          </span>#
+
+%:%:<span class="org-whitespace-space">     </span>##
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13ed4a4" class="outline-3">
+<h3 id="org13ed4a4"><span class="section-number-3">1.6</span> Ended with Hello world program</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-C">%:include<span class="org-whitespace-space"> </span>&lt;stdio.h&gt;
+<span class="org-type">int</span><span class="org-whitespace-space"> </span>main()<span class="org-whitespace-space"> </span>&lt;%
+<span class="org-whitespace-space">  </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>buf&lt;:??)=<span class="org-string">"Hello</span><span class="org-whitespace-space"> </span><span class="org-string">world</span><span class="org-whitespace-space"> </span><span class="org-string">!"</span>;
+<span class="org-whitespace-space">  </span>printf(<span class="org-string">"%s/n"</span>,<span class="org-whitespace-space"> </span>buf);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+??&gt;
+</pre>
+</div>
+
+<pre class="example">
+Hello world !/n
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-trigraphs
+~$<span class="org-whitespace-space"> </span>./hello
+Hello<span class="org-whitespace-space"> </span>world<span class="org-whitespace-space"> </span>!
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0f34118" class="outline-2">
+<h2 id="org0f34118"><span class="section-number-2">2</span> Whitespace, Line Termination, and Lines Length Limits</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The blank(space), end-of-line, VT, FF, HT, and comments are known collectively
+as whitespace character (WSC). These characters are ignored except insofar as
+they are used to separate adjacent tokens or when they appera in character
+constans, string constans, or #include file names. WCS may be used to lay out
+the C program in a way that is  pleasing to a human reader.
+</p>
+
+<p>
+The end-of-line character or character sequence marks the end of source program
+lines. In some emplementations, the formatting characters CR, FF, VT
+additionally terminate source lines, and are called line break characters. Line
+Termination is important for the recognition of preprocessor control lines.
+</p>
+
+<p>
+A source line can be continued onto the next line by ending the first line with
+a backslash(<i>) or with the trigraph ??</i>. Most C implementation impose a limit on
+the maximum length of source lines both before and after splicing continuation
+lines. C89 require to permit logical source lines of at least 509 characters;
+C99 allows 4095 characters.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3567b35" class="outline-2">
+<h2 id="org3567b35"><span class="section-number-2">3</span> Multibyte and Wide Characters</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+To accommodate non-english alphabets that may contain a large number of
+characters, Standard C introduces wide characters and wide strings.  To present
+wide characters and wide strings in the external, byte-oriented world, the
+concept of multibyte characters is introduced.
+</p>
+
+<p>
+Wide Characters And Strings.  A wide character is a binary representation of an
+element of an extended character set. It has the integer type wchar_t which is
+declared in header file stddef.h. Standard C does not specify the encodingof the
+extended character set other than "null wide character"(zero, 0) and the
+existence of WEOF(-1).
+</p>
+
+<p>
+Multibyte Character is the representation of a wide character in either the
+source or execution character set.(There may be different encoding for each). A
+multibyte stirng is a normal C string, but whose characters can be interpreted
+as a series of multibyte characters. The form of multibyte characters and the
+mapping between multibyte and wide characters is implementation-defined. This
+mapping is performed for wide-character and wide string constants at compile
+time, and the standard library provides function that perform this mapping at
+run time. Multibyte characters encoding can be state dependent or independent.
+</p>
+
+<p>
+Standard C places some restrictions on multibyte characters:
+1). All characters from the standard character set must be present in the
+encoding.
+2). In the initial shift state, all single-byte characters from the standard
+character set retain their normal interpretation and do not affect the shift
+state.
+3). A byte containing all zeros is taken to be the null character regardless of
+shift state. No multibyte character can use a byte containing all zeros as its
+second or subsequent character.
+</p>
+
+<p>
+Together, these rules ensure that multibyte sequences can be processed as normal
+C strings(e.g. they will not contain embedded null characters ) and a C string
+without special multibyte codes will have the expected interpretation as a
+multibyte sequence.
+</p>
+
+<p>
+Source and execution use of multibyte characters. Multibyte character may appear
+in comments, idenrifiers, preprocessor header names, string constants, and
+character constants. Multibyte characters in the physical representation of the
+source are recognized and translated to the source character set before any
+lexical analysis, preprocessing, or even splicing of continuation lines. During
+process, character appearing in string and character constants are translated to
+the execution character set before they are interpreted as multibyte sequences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7851fb9" class="outline-2">
+<h2 id="org7851fb9"><span class="section-number-2">4</span> Comments</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Standard C supported two stylized comments:
+</p>
+
+<p>
+1). Begin with the two characters <i>* and ends with the first subsequent
+occurence of the two characters *</i>.
+2). Begin with the characters // and extends up to(but does not include) the
+next line break.
+</p>
+
+<p>
+All comments may take any number of characters and are always treated as
+whitespace. And comments are not recognized inside string or character constants
+or within other comments.  The contents of comments are not examined by C
+implementation except to recognize (and pass over) multibyte characters and line
+breaks. Comments are removed by the compiler before preprocessing, so
+preprocessor commands inside comments will not be recognized, and line breaks
+inside comments do not terminate preprocessor commands. The following two
+#define commands have the same effect:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ten</span><span class="org-whitespace-space"> </span>(2*5)
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ten</span><span class="org-whitespace-space">   </span><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">ten</span>
+<span class="org-whitespace-space">                       </span><span class="org-comment">*</span><span class="org-whitespace-space"> </span><span class="org-comment">one</span><span class="org-whitespace-space"> </span><span class="org-comment">greater</span><span class="org-whitespace-space"> </span><span class="org-comment">than</span><span class="org-whitespace-space"> </span><span class="org-comment">nine</span>
+<span class="org-whitespace-space">                       </span><span class="org-comment-delimiter">*/</span><span class="org-whitespace-space">  </span>(2*5)
+</pre>
+</div>
+
+<p>
+Although some non-standard C implementation implement "nestable comments",
+please do not depend on it and used it.
+</p>
+
+<p>
+To cause the compiler to ignore large parts of C source, it is best to enclose
+the parts to be removed with the preprocessor commands
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#if</span><span class="org-whitespace-space"> </span>0
+
+...<span class="org-whitespace-space"> </span>...
+
+<span class="org-preprocessor">#endif</span>
+</pre>
+</div>
+<p>
+rather than insert <i>* before and *</i> after the text. This avoids having to worry
+about /*-style comments in the enclosed source text.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgacd1d72" class="outline-2">
+<h2 id="orgacd1d72"><span class="section-number-2">5</span> Tokens ( Without Constants )</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Five classes of tokens: operators, separators, identifiers, keywords, and
+constants.
+</p>
+</div>
+
+<div id="outline-container-org8266ce7" class="outline-3">
+<h3 id="org8266ce7"><span class="section-number-3">5.1</span> operators and separators.</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-negation-char">!</span><span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>^<span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>.<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>?
+
++=<span class="org-whitespace-space"> </span>-=<span class="org-whitespace-space"> </span>*=<span class="org-whitespace-space"> </span>/=<span class="org-whitespace-space"> </span>%=
+
+&lt;&lt;=<span class="org-whitespace-space"> </span>&gt;&gt;=<span class="org-whitespace-space"> </span>&amp;=<span class="org-whitespace-space"> </span>^=<span class="org-whitespace-space"> </span>|=
+
+--&gt;<span class="org-whitespace-space"> </span>++<span class="org-whitespace-space"> </span>--<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>&gt;&gt;
+
+&lt;=<span class="org-whitespace-space"> </span>&gt;=<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>||
+
+()<span class="org-whitespace-space"> </span>[]<span class="org-whitespace-space"> </span>{}<span class="org-whitespace-space"> </span>,<span class="org-whitespace-space"> </span>;<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>...
+
+&lt;%<span class="org-whitespace-space"> </span>%&gt;<span class="org-whitespace-space"> </span>&lt;:<span class="org-whitespace-space"> </span>:&gt;<span class="org-whitespace-space"> </span>%:<span class="org-whitespace-space"> </span>%:%:<span class="org-whitespace-space"> </span>(see<span class="org-whitespace-space"> </span><span class="org-type">the</span><span class="org-whitespace-space"> </span><span class="org-variable-name">section</span><span class="org-whitespace-space"> </span>001)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc00362b" class="outline-3">
+<h3 id="orgc00362b"><span class="section-number-3">5.2</span> identifiers</h3>
+<div class="outline-text-3" id="text-5-2">
+<ul class="org-ul">
+<li>An identifier, or name, is a sequence of Latin capital and small letters,</li>
+</ul>
+<p>
+digits, and LOWLINE character. An identifier must bot begin with a digit, and it
+must not have the same spelling as a keyword.
+</p>
+<ul class="org-ul">
+<li>Beginning with C99, identifiers may also contain unversal character names and</li>
+</ul>
+<p>
+other implementation-defined multibyte characters. Unversal characters must not
+be used to place a diagit at the beginning of an identifier and further
+restricted to be "letter-like" character and not puncuators.
+</p>
+<ul class="org-ul">
+<li>Identifiers sensitive of case.</li>
+<li>All identifiers may not beginning with an underscore and followed by ethier a</li>
+</ul>
+<p>
+capital(uppercase) letter or another underscore because which all are reserved
+for standard library.
+</p>
+<ul class="org-ul">
+<li>Internal identidfiers: C89 requires implementation to permit a minimum of 31</li>
+</ul>
+<p>
+significant character in identifiers, and C99 raises this minimum to 63
+characters.
+</p>
+<ul class="org-ul">
+<li>External identifiers: C89 requires a minimum capacity of only six characters,</li>
+</ul>
+<p>
+not counting letter case. C99 raises this to 31 characters, including letter
+case. But allowing unversal character names to be treated as 6 characters or 10
+characters.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9eb2683" class="outline-3">
+<h3 id="org9eb2683"><span class="section-number-3">5.3</span> Keywords</h3>
+<div class="outline-text-3" id="text-5-3">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-type">_Bool</span><span class="org-whitespace-space"> </span><span class="org-keyword">break</span><span class="org-whitespace-space"> </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-type">_Complex</span><span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">continue</span><span class="org-whitespace-space"> </span><span class="org-keyword">default</span><span class="org-whitespace-space"> </span><span class="org-keyword">restrict</span><span class="org-whitespace-space"> </span><span class="org-keyword">do</span><span class="org-whitespace-space"> </span><span class="org-type">double</span>
+<span class="org-keyword">else</span><span class="org-whitespace-space"> </span><span class="org-keyword">enum</span><span class="org-whitespace-space"> </span><span class="org-keyword">extern</span><span class="org-whitespace-space"> </span><span class="org-type">float</span><span class="org-whitespace-space"> </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span><span class="org-keyword">goto</span><span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span><span class="org-type">_Imaginary</span><span class="org-whitespace-space"> </span><span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-keyword">register</span><span class="org-whitespace-space"> </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-type">sh</span><span class="org-type"><span class="org-whitespace-line">ort</span></span>
+<span class="org-type">signed</span><span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span><span class="org-whitespace-space"> </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-keyword">switch</span><span class="org-whitespace-space"> </span><span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-keyword">union</span><span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span><span class="org-keyword">while</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge3c71d1" class="outline-3">
+<h3 id="orge3c71d1"><span class="section-number-3">5.4</span> Constants</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+It's more complicated than forwards. The next section will note the constants.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org826b6c5" class="outline-2">
+<h2 id="org826b6c5"><span class="section-number-2">6</span> Constants</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The lexical class of constants includes four different kinds of constants:
+integers, floating-point numbers, characters, and strings. Suck tokens are
+called literals in other languages to distinguish thm from objects whose value
+are constants(i.e., not changing) but that do not belong to lexically distinct
+classes. An example of these latter objects in C is enumeration constrants,
+which belong to the lexical class of identifiers. In this book, we use
+traditional C terminology of constrant for both cases.
+</p>
+</div>
+
+<div id="outline-container-org1765e94" class="outline-3">
+<h3 id="org1765e94"><span class="section-number-3">6.1</span> Integer Constants.</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Integer constants may be specified in decimal, octual, or hexadecimal notation.
+There are the rules for determining the radix of an integer constant:
+</p>
+<ul class="org-ul">
+<li>If the integer constant begins with the letters 0X or 0x, then it is in
+hexadecimal notation, with the character a through f(or A through F)
+representing 10 through 15.</li>
+<li>Otherwise, if it begins with digit 0, then it is in octal notation.</li>
+<li>Otherwise, it is in decimal notation.</li>
+</ul>
+
+<p>
+An integer constant may be immediately followed by suffix letters to designate
+a minimum size for its type:
+</p>
+<ul class="org-ul">
+<li>Letters l or L indicate a constant of type long</li>
+<li>Letters ll or LL indicate a constant of type long long(C99)(Notes, Ll or lL is invalid)</li>
+<li>Letters u or U indicate an unsigned type of (int, long, or long long)</li>
+<li>The unsigned suffix may be combined with the long or long long suffix in any order, like as 100uLL or 200ULL.</li>
+</ul>
+
+<p>
+These are valid integer constants: 100, 1000L, 200ll, 0x300, 0777, 0x98FCEuLL.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfc7bc4a" class="outline-3">
+<h3 id="orgfc7bc4a"><span class="section-number-3">6.2</span> Floating-Point Constants</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+Floating-point constants may be written with a decimal point, a signed exponent,
+or both. Standard C allows a suffix letter(floating-suffix) to designate
+constants of type float and long double. Without a suffix, the type of the
+constant is double. Letters f or F indicate a constant of type of float, and
+letters l or L indicate a constant of type of long double. In C99, a complex
+floating-point constant iw written as a floating-point constant expression
+involving the imaginary constant _Complex_I(or I) defined in complex.h. C99
+permits floating-point constants to be expressed in hexadecimal notation;
+previous versions of C had only decimal floating-point constants. The
+hexadecimal format use the letter p to separate the fraction from the exponent
+because the customary e could be confused with a hexadecimal digit. The
+binary-exponent is a signed decimal number that represents a power of 2(not a
+power of 10).
+</p>
+
+<p>
+These are valid floating-point constants: 0., e21, 3.1415, .01, 1.E-3, 0.52f,
+5.5E2L, 0x55fceep-5
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge527efd" class="outline-3">
+<h3 id="orge527efd"><span class="section-number-3">6.3</span> Character Constants</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+A character constant is written by enclosing one or more characters in
+apostrophes. A special escape mechanism is providedto write characters or
+numeric values that would be inconvenient or impossible to enter directly in the
+source program. Standard C allows the character constant to be preceded by the
+letter L to specify a wide character constant. The value of a character constant
+is implementation-defined if:
+</p>
+
+<ul class="org-ul">
+<li>there is no corresponding character int the execution character set.</li>
+<li>more than a single execution character appears in the constant, or</li>
+<li>a numeric escape has a value not represented in the execution character set.</li>
+</ul>
+
+<p>
+Character constants not preceded by the letter L have type int. And wide
+character constants that designated by the prefix letter L have type wchar_t.
+</p>
+
+<p>
+Examples of single-character constants along with their(decimal) values under
+the ASCII encoding:
+</p>
+<pre class="example">
+'a',  '\r',  ' ',  '\'',  '"',  '\0',  '\377',  '23',  '\\'
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-org1f593ca" class="outline-3">
+<h3 id="org1f593ca"><span class="section-number-3">6.4</span> String Constants</h3>
+<div class="outline-text-3" id="text-6-4">
+<p>
+A string constant is a (possibly empty) sequence of characters enclosed in
+double quotes. The same escape mechanism provided for character constants can
+be used to express the characters in the string. Standard C allows the string
+constant to be preceded by the letter L to specify a wide string constant.
+</p>
+
+<p>
+For each nonwide string constant of n characters, at run time there will be a
+statically allocated block of n+1 characters whose first n characters are the
+character from the string and whose last character is the null character, '/0'.
+This block is the value of the string constant and its type is char[n+1]. Wide
+sting constants similarly become n wide characters followed by a null wide
+character and have type wchar-t[n+1].
+</p>
+
+<p>
+If a string constant appears anywhere except as an argument to the address
+operator &amp;, an argument to the sizeof operator, or as an initializer of a
+character array, then the usual array conversions come into play, changing the
+string from an array of characters to a pointerto the first character in the
+string.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcc144f6" class="outline-3">
+<h3 id="orgcc144f6"><span class="section-number-3">6.5</span> Escape Characters</h3>
+<div class="outline-text-3" id="text-6-5">
+<div class="org-src-container">
+<pre class="src src-text">a<span class="org-whitespace-space"> </span>--<span class="org-whitespace-space"> </span>alert,<span class="org-whitespace-space">                </span>b--backspace,<span class="org-whitespace-space">               </span>f--form<span class="org-whitespace-space"> </span>feed,
+n--new<span class="org-whitespace-space"> </span>line,<span class="org-whitespace-space">               </span>r--carriage<span class="org-whitespace-space"> </span>return
+t--horizontal<span class="org-whitespace-space"> </span>tab,<span class="org-whitespace-space">    </span>v--vertical<span class="org-whitespace-space"> </span>tab,<span class="org-whitespace-space">              </span>\--backslash,
+'--single<span class="org-whitespace-space"> </span>quote,<span class="org-whitespace-space">         </span>"--double<span class="org-whitespace-space"> </span>quote
+?--question<span class="org-whitespace-space"> </span>mark
+numeric<span class="org-whitespace-space"> </span>escape<span class="org-whitespace-space"> </span>code:<span class="org-whitespace-space"> </span>'\004',<span class="org-whitespace-space"> </span>'\006',<span class="org-whitespace-space"> </span>'\xab',<span class="org-whitespace-space"> </span>etc.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga765feb" class="outline-2">
+<h2 id="orga765feb"><span class="section-number-2">7</span> C++ Compatibility</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org702a8be" class="outline-3">
+<h3 id="org702a8be"><span class="section-number-3">7.1</span> Character Sets</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+The token respelling and trigraphs in Standard C are part of the C++ Standard,
+but they are not common in pre-Standard C++ implementations. Boths C and C++
+allow universal character names with same syntax, but only C explicitly allows
+other implementation-defined character in identifiers. (One expects that C++
+implementations will provide them as an extension.)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org32c9c8e" class="outline-3">
+<h3 id="org32c9c8e"><span class="section-number-3">7.2</span> Comments</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+C99 comments are acceptable as C++ and vice versa.  Before C99, the characters
+//  did not introduce a comment in Standard C, and so the sequence of character
+//* in C could be interpreted differently in C++.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org542bf06" class="outline-3">
+<h3 id="org542bf06"><span class="section-number-3">7.3</span> Operators</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+There are three new compound operators in C++:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++">.*<span class="org-whitespace-space">    </span>-&gt;*<span class="org-whitespace-space">    </span>::
+</pre>
+</div>
+
+<p>
+Since these combinations of tokens would be invalid in Standard C programs,
+there is no impact on portability from C to C++.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5ce6c19" class="outline-3">
+<h3 id="org5ce6c19"><span class="section-number-3">7.4</span> Identifiers and Keywords</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+The identiofiers listed in latter are keywords in C++, but not in C. However,
+the keyword wchar_t is reserved in Standard C, and the keywords bool, true and
+false are reserved in C99 as part of the standard libraries.
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">asm</span><span class="org-whitespace-space">               </span><span class="org-keyword">export</span><span class="org-whitespace-space">          </span><span class="org-keyword">private</span><span class="org-whitespace-space">               </span><span class="org-keyword">throw</span>
+
+<span class="org-type">bool</span><span class="org-whitespace-space">              </span><span class="org-constant">false</span><span class="org-whitespace-space">           </span><span class="org-keyword">protected</span><span class="org-whitespace-space">             </span><span class="org-constant">true</span>
+
+<span class="org-keyword">catch</span><span class="org-whitespace-space">             </span>friends<span class="org-whitespace-space">         </span><span class="org-keyword">public</span><span class="org-whitespace-space">                </span><span class="org-keyword">try</span>
+
+<span class="org-keyword">class</span><span class="org-whitespace-space">             </span><span class="org-keyword">mutable</span><span class="org-whitespace-space">         </span>reinterpret_case<span class="org-whitespace-space">      </span><span class="org-keyword">typeid</span>
+
+<span class="org-keyword">const_cast</span><span class="org-whitespace-space">        </span><span class="org-keyword">namespace</span><span class="org-whitespace-space">       </span><span class="org-keyword">static_cast</span><span class="org-whitespace-space">           </span><span class="org-keyword">typename</span>
+
+<span class="org-keyword">delete</span><span class="org-whitespace-space">            </span><span class="org-keyword">new</span><span class="org-whitespace-space">             </span><span class="org-keyword">template</span><span class="org-whitespace-space">              </span><span class="org-keyword">using</span>
+
+<span class="org-keyword">dynamic_cast</span><span class="org-whitespace-space">      </span><span class="org-keyword">operator</span><span class="org-whitespace-space">        </span><span class="org-keyword">this</span><span class="org-whitespace-space">                  </span><span class="org-keyword">virtual</span>
+
+<span class="org-keyword">explicit</span><span class="org-whitespace-space">          </span><span class="org-type">wchar_t</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org75b5b01" class="outline-3">
+<h3 id="org75b5b01"><span class="section-number-3">7.5</span> Character Constants</h3>
+<div class="outline-text-3" id="text-7-5">
+<p>
+Single-character constants have type int in C, but have type in C++.
+Multicharacter constants-which are implementation-defined&#x2013;have type int in both
+languages. In practice, this makes little difference since in C++ character
+constants used in integral contexts are promoted to int under the usual
+conversions. However, sizeof('C') is sizeof(char) in C++, whereas it is
+sizeof(int) in C.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgee29e94" class="outline-2">
+<h2 id="orgee29e94"><span class="section-number-2">8</span> The C Preprocessor and Preprocessor Commands</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-orge6f75c5" class="outline-3">
+<h3 id="orge6f75c5"><span class="section-number-3">8.1</span> The C preprocessor</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+The C preprocessor is a simple macroprocessor that conceptually processes the
+source text of a C program before the compiler proper reads the source program.
+In some implementations of C(like as gcc), the preprocessor is actually a
+separate program that reads the original source file and writes out a new
+"preprocessored" source file that can then be used as input to the C compiler.
+In other implementations, a single program performs the preprocessing and
+compilation in a single pass over the source file.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb8309b8" class="outline-3">
+<h3 id="orgb8309b8"><span class="section-number-3">8.2</span> Preprocessor Commands</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+The preprocessor is controlled by special preprocessor command lines, which are
+lines of the source file beginning with the character #. Lines that do not
+contain preprocessor commands are called lines of source program text. The
+preprocessor commands as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space">      </span><span class="org-variable-name">Define</span><span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>preprocessor<span class="org-whitespace-space"> </span>macro
+
+<span class="org-preprocessor">#undef</span><span class="org-whitespace-space">       </span>Remove<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>preprocessor<span class="org-whitespace-space"> </span>macro<span class="org-whitespace-space"> </span>definition
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space">     </span>Insert<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>another<span class="org-whitespace-space"> </span>source<span class="org-whitespace-space"> </span>file
+
+<span class="org-preprocessor">#if</span><span class="org-whitespace-space">          </span>Conditionally<span class="org-whitespace-space"> </span>include<span class="org-whitespace-space"> </span>some<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span>based<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>value<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>constant<span class="org-whitespace-space"> </span>ex<span class="org-whitespace-line">pression</span>
+
+<span class="org-preprocessor">#ifdef</span><span class="org-whitespace-space">       </span>Conditionally<span class="org-whitespace-space"> </span>include<span class="org-whitespace-space"> </span>some<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span>based<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>whether<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>macro<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>de<span class="org-whitespace-line">fined</span>
+
+<span class="org-preprocessor">#if</span><span class="org-negation-char"><span class="org-preprocessor">n</span></span><span class="org-preprocessor">def</span><span class="org-whitespace-space">      </span>Conditionally<span class="org-whitespace-space"> </span>include<span class="org-whitespace-space"> </span>some<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>sense<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>opposite<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">to</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">that</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">of</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">#ifdef</span>
+
+<span class="org-preprocessor">#else</span><span class="org-whitespace-space">        </span>Alternatively<span class="org-whitespace-space"> </span>include<span class="org-whitespace-space"> </span>some<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>previous<span class="org-whitespace-space"> </span>#<span class="org-keyword">if</span>,#fdef,#ifndef<span class="org-whitespace-space"> </span>o<span class="org-whitespace-line">r</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">#elif</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">test</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">failed</span>
+
+<span class="org-preprocessor">#endif</span><span class="org-whitespace-space">       </span>Terminate<span class="org-whitespace-space"> </span>conditional<span class="org-whitespace-space"> </span>test
+
+<span class="org-preprocessor">#line</span><span class="org-whitespace-space">        </span>Supply<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>number<span class="org-whitespace-space"> </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>messages
+
+<span class="org-preprocessor">#elif</span><span class="org-whitespace-space">        </span>Alternatively<span class="org-whitespace-space"> </span>include<span class="org-whitespace-space"> </span>some<span class="org-whitespace-space"> </span>text<span class="org-whitespace-space"> </span>based<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>value<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>another<span class="org-whitespace-space"> </span>const<span class="org-whitespace-line">ant</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">expression</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">if</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">the</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">previous</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">#</span><span class="org-keyword"><span class="org-whitespace-line">if</span></span><span class="org-whitespace-line">,</span>
+
+<span class="org-whitespace-space">             </span><span class="org-preprocessor">#ifdef</span>,#ifndef,<span class="org-whitespace-space"> </span>or<span class="org-whitespace-space"> </span>#elif<span class="org-whitespace-space"> </span>test<span class="org-whitespace-space"> </span>failed
+
+defined<span class="org-whitespace-space">      </span>Preprocessor<span class="org-whitespace-space"> </span>function<span class="org-whitespace-space"> </span><span class="org-type">that</span><span class="org-whitespace-space"> </span><span class="org-variable-name">yields</span><span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>name<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>defined<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>prepr<span class="org-whitespace-line">ocessor</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">macro</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">and</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">otherwise;</span>
+
+<span class="org-whitespace-space">             </span><span class="org-type">used</span><span class="org-whitespace-space"> </span><span class="org-variable-name">in</span><span class="org-whitespace-space"> </span>#<span class="org-keyword">if</span><span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>#elif
+
+<span class="org-preprocessor">#</span><span class="org-whitespace-space"> </span><span class="org-preprocessor">operator</span><span class="org-whitespace-space">   </span>Replace<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>macro<span class="org-whitespace-space"> </span>parameter<span class="org-whitespace-space"> </span>with<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>string<span class="org-whitespace-space"> </span>constant<span class="org-whitespace-space"> </span>containing<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>par<span class="org-whitespace-line">ameter</span><span class="org-warning"><span class="org-whitespace-line">'</span></span><span class="org-whitespace-line">s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">value</span>
+
+##<span class="org-whitespace-space"> </span>operator<span class="org-whitespace-space">  </span>Create<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>single<span class="org-whitespace-space"> </span>token<span class="org-whitespace-space"> </span>out<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>two<span class="org-whitespace-space"> </span>adjacent<span class="org-whitespace-space"> </span>tokens
+
+<span class="org-preprocessor">#pragma</span><span class="org-whitespace-space">      </span>Specify<span class="org-whitespace-space"> </span>implementation-dependment<span class="org-whitespace-space"> </span>information<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>compiler
+
+<span class="org-preprocessor">#error</span><span class="org-whitespace-space">       </span><span class="org-string">Produce</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">compile-time</span><span class="org-whitespace-space"> </span><span class="org-string">error</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">designated</span><span class="org-whitespace-space"> </span><span class="org-string">message.</span>
+</pre>
+</div>
+
+<p>
+The preprocessor  typically removes all preprocessor command lines from the
+source file and makes additional transformations on the source file as directed
+by the commands, such as expanding macro calls that occur within the source
+program text. The resulting preprocessed source text must then be a valid C
+program.
+</p>
+
+<p>
+The syntax of preprocessor commands is completely independent of (although in
+some ways similar to)the syntax of the rest of the C language. For example, it
+is possible for a macro definition to expand into a syntactically incomplete
+fragment as long as the fragment makes sense(i.e., is preperly completed) in all
+contexts in which the macro is called.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23c84d3" class="outline-2">
+<h2 id="org23c84d3"><span class="section-number-2">9</span> Preprocessor Lexical Conventions</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+The preprocessor does not parse the source text, but it does break it up into
+tokens for the purpose of locating macro calls. The lexical conventions of the
+preprocessor are somewhat different from the compiler proper; the preprocessor
+recognize the normal C tokens, and additionally recognize as "tokens" other
+characters that would not be recognized as valid in C proper. This enables the
+preprocessor to recognize file names, the presence and absence whitespace, and
+the location of end-of-line markers.
+</p>
+
+<p>
+A line beginning with # is treated as a preprocessor command; the name of the
+command must follow the # character. Standard C permits whitespace to precede
+and follow the # character ont the same source line, but some older compilers do
+not. A line whose only non-whitespace character is a # is termed a null
+directive in standard C and is treated the same as a blank line. Older
+implementations may behave differently.
+</p>
+
+<p>
+The remainder of the line following the command name may contain arguments for
+the command if appropriate. If a preprocessor command takes no arguments, then
+the remainder of the command line should be empty except perhaps for whitespace
+characters or comments. Many pre-ISO compilers silently ignore all characters
+following the expected arguments(if any); this can lead to portability problems.
+The arguments to preprocessor commands are generally subject to macro
+replacement.
+</p>
+
+<p>
+Preprocessor lines are recognized before macro expansion. Therefore, if a macro
+expands into something that looks like a preprocessor command, that command will
+not be recognized by the preprocessors in Standard C or in most other C
+compilers.(Some old UNIX implementations violate this rules.) For example, the
+result of the following code is not to include the file math.h in the program
+being compiled:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">This</span><span class="org-whitespace-space"> </span><span class="org-comment">example</span><span class="org-whitespace-space"> </span><span class="org-comment">doesn't</span><span class="org-whitespace-space"> </span><span class="org-comment">work</span><span class="org-whitespace-space"> </span><span class="org-comment">as</span><span class="org-whitespace-space"> </span><span class="org-comment">one</span><span class="org-whitespace-space"> </span><span class="org-comment">might</span><span class="org-whitespace-space"> </span><span class="org-comment">think</span><span class="org-whitespace-space"> </span><span class="org-comment">!</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">GETMATH</span><span class="org-whitespace-space"> </span>#include<span class="org-whitespace-space"> </span>&lt;math.h&gt;
+GETMATH
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Instead,</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">expanded</span><span class="org-whitespace-space"> </span><span class="org-comment">token</span><span class="org-whitespace-space"> </span><span class="org-comment">sequences</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;math.h&gt;</span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">merely</span><span class="org-whitespace-space"> </span><span class="org-comment">passed</span><span class="org-whitespace-space"> </span><span class="org-comment">through</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">compiled</span><span class="org-whitespace-space"> </span><span class="org-comment">as</span><span class="org-whitespace-space"> </span><span class="org-comment">(erroneous)</span><span class="org-whitespace-space"> </span><span class="org-comment">C</span><span class="org-whitespace-space"> </span><span class="org-comment">code</span>
+</pre>
+</div>
+
+<p>
+All source lines (including preprocessor command lines) can be continued by
+preceding the end-of-line markers by a backslash character, /. This happens
+before scanning for preprocessor commands. Such as the follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text"><span class="org-whitespace-space">            </span>The<span class="org-whitespace-space"> </span>preprocessor
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>err(flag,msg)<span class="org-whitespace-space"> </span>if(flag)/
+
+<span class="org-whitespace-space">                                         </span>printf(msg)
+
+<span class="org-whitespace-space">             </span>is<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>same<span class="org-whitespace-space"> </span>as
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>err(flag,msg)<span class="org-whitespace-space"> </span>if(flag)<span class="org-whitespace-space"> </span>printf(msg)
+
+<span class="org-whitespace-space">             </span>If<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>backslash<span class="org-whitespace-space"> </span>character<span class="org-whitespace-space"> </span>below<span class="org-whitespace-space"> </span>immediately<span class="org-whitespace-space"> </span>precedes<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>end-of-li<span class="org-whitespace-line">ne</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">marker,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">these</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">two</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">lines</span>
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>BACKSLASH<span class="org-whitespace-space"> </span>/
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>ASTERISK<span class="org-whitespace-space"> </span>*
+
+<span class="org-whitespace-space">             </span>will<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>treated<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>single<span class="org-whitespace-space"> </span>preprocessor<span class="org-whitespace-space"> </span>command
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>BACKSLASH<span class="org-whitespace-space"> </span>#define<span class="org-whitespace-space"> </span>ASTERISK<span class="org-whitespace-space"> </span>*
+
+<span class="org-whitespace-space">             </span>and<span class="org-whitespace-space"> </span>expanded<span class="org-whitespace-space"> </span>token<span class="org-whitespace-space"> </span>sequences<span class="org-whitespace-space"> </span>is
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>ASTERISK<span class="org-whitespace-space"> </span>*
+
+The<span class="org-whitespace-space"> </span>preprocessor<span class="org-whitespace-space"> </span>treats<span class="org-whitespace-space"> </span>comments<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>whitespace,<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>breaks<span class="org-whitespace-space"> </span>within<span class="org-whitespace-space"> </span>comments<span class="org-whitespace-space"> </span><span class="org-whitespace-line">do</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">not</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">terminate</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">preprocessor</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">commands.</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">For</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">example:</span>
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>COMMENT/*<span class="org-whitespace-space"> </span>first<span class="org-whitespace-space"> </span>line
+
+<span class="org-whitespace-space">                                                </span>*<span class="org-whitespace-space"> </span>second<span class="org-whitespace-space"> </span>line
+
+<span class="org-whitespace-space">                                                </span>*/<span class="org-whitespace-space"> </span>"comment"
+
+<span class="org-whitespace-space">              </span>will<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>treated<span class="org-whitespace-space"> </span>as:
+
+<span class="org-whitespace-space">                  </span>#define<span class="org-whitespace-space"> </span>COMMENT<span class="org-whitespace-space">  </span>"comment"
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org677d889" class="outline-2">
+<h2 id="org677d889"><span class="section-number-2">10</span> Definition and Replacement</h2>
+<div class="outline-text-2" id="text-10">
+<ol class="org-ol">
+<li><p>
+synopsis
+</p>
+
+<p>
+The #define preprocessor command causes a name (identifier) to become defined as a macro to the preprocessor.  A sequences of tokens, called the body of the macro, is associated with the name. When the name of the macro is recognized in the program source text or in the arguments of certain other preprocessor commands, it is treated as a call to that macro; the name is effectively replaced by a copy of body. If the macro is defined to accept arguments, then the actual arguments following the macro name are substituted for formal parameters in the macro body.
+</p></li>
+</ol>
+
+<p>
+Example:
+</p>
+
+<p>
+If a macro sum with two arguments is defined by
+</p>
+
+<p>
+#define sum(x,y)   ((x)+(y))
+</p>
+
+<p>
+then the preprocessor replaces the source program line
+</p>
+
+<p>
+result = sum(5,a*b)
+</p>
+
+<p>
+with the simple (and perhaps unintended) text substitution
+</p>
+
+<p>
+result = ( (5) + (a*b) );
+</p>
+
+
+
+<p>
+Since the preprocessor does not distinguish reserved words from other identifiers, it is possible, in principle, to use a C reserved word as the name of a preprocessor macro, but to do so is usually bad programming practice. Macro names are never recognized within comments, string or character constants, or #include file names.
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Objectlike Macro Definitions
+</p>
+
+<p>
+The #define command has two forms depending on whether a left parenthesis immediately follows the name to be defined. The simpler, objectlike form has no left parenthesis:
+</p>
+
+<p>
+#define name sequence-of-tokens(optional)
+</p>
+
+<p>
+An objectlike macro takes no arguments. It is invoked merely by mentioning its name. When the name is encountered in the source program text, the name is replaced by the body (the associated sequence-of-tokens, which may be  empty). The syntax of the #define command does not require an equal sign or any other special delimiter token after the name being defined. The body starts right after the name.
+</p>
+
+<p>
+The objectlike macro is particularly useful for introducing named constant into a program, so that a "magic number" such as the length of a table may be written in exactly one place and then refered to elsewhere by name. This makes it easier to change the number later.
+</p>
+
+<p>
+Another important use of objectlike macro is isolate implementation-dependent restrictions on the name of externally defined functions and variables.
+</p></li>
+</ol>
+
+<p>
+Example:
+</p>
+
+<p>
+When a C compiler permits long internal identifiers, but the target computer require short external names, the preprocessor may be used to hide these short names:
+</p>
+
+<p>
+#define error_handler eh73
+</p>
+
+<p>
+extern void error_handler();
+</p>
+
+<p>
+and can be used like as:
+</p>
+
+<p>
+error_handler(&#x2026;);
+</p>
+
+
+
+<p>
+Here are some typical macro definitions:
+</p>
+
+<p>
+#define BLOCK_SIZE    0x100
+</p>
+
+<p>
+#define TRACK_SIZE    (16*BLOCK_SIZE)
+</p>
+
+<p>
+A common programming error is to include an extraneous equal sign:
+</p>
+
+<p>
+#define NUMBER_DRIVERS = 5              <i>* probably wrong *</i>
+</p>
+
+<p>
+This is a valid definition, but it causes the name NUMBER_DRIVERS to be defined as "=5" rather than "5". If one were then to write the code fragment
+</p>
+
+<p>
+If( count != NUMBER_DRIVERS ) &#x2026;
+</p>
+
+<p>
+it would be expanded to
+</p>
+
+<p>
+if ( count != = 5 ) &#x2026;
+</p>
+
+<p>
+which is syntactically invalid. For similar resons, also be careful to avoid an extraneous semicolon:
+</p>
+
+<p>
+#define NUMBER_DRIVERS    5;    <i>* probably wrong *</i>
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Defining Macros with Parameters
+</p>
+
+<p>
+The more complex, functionlike macro definition declares the names of formal parameters within parentheses separated by commas:
+</p>
+
+<p>
+#define name( identifier-list(optional) ) sequence-of-tokens(optional)
+</p>
+
+<p>
+where identifier-list is a comma-separated list of formal parameter names. In C99, an ellipsis(&#x2026;; three periods) may also appera after identifier-list to indicate a variable argument list.
+</p>
+
+<p>
+The left parenthesis must immediately follow the name of the macro with no intervening whitespace. If whitespace separates the left parenthesis from the macro name, the definition is considered to define a macro that takes no arguments and has a body beginning with a left parenthesis.
+</p>
+
+<p>
+The names of the formal parameters must be identifiers, no two the same. There is no requirement  that any of the parameter names must be mentioned in the body(although normally they are mentioned). A functionlike macro can have an empty formal parameter list(i.e. zero formal parameters). This kind of macro is useful to simulate a function that takes no arguments.
+</p>
+
+<p>
+A functionlike macro takes as many actual parameters as there are formal parameters. The macro is invoked by writing its name, a left parenthesis, then one actual argument token sequence for each formal parameter, then a right parenthesis. The actual argument token sequences are separated by commas. (When a functonlike macro with no formal parameters is invoked, an empty actual argument list must be provided.) When a macro is invoked, whitespace may appear between the macro name and the left parenthesis or in the actual arguments. (Some older and deficient preprocessor implementations do not permit the actual argument token list to extend across multiple lines unless the lines to be continued end with a /.)
+</p>
+
+<p>
+A acutal argument token sequence may contain parenthesis if they are properly nested and balanced, and it may contain commas if each comma appears within a set of parentheses. (This restriction prevents confusion with the commas that separate the actual arguments.) Braces and subscripting brackets likewise may appear within macro arguments, but they cannot contain commas and do not have to balance. Parentheses and commas appearing with character-constant and string-constant tokens are not counted in the balancing of parentheses and the delimiting of actual arguments.
+</p>
+
+<p>
+In C99, arguments to macro can be empty, that is, consist of no tokens.
+</p></li>
+</ol>
+
+<p>
+Example:
+</p>
+
+<p>
+Here is the definition of a macro that multiplies its two arguments:
+</p>
+
+<p>
+#define product(x,y) ((x)*(y))
+</p>
+
+<p>
+It is invoked twice in the following statement:
+</p>
+
+<p>
+x = product(a+3,b) + product(c,d);
+</p>
+
+<p>
+The arguments to the product macro could be function(or macro) calls. The commas within the function argument list do not affect the parsing of the macro arguments:
+</p>
+
+<p>
+return product( f(g,b), g(a,b) );  <i>* OK *</i>
+</p>
+
+
+
+<p>
+The getchar() macro has an empty parameter list:
+</p>
+
+<p>
+#define getchar()  getc(stdin)
+</p>
+
+<p>
+When it is invoked, an empty argument list is provided:
+</p>
+
+<p>
+while( (c=getchar()) != EOF ) &#x2026;
+</p>
+
+<p>
+(Note: getchar(), stdin, and EOF are defined in the standard header stdio.h.)
+</p>
+
+
+
+<p>
+We can also define a macro takes as its argument an arbitrary statement:
+</p>
+
+<p>
+#define insert(stmt)    stmt
+</p>
+
+<p>
+The invocation
+</p>
+
+<p>
+insert({a=1; b=1;})
+</p>
+
+<p>
+works properly, but if we change the two assignment statements to a single statement containing two assignment expressions:
+</p>
+
+<p>
+insert({a=1, b=1;})
+</p>
+
+<p>
+then the preprocessor will complain that we have too many macro assignments for insert. To fix the problem, we could have to write:
+</p>
+
+<p>
+insert( {(a=1, b=1);} )
+</p>
+
+
+
+<p>
+Definition functionlike macro to be used in statement contexts can be trickly. The following macro swaps the values int its two arguments, x and y, which are assumed to be of a type whose value can be converted to unsigned long and back without change, and to not involve the identifier _temp.
+</p>
+
+<p>
+#define swap(x,y)  {unsigned long _temp = x; x=y; y=_temp;}
+</p>
+
+<p>
+The problem is that it is natural to want to place a semicolon after swap, as you would if swap were really a function:
+</p>
+
+<p>
+if ( x &gt; y ) swap (x, y);    <i>* whoops*</i>
+</p>
+
+<p>
+else x = y;
+</p>
+
+<p>
+This will result an error since the expansion includes an extra semicolon. We put the expanded statements on separate lines next to illustrate the problems more clearly:
+</p>
+
+<p>
+if ( x &gt; y ) { unsigned long _temp = x; x = y; y = _temp; }
+</p>
+
+<p>
+;
+</p>
+
+<p>
+else x = y;
+</p>
+
+<p>
+A clever way to avoid the problem is to define the macro body as a do-while statement, which consumes the semicolon:
+</p>
+
+<p>
+#define swap(x, y )  /
+</p>
+
+<p>
+do { unsigned long _temp = x; x = y; y = _temp; }while(0)
+</p>
+
+
+
+<p>
+When a functionlike macro call is encountered, the entire macro call is replaced, after parameter processing, by  a process copy of the body. Parameter processing preoceeds as follows. Actual argument tokens strings are associated with the corresponding formal parmeter names. A copy of the body is then made in which every occurence of a formal parameter name is replaced by a copy of the actual argument token sequence associated with it. This copy the body then replaces the macro call. The entire process of replacing a macro call with the processed copy of itd body is called macro expansion; the processed copy of the body is called the expansion of the macro call.
+</p>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Consider this macro definition, which provides a convenient way to make a loop that counts from a given value up to(and including) some limit:
+</p>
+
+<p>
+#define incr(v,low,high) /
+</p>
+
+<p>
+for( (v) = (low); (v) &lt;= (high); ++(v) )
+</p>
+
+<p>
+To print a table of the cubes of the integers from 1 to 20, we could write:
+</p>
+
+<p>
+#include &lt;stdio.h&gt;
+</p>
+
+<p>
+int main()
+</p>
+
+<p>
+{
+</p>
+
+<p>
+int j;
+</p>
+
+<p>
+incr(j,1,20)
+</p>
+
+<p>
+printf("%2d  %6d/n",j, j*j*j);
+</p>
+
+
+
+<p>
+return 0;
+</p>
+
+<p>
+}
+</p>
+
+<p>
+The call to the macro incr is expanded to produce this loop:
+</p>
+
+<p>
+for( (j) = (1); (j) &lt;= (20); ++(j) )
+</p>
+
+<p>
+The liberal use of parentheses ensures that complicated acutal arguments are not be misinterpreted by the compiler.
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Rescanning of Macro Expressions
+</p>
+
+<p>
+Once a macro call has been expanded, the scan for macro calls resumes at the beginning of the expansion so that names of macros may be recognized within the expansion for the purpose of futher macro replacement. Macro replacement is not performed on any part of a #define command, not even the body, at the time the command is processed and the macro name defined. Macro names are recognized within the body only after the body has expanded for some particular macro call.
+</p>
+
+<p>
+Macro replacement is also not performed within the actual argument token string of a functionlike macro call at the time the macro call is being scanned. Macro names are recognized within actual argument token strings only during the rescanning of the expansion, assuming that the corresponding formal parameter in fact occurred one or more times within the body(thereby causing the actual argument token string to appear one or more times in the expansion).
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Giving the following definitions:
+</p>
+
+<p>
+#define plus(x,y)  add(y,x)
+</p>
+
+<p>
+#define add(x,y)   ((x)+(y))
+</p>
+
+<p>
+The invocation
+</p>
+
+<p>
+plus(plus(a,b),c)
+</p>
+
+<p>
+is expanded as shown next.
+</p>
+
+<p>
+Step                           Result
+</p>
+
+<ol class="org-ol">
+<li>original                 plus(plus(a,b),c)</li>
+
+<li>add(c, plus(a,b))</li>
+
+<li>((c)+(plus(a,b)))</li>
+
+<li>((c)+(add(b,a)))</li>
+
+<li>final                    ((c)+(((b)+(a))))</li>
+</ol>
+
+
+
+<p>
+Macros appearing in their own expansion&#x2013;either immediately or through some intermediate sequence of nested macro expansions&#x2013;are not reexpanded in Standard C. This permits a programmer to redefine a function in terms of its old function. Older C preprocessors traditionally do not detect this recursion, and will attempt to continue the expansion until they are stopped by some system error.
+</p>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+The following macro changes the definition of the square root function to handle negative arguments in  a different fashion than is normal:
+</p>
+
+<p>
+#define sqrt(x)    ( (x) &lt; 0 ? sqrt(-x) : sqrt(x) )
+</p>
+
+<p>
+Except that it evaluates its argument more than once, this macro work as intended in Standard C, but might cause an error in older compilers. Similarly:
+</p>
+
+<p>
+#define char unsigned char
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Predefined Macros
+</p>
+
+<p>
+Preprocessors for Standard C are required to define certain objectlike macros. The name of each begins and ends with two underscore characters. None of these predefined may be undefined (#undef) or redefined by the programmer.
+</p>
+
+<p>
+The <span class="underline"><span class="underline">LINE</span></span> and <span class="underline"><span class="underline">FILE</span></span> macros are useful when printing certain kinds of error messages. The <span class="underline"><span class="underline">DATE</span></span> and <span class="underline"><span class="underline">TIME</span></span> macros can be used to record when a compilation occured. The values of <span class="underline"><span class="underline">TIME</span></span> and <span class="underline"><span class="underline">DATE</span></span> remain constant throughout the compilation. The values of <span class="underline"><span class="underline">FILE</span></span> and <span class="underline"><span class="underline">LINE</span></span> macros are established by implementation, but are subject to alteration by the #line directive(like as #line 300 or #line 500 "cppgp.c"). The C99 predefined identifier <span class="underline"><span class="underline">func</span></span> is similar in purpose to <span class="underline"><span class="underline">LINE</span></span>, but is actually a block-scope variable, not a macro. It supplies the name of the enclosing function.
+</p>
+
+<p>
+The <span class="underline"><span class="underline">STDC</span></span> and <span class="underline"><span class="underline">STDC_VERSION</span></span> macros are useful for writing code compatible with Standard and non-Standard C implementations. The <span class="underline"><span class="underline">STDC_HOSTED</span></span> macro was introduced in C99 to distinguish hosted from freestanding implementations. The remaining C99 macros indicate whether the implementation's floating-point and wide character facilities adhere to other relevant international standards(Adherence is recommended, but not required)
+</p>
+
+<p>
+Implementation routinely define additional macros to communicate information about the enviroment, such as the type of computer for which the program is being compiled. Exactly which macros are defined is implementation-dependent, although UNIX implementations customarily predefine unix. Unlike the built-in macros, these macros may be undefined. Standard C requires implementation-specific macro names to begin with a leading underscore followed by either an uppercase letter or another underscore.(The macro unix does not meet that criterion.)
+</p>
+
+<p>
+And the example about the predefined macros will be appended the next subject.
+</p></li>
+</ol>
+
+
+
+<ol class="org-ol">
+<li><p>
+Undefining and Redefining Macros
+</p>
+
+<p>
+The #undef command can be used to make a name be no longer defined:
+</p>
+
+<p>
+#undef name
+</p>
+
+<p>
+This command causes the preprocessor to forget any macro definition of name. It is not an error to undefine a name currently not defined. Once a name has been undefined, it may then be given a completely new definition(using #define) without error. Macro replacement is not performed within #undef commands.
+</p>
+
+<p>
+The benign redefinition of macros is allowed in Standard C and many other implementations. That is, a macro may be redefined if the new definition is the same, token for token, as the existing definition. The redefinition must include whitespace in the same locations as in the original definition, although the particular whitespace characters can be different. We think programmers should avoid depending on benign redefinitions.  It is generally better style to have a single point of definition for all program entities, including macros. (Some older implementations of C may not allow any kind of redefinition.)
+</p></li>
+</ol>
+
+<p>
+Example:
+</p>
+
+<p>
+In the following definitions, the redefinition of NULL is allowed, but neither redefinition of FUNC is valid. (The first includes whitespace not in the original definition, and the second changes two tokens.)
+</p>
+
+<p>
+#define NULL 0
+</p>
+
+<p>
+#define FUNC(x)    x+4
+</p>
+
+<p>
+#define NULL    <i>* null pointer *</i> 0
+</p>
+
+<p>
+#define FUNC(x)    x + 4
+</p>
+
+<p>
+#define FUNC(y)    y+4
+</p>
+
+<p>
+(But I make a test on fedora10 platform with gcc version 4.3.2 20081105 (Red Hat 4.3.2-7) (GCC), Both the FUNC redefinition is valid too. why ?)
+</p>
+
+
+
+<p>
+When the programmer legitimate reasons cannot tell if a previous definition exists, the #ifndef can be used to test for an existing definition so that a redefinition can be avoided.:
+</p>
+
+<p>
+#ifndef MAX_TABLE_SIZE
+</p>
+
+<p>
+#define MAX_TABLE_SIZE 1000
+</p>
+
+<p>
+#endif
+</p>
+
+<p>
+Thisidiom is particularly useful with implementations that allow macro definitions in the command that invokes the C compiler. For example, the following UNIX invocation of C provides an initial definition of the macro MAX_TABLE_SIZE as 5000. The C programmer would then check for the definition as shown before:
+</p>
+
+<p>
+cc -c -DMAX_TABLE_SIZE=5000 prog.c
+</p>
+
+
+
+<p>
+Although disallowed in Standard C, a few older preprocessor implementations handle #define and #undef so as to maintain a stack of definitions. When a name is redefined with a #define, its old definition is pushed onto a stack and then the new definition replaces the old one. When a name is undefined with #undef, the current definition is discarded and the most recent previous definition (if any) restored.
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Precedence Errors In Macro Expansions
+</p>
+
+<p>
+Macros operate purely by textual substitution of tokens. Parsing of the body into declarations, expressions, or statements occurs only after the macro expansion process. This can lead to surprising results if care is not taken. As a rule, it is safest to always parenthesize each parameter appearing in the macro body. The entire body, if it is syntactically an expression, should also be parenthesized.
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Consider this macro definition:
+</p>
+
+<p>
+#define  SQUARE(x)    x*x
+</p>
+
+<p>
+The idea is that SQUARE takes an argument expression and produces a new expression to comput the square of that argument. For example, SQUARE(5) expands to %*5. However, the expression SQUARE(z+1) expands to z+1*z+1, which is parsed as z+(1*z)+1 rather than expected (z+1)*(z+1). A definition of SQUARE that avoids this problem is:
+</p>
+
+<p>
+#define SQUARE(x)    ((x)*(x))
+</p>
+
+<p>
+The out parentheses are needed to prevent misinterpretation of an expression such as (short)SQUARE(z+1).
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Side Effects In Macro Arguments
+</p>
+
+<p>
+Macros can also produce problems dut to side effects. Because the macro's actual arguments may be textually replicated, they may be executed more than once, and side effects in the actual arguments may occur more than once. In contrast, a true function call&#x2013;which the macro invocation resembles&#x2013;evaluates argument expressions exactly once, so any side effects of the expression occur exactly once. Macros must be used with care to avoid such problems.
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Consider the macro SQUARE from the prior example and also a function square that does (almost) the same thing:
+</p>
+
+<p>
+int square(int x) { return x*x; }
+</p>
+
+<p>
+The macro can square integers or floating-point numbers; the function can square only integers. Also, calling the function is likely to be somewhat slower at run time than using the macro. But these differences are less important than the problem of side effects. In the program fragment
+</p>
+
+<p>
+a = 3;
+</p>
+
+<p>
+b = square(a++);
+</p>
+
+<p>
+the variable b gets the value 9 and the variable a ends up with the value 4. Howerver, in the superficially similar program fragment
+</p>
+
+<p>
+a = 3;
+</p>
+
+<p>
+b = SQUARE(a++);
+</p>
+
+<p>
+the variable b may get the value 12 and the variable a may end up with the value 5 because the expansion of the last fragment is
+</p>
+
+<p>
+a = 3;
+</p>
+
+<p>
+b = ((a++)*(a++));
+</p>
+
+<p>
+(Say that 12 and 15 may be the resulting values of b  and a because Standard C implementations may evaluate the expression ((a++)*(a++)) in different ways.)
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Converting Tokens to Strings
+</p>
+
+<p>
+There is a mechanism in Standard C to convert macro parameters (after expansion) to string constants. Before this, programmers had to depend on a loophole in many C preprocessors that achieved the same result in a different way.
+</p>
+
+<p>
+In Standard C, the # token appearing within a macro definition is recognized as a unary "stringization" operator that must be followed by the name of a macro formal parameters. During macro expansion, the # and the formal parameter name are replaced by the corresponding actual argument enclosed in string quotes. When creating the string, each sequence of whitespace in the argument's token list is replaced by a single space character, and any embedded quotation or backslash character characters are preceded by a backslash character to preserve their meaning in the string. Whitespace at the beginning and end of the argument is ignored, so an empty argument (even with whitespace between the commas) expands to the empty string "".
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Consider the Standard C definition of macro TEST:
+</p>
+
+<p>
+#define TEST(a, b )    printf( #a " &lt; " #b " = %d/n", (a)&lt;(b) )
+</p>
+
+<p>
+The statement TEST(0, 0XFFFF);  TEST('/n', 10); would expand into
+</p>
+
+<p>
+printf("0" "&lt;" "0xFFFF" " = %d/n", (0)&lt;(0XFFFF));
+</p>
+
+<p>
+printf(" '//n' " "&lt;" "10" " = %d/n", ('/n') &lt;(10) );
+</p>
+
+<p>
+After concatenation of ajacent strings, these become:
+</p>
+
+<p>
+printf("0 &lt; 0xFFFF = %d/n", (0) &lt; (0XFFFF) );
+</p>
+
+<p>
+printf(" '//n' &lt; 10 = %d/n", ('/n') &lt;(10) );
+</p>
+
+
+
+<p>
+A number of non-standard C compilers will substitute for macro formal parameters inside string and character constants. Standard C prohibits this.
+</p>
+
+<p>
+The handling if whitespace in non-ISO implementations is likely to vary from compiler to compiler&#x2013;another reason to avoid depending on this feature except in Standard C implementations.
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Token Merging In Macro Expansions
+</p>
+
+<p>
+Merging of tokens to form new tokens in Standard C is controlled by the presence of a merging operator, ##, in macro definitions. In a macro replacement list&#x2013;before rescanning for more macros&#x2013;the two tokens surrounding any ## operator are combined into a single token. There must be suck tokens: ## must not appear at the begnning or end of a replacement list. If the combination does not form a valid token, the result is undefined.
+</p>
+
+<p>
+#define TEMP(i)   temp ## i
+</p>
+
+<p>
+Temp(1) = TEMP(2+k) + x;
+</p>
+
+<p>
+After preprocessing, this becomes
+</p>
+
+<p>
+temp1 = temp2 + k + x;
+</p></li>
+</ol>
+
+
+
+<p>
+In the previous example, a curious situation can arise whe expanding TEMP() + x. The macro definition is valid, but ## is left with no right-hand token token to combine (unless it grabs +, which we do not want). This problem is resolved by treating the formal parameter i as if it expanded to a special "empty" token just for the benefit of ##. Thus, the expansion of TEMP() + x would be temp + x as expected.
+</p>
+
+
+
+<p>
+Token concatenation must not be used to produce a unversal character name.
+</p>
+
+
+
+<p>
+As with the conversion of macro arguments to strings, programmers can obtain something like this merging capability through a loophole in many non-Standard C implementations. Although the original definition of C explicitly described macro bodies as being  sequences of tokens, not sequences of characters, nevertheless many C compilers expand and rescan macro bodies as if they were character sequences. This becomes apparent primarily in the case where the compiler also handles comments by eliminating them entirely (rather than replacing them with a space)&#x2013;a situation exploited by some cleverly written programs.
+</p>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+Consider the following example:
+</p>
+
+<p>
+#defi n e INC    ++
+</p>
+
+<p>
+#define TAB    internal_table
+</p>
+
+<p>
+#define INCTAB table_of_increments
+</p>
+
+<p>
+#define CONC(x,y) x/**/y
+</p>
+
+<p>
+CONC(INC,TAB)
+</p>
+
+<p>
+Standard C interprets the body of CONC as two tokens, x and y, separated by a space.(Comments are converted to a space.) The call CONC(INC,TAB) expands to the two tokens INC TAB. Howerver, some non-Standard implementations simply eliminate comments and rescan macro bodies for tokens; the expand CONC(INC,TAB) to the single token INCTAB.
+</p>
+
+
+
+<p>
+Step              1                2             3          4
+</p>
+
+<p>
+Standard          CONC(INC,TAB)    INC/**/TAB    INC TAB    ++ internal_table
+</p>
+
+<p>
+non-Standard      CONC(INC,TAB)    INC/**/TAB    INCTAB     table_of_increments
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Variable Argument Lists In Macro
+</p>
+
+<p>
+In C99, a functionlike macro can have as its last or only formal parameter an ellipsis, signifying that the macro may accept a variable number of arguments:
+</p>
+
+<p>
+#define name( identifier-list, &#x2026; ) sequence-of-tokens(optional)
+</p>
+
+<p>
+#define name( &#x2026; ) sequence-of-tokens(optional)
+</p>
+
+<p>
+When such a macro is invoked, there must be at least as many actual arguments as there are identifiers in identifier-list. The trailing argument ( s), including any separating commas, are merged into a single sequence of preprocessing tokens called the variable arguments. The identifier <span class="underline"><span class="underline">VA_ARGS</span></span> appearing in the replacement list of the macro definiton as treated as if it had been a macro parameter whose argument was the merged variable arguments. That is, <span class="underline"><span class="underline">VA_ARGS</span></span> is replaced by the list of extra arguments, including their comma separators. __VA_ARGS__can only appear in a macro definition that includes &#x2026; in its parameter list.
+</p>
+
+<p>
+Macro with a variable number of arguments are often used to interface to functions that takes a variable number of arguments, such as printf. By using # stringization operator, they can also be used to convert a list of arguments to a single string without having to enclosing the arguments in parentheses.
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+These directives create a macro my_printf that can write its arguments either to the error or standard output.
+</p>
+
+<p>
+#ifdef DEBUG
+</p>
+
+<p>
+#define my_printf( &#x2026; ) fprintf(stderr, <span class="underline"><span class="underline">VA_ARGS</span></span>)
+</p>
+
+<p>
+#else
+</p>
+
+<p>
+#define my_printf( &#x2026; ) fprintf(stdout, <span class="underline"><span class="underline">VA_ARGS</span></span>)
+</p>
+
+<p>
+#endif
+</p>
+
+
+
+<p>
+Given the definition
+</p>
+
+<p>
+#define make_em_a_string( &#x2026; ) #__VA_ARGS__
+</p>
+
+<p>
+the invocation
+</p>
+
+<p>
+make_em_a_string(a, b, c, d)
+</p>
+
+<p>
+expands to the string
+</p>
+
+<p>
+"a, b, c, d"
+</p>
+
+
+
+<ol class="org-ol">
+<li><p>
+Other Problems
+</p>
+
+<p>
+Some non-Standard implementations do not perform stringent error checking on macro definitions and calls, including permitting an incomplete token in the macro body to be completed by text appearing after the macro call. The lack of error checking by certain implementations does not make clever exploitation of that lack legitimate. Standard C reaffirms that macro bodies must be sequences of well-formed tokens.
+</p></li>
+</ol>
+
+
+
+<p>
+Example:
+</p>
+
+<p>
+For example, the folloing fragment in one of these non-ISO implementations:
+</p>
+
+<p>
+#define STRING_START_PART   "This is a split"
+</p>
+
+<p>
+&#x2026;
+</p>
+
+<p>
+printf(STRING_START_PART string."); <i>* !!!! Yuk *</i>
+</p>
+
+<p>
+will, after preprocessing, result in the source text
+</p>
+
+<p>
+printf("This is a split string.");
+</p>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
