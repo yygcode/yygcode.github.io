@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+xhtml4
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-01-01 Wed 14:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>The Adaptive Radix Tree &#x2013; ARTful Indexing for Main-Memory Databases</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Viktor Leis, Alfons Kemper, Thomas Neumann" />
+<script type="text/javascript"> var disqus_developer = 1; </script>
+<link rel="stylesheet" type="text/css" href="../themes/readtheorg/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="../themes/readtheorg/styles/readtheorg/css/readtheorg.css"/>
+<script src="../themes/jquery/2.1.3/jquery.min.js"></script>
+<script src="../themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="../themes/readtheorg/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../index.html"> UP </a>
+ |
+ <a accesskey="H" href="paper-index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">The Adaptive Radix Tree &#x2013; ARTful Indexing for Main-Memory Databases</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8141fb4">DECLARATION</a></li>
+<li><a href="#org3397ff9">ABSTRACT</a></li>
+<li><a href="#org9a8acaf">1. INTRODUCTION</a></li>
+<li><a href="#org176f161">2. Second</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8141fb4" class="outline-2">
+<h2 id="org8141fb4">DECLARATION</h2>
+<div class="outline-text-2" id="text-org8141fb4">
+<p>
+This page is the &lt;The Adaptive Radix Tree&gt; paper. Original Paper Link is:
+<a href="https://db.in.tum.de/%7Eleis/papers/ART.pdf">https://db.in.tum.de/%7Eleis/papers/ART.pdf</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3397ff9" class="outline-2">
+<h2 id="org3397ff9">ABSTRACT</h2>
+<div class="outline-text-2" id="text-org3397ff9">
+<p>
+Fakultät für Informatik
+Technische Universität München
+Boltzmannstrae 3, D-85748 Garching
+&lt;lastname&gt;@in.tum.de
+</p>
+
+<p>
+Abstract—Main memory capacities have grown up to a point where most
+databases fit into RAM. For main-memory database systems, index structure
+performance is a critical bottleneck. Traditional in-memory data structures
+like balanced binary search trees are not efficient on modern hardware, because
+they do not optimally utilize on-CPU caches. Hash tables, also often used for
+main-memory indexes, are fast but only support point queries.
+</p>
+
+<p>
+To overcome these shortcomings, we present ART, an adaptive radix tree (trie)
+for efficient indexing in main memory. Its lookup performance surpasses highly
+tuned, read-only search trees, while supporting very efficient insertions and
+deletions as well. At the same time, ART is very space efficient and solves
+the problem of excessive worst-case space consumption, which plagues most
+radix trees, by adaptively choosing compact and efficient data structures for
+internal nodes. Even though ART’s performance is comparable to hash tables, it
+maintains the data in sorted order, which enables additional operations like
+range scan and prefix lookup.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9a8acaf" class="outline-2">
+<h2 id="org9a8acaf"><span class="section-number-2">1</span> INTRODUCTION</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+After decades of rising main memory capacities, even large transactional
+databases fit into RAM. When most data is cached, traditional database systems
+are CPU bound because they spend considerable effort to avoid disk accesses.
+This has led to very intense research and commercial activities in main-memory
+database systems like H-Store/VoltDB <sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>, SAP HANA <sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>, and HyPer <sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>.
+These systems are optimized for the new hardware landscape and are therefore
+much faster. Our system HyPer, for example, compiles transactions to machine
+code and gets rid of buffer management, locking, and latching overhead. For
+OLTP workloads, the resulting execution plans are often sequences of index
+operations. Therefore, index efficiency is the decisive performance factor.
+More than 25 years ago, the T-tree <sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup> was proposed as an in-memory indexing
+structure. Unfortunately, the dramatic processor architecture changes have
+rendered T-trees, like all traditional binary search trees, inefficient on
+modern hardware. The reason is that the ever growing CPU cache sizes and
+the diverging main memory speed have made the underlying assumption of uniform
+memory access time obsolete. B+-tree variants like the cache sensitive
+B+-tree <sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup> have more cache-friendly memory access patterns, but require more
+expensive update operations. Furthermore, the efficiency of both binary and
+B+-trees suffers from another feature of modern CPUs: Because the result of
+comparisons cannot be predicted easily, the long pipelines of modern CPUs
+stall, which causes additional latencies after every second comparison
+(on average).
+</p>
+
+<p>
+These problems of traditional search trees were tackled by recent research on
+data structures specifically designed to be efficient on modern hardware
+architectures. The k-ary search tree <sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup> and the Fast Architecture Sensitive
+Tree (FAST) <sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup> use data level parallelism to perform multiple comparisons
+simultaneously with Singe Instruction Multiple Data (SIMD) instructions.
+Additionally, FAST uses a data layout which avoids cache misses by optimally
+utilizing cache lines and the Translation Lookaside Buffer (TLB). While these
+optimizations improve search performance, both data structures cannot support
+incremental updates. For an OLTP database system which necessitates continuous
+insertions, updates, and deletions, an obvious solution is a differential file
+(delta) mechanism, which, however, will result in additional costs.
+</p>
+
+<p>
+Hash tables are another popular main-memory data structure. In contrast to
+search trees, which have O(log n) access time, hash tables have expected O(1)
+access time and are therefore much faster in main memory. Nevertheless, hash
+tables are less commonly used as database indexes. One reason is that hash
+tables scatter the keys randomly, and therefore only support point queries.
+Another problem is that most hash tables do not handle growth gracefully, but
+require expensive reorganization upon overflow with O(n) complexity. Therefore,
+current systems face the unfortunate trade-off between fast hash tables that
+only allow point queries and fully-featured, but relatively slow, search trees.
+</p>
+
+<p>
+A third class of data structures, known as trie, radix tree, prefix tree, and
+digital search tree, is illustrated in Figure 1.
+</p>
+
+
+<div id="org4a69040" class="figure">
+<p><img src="img/art-figure-1.png" alt="art-figure-1.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Figure 1 ""</p>
+</div>
+
+<p>
+These data structures directly use the digital representation of keys instead of
+hashing or comparing keys. The underlying idea is similar to a thumb-index found
+in many alphabetically ordered dictionary books: The first character of a word
+can directly be used to jump to all words starting with that character. In a
+computer, this process can be repeated with the next characters until a match is
+found. As a consequence of this process, all operations have O(k) complexity
+where k is the length of the key. In the era of extremely large data sets,
+when \(n\) is growing faster than k, having a time complexity independent of \(n\)
+is very attractive.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org176f161" class="outline-2">
+<h2 id="org176f161"><span class="section-number-2">2</span> Second</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+xxx.
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 1
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.6" class="footnum" href="#fnr.6">6</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.7" class="footnum" href="#fnr.7">7</a></sup> <div class="footpara"><p class="footpara">
+FOOT NOTE 2
+</p></div></div>
+
+
+</div>
+</div>
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
