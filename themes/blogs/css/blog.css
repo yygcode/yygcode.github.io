@@ -30,8 +30,8 @@ a:hover {
     margin: auto;
     padding: 5px;
     /* color: #F8F2F2; */
-    font-size: 28px;
-    line-height: 40px;
+    font-size: 2rem;
+    line-height: 2.6rem;
     font-weight: 200;
     /* background: #2E435E; */
     /* background: linear-gradient(to top,#2E435E,#172E50); */
@@ -67,31 +67,23 @@ a:hover {
 }
 
 .title {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    font-size: 32px;
+    margin-bottom: 1.5rem;
+    font-size: 2.0rem;
     font-weight: bold;
     color: #272822;
     align: center;
-    /* border-bottom: 1px dotted #272822; */
 }
 
-.title:before {
-    content: "{";
-    font-size: 36px;
-    padding-right: 10px;
+.title:before, .title:after {
+    font-size: 2.5rem;
 }
-
-.title:after {
-    content: "}";
-    font-size: 36px;
-    padding-left: 10px;
-}
+.title:before { content: "({"; padding-right: 0.5rem; }
+.title:after { content: "})"; padding-left: 0.5rem; }
 
 /* TOC inspired by http://jashkenas.github.com/coffee-script */
 #table-of-contents {
     margin-top: 3px;
-    font-size: 12pt;
+    font-size: 1rem;
     position: fixed;
     right: 0em;
     top: 0em;
@@ -108,11 +100,11 @@ a:hover {
 }
 
 #table-of-contents h2 {
-    font-size: 12pt;
-    max-width: 10em;
+    font-size: 1rem;
+    max-width: 15rem;
     border: 0;
     font-weight: normal;
-    padding: 0.01em 0.5em;
+    padding: 0.01rem 0.5rem;
 }
 
 #text-table-of-contents {
@@ -134,8 +126,9 @@ h2, h3, h4, h5, h6 {
     text-rendering:optimizelegibility;
 }
 
-h2{ font-size: 24px; }
-h3, h4, h5, h6{ font-size: 20px; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.3rem; }
+h4, h5, h6 { font-size: 1.2rem; }
 
 .outline-2 { margin-left: 2px; }
 .outline-3 { margin-left: 4px; }
@@ -272,8 +265,8 @@ textarea {
 
 p {
     margin: 12px 5px 5px 5px;
-    font-size:18px;
-    line-height:24px;
+    font-size: 1rem;
+    line-height:1.2rem;
 }
 
 ul,ol{
@@ -290,7 +283,7 @@ ol{
     list-style:decimal;
 }
 li{
-    font-size:18px;
+    font-size: 1rem;
     line-height:35px;
 }
 ul.unstyled{
@@ -340,7 +333,7 @@ blockquote{
 }
 blockquote p{
     margin-bottom:0;
-    font-size:16px;
+    font-size: 1rem;
     font-weight:300;
     line-height:22.5px;
 }
@@ -364,15 +357,6 @@ blockquote.pull-right p,blockquote.pull-right small{
 }
 q:before,q:after,blockquote:before,blockquote:after{
     content:"";
-}
-
-code {
-    background: #F8F8F2;
-    color: #444;
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 15px;
-    line-height: 18px;
-    padding: 2px;
 }
 
 pre {
