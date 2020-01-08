@@ -1,0 +1,369 @@
+@import url(/themes/bootstrap/4.1.3/css/bootstrap.min.css);
+@import url(/themes/code/css/code.css);
+
+html {
+    font-family: Georgia, "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif; "Microsoft Yahei", "WenQuanYi Micro Hei";
+}
+
+body {
+    margin:0 0 5em 0;
+    font-size:16px;
+    line-height:22px;
+    color:#272822;
+    background-color:#F8F8F2;
+    overflow-x: hidden;
+    text-align: justify;
+}
+
+a, a:hover {
+    color:#30557c;
+    text-decoration: none;
+    border-bottom: 1px dashed #FFA500;
+    padding: 1px;
+}
+
+a:hover {
+    background-color: #D4D4D4;
+}
+
+#preamble {
+    margin: auto;
+    padding: 5px;
+    font-size: 2rem;
+    line-height: 2.6rem;
+    font-weight: 200;
+    border: dotted 1px transparent;
+    border-bottom-color: #AAA;
+    text-align: center;
+    max-width: 60rem;
+    position: relative;
+}
+
+#preamble a, #preamble a:hover {
+    /* color:#F8F8F2; */
+    border-bottom: none;
+    background-color: transparent;
+}
+
+#preamble a:hover {
+    border-bottom: 1px dashed orange;
+}
+
+.sitelinks, .sitelinks a {
+    font-size: 80%;
+    padding: 0 10px;
+}
+
+#content {
+    margin: auto;
+    padding-top: 1.5em;
+    max-width: 800px;
+    position: relative;
+}
+
+.title {
+    margin-bottom: 1.5rem;
+    font-size: 2.0rem;
+    font-weight: bold;
+    color: #272822;
+    align: center;
+}
+
+.title:before, .title:after {
+    font-size: 2.5rem;
+}
+.title:before { content: "({"; padding-right: 0.5rem; }
+.title:after { content: "})"; padding-left: 0.5rem; }
+
+/* TOC inspired by http://jashkenas.github.com/coffee-script */
+#table-of-contents {
+    margin-top: 3px;
+    font-size: 1rem;
+    position: fixed;
+    right: 0em;
+    top: 0em;
+    line-height: 18pt;
+    text-align: right;
+    box-shadow: 0 0 1em #777777;
+    -webkit-box-shadow: 0 0 1em #777777;
+    -moz-box-shadow: 0 0 1em #777777;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    max-height: 80%;
+    overflow: auto;
+    background-color: #F8F8F2;
+}
+
+#table-of-contents h2 {
+    font-size: 1rem;
+    max-width: 15rem;
+    border: 0;
+    font-weight: normal;
+    padding: 0.01rem 0.5rem;
+}
+
+#text-table-of-contents {
+    display: none;
+    text-align: left;
+}
+
+#table-of-contents:hover #text-table-of-contents {
+    display: block;
+}
+
+.todo {
+    color: red;
+}
+
+h2, h3, h4, h5, h6 {
+    margin: 12px 0;
+    font-weight: bold;
+    text-rendering:optimizelegibility;
+}
+
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.3rem; }
+h4, h5, h6 { font-size: 1.2rem; }
+
+.outline-2 { margin-left: 2px; }
+.outline-3 { margin-left: 4px; }
+.outline-4, .outline-5, .outline-6 { margin-left: 6px; }
+
+.underline {
+    text-decoration: underline;
+}
+
+.todo, .done, .priority {
+    font-family: monospace;
+    font-size: 80%;
+}
+
+.done {
+    color: green;
+}
+
+.priority {
+    color: olive;
+}
+
+.tag {
+    background-color: #eee;
+    font-family: monospace;
+    padding: 2px;
+    font-size: 80%;
+    font-weight: light;
+}
+
+.timestamp {
+    color: olive;
+    font-family: monospace;
+    font-size: 80%;
+}
+
+.timestamp-kwd {
+    color: #5f9ea0;
+}
+
+.org-right {
+    margin-left: auto;
+    margin-right: 0px;
+    text-align: right;
+}
+.org-left {
+    margin-left: 0px;
+    margin-right: auto;
+    text-align: left;
+}
+.org-center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.org-ul {
+    padding-left: 10px;
+}
+.org-ol {
+    padding-left: 20px;
+}
+
+ul {
+    padding-left: 100px;
+}
+ol {
+    padding-left: 200px;
+}
+
+.copyright {
+    border-top: solid 2px #666;
+    border-bottom-color: #aaa;
+    margin: 3em auto 0em auto;
+    padding: 0.5em 0;
+    max-width: 800px;
+    text-align: center;
+    background: #F8F8F2;
+}
+
+.copyright a{
+    color: #555;
+    background-color: lightblue;
+    border-bottom: transparent;
+    white-space: pre;
+}
+
+.copyright a:hover {
+    color: #888;
+    background-color: lightblue;
+    border-bottom: transparent;
+}
+
+.date {
+    font-style: italic
+}
+
+.post-date {
+    margin-top: 2em;
+    color: #888;
+}
+
+.article-meta {
+    margin-left: 2.2em;
+    margin-right: 2.2em;
+    margin-bottom: 2.2em
+}
+
+.footnum {
+    font-weight: bold;
+}
+
+.footnotes {
+    margin-top: 2em;
+    padding-top: 0.5em;
+    border-top: 1px dotted #272822;
+    font-size: 100%;
+}
+
+.footpara {
+    display: inline;
+}
+
+img {
+    max-width:100%;
+    height:auto;
+    border:0;
+    -ms-interpolation-mode:bicubic;
+}
+
+textarea {
+    overflow: scroll;
+    vertical-align: top;
+}
+
+p {
+    margin: 12px 5px 5px 5px;
+    font-size: 1rem;
+    line-height:1.2rem;
+}
+
+ul,ol{
+    padding:0;
+    margin:0 0 9px 25px;
+}
+ul ul,ul ol,ol ol,ol ul{
+    margin-bottom:0;
+}
+ul{
+    list-style:disc;
+}
+ol{
+    list-style:decimal;
+}
+li{
+    font-size: 1rem;
+    line-height:35px;
+}
+ul.unstyled{
+    margin-left:0;
+    list-style:none;
+}
+dl{
+    margin-bottom:18px;
+}
+dt, dd{
+    margin: 0.5em;
+    line-height: 100%;
+}
+dt{
+    font-weight:bold;
+    margin: 12px 0 2px 0;
+}
+dd{
+    margin-left:9px;
+}
+
+hr{
+    margin:18px 0;
+    border:0;
+    border-top:1px solid #e5e5e5;
+    border-bottom:1px solid #F8F8F2;
+}
+strong{
+    font-weight:bold;
+}
+em{
+    font-style:italic;
+}
+.muted{
+    color:#999999;
+}
+abbr{
+    font-size:90%;
+    text-transform:uppercase;
+    border-bottom:1px dotted #ddd;
+    cursor:help;
+}
+blockquote{
+    padding:0 0 0 15px;
+    margin:0 0 18px;
+    border-left:5px solid #eeeeee;
+}
+blockquote p{
+    margin-bottom:0;
+    font-size: 1rem;
+    font-weight:300;
+    line-height:22.5px;
+}
+blockquote small{
+    display:block;
+    line-height:18px;
+    color:#999999;
+}
+blockquote small:before{
+    content:'\2014 \00A0';
+}
+blockquote.pull-right{
+    float:right;
+    padding-left:0;
+    padding-right:15px;
+    border-left:0;
+    border-right:5px solid #eeeeee;
+}
+blockquote.pull-right p,blockquote.pull-right small{
+    text-align:right;
+}
+q:before,q:after,blockquote:before,blockquote:after{
+    content:"";
+}
+
+pre {
+    /* background: #272822; */
+    color: #444;
+    font-family: 'Ubuntu Mono', monospace;
+    padding: 4px;
+    padding-left: 6px;
+    overflow: auto;
+}
+
+.comment {
+    color: #93a1a1;
+    font-style: italic;
+}
