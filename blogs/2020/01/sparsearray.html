@@ -26,17 +26,92 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf9fc26f">1. Reference</a></li>
+<li><a href="#org9fc1f0e">1. Learn from youtube</a>
+<ul>
+<li><a href="#orgb72ddf2">1.1. Xarray: One Data Structure To Rule Them All</a>
+<ul>
+<li><a href="#org7a2c107">1.1.1. What is the Xarray</a></li>
+<li><a href="#orgdba881c">1.1.2. Fundamentals</a></li>
+<li><a href="#orga3c6656">1.1.3. Three auxiliary bits per non-NULL entry</a></li>
+<li><a href="#org5a59085">1.1.4. Some users need something a little more complex</a></li>
+<li><a href="#org17fbf4d">1.1.5. The Xarray can trace free entries for you</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf9fc26f">2. Reference</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf9fc26f" class="outline-2">
-<h2 id="orgf9fc26f"><span class="section-number-2">1</span> Reference</h2>
+<div id="outline-container-org9fc1f0e" class="outline-2">
+<h2 id="org9fc1f0e"><span class="section-number-2">1</span> Learn from youtube</h2>
 <div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgb72ddf2" class="outline-3">
+<h3 id="orgb72ddf2"><span class="section-number-3">1.1</span> Xarray: One Data Structure To Rule Them All</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org7a2c107" class="outline-4">
+<h4 id="org7a2c107"><span class="section-number-4">1.1.1</span> What is the Xarray</h4>
+<div class="outline-text-4" id="text-1-1-1">
 <ul class="org-ul">
+<li>Automatically resizing array of pointers</li>
+<li>Indexed by unsigned long</li>
+<li>All pointers  initially NULL</li>
+<li>Embeds a spinlock</li>
+<li>Loads are store-free (using rcu)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdba881c" class="outline-4">
+<h4 id="orgdba881c"><span class="section-number-4">1.1.2</span> Fundamentals</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li>Some users only need load, store and (maybe) iterate:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_load</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_store</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">entry</span>,<span class="org-whitespace-space"> </span><span class="org-type">gfp_t</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_erase</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>);
+<span class="org-function-name">xa_for_each</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">entry</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga3c6656" class="outline-4">
+<h4 id="orga3c6656"><span class="section-number-4">1.1.3</span> Three auxiliary bits per non-NULL entry</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_set_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_clear_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+<span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_get_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a59085" class="outline-4">
+<h4 id="org5a59085"><span class="section-number-4">1.1.4</span> Some users need something a little more complex</h4>
+</div>
+
+<div id="outline-container-org17fbf4d" class="outline-4">
+<h4 id="org17fbf4d"><span class="section-number-4">1.1.5</span> The Xarray can trace free entries for you</h4>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf9fc26f" class="outline-2">
+<h2 id="orgf9fc26f"><span class="section-number-2">2</span> Reference</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>LWN Introducing the eXtensible array: <a href="https://lwn.net/Articles/715948/">https://lwn.net/Articles/715948/</a></li>
 <li>LWN The XArray data structure: <a href="https://lwn.net/Articles/745073/">https://lwn.net/Articles/745073/</a></li>
-<li>Linux kernel <a href="../../../code-snippets/linux/xarray.h.html">xarry.h</a> and <a href="../../../code-snippets/linux/xarray.c.html">xarray.c</a></li>
+<li>Xarray: One Data Structure To Rule Them All: <a href="https://2019.linux.conf.au/schedule/presentation/213/">https://2019.linux.conf.au/schedule/presentation/213/</a></li>
+<li>Linux kernel code <a href="../../../code-snippets/linux/xarray.h.html">xarry.h</a> and <a href="../../../code-snippets/linux/xarray.c.html">xarray.c</a></li>
+<li>LWN Radix Tree: <a href="https://lwn.net/Articles/175432/">https://lwn.net/Articles/175432/</a></li>
 </ul>
 </div>
 </div>
