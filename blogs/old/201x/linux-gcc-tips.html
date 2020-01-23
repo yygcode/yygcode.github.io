@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<a href="../../../index.html">Yanyg - Software Engineer</a>
 <div class="sitelinks">
   <a href="../../archives.html">Archives</a> |
   <a href="../../theindex.html">Index</a> |
@@ -26,14 +26,179 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org526f8c9">1. 使用wrap拦截系统函数</a></li>
+<li><a href="#orgd46a182">1. Instrument Function</a>
+<ul>
+<li><a href="#org0ed2990">1.1. 作用</a></li>
+<li><a href="#orgc36f4ff">1.2. Example</a></li>
+<li><a href="#org5986e9d">1.3. gcc docs</a></li>
+</ul>
+</li>
+<li><a href="#org526f8c9">2. 使用wrap拦截系统函数</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org526f8c9" class="outline-2">
-<h2 id="org526f8c9"><span class="section-number-2">1</span> 使用wrap拦截系统函数</h2>
+<div id="outline-container-orgd46a182" class="outline-2">
+<h2 id="orgd46a182"><span class="section-number-2">1</span> Instrument Function</h2>
 <div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org0ed2990" class="outline-3">
+<h3 id="org0ed2990"><span class="section-number-3">1.1</span> 作用</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+统计函数调用的进入和退出，以及被谁调用，在分析问题时是非常有用的。
+例如，内存泄漏时，可以统计 <code>malloc/free</code> 函数的调用，然后分析持续
+增长的调用函数，一般就是内存泄漏分配点。
+</p>
+
+<p>
+使用方法是 <code>finstrument-functions</code> 参数编译，提供两个函数统计调用。
+这两个函数的编译不能打开 <code>finstrument-functions</code> （否则循环调用
+导致堆栈溢出）。使用 <code>__attribute__((no_instrument_function))</code> 关闭
+这两个函数的注入是有意义的。
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span>
+<span class="org-keyword">__attribute__</span>((no_instrument_function))
+<span class="org-function-name">__cyg_profile_func_enter</span><span class="org-whitespace-space"> </span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">this_fn</span>,
+<span class="org-whitespace-space">                          </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">call_site</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">enter</span><span class="org-whitespace-space"> </span><span class="org-comment">stuff</span>
+}
+<span class="org-type">void</span>
+<span class="org-keyword">__attribute__</span>((no_instrument_function))
+<span class="org-function-name">__cyg_profile_func_exit</span><span class="org-whitespace-space">  </span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">this_fn</span>,
+<span class="org-whitespace-space">                          </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">call_site</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Do</span><span class="org-whitespace-space"> </span><span class="org-comment">exit</span><span class="org-whitespace-space"> </span><span class="org-comment">stuff</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc36f4ff" class="outline-3">
+<h3 id="orgc36f4ff"><span class="section-number-3">1.2</span> Example</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">_GNU_SOURCE</span><span class="org-whitespace-space"> </span>1
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;dlfcn.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+
+<span class="org-type">void</span>*<span class="org-whitespace-space"> </span><span class="org-keyword">__attribute__</span>((noinline))<span class="org-whitespace-space"> </span><span class="org-function-name">my_malloc</span>(<span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">size</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>malloc(size);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-keyword">__attribute__</span>((noinline))<span class="org-whitespace-space"> </span><span class="org-function-name">func</span>()
+{
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"&gt;&gt;&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">memory</span><span class="org-whitespace-space"> </span><span class="org-string">leak</span><span class="org-whitespace-space"> </span><span class="org-string">function</span><span class="org-whitespace-space"> </span><span class="org-string">addr=%p</span><span class="org-whitespace-space"> </span><span class="org-string">!\n"</span>,<span class="org-whitespace-space"> </span>func);
+<span class="org-whitespace-space">    </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">leak</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>my_malloc(100);
+}
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">    </span>func();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">void</span>
+<span class="org-keyword">__attribute__</span>((no_instrument_function))
+<span class="org-function-name">print_info</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">prefix</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">this_fn</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">call_fn</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-type">Dl_info</span><span class="org-whitespace-space"> </span><span class="org-variable-name">this_info</span>;
+<span class="org-whitespace-space">    </span><span class="org-type">Dl_info</span><span class="org-whitespace-space"> </span><span class="org-variable-name">call_info</span>;
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">this_ret</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">call_ret</span>;
+
+<span class="org-whitespace-space">    </span>memset(&amp;this_info,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(this_info));
+<span class="org-whitespace-space">    </span>memset(&amp;call_info,<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(call_info));
+<span class="org-whitespace-space">    </span>this_ret<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dladdr(this_fn,<span class="org-whitespace-space"> </span>&amp;this_info);
+<span class="org-whitespace-space">    </span>call_ret<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dladdr(call_fn,<span class="org-whitespace-space"> </span>&amp;call_info);
+
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"%s:</span><span class="org-whitespace-space"> </span><span class="org-string">this_fn:</span><span class="org-whitespace-space"> </span><span class="org-string">%p(%s</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">%s),</span><span class="org-whitespace-space"> </span><span class="org-string">call_fn:%p(%s</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">%s)\n"</span>,<span class="org-whitespace-space"> </span>prefix,
+<span class="org-whitespace-space">           </span>this_fn,<span class="org-whitespace-space"> </span>this_info.dli_sname,<span class="org-whitespace-space"> </span>this_info.dli_fname,
+<span class="org-whitespace-space">           </span>call_fn,<span class="org-whitespace-space"> </span>call_info.dli_sname,<span class="org-whitespace-space"> </span>call_info.dli_fname);
+}
+
+<span class="org-type">void</span>
+<span class="org-keyword">__attribute__</span>((no_instrument_function))
+<span class="org-function-name">__cyg_profile_func_enter</span><span class="org-whitespace-space"> </span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">this_fn</span>,
+<span class="org-whitespace-space">                          </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">call_fn</span>)
+{
+<span class="org-whitespace-space">    </span>print_info(<span class="org-string">"Enter"</span>,<span class="org-whitespace-space"> </span>this_fn,<span class="org-whitespace-space"> </span>call_fn);
+}
+<span class="org-type">void</span>
+<span class="org-keyword">__attribute__</span>((no_instrument_function))
+<span class="org-function-name">__cyg_profile_func_exit</span><span class="org-whitespace-space">  </span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">this_fn</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">call_fn</span>)
+{
+<span class="org-whitespace-space">    </span>print_info(<span class="org-string">"Exit</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>,<span class="org-whitespace-space"> </span>this_fn,<span class="org-whitespace-space"> </span>call_fn);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5986e9d" class="outline-3">
+<h3 id="org5986e9d"><span class="section-number-3">1.3</span> gcc docs</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Docs1: <a href="https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html">https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html</a>
+</p>
+
+<p>
+Docs2: <a href="https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#Common-Function-Attributes">https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#Common-Function-Attributes</a>
+</p>
+<blockquote>
+<p>
+Generate instrumentation calls for entry and exit to functions. Just after
+function entry and just before function exit, the following profiling functions
+are called with the address of the current function and its call site. (On some
+platforms, __builtin_return_address does not work beyond the current function,
+so the call site information may not be available to the profiling functions
+otherwise.)
+</p>
+
+<p>
+void __cyg_profile_func_enter (void *this_fn,
+                               void *call_site);
+void __cyg_profile_func_exit  (void *this_fn,
+                               void *call_site);
+</p>
+
+<p>
+The first argument is the address of the start of the current function, which
+may be looked up exactly in the symbol table.
+</p>
+
+<p>
+This instrumentation is also done for functions expanded inline in other
+functions. The profiling calls indicate where, conceptually, the inline function
+is entered and exited. This means that addressable versions of such functions
+must be available. If all your uses of a function are expanded inline, this may
+mean an additional expansion of code size. If you use extern inline in your C
+code, an addressable version of such functions must be provided. (This is
+normally the case anyway, but if you get lucky and the optimizer always expands
+the functions inline, you might have gotten away without providing
+static copies.)
+</p>
+
+<p>
+A function may be given the attribute no_instrument_function, in which case this
+instrumentation is not done. This can be used, for example, for the profiling
+functions listed above, high-priority interrupt routines, and any functions
+from which the profiling functions cannot safely be called (perhaps signal
+handlers, if the profiling routines generate output or allocate memory).
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org526f8c9" class="outline-2">
+<h2 id="org526f8c9"><span class="section-number-2">2</span> 使用wrap拦截系统函数</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 下例使用wrap包装malloc，我们可以添加一些统计，来确认是否有内存泄漏问题。
 </p>
