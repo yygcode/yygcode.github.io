@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<a href="../../../index.html">Yanyg - Software Engineer</a>
 <div class="sitelinks">
   <a href="../../archives.html">Archives</a> |
   <a href="../../theindex.html">Index</a> |
@@ -26,18 +26,162 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7542b4f">1. References</a></li>
+<li><a href="#org35e1ce9">1. Makefile</a></li>
+<li><a href="#orga8694e6">2. Autoconf</a></li>
+<li><a href="#org7539e03">3. CMake</a>
+<ul>
+<li><a href="#org36f2d37">3.1. hello world</a></li>
 </ul>
+</li>
+<li><a href="#org7542b4f">4. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+编译系统从Makefile，到Autoconf，再到CMake，
+</p>
+
+<div id="outline-container-org35e1ce9" class="outline-2">
+<h2 id="org35e1ce9"><span class="section-number-2">1</span> Makefile</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://www.gnu.org/software/make/manual/make.html">Makefile</a>的语法比较好玩（晦涩），提供了各种各样的弹性扩展。06年写过下面这样的
+Makefile Demo，现在基本不会写了，也忘记了  <code>$&lt;, $@, $*</code> 的含义。
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="org-comment-delimiter">################################</span>
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space">  </span><span class="org-comment">ApFileSubServer</span><span class="org-whitespace-space">  </span><span class="org-comment">Makefile</span><span class="org-whitespace-space">  </span><span class="org-comment">#</span>
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space">    </span><span class="org-comment">yanyg</span><span class="org-whitespace-space">   </span><span class="org-comment">2006</span><span class="org-whitespace-space">   </span><span class="org-comment">10</span><span class="org-whitespace-space">  </span><span class="org-comment">23</span><span class="org-whitespace-space">     </span><span class="org-comment">#</span>
+<span class="org-comment-delimiter">################################</span>
+
+<span class="org-variable-name">CXX</span><span class="org-whitespace-space">      </span>:=<span class="org-whitespace-space"> </span>g++
+<span class="org-variable-name">CXXFLAGS</span><span class="org-whitespace-space"> </span>:=<span class="org-whitespace-space"> </span>-g<span class="org-whitespace-space"> </span>-c
+<span class="org-variable-name">LIB</span><span class="org-whitespace-space">      </span>:=<span class="org-whitespace-space"> </span>-Wl,-Bdynamic<span class="org-whitespace-space"> </span>-lpthread<span class="org-whitespace-space"> </span>-lgcc_s<span class="org-whitespace-space"> </span>-lcrypt<span class="org-whitespace-space"> </span>-lnsl<span class="org-whitespace-space"> </span>-lrt
+<span class="org-variable-name">SRC</span><span class="org-whitespace-space">      </span>:=$(<span class="org-variable-name">wildcard</span><span class="org-whitespace-space"> </span>*.cpp)
+<span class="org-variable-name">OBJ</span><span class="org-whitespace-space">      </span>:=$(<span class="org-variable-name">SRC</span>:<span class="org-variable-name">.cpp</span>=.o)
+
+<span class="org-makefile-targets">all</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>ApFileMainServer
+
+<span class="org-makefile-targets">.SUFFIXES</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>.o<span class="org-whitespace-space"> </span>.cpp
+
+<span class="org-makefile-targets">.cpp.o</span><span class="org-whitespace-space"> </span>:
+<span class="org-whitespace-space">        </span>@${<span class="org-variable-name">CXX</span>}<span class="org-whitespace-space"> </span>${<span class="org-variable-name">CXXFLAGS</span>}<span class="org-whitespace-space"> </span>$<span class="org-constant">&lt;</span><span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span><span class="org-makefile-targets">$</span><span class="org-makefile-targets"><span class="org-constant">@</span></span>
+<span class="org-whitespace-space">        </span>@echo<span class="org-whitespace-space"> </span><span class="org-string">"Compile</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>$<span class="org-constant">&lt;</span><span class="org-whitespace-space"> </span><span class="org-string">"success..."</span>
+<span class="org-makefile-targets">ApFileMainServer</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>${<span class="org-variable-name">OBJ</span>}
+<span class="org-whitespace-space">        </span>@echo<span class="org-whitespace-space"> </span><span class="org-string">"Link</span><span class="org-whitespace-space"> </span><span class="org-string">OBJ</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">ApFileMainServer</span><span class="org-whitespace-space"> </span><span class="org-string">..."</span>
+<span class="org-whitespace-space">        </span>@${<span class="org-variable-name">CXX</span>}<span class="org-whitespace-space"> </span>${<span class="org-variable-name">LIB</span>}<span class="org-whitespace-space"> </span>${<span class="org-variable-name">OBJ</span>}<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>ApFileMainServer
+<span class="org-whitespace-space">        </span>@echo<span class="org-whitespace-space"> </span><span class="org-string">"Build</span><span class="org-whitespace-space"> </span><span class="org-string">ApFileMainServer</span><span class="org-whitespace-space"> </span><span class="org-string">Success!"</span>
+
+<span class="org-makefile-targets">.PHONY</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>clean
+<span class="org-makefile-targets">clean</span>:
+<span class="org-whitespace-space">        </span>@echo<span class="org-whitespace-space"> </span><span class="org-string">"Delete</span><span class="org-whitespace-space"> </span><span class="org-string">OBJ(*.o)</span><span class="org-whitespace-space"> </span><span class="org-string">&amp;&amp;</span><span class="org-whitespace-space"> </span><span class="org-string">ApFileMainServer..."</span>
+<span class="org-whitespace-space">        </span>@rm<span class="org-whitespace-space"> </span>-fr<span class="org-whitespace-space"> </span>${<span class="org-variable-name">OBJ</span>}<span class="org-whitespace-space"> </span>ApFileMainServery
+</pre>
+</div>
+
+<p>
+这个Makefile只是一个Demo，而不是好的示例。一个Makefile要有编译、打包、安装、
+测试等。想写好的Makefile不是一件简单的事情，Autoconf从一定程度缓解了这个问题。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga8694e6" class="outline-2">
+<h2 id="orga8694e6"><span class="section-number-2">2</span> Autoconf</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在CMake之前，绝大多数的开源项目用<a href="https://www.gnu.org/software/autoconf/autoconf.html">Autoconf</a>编译。花费少量的精力，Autoconf就能
+帮助生成功能完备的Makefile。写Autoconf需要熟悉automake, autoconf, <a href="https://www.gnu.org/software/libtool/">libtool</a>。
+之前业余写的几行代码也用autoconf编译：
+</p>
+
+<p>
+<a href="https://github.com/yygcode/ycc/tree/develop">https://github.com/yygcode/ycc/tree/develop</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7539e03" class="outline-2">
+<h2 id="org7539e03"><span class="section-number-2">3</span> CMake</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+目前用起来最爽的编译系统了。
+</p>
+</div>
+
+<div id="outline-container-org36f2d37" class="outline-3">
+<h3 id="org36f2d37"><span class="section-number-3">3.1</span> hello world</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+hello.c
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">  </span>printf(<span class="org-string">"hello</span><span class="org-whitespace-space"> </span><span class="org-string">world\n"</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<p>
+CMakeLists.txt:
+</p>
+<div class="org-src-container">
+<pre class="src src-cmake"><span class="org-function-name">project</span>(hello)
+
+<span class="org-function-name">add_executable</span>(hello<span class="org-whitespace-space"> </span>helloc.c)
+</pre>
+</div>
+
+<p>
+Compile:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-variable-name">yanyg</span>@t430:~/test<span class="org-whitespace-space"> </span>$<span class="org-whitespace-space"> </span>mkdir<span class="org-whitespace-space"> </span>build
+yanyg@t430:~/test<span class="org-whitespace-space"> </span>$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>build
+yanyg@t430:~/test/build<span class="org-whitespace-space"> </span>$<span class="org-whitespace-space"> </span>cmake<span class="org-whitespace-space"> </span>..
+--<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>identification<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>GNU<span class="org-whitespace-space"> </span>8.3.0
+--<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>identification<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>GNU<span class="org-whitespace-space"> </span>8.3.0
+--<span class="org-whitespace-space"> </span>Check<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>working<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compiler:<span class="org-whitespace-space"> </span>/usr/bin/cc
+--<span class="org-whitespace-space"> </span>Check<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>working<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compiler:<span class="org-whitespace-space"> </span>/usr/bin/cc<span class="org-whitespace-space"> </span>--<span class="org-whitespace-space"> </span>works
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>ABI<span class="org-whitespace-space"> </span>info
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>ABI<span class="org-whitespace-space"> </span>info<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compile<span class="org-whitespace-space"> </span>features
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>C<span class="org-whitespace-space"> </span>compile<span class="org-whitespace-space"> </span>features<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Check<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>working<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compiler:<span class="org-whitespace-space"> </span>/usr/bin/c++
+--<span class="org-whitespace-space"> </span>Check<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>working<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compiler:<span class="org-whitespace-space"> </span>/usr/bin/c++<span class="org-whitespace-space"> </span>--<span class="org-whitespace-space"> </span>works
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>ABI<span class="org-whitespace-space"> </span>info
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compiler<span class="org-whitespace-space"> </span>ABI<span class="org-whitespace-space"> </span>info<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compile<span class="org-whitespace-space"> </span>features
+--<span class="org-whitespace-space"> </span>Detecting<span class="org-whitespace-space"> </span>CXX<span class="org-whitespace-space"> </span>compile<span class="org-whitespace-space"> </span>features<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Configuring<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Generating<span class="org-whitespace-space"> </span>done
+--<span class="org-whitespace-space"> </span>Build<span class="org-whitespace-space"> </span>files<span class="org-whitespace-space"> </span>have<span class="org-whitespace-space"> </span>been<span class="org-whitespace-space"> </span>written<span class="org-whitespace-space"> </span>to:<span class="org-whitespace-space"> </span>/home/yanyg/test/build
+yanyg@t430:~/test/build$<span class="org-whitespace-space"> </span>ls
+CMakeCache.txt<span class="org-whitespace-space">  </span>CMakeFiles<span class="org-whitespace-space">  </span>cmake_install.cmake<span class="org-whitespace-space">  </span>hello<span class="org-whitespace-space">  </span>Makefile
+yanyg@t430:~/test/build$<span class="org-whitespace-space"> </span>./hello
+hello<span class="org-whitespace-space"> </span>world
+</pre>
+</div>
+</div>
 </div>
 </div>
 
 <div id="outline-container-org7542b4f" class="outline-2">
-<h2 id="org7542b4f"><span class="section-number-2">1</span> References</h2>
-<div class="outline-text-2" id="text-1">
+<h2 id="org7542b4f"><span class="section-number-2">4</span> References</h2>
+<div class="outline-text-2" id="text-4">
 <ul class="org-ul">
-<li>cmake homepage: <a href="https://cmake.org/documentation/">https://cmake.org/documentation/</a></li>
+<li>cmake documentation: <a href="https://cmake.org/documentation/">https://cmake.org/documentation/</a></li>
 <li>awesome-cmake: <a href="https://github.com/onqtam/awesome-cmake">https://github.com/onqtam/awesome-cmake</a></li>
 <li>professional-cmake: <a href="https://crascit.com/professional-cmake/">https://crascit.com/professional-cmake/</a></li>
+<li>automake: <a href="https://www.gnu.org/software/automake/">https://www.gnu.org/software/automake/</a></li>
+<li>autoconf: <a href="https://www.gnu.org/software/autoconf/autoconf.html">https://www.gnu.org/software/autoconf/autoconf.html</a></li>
+<li>makefile: <a href="https://www.gnu.org/software/make/manual/make.html">https://www.gnu.org/software/make/manual/make.html</a></li>
+<li>Blog: <a href="autoconf.html">Autoconf简单示例</a></li>
+<li>Blog: <a href="autoconf2.html">Autoconf简单示例2</a></li>
 </ul>
 </div>
 </div>
