@@ -26,7 +26,7 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org499dac0">1. <span class="todo TODO">TODO</span> 概述</a></li>
+<li><a href="#org236dbf0">1. <span class="todo TODO">TODO</span> 概述</a></li>
 <li><a href="#us">2. 用户态内存管理技术</a>
 <ul>
 <li><a href="#us-process-layout">2.1. 从程序地址空间布局谈起</a></li>
@@ -51,26 +51,12 @@
 </li>
 </ul>
 </li>
-<li><a href="#org172e952">4. 读书笔记</a>
-<ul>
-<li><a href="#org4ff8504">4.1. Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</a>
-<ul>
-<li><a href="#org9a56c10">4.1.1. Chapter</a></li>
-</ul>
-</li>
-<li><a href="#org782ee99">4.2. Professional Linux Kernel Architecture CN</a>
-<ul>
-<li><a href="#org236dbf0">4.2.1. 概述</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org499dac0" class="outline-2">
-<h2 id="org499dac0"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
+<div id="outline-container-org236dbf0" class="outline-2">
+<h2 id="org236dbf0"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 待定内容：
@@ -472,49 +458,6 @@ Diff:
 echo<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>/proc/sys/kernel/randomize_va_space;<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/self/maps<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>cat.maps.1;<span class="org-whitespace-space"> </span><span class="org-whitespace-line">cat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/proc/self/maps</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cat.maps.2;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-type"><span class="org-whitespace-line">diff</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">cat</span></span><span class="org-whitespace-line">.maps.[12]</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">&gt;/dev/null;</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">echo</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">$?</span>
 </pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div id="outline-container-org172e952" class="outline-2">
-<h2 id="org172e952"><span class="section-number-2">4</span> 读书笔记</h2>
-<div class="outline-text-2" id="text-4">
-</div>
-<div id="outline-container-org4ff8504" class="outline-3">
-<h3 id="org4ff8504"><span class="section-number-3">4.1</span> Understanding The Linux Virtual Memory Manager(Mel Gorman, JUly 9, 2007)</h3>
-<div class="outline-text-3" id="text-4-1">
-</div>
-<div id="outline-container-org9a56c10" class="outline-4">
-<h4 id="org9a56c10"><span class="section-number-4">4.1.1</span> Chapter</h4>
-<div class="outline-text-4" id="text-4-1-1">
-<p>
-1
-</p>
-</div>
-</div>
-</div>
-<div id="outline-container-org782ee99" class="outline-3">
-<h3 id="org782ee99"><span class="section-number-3">4.2</span> Professional Linux Kernel Architecture CN</h3>
-<div class="outline-text-3" id="text-4-2">
-</div>
-<div id="outline-container-org236dbf0" class="outline-4">
-<h4 id="org236dbf0"><span class="section-number-4">4.2.1</span> 概述</h4>
-<div class="outline-text-4" id="text-4-2-1">
-<p>
-领域：
-</p>
-<ul class="org-ul">
-<li>物理内存页的管理</li>
-<li>分配大块内存的伙伴系统</li>
-<li>分配小块内存的slab、slob、slub分配器</li>
-<li>分配非连续内存块的vmalloc机制</li>
-<li>进程的地址空间</li>
-</ul>
-
-<p>
-LINUX将虚拟地址空间分两部分，底部较大用于用户进程，顶部则内核专用。32位系统下的典型分配是3:1。
-PAE开启后32位系统可达64GB，但不是同时可访问。
-</p>
 </div>
 </div>
 </div>
