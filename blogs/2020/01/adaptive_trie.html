@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Adaptive Trie Tree</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Adaptive Trie Tree</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org44e7546">1. Optimize</a></li>
+<li><a href="#org3ffa353">2. Test Data</a>
+<ul>
+<li><a href="#orga26df49">2.1. Traditional</a></li>
+<li><a href="#org2b43cee">2.2. Collapsing</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+最近看了一篇论文&lt;The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases&gt;,
+下载链接在这里：<a href="https://db.in.tum.de/~leis/papers/ART.pdf">https://db.in.tum.de/~leis/papers/ART.pdf</a>
+</p>
+
+<p>
+Radix-Tree实际是Trie数据结构（数据检索）。树的高度由Key(也叫做Index)的长度和
+每层的位宽决定。例如对于 <code>Key=32Bits, LayerBits=4</code> ，树的最大高度是8。对于
+ <code>Key=32Bits, LayerBits=6</code> ，树的最大高度是6。
+</p>
+
+<p>
+Trie树分为内部节点(inner node)和叶子节点(leaf node)。内部节点保存下一级
+内部节点的地址，而叶子节点保存实际对象（或者对象指针）。
+</p>
+
+<div id="outline-container-org44e7546" class="outline-2">
+<h2 id="org44e7546"><span class="section-number-2">1</span> Optimize</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Adaptive包括三个优化：
+</p>
+<ul class="org-ul">
+<li>内部节点的自动伸缩</li>
+</ul>
+<p>
+默认Trie树每个内部节点都有 \(2^{Layerbits}\) 个元素。自动伸缩的分配方式是指
+不按照每层的位宽分配，而是实现一个自动调整大小的内部节点。如果内部节点的
+使用率较低，这种策略能节省大量内存。对于比较长的Key(例如16字节的UUID)，
+大部分内部节点的使用率都很低。假定保存60亿个元素，裸的Key需要占用内存90GB
+左右，这在当前系统上已经是很可观的了(现有计算机系统内存128GB~256GB是比较
+常见的)。60亿元素只需要33个位宽就可以构建唯一编址，相对于16字节(128位)的
+Key，这个数据太小，因此内部节点使用率相当低。
+</p>
+<ul class="org-ul">
+<li>内部节点折叠；</li>
+</ul>
+<p>
+当Key的前缀(prefix)可以唯一描述Key时(没有相同的Prefix)，则不用继续伸展，而是在
+内部节点的对应位置标记Leaf，同时保存完整的Key。当后续有相同前缀的另一个Key插入
+时，检测到Leaf标记，则从这里拿到已经保存的KeyExist，与要插入的Key对比。如果两者
+相等则结束，否则扩展层级，直到两者的前缀不等，分别保存两个Key。我使用
+<code>KeyLen=16Byte, LayerBits=4</code> ，使用 <code>/dev/urandom</code> 作为随机源，插入3亿元素时
+树的高度为12或13(更大量的数据我的内存不足无法测试了)。
+</p>
+<ul class="org-ul">
+<li>路径压缩</li>
+</ul>
+<p>
+如果一个内部节点只有一个子节点，则可以移除这个内部节点。例如下面这个图示，可以
+移除内部节点A。
+</p>
+<div class="org-src-container">
+<pre class="src src-text">A<span class="org-whitespace-space">              </span>B<span class="org-whitespace-space">              </span>C
+|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|-----&gt;|0|<span class="org-whitespace-space"> </span>Leaf0
+|1|-----|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|-----&gt;|2|<span class="org-whitespace-space"> </span>Leaf1
+|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|-----&gt;|3|-----|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+</pre>
+</div>
+
+<p>
+论文测试数据证明每个节点平均耗费8.1字节空间。这个非常高效了。我目前版本只做了
+优化2内部节点折叠，Key是16字节UUID，每层4位，测试结果是每个节点耗费22字节。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3ffa353" class="outline-2">
+<h2 id="org3ffa353"><span class="section-number-2">2</span> Test Data</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+16字节Key，每层4位，32层。
+</p>
+</div>
+
+<div id="outline-container-orga26df49" class="outline-3">
+<h3 id="orga26df49"><span class="section-number-3">2.1</span> Traditional</h3>
+<div class="outline-text-3" id="text-2-1">
+<table>
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Item(x1M)</th>
+<th scope="col" class="org-right">Memory(GB)</th>
+<th scope="col" class="org-right">Bytes/Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">1.891</td>
+<td class="org-right">1936.384</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">3.744</td>
+<td class="org-right">1916.928</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">5.583</td>
+<td class="org-right">1905.664</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">7.414</td>
+<td class="org-right">1897.984</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">9.240</td>
+<td class="org-right">1892.352</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">11.062</td>
+<td class="org-right">1887.915</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">12.881</td>
+<td class="org-right">1884.306</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+InternalNode结构体68字节，IDMem映射增加4个字节，因此每个InternalNode
+占用72字节。Key结构体16字节，映射增加4字节，因此每个LeafNode占用20字节。
+</p>
+
+<p>
+考虑每层4位，因此第5层的InternalNode数目是 \(2^20\) ，等于1M。
+1M(1024*1024) Key插入时，假定Key完全平均分布，InternalNode前5层是满的，
+后续的InternalNode预期每个Node只包含一个Key。因此每个Key使用的InternalNode
+在26(31-5)以上，但不足27个。实际统计结果是26.616个。因此：
+\(Bytes/Item < 72*26.616 + 20 = 1936.38\)
+</p>
+
+<p>
+符合预期。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2b43cee" class="outline-3">
+<h3 id="org2b43cee"><span class="section-number-3">2.2</span> Collapsing</h3>
+<div class="outline-text-3" id="text-2-2">
+<table>
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Item(x16M)</th>
+<th scope="col" class="org-right">Memory(GB)</th>
+<th scope="col" class="org-right">Bytes/Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">0.6584</td>
+<td class="org-right">42.138</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">1.3819</td>
+<td class="org-right">44.221</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">2.0263</td>
+<td class="org-right">43.228</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">2.6109</td>
+<td class="org-right">41.774</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">3.1777</td>
+<td class="org-right">40.675</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">3.7530</td>
+<td class="org-right">40.032</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">4.3483</td>
+<td class="org-right">39.756</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-right">4.9673</td>
+<td class="org-right">39.738</td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-right">5.6088</td>
+<td class="org-right">39.885</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-right">6.2714</td>
+<td class="org-right">40.137</td>
+</tr>
+
+<tr>
+<td class="org-right">11</td>
+<td class="org-right">6.9523</td>
+<td class="org-right">40.450</td>
+</tr>
+
+<tr>
+<td class="org-right">12</td>
+<td class="org-right">7.6479</td>
+<td class="org-right">40.789</td>
+</tr>
+
+<tr>
+<td class="org-right">13</td>
+<td class="org-right">8.3564</td>
+<td class="org-right">41.139</td>
+</tr>
+
+<tr>
+<td class="org-right">14</td>
+<td class="org-right">9.0747</td>
+<td class="org-right">41.484</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">9.8009</td>
+<td class="org-right">41.817</td>
+</tr>
+
+<tr>
+<td class="org-right">16</td>
+<td class="org-right">10.5332</td>
+<td class="org-right">42.133</td>
+</tr>
+
+<tr>
+<td class="org-right">17</td>
+<td class="org-right">11.2696</td>
+<td class="org-right">42.427</td>
+</tr>
+
+<tr>
+<td class="org-right">18</td>
+<td class="org-right">12.0087</td>
+<td class="org-right">42.698</td>
+</tr>
+
+<tr>
+<td class="org-right">19</td>
+<td class="org-right">12.7489</td>
+<td class="org-right">42.944</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+计算16M Key情况。每个Key占用的InternalNode平均是:
+\((41.139 - 20)/72=0.2797\)
+</p>
+
+<p>
+平均每个Key使用的InternalNode对应字节数为21.139。
+</p>
+
+<p>
+假定Key完全平均分布，在Collapsing下，16M Key将占满全部6层，InternalNode数为
+\(1 + 16 + 256 + 4096 + 65546 + 1048576 = 1118481\)
+</p>
+
+<p>
+平均每个Key使用的InternalNode数量为
+\(1118481/1024/1024/16 = 0.0667\)
+</p>
+
+<p>
+平均每个Key使用的InternalNode对应字节数为
+\(0.0667*72=4.8\)
+</p>
+
+<p>
+还有很大的优化空间。
+</p>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
