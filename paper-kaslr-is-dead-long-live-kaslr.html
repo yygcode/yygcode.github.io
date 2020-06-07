@@ -1,52 +1,47 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>KASLR is Dead: Long Live KASLR</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">KASLR is Dead: Long Live KASLR</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge1bb0d9">1. Author</a>
+<li><a href="#orgb9d8d1a">1. Author</a>
 <ul>
-<li><a href="#org4717981">1.1. Daniel Gruss</a></li>
-<li><a href="#orgabdd844">1.2. Moritz Lipp</a></li>
-<li><a href="#orgd148ec1">1.3. Michael Schwarz</a></li>
-<li><a href="#org67ce2e4">1.4. Richard Fellner</a></li>
-<li><a href="#org4bde144">1.5. Clementine Maurice</a></li>
-<li><a href="#org61ff3b1">1.6. Stefan Mangard</a></li>
+<li><a href="#org29bd329">1.1. Daniel Gruss</a></li>
+<li><a href="#org590822b">1.2. Moritz Lipp</a></li>
+<li><a href="#org67748bc">1.3. Michael Schwarz</a></li>
+<li><a href="#org7ec8415">1.4. Richard Fellner</a></li>
+<li><a href="#org7a28f1a">1.5. Clementine Maurice</a></li>
+<li><a href="#org3f96f82">1.6. Stefan Mangard</a></li>
 </ul>
 </li>
-<li><a href="#orgcf3939d">2. Abstract</a></li>
-<li><a href="#orgf07f75e">3. Introduction</a></li>
-<li><a href="#org4d0e140">4. Background</a>
+<li><a href="#org5b5e4a9">2. Abstract</a></li>
+<li><a href="#org6b3fcb8">3. Introduction</a></li>
+<li><a href="#org546c3a0">4. Background</a>
 <ul>
-<li><a href="#orgadc3fcc">4.1. Virtual Address Space</a></li>
-<li><a href="#orgbb490be">4.2. CPU Caches</a></li>
-<li><a href="#orgae6b65f">4.3. Microarchitectural Attacks on Kernel Address Informationo</a></li>
+<li><a href="#org5d04d32">4.1. Virtual Address Space</a></li>
+<li><a href="#org16ee38f">4.2. CPU Caches</a></li>
+<li><a href="#org8e62f49">4.3. Microarchitectural Attacks on Kernel Address Informationo</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge1bb0d9" class="outline-2">
-<h2 id="orge1bb0d9"><span class="section-number-2">1</span> Author</h2>
+<div id="outline-container-orgb9d8d1a" class="outline-2">
+<h2 id="orgb9d8d1a"><span class="section-number-2">1</span> Author</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org4717981" class="outline-3">
-<h3 id="org4717981"><span class="section-number-3">1.1</span> Daniel Gruss</h3>
+<div id="outline-container-org29bd329" class="outline-3">
+<h3 id="org29bd329"><span class="section-number-3">1.1</span> Daniel Gruss</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 <a href="https://gruss.cc/">https://gruss.cc/</a>
@@ -73,8 +68,8 @@ graduate courses (Embedded Security, Security Aspects in Software Development).
 </div>
 </div>
 
-<div id="outline-container-orgabdd844" class="outline-3">
-<h3 id="orgabdd844"><span class="section-number-3">1.2</span> Moritz Lipp</h3>
+<div id="outline-container-org590822b" class="outline-3">
+<h3 id="org590822b"><span class="section-number-3">1.2</span> Moritz Lipp</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <a href="https://mlq.me/">https://mlq.me/</a>
@@ -98,8 +93,8 @@ If you have any questions or just want to get in touch, feel free to contact me!
 </div>
 </div>
 
-<div id="outline-container-orgd148ec1" class="outline-3">
-<h3 id="orgd148ec1"><span class="section-number-3">1.3</span> Michael Schwarz</h3>
+<div id="outline-container-org67748bc" class="outline-3">
+<h3 id="org67748bc"><span class="section-number-3">1.3</span> Michael Schwarz</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 <a href="https://misc0110.net/web/">https://misc0110.net/web/</a>
@@ -123,19 +118,19 @@ Aspects in Software Development.
 </div>
 </div>
 
-<div id="outline-container-org67ce2e4" class="outline-3">
-<h3 id="org67ce2e4"><span class="section-number-3">1.4</span> Richard Fellner</h3>
+<div id="outline-container-org7ec8415" class="outline-3">
+<h3 id="org7ec8415"><span class="section-number-3">1.4</span> Richard Fellner</h3>
 </div>
-<div id="outline-container-org4bde144" class="outline-3">
-<h3 id="org4bde144"><span class="section-number-3">1.5</span> Clementine Maurice</h3>
+<div id="outline-container-org7a28f1a" class="outline-3">
+<h3 id="org7a28f1a"><span class="section-number-3">1.5</span> Clementine Maurice</h3>
 </div>
-<div id="outline-container-org61ff3b1" class="outline-3">
-<h3 id="org61ff3b1"><span class="section-number-3">1.6</span> Stefan Mangard</h3>
+<div id="outline-container-org3f96f82" class="outline-3">
+<h3 id="org3f96f82"><span class="section-number-3">1.6</span> Stefan Mangard</h3>
 </div>
 </div>
 
-<div id="outline-container-orgcf3939d" class="outline-2">
-<h2 id="orgcf3939d"><span class="section-number-2">2</span> Abstract</h2>
+<div id="outline-container-org5b5e4a9" class="outline-2">
+<h2 id="org5b5e4a9"><span class="section-number-2">2</span> Abstract</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Modern operating system kernels employ address space layout randomization (ASLR)
@@ -161,8 +156,8 @@ demonstrate that KAISER has a runtime overhead of only 0:28%.
 </div>
 </div>
 
-<div id="outline-container-orgf07f75e" class="outline-2">
-<h2 id="orgf07f75e"><span class="section-number-2">3</span> Introduction</h2>
+<div id="outline-container-org6b3fcb8" class="outline-2">
+<h2 id="org6b3fcb8"><span class="section-number-2">3</span> Introduction</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Like user programs, kernel code contains software bugs which can be exploited
@@ -269,12 +264,12 @@ Section 5, we discuss future work. We conclude in Section 6.
 </div>
 </div>
 
-<div id="outline-container-org4d0e140" class="outline-2">
-<h2 id="org4d0e140"><span class="section-number-2">4</span> Background</h2>
+<div id="outline-container-org546c3a0" class="outline-2">
+<h2 id="org546c3a0"><span class="section-number-2">4</span> Background</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgadc3fcc" class="outline-3">
-<h3 id="orgadc3fcc"><span class="section-number-3">4.1</span> Virtual Address Space</h3>
+<div id="outline-container-org5d04d32" class="outline-3">
+<h3 id="org5d04d32"><span class="section-number-3">4.1</span> Virtual Address Space</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Virtual addressing is the foundation of memory isolation between different
@@ -350,8 +345,8 @@ attacks.
 </div>
 </div>
 
-<div id="outline-container-orgbb490be" class="outline-3">
-<h3 id="orgbb490be"><span class="section-number-3">4.2</span> CPU Caches</h3>
+<div id="outline-container-org16ee38f" class="outline-3">
+<h3 id="org16ee38f"><span class="section-number-3">4.2</span> CPU Caches</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Caches are small memory buffers inside the CPU, storing frequently used data.
@@ -366,8 +361,8 @@ used for address resolution.
 </div>
 </div>
 
-<div id="outline-container-orgae6b65f" class="outline-3">
-<h3 id="orgae6b65f"><span class="section-number-3">4.3</span> Microarchitectural Attacks on Kernel Address Informationo</h3>
+<div id="outline-container-org8e62f49" class="outline-3">
+<h3 id="org8e62f49"><span class="section-number-3">4.3</span> Microarchitectural Attacks on Kernel Address Informationo</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Until recently, Linux provided information on virtual and physical addresses
@@ -394,6 +389,21 @@ even if it is not accessible from the user space.
 </p>
 </div>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

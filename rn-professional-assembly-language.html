@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>汇编语言程序设计/Professional Assembly Language</title>
 <meta name="generator" content="Org mode" />
@@ -30,24 +29,20 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">汇编语言程序设计/Professional Assembly Language</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga94c64b">1. 使用内联汇编/Inline Assembly</a>
+<li><a href="#org2fb1ab9">1. 使用内联汇编/Inline Assembly</a>
 <ul>
-<li><a href="#org96bda16">1.1. 基本内联汇编</a>
+<li><a href="#orgb78304d">1.1. 基本内联汇编</a>
 <ul>
-<li><a href="#org5976be2">1.1.1. 基本格式</a></li>
-<li><a href="#org6a922fc">1.1.2. 使用volatile修饰内联汇编，禁止编译器优化</a></li>
-<li><a href="#orgb4ccce6">1.1.3. 替换关键字__asm__</a></li>
-<li><a href="#org84f4220">1.1.4. 扩展asm</a></li>
+<li><a href="#org51997b3">1.1.1. 基本格式</a></li>
+<li><a href="#org62dd824">1.1.2. 使用volatile修饰内联汇编，禁止编译器优化</a></li>
+<li><a href="#org61fb7a1">1.1.3. 替换关键字__asm__</a></li>
+<li><a href="#orgb6cdfb2">1.1.4. 扩展asm</a></li>
 </ul>
 </li>
 </ul>
@@ -58,16 +53,16 @@
 <p>
 Part 3: 高级汇编语言技术
 </p>
-<div id="outline-container-orga94c64b" class="outline-2">
-<h2 id="orga94c64b"><span class="section-number-2">1</span> 使用内联汇编/Inline Assembly</h2>
+<div id="outline-container-org2fb1ab9" class="outline-2">
+<h2 id="org2fb1ab9"><span class="section-number-2">1</span> 使用内联汇编/Inline Assembly</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org96bda16" class="outline-3">
-<h3 id="org96bda16"><span class="section-number-3">1.1</span> 基本内联汇编</h3>
+<div id="outline-container-orgb78304d" class="outline-3">
+<h3 id="orgb78304d"><span class="section-number-3">1.1</span> 基本内联汇编</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org5976be2" class="outline-4">
-<h4 id="org5976be2"><span class="section-number-4">1.1.1</span> 基本格式</h4>
+<div id="outline-container-org51997b3" class="outline-4">
+<h4 id="org51997b3"><span class="section-number-4">1.1.1</span> 基本格式</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 格式\(asm("assembly code")\)。
@@ -81,8 +76,8 @@ Part 3: 高级汇编语言技术
 </div>
 </div>
 
-<div id="outline-container-org6a922fc" class="outline-4">
-<h4 id="org6a922fc"><span class="section-number-4">1.1.2</span> 使用volatile修饰内联汇编，禁止编译器优化</h4>
+<div id="outline-container-org62dd824" class="outline-4">
+<h4 id="org62dd824"><span class="section-number-4">1.1.2</span> 使用volatile修饰内联汇编，禁止编译器优化</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <div class="org-src-container">
 <pre class="src src-asm"><span class="org-function-name">asm</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span>(<span class="org-string">"assembly</span><span class="org-whitespace-space"> </span><span class="org-string">code"</span>)
@@ -91,14 +86,29 @@ Part 3: 高级汇编语言技术
 </div>
 </div>
 
-<div id="outline-container-orgb4ccce6" class="outline-4">
-<h4 id="orgb4ccce6"><span class="section-number-4">1.1.3</span> 替换关键字__asm__</h4>
+<div id="outline-container-org61fb7a1" class="outline-4">
+<h4 id="org61fb7a1"><span class="section-number-4">1.1.3</span> 替换关键字__asm__</h4>
 </div>
 
-<div id="outline-container-org84f4220" class="outline-4">
-<h4 id="org84f4220"><span class="section-number-4">1.1.4</span> 扩展asm</h4>
+<div id="outline-container-orgb6cdfb2" class="outline-4">
+<h4 id="orgb6cdfb2"><span class="section-number-4">1.1.4</span> 扩展asm</h4>
 </div>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

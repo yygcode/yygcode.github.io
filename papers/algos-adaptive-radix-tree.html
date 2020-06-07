@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-xhtml4
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-01 Wed 14:34 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta charset="utf-8" />
 <title>The Adaptive Radix Tree &#x2013; ARTful Indexing for Main-Memory Databases</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Viktor Leis, Alfons Kemper, Thomas Neumann" />
@@ -175,6 +173,20 @@ found. As a consequence of this process, all operations have O(k) complexity
 where k is the length of the key. In the era of extremely large data sets,
 when \(n\) is growing faster than k, having a time complexity independent of \(n\)
 is very attractive.
+</p>
+
+<p>
+In this work, we present the adaptive radix tree (ART) which is a fast and
+space-efficient in-memory indexing structure specifically tuned for modern
+hardware. While most radix trees require to trade off tree height versus space
+efficiency by setting a globally valid fanout parameter, ART adapts the
+representation of every individual node, as exemplified in Figure 1. By adapting
+each inner node locally, it optimizes global space utilization and access
+efficiency at the same time. Nodes are represented using a small number of
+efficient and compact data structures, chosen dynamically depending on the
+number of child nodes. Two additional techniques, path compression and lazy
+expansion, allow ART to efficiently index long keys by collapsing nodes and
+thereby decreasing the tree height.
 </p>
 </div>
 </div>

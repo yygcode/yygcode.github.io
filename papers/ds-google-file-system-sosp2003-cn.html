@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
 <head>
-<!-- 2019-12-29 Sun 21:58 -->
 <meta charset="utf-8" />
 <title>Google文件系统</title>
 <meta name="generator" content="Org mode" />
@@ -34,7 +33,7 @@
 <li><a href="#org9132e32">2.3. 架构</a></li>
 <li><a href="#org665734a">2.4. 单Master</a></li>
 <li><a href="#orge76c32f">2.5. chunk大小</a></li>
-<li><a href="#org0fe73a6">2.6. 元数据</a>
+<li><a href="#org9c74833">2.6. 元数据</a>
 <ul>
 <li><a href="#org9c05af0">2.6.1. 内存数据结构</a></li>
 <li><a href="#org178bbad">2.6.2. chunk location</a></li>
@@ -96,9 +95,9 @@
 <li><a href="#org8aedc66">6.2. 现实的集群</a>
 <ul>
 <li><a href="#orgcc8b878">6.2.1. 存储</a></li>
-<li><a href="#org9c74833">6.2.2. 元数据</a></li>
+<li><a href="#org67eaa6b">6.2.2. 元数据</a></li>
 <li><a href="#orgf571c58">6.2.3. 读写速率</a></li>
-<li><a href="#orge5df807">6.2.4. master负载</a></li>
+<li><a href="#org2951753">6.2.4. master负载</a></li>
 <li><a href="#org5c1f53c">6.2.5. 恢复时间</a></li>
 </ul>
 </li>
@@ -107,7 +106,7 @@
 <li><a href="#org08c3479">6.3.1. 方法和说明</a></li>
 <li><a href="#orgdf6144a">6.3.2. chunkserver负载</a></li>
 <li><a href="#orge1947e3">6.3.3. append与write</a></li>
-<li><a href="#org2951753">6.3.4. master负载</a></li>
+<li><a href="#orgbc1b37f">6.3.4. master负载</a></li>
 </ul>
 </li>
 </ul>
@@ -435,8 +434,8 @@ chunk的副本作为普通的linux文件存储在chunkserver上，如果需要�
 </div>
 </div>
 
-<div id="outline-container-org0fe73a6" class="outline-3">
-<h3 id="org0fe73a6"><span class="section-number-3">2.6</span> 元数据</h3>
+<div id="outline-container-org9c74833" class="outline-3">
+<h3 id="org9c74833"><span class="section-number-3">2.6</span> 元数据</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Master存储了三个主要类型的元数据：文件和chunk名字空间，文件到chunk的映射信息，
@@ -1484,8 +1483,8 @@ append，在这里N和M通常是几十甚至几百大小。因此在我们的实
 </div>
 </div>
 
-<div id="outline-container-org9c74833" class="outline-4">
-<h4 id="org9c74833"><span class="section-number-4">6.2.2</span> 元数据</h4>
+<div id="outline-container-org67eaa6b" class="outline-4">
+<h4 id="org67eaa6b"><span class="section-number-4">6.2.2</span> 元数据</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 所有的Chunkserver总共存储了数十G的元数据，大部分是用户数据的64kb块的校验和。
@@ -1605,8 +1604,8 @@ master的启动可能要慢一些，通常还需要30-60秒从所有的chunkserv
 </div>
 </div>
 
-<div id="outline-container-orge5df807" class="outline-4">
-<h4 id="orge5df807"><span class="section-number-4">6.2.4</span> master负载</h4>
+<div id="outline-container-org2951753" class="outline-4">
+<h4 id="org2951753"><span class="section-number-4">6.2.4</span> master负载</h4>
 <div class="outline-text-4" id="text-6-2-4">
 <p>
 表3也表明发送给master的操作速率大概是每秒200-500个操作。Master可以轻易的处理这个
@@ -1916,8 +1915,8 @@ write｝。对于集群X来说，在测量期间的记录append操作要低一�
 </div>
 </div>
 
-<div id="outline-container-org2951753" class="outline-4">
-<h4 id="org2951753"><span class="section-number-4">6.3.4</span> master负载</h4>
+<div id="outline-container-orgbc1b37f" class="outline-4">
+<h4 id="orgbc1b37f"><span class="section-number-4">6.3.4</span> master负载</h4>
 <div class="outline-text-4" id="text-6-3-4">
 <table>
 <caption class="t-above"><span class="table-number">Table 6:</span> Master Requests Breakdown by Type (%)</caption>

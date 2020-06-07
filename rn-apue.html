@@ -1,49 +1,44 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>UNIX环境高级编程读书笔记(第二版)/Advanced Programming in the UNIX Environment(2nd)</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">UNIX环境高级编程读书笔记(第二版)/Advanced Programming in the UNIX Environment(2nd)</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org31eb4b7">1. Chapter 1: UNIX System Overview</a>
+<li><a href="#org8108ca4">1. Chapter 1: UNIX System Overview</a>
 <ul>
-<li><a href="#org5c886a7">1.1. Introduction</a></li>
-<li><a href="#orgc5f25a9">1.2. UNIX Architecture</a></li>
-<li><a href="#org36075ed">1.3. Logging in</a>
+<li><a href="#org9817401">1.1. Introduction</a></li>
+<li><a href="#orgd8350f4">1.2. UNIX Architecture</a></li>
+<li><a href="#orgd17a832">1.3. Logging in</a>
 <ul>
-<li><a href="#org8ea90e4">1.3.1. Login name: /etc/passwd</a></li>
-<li><a href="#org3585884">1.3.2. Shells</a></li>
-<li><a href="#org8e98e37">1.3.3. Files and Directories</a></li>
-<li><a href="#orgb15b203">1.3.4. Working directory</a></li>
-<li><a href="#orga32bd8c">1.3.5. Home Directory</a></li>
+<li><a href="#org237827e">1.3.1. Login name: /etc/passwd</a></li>
+<li><a href="#orgb9bcba0">1.3.2. Shells</a></li>
+<li><a href="#orgab107d5">1.3.3. Files and Directories</a></li>
+<li><a href="#org2218497">1.3.4. Working directory</a></li>
+<li><a href="#org2fcc009">1.3.5. Home Directory</a></li>
 </ul>
 </li>
-<li><a href="#org286d868">1.4. Input and output</a></li>
+<li><a href="#org65e8220">1.4. Input and output</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org31eb4b7" class="outline-2">
-<h2 id="org31eb4b7"><span class="section-number-2">1</span> Chapter 1: UNIX System Overview</h2>
+<div id="outline-container-org8108ca4" class="outline-2">
+<h2 id="org8108ca4"><span class="section-number-2">1</span> Chapter 1: UNIX System Overview</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org5c886a7" class="outline-3">
-<h3 id="org5c886a7"><span class="section-number-3">1.1</span> Introduction</h3>
+<div id="outline-container-org9817401" class="outline-3">
+<h3 id="org9817401"><span class="section-number-3">1.1</span> Introduction</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Typical Services:
@@ -62,8 +57,8 @@ whirlwind(旋风，旋风般的)
 </div>
 </div>
 
-<div id="outline-container-orgc5f25a9" class="outline-3">
-<h3 id="orgc5f25a9"><span class="section-number-3">1.2</span> UNIX Architecture</h3>
+<div id="outline-container-orgd8350f4" class="outline-3">
+<h3 id="orgd8350f4"><span class="section-number-3">1.2</span> UNIX Architecture</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>kernel, system calls, library routines, shell, applications</li>
@@ -71,30 +66,45 @@ whirlwind(旋风，旋风般的)
 </div>
 </div>
 
-<div id="outline-container-org36075ed" class="outline-3">
-<h3 id="org36075ed"><span class="section-number-3">1.3</span> Logging in</h3>
+<div id="outline-container-orgd17a832" class="outline-3">
+<h3 id="orgd17a832"><span class="section-number-3">1.3</span> Logging in</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
-<div id="outline-container-org8ea90e4" class="outline-4">
-<h4 id="org8ea90e4"><span class="section-number-4">1.3.1</span> Login name: /etc/passwd</h4>
+<div id="outline-container-org237827e" class="outline-4">
+<h4 id="org237827e"><span class="section-number-4">1.3.1</span> Login name: /etc/passwd</h4>
 </div>
-<div id="outline-container-org3585884" class="outline-4">
-<h4 id="org3585884"><span class="section-number-4">1.3.2</span> Shells</h4>
+<div id="outline-container-orgb9bcba0" class="outline-4">
+<h4 id="orgb9bcba0"><span class="section-number-4">1.3.2</span> Shells</h4>
 </div>
-<div id="outline-container-org8e98e37" class="outline-4">
-<h4 id="org8e98e37"><span class="section-number-4">1.3.3</span> Files and Directories</h4>
+<div id="outline-container-orgab107d5" class="outline-4">
+<h4 id="orgab107d5"><span class="section-number-4">1.3.3</span> Files and Directories</h4>
 </div>
-<div id="outline-container-orgb15b203" class="outline-4">
-<h4 id="orgb15b203"><span class="section-number-4">1.3.4</span> Working directory</h4>
+<div id="outline-container-org2218497" class="outline-4">
+<h4 id="org2218497"><span class="section-number-4">1.3.4</span> Working directory</h4>
 </div>
-<div id="outline-container-orga32bd8c" class="outline-4">
-<h4 id="orga32bd8c"><span class="section-number-4">1.3.5</span> Home Directory</h4>
+<div id="outline-container-org2fcc009" class="outline-4">
+<h4 id="org2fcc009"><span class="section-number-4">1.3.5</span> Home Directory</h4>
 </div>
 </div>
 
-<div id="outline-container-org286d868" class="outline-3">
-<h3 id="org286d868"><span class="section-number-3">1.4</span> Input and output</h3>
+<div id="outline-container-org65e8220" class="outline-3">
+<h3 id="org65e8220"><span class="section-number-3">1.4</span> Input and output</h3>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

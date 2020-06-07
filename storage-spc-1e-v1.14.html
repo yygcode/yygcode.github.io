@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>SPC-1 SPC-1E V1.14 Official Specifications</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">SPC-1 SPC-1E V1.14 Official Specifications</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4917705">1. CLAUSE0: Introduction</a>
+<li><a href="#org1adf336">1. CLAUSE0: Introduction</a>
 <ul>
-<li><a href="#orga13c4f9">1.1. Preamble/前言</a></li>
+<li><a href="#org516aea3">1.1. Preamble/前言</a></li>
 </ul>
 </li>
-<li><a href="#org235c710">2. CLAUSE1: Workload Environments</a>
+<li><a href="#org8e983a4">2. CLAUSE1: Workload Environments</a>
 <ul>
-<li><a href="#orga9001ff">2.1. Business and Application Environment</a></li>
-<li><a href="#org21968bc">2.2. High-Level Workload Model/</a></li>
-<li><a href="#orgd33b2ce">2.3. Business Scaling Units (BSUs)</a></li>
-<li><a href="#orgeb924e0">2.4. Application Storage Units (ASUs)</a></li>
+<li><a href="#org800d72b">2.1. Business and Application Environment</a></li>
+<li><a href="#orge3a6316">2.2. High-Level Workload Model/</a></li>
+<li><a href="#org1a24b42">2.3. Business Scaling Units (BSUs)</a></li>
+<li><a href="#orga2d1d28">2.4. Application Storage Units (ASUs)</a></li>
 </ul>
 </li>
-<li><a href="#orgcd32585">3. CLAUSE2: Data Repository</a>
+<li><a href="#orgdb72347">3. CLAUSE2: Data Repository</a>
 <ul>
-<li><a href="#org65a4bc8">3.1. SPC-1 Storage Hierarchy</a></li>
-<li><a href="#orgbe3045b">3.2. Physical Storage Capacity (PSC)</a>
+<li><a href="#org981f2e3">3.1. SPC-1 Storage Hierarchy</a></li>
+<li><a href="#org6c571dd">3.2. Physical Storage Capacity (PSC)</a>
 <ul>
-<li><a href="#org153a4fc">3.2.1. Physical Storage Capacity is typically the formatted capacity of all Storage Devices that are physically present in the Tested Storage Configuration.</a></li>
-<li><a href="#orge5254f1">3.2.2. All physical storage present in the TSC must be included in Physical Storage Capacity, whether or not it is cabled in or powered up.</a></li>
-<li><a href="#orgc89a5be">3.2.3. Global Storage Overhead consists of the Physical Storage Capacity that is required for system use, such as metadata, and unavailable for use by application programs such as the SPC-1 Workload Generator.</a></li>
+<li><a href="#org3584a25">3.2.1. Physical Storage Capacity is typically the formatted capacity of all Storage Devices that are physically present in the Tested Storage Configuration.</a></li>
+<li><a href="#org9426798">3.2.2. All physical storage present in the TSC must be included in Physical Storage Capacity, whether or not it is cabled in or powered up.</a></li>
+<li><a href="#org61680e7">3.2.3. Global Storage Overhead consists of the Physical Storage Capacity that is required for system use, such as metadata, and unavailable for use by application programs such as the SPC-1 Workload Generator.</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf5f7c57">4. CLAUSE3: Workload and I/O Operation Profile</a></li>
-<li><a href="#org52ac30a">5. CLAUSE4: Benchmark Configuration (BC), Tested Storage Configuration (TSC), and Workload Generator</a></li>
-<li><a href="#org4daaa45">6. CLAUSE5: Test Measurement Requirements (Execution Rules)</a></li>
-<li><a href="#org2bd60cf">7. CLAUSE6: Data Persistence Requirements and Test</a></li>
-<li><a href="#org1c1435b">8. CLAUSE7: Reported Data</a></li>
-<li><a href="#orgf2d6881">9. CLAUSE8: Pricing</a></li>
-<li><a href="#org6791a4d">10. CLAUSE9: Full Disclosure(信息披露)</a></li>
-<li><a href="#org5ef67ab">11. CLAUSE10: Measurement, Audit, and Results Submission</a></li>
-<li><a href="#org165816c">12. CLAUSE11: Energy Extension</a></li>
-<li><a href="#org4152f59">13. Appendix A: Letter of Good Faith Template</a></li>
-<li><a href="#orga9ba4ab">14. Appendix B: The Hierarchical Reuse Random Walk</a></li>
+<li><a href="#org34a8927">4. CLAUSE3: Workload and I/O Operation Profile</a></li>
+<li><a href="#org7556f16">5. CLAUSE4: Benchmark Configuration (BC), Tested Storage Configuration (TSC), and Workload Generator</a></li>
+<li><a href="#org8bae4a3">6. CLAUSE5: Test Measurement Requirements (Execution Rules)</a></li>
+<li><a href="#org0a59490">7. CLAUSE6: Data Persistence Requirements and Test</a></li>
+<li><a href="#org0a2fbfb">8. CLAUSE7: Reported Data</a></li>
+<li><a href="#orgde1155c">9. CLAUSE8: Pricing</a></li>
+<li><a href="#org283c856">10. CLAUSE9: Full Disclosure(信息披露)</a></li>
+<li><a href="#org280b282">11. CLAUSE10: Measurement, Audit, and Results Submission</a></li>
+<li><a href="#org3bc5a52">12. CLAUSE11: Energy Extension</a></li>
+<li><a href="#org83ab76f">13. Appendix A: Letter of Good Faith Template</a></li>
+<li><a href="#org496d031">14. Appendix B: The Hierarchical Reuse Random Walk</a></li>
 </ul>
 </div>
 </div>
@@ -79,12 +74,12 @@ Revision 1.14 - Effective May 12, 2013
 </p>
 </div>
 
-<div id="outline-container-org4917705" class="outline-2">
-<h2 id="org4917705"><span class="section-number-2">1</span> CLAUSE0: Introduction</h2>
+<div id="outline-container-org1adf336" class="outline-2">
+<h2 id="org1adf336"><span class="section-number-2">1</span> CLAUSE0: Introduction</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga13c4f9" class="outline-3">
-<h3 id="orga13c4f9"><span class="section-number-3">1.1</span> Preamble/前言</h3>
+<div id="outline-container-org516aea3" class="outline-3">
+<h3 id="org516aea3"><span class="section-number-3">1.1</span> Preamble/前言</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The SPC Benchmark-1<sup>TM</sup> (SPC-1) is a sophisticated performance measurement
@@ -113,12 +108,12 @@ SPC基准1<sup>TM</sup> (SPC-1)是一个存储子系统复杂的性能测量工�
 </div>
 </div>
 
-<div id="outline-container-org235c710" class="outline-2">
-<h2 id="org235c710"><span class="section-number-2">2</span> CLAUSE1: Workload Environments</h2>
+<div id="outline-container-org8e983a4" class="outline-2">
+<h2 id="org8e983a4"><span class="section-number-2">2</span> CLAUSE1: Workload Environments</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga9001ff" class="outline-3">
-<h3 id="orga9001ff"><span class="section-number-3">2.1</span> Business and Application Environment</h3>
+<div id="outline-container-org800d72b" class="outline-3">
+<h3 id="org800d72b"><span class="section-number-3">2.1</span> Business and Application Environment</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 SPC-1 is comprised of a set of I/O operations designed to demonstrate the
@@ -131,8 +126,8 @@ mail server applications).
 </div>
 </div>
 
-<div id="outline-container-org21968bc" class="outline-3">
-<h3 id="org21968bc"><span class="section-number-3">2.2</span> High-Level Workload Model/</h3>
+<div id="outline-container-orge3a6316" class="outline-3">
+<h3 id="orge3a6316"><span class="section-number-3">2.2</span> High-Level Workload Model/</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The segment of applications represented by SPC-1 covers a broad range of user
@@ -151,8 +146,8 @@ components:
 </div>
 </div>
 
-<div id="outline-container-orgd33b2ce" class="outline-3">
-<h3 id="orgd33b2ce"><span class="section-number-3">2.3</span> Business Scaling Units (BSUs)</h3>
+<div id="outline-container-org1a24b42" class="outline-3">
+<h3 id="org1a24b42"><span class="section-number-3">2.3</span> Business Scaling Units (BSUs)</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Business Scaling Units (BSUs) are the benchmark’s representation of an
@@ -173,8 +168,8 @@ detailed technical description of BSUs may be found in Clause 4.
 </div>
 </div>
 
-<div id="outline-container-orgeb924e0" class="outline-3">
-<h3 id="orgeb924e0"><span class="section-number-3">2.4</span> Application Storage Units (ASUs)</h3>
+<div id="outline-container-orga2d1d28" class="outline-3">
+<h3 id="orga2d1d28"><span class="section-number-3">2.4</span> Application Storage Units (ASUs)</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 In the same way that the BSU generalizes the IO load presented to a tested
@@ -197,12 +192,12 @@ Clause 3.1.1. See Clause 4.3 for examples of supported configurations.
 </div>
 </div>
 
-<div id="outline-container-orgcd32585" class="outline-2">
-<h2 id="orgcd32585"><span class="section-number-2">3</span> CLAUSE2: Data Repository</h2>
+<div id="outline-container-orgdb72347" class="outline-2">
+<h2 id="orgdb72347"><span class="section-number-2">3</span> CLAUSE2: Data Repository</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org65a4bc8" class="outline-3">
-<h3 id="org65a4bc8"><span class="section-number-3">3.1</span> SPC-1 Storage Hierarchy</h3>
+<div id="outline-container-org981f2e3" class="outline-3">
+<h3 id="org981f2e3"><span class="section-number-3">3.1</span> SPC-1 Storage Hierarchy</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The SPC-1 data repository segments storage components into five distinct roles:
@@ -234,12 +229,12 @@ Included in the above storage capacities are:
 </div>
 </div>
 
-<div id="outline-container-orgbe3045b" class="outline-3">
-<h3 id="orgbe3045b"><span class="section-number-3">3.2</span> Physical Storage Capacity (PSC)</h3>
+<div id="outline-container-org6c571dd" class="outline-3">
+<h3 id="org6c571dd"><span class="section-number-3">3.2</span> Physical Storage Capacity (PSC)</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org153a4fc" class="outline-4">
-<h4 id="org153a4fc"><span class="section-number-4">3.2.1</span> Physical Storage Capacity is typically the formatted capacity of all Storage Devices that are physically present in the Tested Storage Configuration.</h4>
+<div id="outline-container-org3584a25" class="outline-4">
+<h4 id="org3584a25"><span class="section-number-4">3.2.1</span> Physical Storage Capacity is typically the formatted capacity of all Storage Devices that are physically present in the Tested Storage Configuration.</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <ol class="org-ol">
 <li>In cases where the formatted capacity of a configured Storage Device is not</li>
@@ -267,47 +262,62 @@ as described in 2.2.3, and included in the reported Physical Storage Capacity.
 </div>
 </div>
 
-<div id="outline-container-orge5254f1" class="outline-4">
-<h4 id="orge5254f1"><span class="section-number-4">3.2.2</span> All physical storage present in the TSC must be included in Physical Storage Capacity, whether or not it is cabled in or powered up.</h4>
+<div id="outline-container-org9426798" class="outline-4">
+<h4 id="org9426798"><span class="section-number-4">3.2.2</span> All physical storage present in the TSC must be included in Physical Storage Capacity, whether or not it is cabled in or powered up.</h4>
 </div>
-<div id="outline-container-orgc89a5be" class="outline-4">
-<h4 id="orgc89a5be"><span class="section-number-4">3.2.3</span> Global Storage Overhead consists of the Physical Storage Capacity that is required for system use, such as metadata, and unavailable for use by application programs such as the SPC-1 Workload Generator.</h4>
+<div id="outline-container-org61680e7" class="outline-4">
+<h4 id="org61680e7"><span class="section-number-4">3.2.3</span> Global Storage Overhead consists of the Physical Storage Capacity that is required for system use, such as metadata, and unavailable for use by application programs such as the SPC-1 Workload Generator.</h4>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf5f7c57" class="outline-2">
-<h2 id="orgf5f7c57"><span class="section-number-2">4</span> CLAUSE3: Workload and I/O Operation Profile</h2>
+<div id="outline-container-org34a8927" class="outline-2">
+<h2 id="org34a8927"><span class="section-number-2">4</span> CLAUSE3: Workload and I/O Operation Profile</h2>
 </div>
-<div id="outline-container-org52ac30a" class="outline-2">
-<h2 id="org52ac30a"><span class="section-number-2">5</span> CLAUSE4: Benchmark Configuration (BC), Tested Storage Configuration (TSC), and Workload Generator</h2>
+<div id="outline-container-org7556f16" class="outline-2">
+<h2 id="org7556f16"><span class="section-number-2">5</span> CLAUSE4: Benchmark Configuration (BC), Tested Storage Configuration (TSC), and Workload Generator</h2>
 </div>
-<div id="outline-container-org4daaa45" class="outline-2">
-<h2 id="org4daaa45"><span class="section-number-2">6</span> CLAUSE5: Test Measurement Requirements (Execution Rules)</h2>
+<div id="outline-container-org8bae4a3" class="outline-2">
+<h2 id="org8bae4a3"><span class="section-number-2">6</span> CLAUSE5: Test Measurement Requirements (Execution Rules)</h2>
 </div>
-<div id="outline-container-org2bd60cf" class="outline-2">
-<h2 id="org2bd60cf"><span class="section-number-2">7</span> CLAUSE6: Data Persistence Requirements and Test</h2>
+<div id="outline-container-org0a59490" class="outline-2">
+<h2 id="org0a59490"><span class="section-number-2">7</span> CLAUSE6: Data Persistence Requirements and Test</h2>
 </div>
-<div id="outline-container-org1c1435b" class="outline-2">
-<h2 id="org1c1435b"><span class="section-number-2">8</span> CLAUSE7: Reported Data</h2>
+<div id="outline-container-org0a2fbfb" class="outline-2">
+<h2 id="org0a2fbfb"><span class="section-number-2">8</span> CLAUSE7: Reported Data</h2>
 </div>
-<div id="outline-container-orgf2d6881" class="outline-2">
-<h2 id="orgf2d6881"><span class="section-number-2">9</span> CLAUSE8: Pricing</h2>
+<div id="outline-container-orgde1155c" class="outline-2">
+<h2 id="orgde1155c"><span class="section-number-2">9</span> CLAUSE8: Pricing</h2>
 </div>
-<div id="outline-container-org6791a4d" class="outline-2">
-<h2 id="org6791a4d"><span class="section-number-2">10</span> CLAUSE9: Full Disclosure(信息披露)</h2>
+<div id="outline-container-org283c856" class="outline-2">
+<h2 id="org283c856"><span class="section-number-2">10</span> CLAUSE9: Full Disclosure(信息披露)</h2>
 </div>
-<div id="outline-container-org5ef67ab" class="outline-2">
-<h2 id="org5ef67ab"><span class="section-number-2">11</span> CLAUSE10: Measurement, Audit, and Results Submission</h2>
+<div id="outline-container-org280b282" class="outline-2">
+<h2 id="org280b282"><span class="section-number-2">11</span> CLAUSE10: Measurement, Audit, and Results Submission</h2>
 </div>
-<div id="outline-container-org165816c" class="outline-2">
-<h2 id="org165816c"><span class="section-number-2">12</span> CLAUSE11: Energy Extension</h2>
+<div id="outline-container-org3bc5a52" class="outline-2">
+<h2 id="org3bc5a52"><span class="section-number-2">12</span> CLAUSE11: Energy Extension</h2>
 </div>
-<div id="outline-container-org4152f59" class="outline-2">
-<h2 id="org4152f59"><span class="section-number-2">13</span> Appendix A: Letter of Good Faith Template</h2>
+<div id="outline-container-org83ab76f" class="outline-2">
+<h2 id="org83ab76f"><span class="section-number-2">13</span> Appendix A: Letter of Good Faith Template</h2>
 </div>
-<div id="outline-container-orga9ba4ab" class="outline-2">
-<h2 id="orga9ba4ab"><span class="section-number-2">14</span> Appendix B: The Hierarchical Reuse Random Walk</h2>
+<div id="outline-container-org496d031" class="outline-2">
+<h2 id="org496d031"><span class="section-number-2">14</span> Appendix B: The Hierarchical Reuse Random Walk</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

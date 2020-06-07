@@ -1,37 +1,32 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>算法 - LINUX内核 - IDR实现分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">算法 - LINUX内核 - IDR实现分析</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org31af5f4">1. 介绍</a></li>
-<li><a href="#orga8d7258">2. 代码分析</a>
+<li><a href="#org22c805e">1. 介绍</a></li>
+<li><a href="#orge551968">2. 代码分析</a>
 <ul>
-<li><a href="#org7b834ca">2.1. 数据结构</a></li>
-<li><a href="#org2dd7457">2.2. idr_alloc分析</a></li>
+<li><a href="#org7aacc0c">2.1. 数据结构</a></li>
+<li><a href="#orgf4b13e8">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#orgde41015">3. Reference Material</a></li>
+<li><a href="#org2342ac9">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org31af5f4" class="outline-2">
-<h2 id="org31af5f4"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-org22c805e" class="outline-2">
+<h2 id="org22c805e"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -39,12 +34,12 @@
 </div>
 </div>
 
-<div id="outline-container-orga8d7258" class="outline-2">
-<h2 id="orga8d7258"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-orge551968" class="outline-2">
+<h2 id="orge551968"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7b834ca" class="outline-3">
-<h3 id="org7b834ca"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-org7aacc0c" class="outline-3">
+<h3 id="org7aacc0c"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span>{
@@ -88,8 +83,8 @@
 </div>
 </div>
 
-<div id="outline-container-org2dd7457" class="outline-3">
-<h3 id="org2dd7457"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-orgf4b13e8" class="outline-3">
+<h3 id="orgf4b13e8"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -122,14 +117,29 @@
 </div>
 
 
-<div id="outline-container-orgde41015" class="outline-2">
-<h2 id="orgde41015"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org2342ac9" class="outline-2">
+<h2 id="org2342ac9"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>
 <dt>A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>
 </dl>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

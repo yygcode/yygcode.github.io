@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>How To Write Numerical Code</title>
 <meta name="generator" content="Org mode" />
@@ -25,31 +24,31 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfcf4ecc">1. Performance Optimization: The basics</a>
+<li><a href="#org42c6a51">1. Performance Optimization: The basics</a>
 <ul>
-<li><a href="#orgab51149">1.1. Floating The Hotspots</a></li>
-<li><a href="#orgd94eab0">1.2. Timing a Hotspot</a></li>
-<li><a href="#orgd2ae68d">1.3. Analyzing the Measured Runtime</a></li>
-<li><a href="#orgd82a082">1.4. Exercises</a></li>
+<li><a href="#org3b75791">1.1. Floating The Hotspots</a></li>
+<li><a href="#orgbdfadc0">1.2. Timing a Hotspot</a></li>
+<li><a href="#orga56f414">1.3. Analyzing the Measured Runtime</a></li>
+<li><a href="#orgfeadcad">1.4. Exercises</a></li>
 </ul>
 </li>
-<li><a href="#orgd430f41">2. Optimization for the Memory Hierarchy</a>
+<li><a href="#org451aaa6">2. Optimization for the Memory Hierarchy</a>
 <ul>
-<li><a href="#org97d2f50">2.1. Performance-Conscious Programming</a></li>
-<li><a href="#org8d9243f">2.2. Cache Optimization</a></li>
-<li><a href="#orgd515068">2.3. CPU and Register Level Optimization</a></li>
+<li><a href="#orgbc3436e">2.1. Performance-Conscious Programming</a></li>
+<li><a href="#org910623b">2.2. Cache Optimization</a></li>
+<li><a href="#orgbfb4470">2.3. CPU and Register Level Optimization</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfcf4ecc" class="outline-2">
-<h2 id="orgfcf4ecc"><span class="section-number-2">1</span> Performance Optimization: The basics</h2>
+<div id="outline-container-org42c6a51" class="outline-2">
+<h2 id="org42c6a51"><span class="section-number-2">1</span> Performance Optimization: The basics</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgab51149" class="outline-3">
-<h3 id="orgab51149"><span class="section-number-3">1.1</span> Floating The Hotspots</h3>
+<div id="outline-container-org3b75791" class="outline-3">
+<h3 id="org3b75791"><span class="section-number-3">1.1</span> Floating The Hotspots</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>gprof</li>
@@ -116,16 +115,16 @@ Each<span class="org-whitespace-space"> </span>sample<span class="org-whitespace
 </div>
 </div>
 </div>
-<div id="outline-container-orgd94eab0" class="outline-3">
-<h3 id="orgd94eab0"><span class="section-number-3">1.2</span> Timing a Hotspot</h3>
+<div id="outline-container-orgbdfadc0" class="outline-3">
+<h3 id="orgbdfadc0"><span class="section-number-3">1.2</span> Timing a Hotspot</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>参考<a href="blogs/linux-benchmark-time.html">Blogs Linux Benchmark Time</a>。</li>
 </ul>
 </div>
 
-<div id="outline-container-orgfb0a77c" class="outline-4">
-<h4 id="orgfb0a77c"><span class="section-number-4">1.2.1</span> Known Problems</h4>
+<div id="outline-container-org0e5ffc6" class="outline-4">
+<h4 id="org0e5ffc6"><span class="section-number-4">1.2.1</span> Known Problems</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <ul class="org-ul">
 <li>指令太少时，时钟精度导致时间评估不准确；</li>
@@ -145,21 +144,21 @@ Each<span class="org-whitespace-space"> </span>sample<span class="org-whitespace
 </div>
 </div>
 
-<div id="outline-container-orgd2ae68d" class="outline-3">
-<h3 id="orgd2ae68d"><span class="section-number-3">1.3</span> Analyzing the Measured Runtime</h3>
+<div id="outline-container-orga56f414" class="outline-3">
+<h3 id="orga56f414"><span class="section-number-3">1.3</span> Analyzing the Measured Runtime</h3>
 </div>
 
-<div id="outline-container-orgd82a082" class="outline-3">
-<h3 id="orgd82a082"><span class="section-number-3">1.4</span> Exercises</h3>
+<div id="outline-container-orgfeadcad" class="outline-3">
+<h3 id="orgfeadcad"><span class="section-number-3">1.4</span> Exercises</h3>
 </div>
 </div>
 
-<div id="outline-container-orgd430f41" class="outline-2">
-<h2 id="orgd430f41"><span class="section-number-2">2</span> Optimization for the Memory Hierarchy</h2>
+<div id="outline-container-org451aaa6" class="outline-2">
+<h2 id="org451aaa6"><span class="section-number-2">2</span> Optimization for the Memory Hierarchy</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org97d2f50" class="outline-3">
-<h3 id="org97d2f50"><span class="section-number-3">2.1</span> Performance-Conscious Programming</h3>
+<div id="outline-container-orgbc3436e" class="outline-3">
+<h3 id="orgbc3436e"><span class="section-number-3">2.1</span> Performance-Conscious Programming</h3>
 <div class="outline-text-3" id="text-2-1">
 <table>
 
@@ -199,8 +198,8 @@ Each<span class="org-whitespace-space"> </span>sample<span class="org-whitespace
 </div>
 </div>
 
-<div id="outline-container-org8d9243f" class="outline-3">
-<h3 id="org8d9243f"><span class="section-number-3">2.2</span> Cache Optimization</h3>
+<div id="outline-container-org910623b" class="outline-3">
+<h3 id="org910623b"><span class="section-number-3">2.2</span> Cache Optimization</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>Blocking: data in chunks fit respective cache level;</li>
@@ -210,9 +209,24 @@ Each<span class="org-whitespace-space"> </span>sample<span class="org-whitespace
 </div>
 </div>
 
-<div id="outline-container-orgd515068" class="outline-3">
-<h3 id="orgd515068"><span class="section-number-3">2.3</span> CPU and Register Level Optimization</h3>
+<div id="outline-container-orgbfb4470" class="outline-3">
+<h3 id="orgbfb4470"><span class="section-number-3">2.3</span> CPU and Register Level Optimization</h3>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

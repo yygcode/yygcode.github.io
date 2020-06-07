@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
-<!-- 2019-12-22 Sun 21:49 -->
 <meta charset="utf-8" />
 <title>性能测试/Performance Test</title>
 <meta name="generator" content="Org mode" />
@@ -30,44 +29,40 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href=""> UP </a>
- |
- <a accesskey="H" href="https://ycode.org"> HOME </a>
-</div><div id="content">
+<div id="content">
 <h1 class="title">性能测试/Performance Test</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org56b4342">1. 声明</a></li>
-<li><a href="#org1ea5933">2. 简述</a></li>
-<li><a href="#org1f952ba">3. 名词介绍</a>
+<li><a href="#org0f46396">1. 声明</a></li>
+<li><a href="#org98ab74c">2. 简述</a></li>
+<li><a href="#org3d5b6b9">3. 名词介绍</a>
 <ul>
-<li><a href="#org8666817">3.1. 带宽</a></li>
-<li><a href="#orga9921e9">3.2. IOPS</a></li>
+<li><a href="#orgc0904e3">3.1. 带宽</a></li>
+<li><a href="#org579ca1c">3.2. IOPS</a></li>
 </ul>
 </li>
-<li><a href="#org236667a">4. Resource list</a></li>
-<li><a href="#orge3c2eb9">5. Patterns</a></li>
-<li><a href="#orge258d21">6. 素材搜集</a>
+<li><a href="#org0ba2e71">4. Resource list</a></li>
+<li><a href="#orgebf6547">5. Patterns</a></li>
+<li><a href="#org7f56e46">6. 素材搜集</a>
 <ul>
-<li><a href="#orge957385">6.1. 性能影响因素</a></li>
+<li><a href="#org7d9a95f">6.1. 性能影响因素</a></li>
 </ul>
 </li>
-<li><a href="#orgee64dda">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
+<li><a href="#org0d6e3ef">7. SNIA Storage Performance Benchmarking Introduction And Fundamentals</a>
 <ul>
-<li><a href="#org54d959e">7.1. Three Great Buckets Of Testing</a></li>
-<li><a href="#orgf790729">7.2. Block/SAN operations</a></li>
-<li><a href="#orgad17397">7.3. Terminology</a></li>
+<li><a href="#org37b13e8">7.1. Three Great Buckets Of Testing</a></li>
+<li><a href="#orgfb952da">7.2. Block/SAN operations</a></li>
+<li><a href="#org5e5c64c">7.3. Terminology</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org56b4342" class="outline-2">
-<h2 id="org56b4342"><span class="section-number-2">1</span> 声明</h2>
+<div id="outline-container-org0f46396" class="outline-2">
+<h2 id="org0f46396"><span class="section-number-2">1</span> 声明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文描述准确性仅限于存储系统.
@@ -75,16 +70,16 @@
 </div>
 </div>
 
-<div id="outline-container-org1ea5933" class="outline-2">
-<h2 id="org1ea5933"><span class="section-number-2">2</span> 简述</h2>
+<div id="outline-container-org98ab74c" class="outline-2">
+<h2 id="org98ab74c"><span class="section-number-2">2</span> 简述</h2>
 </div>
 
-<div id="outline-container-org1f952ba" class="outline-2">
-<h2 id="org1f952ba"><span class="section-number-2">3</span> 名词介绍</h2>
+<div id="outline-container-org3d5b6b9" class="outline-2">
+<h2 id="org3d5b6b9"><span class="section-number-2">3</span> 名词介绍</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org8666817" class="outline-3">
-<h3 id="org8666817"><span class="section-number-3">3.1</span> 带宽</h3>
+<div id="outline-container-orgc0904e3" class="outline-3">
+<h3 id="orgc0904e3"><span class="section-number-3">3.1</span> 带宽</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 系统的最大吞吐量. 一般单位是KBps/MBps/GBps/TBps, 指每秒数据的传输量.
@@ -101,8 +96,8 @@
 </div>
 </div>
 
-<div id="outline-container-orga9921e9" class="outline-3">
-<h3 id="orga9921e9"><span class="section-number-3">3.2</span> IOPS</h3>
+<div id="outline-container-org579ca1c" class="outline-3">
+<h3 id="org579ca1c"><span class="section-number-3">3.2</span> IOPS</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 IOPS/Throughput/Response Time/Latency/Utilization/Saturation/Bottleneck
@@ -167,8 +162,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-org236667a" class="outline-2">
-<h2 id="org236667a"><span class="section-number-2">4</span> Resource list</h2>
+<div id="outline-container-org0ba2e71" class="outline-2">
+<h2 id="org0ba2e71"><span class="section-number-2">4</span> Resource list</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>CPU</li>
@@ -181,8 +176,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-orge3c2eb9" class="outline-2">
-<h2 id="orge3c2eb9"><span class="section-number-2">5</span> Patterns</h2>
+<div id="outline-container-orgebf6547" class="outline-2">
+<h2 id="orgebf6547"><span class="section-number-2">5</span> Patterns</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>Linear scalability</li>
@@ -194,12 +189,12 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 
-<div id="outline-container-orge258d21" class="outline-2">
-<h2 id="orge258d21"><span class="section-number-2">6</span> 素材搜集</h2>
+<div id="outline-container-org7f56e46" class="outline-2">
+<h2 id="org7f56e46"><span class="section-number-2">6</span> 素材搜集</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orge957385" class="outline-3">
-<h3 id="orge957385"><span class="section-number-3">6.1</span> 性能影响因素</h3>
+<div id="outline-container-org7d9a95f" class="outline-3">
+<h3 id="org7d9a95f"><span class="section-number-3">6.1</span> 性能影响因素</h3>
 <div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>是否所有IO来自首选节点(preferred node)</li>
@@ -218,8 +213,8 @@ Cache Cold, Hot, Warm, Warmth
 </div>
 </div>
 </div>
-<div id="outline-container-orgee64dda" class="outline-2">
-<h2 id="orgee64dda"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
+<div id="outline-container-org0d6e3ef" class="outline-2">
+<h2 id="org0d6e3ef"><span class="section-number-2">7</span> SNIA Storage Performance Benchmarking Introduction And Fundamentals</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>Metrics and Terminology: IOPS, MBps, Response Time</li>
@@ -229,8 +224,8 @@ Cache Cold, Hot, Warm, Warmth
 <li>Workload Definitions</li>
 </ul>
 </div>
-<div id="outline-container-org54d959e" class="outline-3">
-<h3 id="org54d959e"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
+<div id="outline-container-org37b13e8" class="outline-3">
+<h3 id="org37b13e8"><span class="section-number-3">7.1</span> Three Great Buckets Of Testing</h3>
 <div class="outline-text-3" id="text-7-1">
 <ul class="org-ul">
 <li>Bake-offs: Single Obscure Metric, DD, IOMETER, IOZONE, VDBENCH</li>
@@ -239,8 +234,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf790729" class="outline-3">
-<h3 id="orgf790729"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
+<div id="outline-container-orgfb952da" class="outline-3">
+<h3 id="orgfb952da"><span class="section-number-3">7.2</span> Block/SAN operations</h3>
 <div class="outline-text-3" id="text-7-2">
 <ul class="org-ul">
 <li>LOG SENSE</li>
@@ -253,8 +248,8 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
-<div id="outline-container-orgad17397" class="outline-3">
-<h3 id="orgad17397"><span class="section-number-3">7.3</span> Terminology</h3>
+<div id="outline-container-org5e5c64c" class="outline-3">
+<h3 id="org5e5c64c"><span class="section-number-3">7.3</span> Terminology</h3>
 <div class="outline-text-3" id="text-7-3">
 <ul class="org-ul">
 <li>IO Operation AKA type READ WRITE</li>
@@ -266,6 +261,21 @@ Cache Cold, Hot, Warm, Warmth
 </ul>
 </div>
 </div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>
