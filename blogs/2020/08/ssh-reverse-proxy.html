@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>SSH反向代理</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">SSH反向代理</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org63aa712">1. 在ECS上打开反向代理</a></li>
+<li><a href="#orgd1c7735">2. 在家里机器上自动打开反向连接</a>
+<ul>
+<li><a href="#org2f378df">2.1. ECS主机映射</a></li>
+<li><a href="#org221c8aa">2.2. ssh测试</a></li>
+<li><a href="#org804536c">2.3. 建立开机自动连接</a></li>
+<li><a href="#org7cdbfa0">2.4. 现在只要家里开机，任何地方都可以远程过去：</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+家里用的互联万邦，没有可用的公网IP。有时候需要在外面想连接到家里的几台机器上，
+因此用Aliyun的ECS开了一个反向代理。记录下配置。
+</p>
+
+<div id="outline-container-org63aa712" class="outline-2">
+<h2 id="org63aa712"><span class="section-number-2">1</span> 在ECS上打开反向代理</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>/etc/ssh/sshd_config</code> 添加一行：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">GatewayPorts<span class="org-whitespace-space"> </span>yes
+</pre>
+</div>
+
+<p>
+man：
+</p>
+<blockquote>
+<p>
+GatewayPorts
+  Specifies whether remote hosts are allowed to connect to ports forwarded for
+  the client.  By default, sshd(8) binds remote port forwardings to the loopback
+  address.  This prevents other remote hosts from connecting to forwarded ports.
+  GatewayPorts can be used to specify that sshd should allow remote port
+  forwardings to bind to non-loopback addresses, thus allowing other hosts to
+  connect.  The argument may be no to force remote port forwardings to be
+  available to the local host only, yes to force remote port forwardings to bind
+  to the wildcard address, or clientspecified to allow the client to select the
+  address to which the forwarding is bound.  The default is no.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgd1c7735" class="outline-2">
+<h2 id="orgd1c7735"><span class="section-number-2">2</span> 在家里机器上自动打开反向连接</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org2f378df" class="outline-3">
+<h3 id="org2f378df"><span class="section-number-3">2.1</span> ECS主机映射</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+为实现方便，把ECS拿到的IP映射为名称a：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/etc/hosts
+127.0.0.1<span class="org-whitespace-space">       </span>localhost
+127.0.1.1<span class="org-whitespace-space">       </span>t430
+xxx.xxx.xxx.xxx<span class="org-whitespace-space"> </span>a
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org221c8aa" class="outline-3">
+<h3 id="org221c8aa"><span class="section-number-3">2.2</span> ssh测试</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+手动执行命令，尝试反向连接8888：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>ssh<span class="org-whitespace-space"> </span>-NR<span class="org-whitespace-space"> </span><span class="org-string">'*:8888:localhost:22'</span><span class="org-whitespace-space"> </span>yanyg@a<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>/home/rt/.ssh/id_rsa
+</pre>
+</div>
+<p>
+-N表示不执行任何命令，-R指定remote forward IP和端口。
+</p>
+<blockquote>
+<p>
+-N
+    Do not execute a remote command.  This is useful for just forwarding ports.
+</p>
+
+<p>
+-R [bind_address:]port
+    Specifies that connections to the given TCP port or Unix socket on the
+    remote (server) host are to be forwarded to the local side.
+</p>
+
+<p>
+This works by allocating a socket to listen to either a TCP port or to a
+Unix socket on the remote side.  Whenever a connection is made to this port
+or Unix socket, the connection is forwarded over the secure channel, and a
+connection is made from the local machine to either an explicit destination
+specified by host port hostport, or local_socket, or, if no explicit
+destination was specified, ssh will act as a SOCKS 4/5 proxy and forward
+connections to the destinations requested by the remote SOCKS client.
+</p>
+
+<p>
+Port forwardings can also be specified in the configuration file.
+Privileged ports can be forwarded only when logging in as root on the
+remote machine.  IPv6 addresses can be specified by enclosing the address in
+square brackets.
+</p>
+
+<p>
+By default, TCP listening sockets on the server will be bound to the
+loopback interface only.  This may be overridden by specifying a
+bind_address.  An empty bind_address, or the address '*', indicates that
+the remote socket should listen on all interfaces.  Specifying a remote
+bind_address will only succeed if the server's GatewayPorts option is
+enabled (see sshd_config(5)).
+</p>
+
+<p>
+If the port argument is ‘0’, the listen port will be dynamically allocated
+on the server and reported to the client at run time.  When used together
+with -O forward the allocated port will be printed to the standard output.
+</p>
+</blockquote>
+<p>
+随便找台电脑尝试连接：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>ssh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>8888<span class="org-whitespace-space"> </span>rt@a
+</pre>
+</div>
+<p>
+输入密码，测试通过。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org804536c" class="outline-3">
+<h3 id="org804536c"><span class="section-number-3">2.3</span> 建立开机自动连接</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+使用systemd+autossh实现。
+service文件/etc/systemd/system/autossh.service：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">[Unit]
+Description=Auto<span class="org-whitespace-space"> </span>SSH<span class="org-whitespace-space"> </span>Tunnel
+After=network-online.target
+[Service]
+User=rt
+Type=simple
+ExecStart=/usr/bin/autossh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>22<span class="org-whitespace-space"> </span>-M<span class="org-whitespace-space"> </span>8988<span class="org-whitespace-space"> </span>-CNR<span class="org-whitespace-space"> </span>'*:8989:localhost:22'<span class="org-whitespace-space"> </span>yanyg@a<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>/<span class="org-whitespace-line">home/rt/.ssh/id_rsa</span>
+ExecReload=/bin/kill<span class="org-whitespace-space"> </span>-HUP<span class="org-whitespace-space"> </span>$MAINPID
+KillMode=process
+Restart=always
+[Install]
+WantedBy=multi-user.target
+WantedBy=graphical.target
+</pre>
+</div>
+
+<p>
+Enable service：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>enable<span class="org-whitespace-space"> </span>autossh
+~$<span class="org-whitespace-space"> </span>systemctl<span class="org-whitespace-space"> </span>status<span class="org-whitespace-space"> </span>autossh
+&#9679;<span class="org-whitespace-space"> </span>autossh.service<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>Auto<span class="org-whitespace-space"> </span>SSH<span class="org-whitespace-space"> </span>Tunnel
+<span class="org-whitespace-space">   </span>Loaded:<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>(/etc/systemd/system/autossh.service;<span class="org-whitespace-space"> </span>enabled;<span class="org-whitespace-space"> </span>vendor<span class="org-whitespace-space"> </span>preset:<span class="org-whitespace-space"> </span><span class="org-whitespace-line">enabled)</span>
+<span class="org-whitespace-space">   </span>Active:<span class="org-whitespace-space"> </span>active<span class="org-whitespace-space"> </span>(running)<span class="org-whitespace-space"> </span>since<span class="org-whitespace-space"> </span>Wed<span class="org-whitespace-space"> </span>2020-08-26<span class="org-whitespace-space"> </span>23:45:41<span class="org-whitespace-space"> </span>CST;<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>weeks<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>days<span class="org-whitespace-space"> </span>ag<span class="org-whitespace-line">o</span>
+<span class="org-whitespace-space"> </span>Main<span class="org-whitespace-space"> </span>PID:<span class="org-whitespace-space"> </span>1214<span class="org-whitespace-space"> </span>(autossh)
+<span class="org-whitespace-space">    </span>Tasks:<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>(limit:<span class="org-whitespace-space"> </span>4915)
+<span class="org-whitespace-space">   </span>Memory:<span class="org-whitespace-space"> </span>2.4M
+<span class="org-whitespace-space">   </span>CGroup:<span class="org-whitespace-space"> </span>/system.slice/autossh.service
+<span class="org-whitespace-space">           </span>&#9500;&#9472;1214<span class="org-whitespace-space"> </span>/usr/lib/autossh/autossh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>22<span class="org-whitespace-space"> </span>-M<span class="org-whitespace-space"> </span>8988<span class="org-whitespace-space"> </span>-CNR<span class="org-whitespace-space"> </span>*:8989:localhost:2<span class="org-whitespace-line">2</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">yanyg@a</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-i</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/home/rt/.ssh/id_rsa</span>
+<span class="org-whitespace-space">           </span>&#9492;&#9472;8794<span class="org-whitespace-space"> </span>/usr/bin/ssh<span class="org-whitespace-space"> </span>-L<span class="org-whitespace-space"> </span>8988:127.0.0.1:8988<span class="org-whitespace-space"> </span>-R<span class="org-whitespace-space"> </span>8988:127.0.0.1:8989<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span><span class="org-whitespace-line">22</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-CNR</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">*:8989:localhost:22</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">-i</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/home/rt/.ssh/id_rsa</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">yanyg@a</span>
+</pre>
+</div>
+
+<p>
+另外提供一个autossh2.service，使用不同端口做备份：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t430:~/<span class="org-whitespace-space"> </span>$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/etc/systemd/system/autossh2.service
+[Unit]
+<span class="org-variable-name">Description</span>=Auto<span class="org-whitespace-space"> </span>SSH<span class="org-whitespace-space"> </span>Tunnel2
+<span class="org-variable-name">After</span>=network-online.target
+[Service]
+<span class="org-variable-name">User</span>=rt
+<span class="org-variable-name">Type</span>=simple
+<span class="org-variable-name">ExecStart</span>=/usr/bin/autossh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>22<span class="org-whitespace-space"> </span>-M<span class="org-whitespace-space"> </span>8998<span class="org-whitespace-space"> </span>-CNR<span class="org-whitespace-space"> </span><span class="org-string">'*:8999:localhost:22'</span><span class="org-whitespace-space"> </span>yanyg@a<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>/<span class="org-whitespace-line">home/rt/.ssh/id_rsa</span>
+<span class="org-variable-name">ExecReload</span>=/bin/kill<span class="org-whitespace-space"> </span>-HUP<span class="org-whitespace-space"> </span>$<span class="org-variable-name">MAINPID</span>
+<span class="org-variable-name">KillMode</span>=process
+<span class="org-variable-name">Restart</span>=always
+[Install]
+<span class="org-variable-name">WantedBy</span>=multi-user.target
+<span class="org-variable-name">WantedBy</span>=graphical.target
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7cdbfa0" class="outline-3">
+<h3 id="org7cdbfa0"><span class="section-number-3">2.4</span> 现在只要家里开机，任何地方都可以远程过去：</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t450:~/mnt/201911-22.backup$<span class="org-whitespace-space"> </span>ssh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>8989<span class="org-whitespace-space"> </span>rt@a
+rt@a<span class="org-string">'s</span><span class="org-whitespace-space"> </span><span class="org-string">password:</span>
+<span class="org-string">Linux</span><span class="org-whitespace-space"> </span><span class="org-string">t430</span><span class="org-whitespace-space"> </span><span class="org-string">4.19.0-6-amd64</span><span class="org-whitespace-space"> </span><span class="org-string">#1</span><span class="org-whitespace-space"> </span><span class="org-string">SMP</span><span class="org-whitespace-space"> </span><span class="org-string">Debian</span><span class="org-whitespace-space"> </span><span class="org-string">4.19.67-2+deb10u2</span><span class="org-whitespace-space"> </span><span class="org-string">(2019-11-11)</span><span class="org-whitespace-space"> </span><span class="org-string">x86_64</span>
+
+<span class="org-string">The</span><span class="org-whitespace-space"> </span><span class="org-string">programs</span><span class="org-whitespace-space"> </span><span class="org-string">included</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">Debian</span><span class="org-whitespace-space"> </span><span class="org-string">GNU/Linux</span><span class="org-whitespace-space"> </span><span class="org-string">system</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">free</span><span class="org-whitespace-space"> </span><span class="org-string">software;</span>
+<span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">exact</span><span class="org-whitespace-space"> </span><span class="org-string">distribution</span><span class="org-whitespace-space"> </span><span class="org-string">terms</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">each</span><span class="org-whitespace-space"> </span><span class="org-string">program</span><span class="org-whitespace-space"> </span><span class="org-string">are</span><span class="org-whitespace-space"> </span><span class="org-string">described</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">the</span>
+<span class="org-string">individual</span><span class="org-whitespace-space"> </span><span class="org-string">files</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">/usr/share/doc/*/copyright.</span>
+
+<span class="org-string">Debian</span><span class="org-whitespace-space"> </span><span class="org-string">GNU/Linux</span><span class="org-whitespace-space"> </span><span class="org-string">comes</span><span class="org-whitespace-space"> </span><span class="org-string">with</span><span class="org-whitespace-space"> </span><span class="org-string">ABSOLUTELY</span><span class="org-whitespace-space"> </span><span class="org-string">NO</span><span class="org-whitespace-space"> </span><span class="org-string">WARRANTY,</span><span class="org-whitespace-space"> </span><span class="org-string">to</span><span class="org-whitespace-space"> </span><span class="org-string">the</span><span class="org-whitespace-space"> </span><span class="org-string">extent</span>
+<span class="org-string">permitted</span><span class="org-whitespace-space"> </span><span class="org-string">by</span><span class="org-whitespace-space"> </span><span class="org-string">applicable</span><span class="org-whitespace-space"> </span><span class="org-string">law.</span>
+<span class="org-string">Last</span><span class="org-whitespace-space"> </span><span class="org-string">login:</span><span class="org-whitespace-space"> </span><span class="org-string">Fri</span><span class="org-whitespace-space"> </span><span class="org-string">Sep</span><span class="org-whitespace-space">  </span><span class="org-string">4</span><span class="org-whitespace-space"> </span><span class="org-string">23:48:01</span><span class="org-whitespace-space"> </span><span class="org-string">2020</span><span class="org-whitespace-space"> </span><span class="org-string">from</span><span class="org-whitespace-space"> </span><span class="org-string">::1</span>
+<span class="org-string">rt@t430:~$</span><span class="org-whitespace-space"> </span><span class="org-string">~$</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

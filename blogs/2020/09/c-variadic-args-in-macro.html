@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<title>分布式存储系统</title>
+<title>Detects arguments number in a macro</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,25 +21,23 @@
 </div>
 </div>
 <div id="content">
-<h1 class="title">分布式存储系统</h1>
-<div id="table-of-contents">
-<h2>&#30446;&#24405;</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#org2fc1a46">1. References</a></li>
-</ul>
-</div>
+<h1 class="title">Detects arguments number in a macro</h1>
+<p>
+写C语言代码时经常会有一个函数传递不同数量参数的需求。例如：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-function-name">PL_ASSERT</span>(OK<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret);
+<span class="org-function-name">PL_ASSERT</span>(OK<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret,<span class="org-whitespace-space"> </span><span class="org-string">"error</span><span class="org-whitespace-space"> </span><span class="org-string">code:</span><span class="org-whitespace-space"> </span><span class="org-string">%d\b"</span>,<span class="org-whitespace-space"> </span>ret);
+</pre>
 </div>
 
-<div id="outline-container-org2fc1a46" class="outline-2">
-<h2 id="org2fc1a46"><span class="section-number-2">1</span> References</h2>
-<div class="outline-text-2" id="text-1">
-<ul class="org-ul">
-<li>Google File System及其继任者Colossus : <a href="https://levy.at/blog/22">https://levy.at/blog/22</a></li>
-<li>HDFS: <a href="https://github.com/apache/hadoop">https://github.com/apache/hadoop</a></li>
-</ul>
-</div>
-</div>
+<p>
+对于前者，只要检查ASSERT条件，而对于后者，希望触发ASSERT时打印具体的ret数值。
+</p>
+
+<p>
+本文描述如何通过C99语言 <code>__VA_ARGS__</code> 实现此功能。
+</p>
 
 <script src="https://utteranc.es/client.js"
         repo="yygcode/yygcode.github.io"

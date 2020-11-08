@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>LINUX开发环境初始化</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LINUX开发环境初始化</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org203d271">1. Debian</a>
+<ul>
+<li><a href="#org64fbc98">1.1. download</a></li>
+<li><a href="#org5ffb71d">1.2. install</a></li>
+</ul>
+</li>
+<li><a href="#orga6dac90">2. System config</a></li>
+<li><a href="#orgc4d6eab">3. Keymap</a>
+<ul>
+<li><a href="#orgb8b40fa">3.1. vconsole</a></li>
+<li><a href="#org3452c12">3.2. gnome</a></li>
+</ul>
+</li>
+<li><a href="#org605b5d5">4. terminator</a></li>
+<li><a href="#org2f9381a">5. base install</a></li>
+<li><a href="#org7d69287">6. google chrome</a></li>
+<li><a href="#orgfc9ff3b">7. fcitx</a></li>
+<li><a href="#org6389e7d">8. emacs</a></li>
+<li><a href="#org21afd5e">9. gcc and g++ manpages</a>
+<ul>
+<li><a href="#org36a925a">9.1. gcc</a></li>
+<li><a href="#orgb5c232b">9.2. g++</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org203d271" class="outline-2">
+<h2 id="org203d271"><span class="section-number-2">1</span> Debian</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org64fbc98" class="outline-3">
+<h3 id="org64fbc98"><span class="section-number-3">1.1</span> download</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Download: <a href="https://www.debian.org/CD/http-ftp/">https://www.debian.org/CD/http-ftp/</a></li>
+<li>163 Mirror: <a href="http://mirrors.163.com/debian-cd/10.6.0/i386/iso-dvd/">http://mirrors.163.com/debian-cd/10.6.0/i386/iso-dvd/</a></li>
+<li>Mirror list: <a href="https://www.debian.org/CD/http-ftp/#mirrors">https://www.debian.org/CD/http-ftp/#mirrors</a></li>
+<li>10.6: <a href="http://mirrors.163.com/debian-cd/10.6.0/amd64/iso-dvd/debian-10.6.0-amd64-DVD-1.iso">http://mirrors.163.com/debian-cd/10.6.0/amd64/iso-dvd/debian-10.6.0-amd64-DVD-1.iso</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5ffb71d" class="outline-3">
+<h3 id="org5ffb71d"><span class="section-number-3">1.2</span> install</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>usb stick: <a href="https://d-i.debian.org/manual/en.amd64/ch04s03.html#usb-copy-isohybrid">https://d-i.debian.org/manual/en.amd64/ch04s03.html#usb-copy-isohybrid</a></li>
+<li>sdc is usb block device file:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">sudo<span class="org-whitespace-space"> </span>cp<span class="org-whitespace-space"> </span>debian-10.6.0-amd64-DVD-1.iso<span class="org-whitespace-space"> </span>/dev/sdc
+sudo<span class="org-whitespace-space"> </span>sync
+sudo<span class="org-whitespace-space"> </span>eject<span class="org-whitespace-space"> </span>/dev/sdc
+</pre>
+</div>
+<ul class="org-ul">
+<li>insert usb stick and loader from usb</li>
+<li>select install(not graphical install)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga6dac90" class="outline-2">
+<h2 id="orga6dac90"><span class="section-number-2">2</span> System config</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>download from github:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>git@github.com:yygcode/system-config
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>system-config
+~$<span class="org-whitespace-space"> </span>./install.sh<span class="org-whitespace-space"> </span>-f
+<span class="org-comment-delimiter">###</span><span class="org-whitespace-space"> </span><span class="org-comment">-f</span><span class="org-whitespace-space"> </span><span class="org-comment">means</span><span class="org-whitespace-space"> </span><span class="org-comment">force</span><span class="org-whitespace-space"> </span><span class="org-comment">overwrite</span><span class="org-whitespace-space"> </span><span class="org-comment">file</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">exist</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc4d6eab" class="outline-2">
+<h2 id="orgc4d6eab"><span class="section-number-2">3</span> Keymap</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Change Caps and Ctrl:
+</p>
+</div>
+<div id="outline-container-orgb8b40fa" class="outline-3">
+<h3 id="orgb8b40fa"><span class="section-number-3">3.1</span> vconsole</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>~/Caps2Ctrl.map
+keymaps<span class="org-whitespace-space"> </span>0-127
+keycode<span class="org-whitespace-space"> </span>58<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Control
+keycode<span class="org-whitespace-space"> </span>29<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Caps_Lock
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>loadkeys<span class="org-whitespace-space"> </span>~/Caps2Ctrl.map
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3452c12" class="outline-3">
+<h3 id="org3452c12"><span class="section-number-3">3.2</span> gnome</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>Search 'tweak' -&gt; 'Keyboard &amp; mouse' set Caps Behavior</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org605b5d5" class="outline-2">
+<h2 id="org605b5d5"><span class="section-number-2">4</span> terminator</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>install terminator and set shortcut</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>terminator
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Set shortcut
+<ul class="org-ul">
+<li>Search 'Keyboard' in gnome, Select keyboard to add additional
+shortcuts</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2f9381a" class="outline-2">
+<h2 id="org2f9381a"><span class="section-number-2">5</span> base install</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-bash">yes<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>tmux<span class="org-whitespace-space"> </span>terminator<span class="org-whitespace-space"> </span>manpages<span class="org-whitespace-space"> </span>manpages-dev<span class="org-whitespace-space"> </span>manpages-zh<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">manpages-posix</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">manpages-posix-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">gconf-service</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gconf2-common</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libappindicator1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libdbusmenu-glib4</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libdbusmenu-gtk4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libgconf-2-4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libindicator7</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libappindicator3-0.1-cil</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ntp</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">autoconf</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">automake</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libtool</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cmake</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">info</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">texinfo</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">texi2html</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gettext</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">gettext-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">autopoint</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libasprintf-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libgettextpo-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libxaw7-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libxaw3dxft8-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libxaw-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libxt-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libx11-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libgtk3.0-cil-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libwxgtk3.0-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libgnutls28-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libtiff5-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">giflib-tools</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libgif-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libjpeg-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">gmp-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libgmp10-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libmpfr-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gnutls-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gnutls-bin</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">liblzma-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libtinfo-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libncursesw5-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libncurses5-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">mailutils</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mailutils-doc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xaw3dg-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libcairo2-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">librsvg2-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">liblcms2-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">imagemagick</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libmagick++-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libdbus-1-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libdbus-glib-1-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libdbus-c++-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gconf2</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libgconf2-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libm17n-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libotf-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libxft-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libcairo2-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">gir1.2-poppler-0.18</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libpoppler-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libpoppler-glib-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">libpoppler-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libpoppler-glib-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">libpoppler-private-dev</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">global</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fcitx-googlepinyin</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">fonts-arphic-bkai00mp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fonts-arphic-bsmi00lp</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">fonts-arphic-gbsn00lp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fonts-arphic-gkai00mp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fonts-arphic-ukai</span><span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">rdesktop</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mplayer</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ffmpeg</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">vlc</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">mjpegtools</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7d69287" class="outline-2">
+<h2 id="org7d69287"><span class="section-number-2">6</span> google chrome</h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>fonts-liberation<span class="org-whitespace-space"> </span>libappindicator3-1
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dpkg<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>google-chrome-stable_current_amd64.deb
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt<span class="org-whitespace-space"> </span>--fix-broken<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">run</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">fail</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfc9ff3b" class="outline-2">
+<h2 id="orgfc9ff3b"><span class="section-number-2">7</span> fcitx</h2>
+<div class="outline-text-2" id="text-7">
+<ul class="org-ul">
+<li>Run dpkg to add locales</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dpkg-reconfigure<span class="org-whitespace-space"> </span>locales
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">Select</span><span class="org-whitespace-space"> </span><span class="org-comment">en_US.UTF-8,</span><span class="org-whitespace-space"> </span><span class="org-comment">zh_CN.UTF-8</span>
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Run Fcitx Configuration
+<ul class="org-ul">
+<li>Input method add and disable 'Only show current language'</li>
+<li>Input method add 'Google pinyin'</li>
+<li>Global config, Trigger input method set to 'Ctrl-Alt-Space'</li>
+</ul></li>
+<li>Reboot</li>
+<li>Try 'Ctrl-Alt-Space' switch to google-pinyin</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6389e7d" class="outline-2">
+<h2 id="org6389e7d"><span class="section-number-2">8</span> emacs</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li>download and compile</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>https://git.savannah.gnu.org/git/emacs.git
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>emacs
+~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>checkout<span class="org-whitespace-space"> </span>emacs-27.1
+~$<span class="org-whitespace-space"> </span>./configure<span class="org-whitespace-space"> </span>--without-pop<span class="org-whitespace-space"> </span>--with-mailutils
+~$<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>-j2<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>install
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>config</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>git@github.com:yygcode/.emacs.d
+<span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">Use</span><span class="org-whitespace-space"> </span><span class="org-comment">https</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">you</span><span class="org-whitespace-space"> </span><span class="org-comment">are</span><span class="org-whitespace-space"> </span><span class="org-comment">not</span><span class="org-whitespace-space"> </span><span class="org-comment">contributor:</span>
+~$<span class="org-whitespace-space"> </span>https://github.com/yygcode/.emacs.d.git
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Start emacs
+<ul class="org-ul">
+<li>MAY need restart multi times</li>
+</ul></li>
+
+<li>Need set LANG=zh_CN.UTF-8 if start emacs in X windows</li>
+<li>Run emacs daemon</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>emacs<span class="org-whitespace-space"> </span>--daemon
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org21afd5e" class="outline-2">
+<h2 id="org21afd5e"><span class="section-number-2">9</span> gcc and g++ manpages</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-org36a925a" class="outline-3">
+<h3 id="org36a925a"><span class="section-number-3">9.1</span> gcc</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+debian8还没有gcc-doc，可以用之前版本的，把下列两行加到/etc/apt/sources.list:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">deb<span class="org-whitespace-space"> </span>http://deb.debian.org/debian<span class="org-whitespace-space"> </span>buster-backports<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+deb-src<span class="org-whitespace-space"> </span>http://deb.debian.org/debian<span class="org-whitespace-space"> </span>buster-backports<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+</pre>
+</div>
+
+<p>
+执行update然后install:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt<span class="org-whitespace-space"> </span>update
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>-t<span class="org-whitespace-space"> </span>buster-backports<span class="org-whitespace-space"> </span>gcc-doc
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb5c232b" class="outline-3">
+<h3 id="orgb5c232b"><span class="section-number-3">9.2</span> g++</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+下载manpages，解压到 /usr/share/man/man3/目录：
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>wget<span class="org-whitespace-space"> </span>--continue<span class="org-whitespace-space"> </span>ftp://gcc.gnu.org/pub/gcc/libstdc++/doxygen//libstdc++-man.4.<span class="org-whitespace-line">4.0.tar.bz2</span>
+~$<span class="org-whitespace-space"> </span>tar<span class="org-whitespace-space"> </span>xvf<span class="org-whitespace-space"> </span>libstdc++-man.4.4.0.tar.bz2
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>libstdc++-man.4.4.0
+~$<span class="org-whitespace-space"> </span>cp<span class="org-whitespace-space"> </span>man3/*<span class="org-whitespace-space"> </span>/usr/share/man/man3/
+</pre>
+</div>
+
+<p>
+试试：man std::iostream.
+</p>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
