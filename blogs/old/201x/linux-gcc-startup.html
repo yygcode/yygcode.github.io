@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<a href="../../../index.html">Yanyg - Software Engineer</a>
 <div class="sitelinks">
   <a href="../../archives.html">Archives</a> |
   <a href="../../theindex.html">Index</a> |
@@ -26,31 +26,31 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0879121">1. 说明</a></li>
-<li><a href="#orgf77e2cb">2. 安装</a></li>
-<li><a href="#org5afed21">3. C编程中的文件后缀名介绍</a></li>
-<li><a href="#org9e9caef">4. hello.c的编译过程</a>
+<li><a href="#org28f7cac">1. 说明</a></li>
+<li><a href="#orgfbabf80">2. 安装</a></li>
+<li><a href="#org0b63371">3. C编程中的文件后缀名介绍</a></li>
+<li><a href="#org4913406">4. hello.c的编译过程</a>
 <ul>
-<li><a href="#org99d4d43">4.1. 直接生成可执行程序</a></li>
-<li><a href="#orgbdca371">4.2. 生成预处理后的文件 hello.i</a></li>
-<li><a href="#org2314cca">4.3. 生成汇编语言文件 hello.s</a></li>
-<li><a href="#org3c274bd">4.4. 生成目标文件 hello.o</a></li>
-<li><a href="#org5a8cbcc">4.5. 采用中间级文件生成可执行程序</a></li>
+<li><a href="#orgece8f2f">4.1. 直接生成可执行程序</a></li>
+<li><a href="#org6e359e9">4.2. 生成预处理后的文件 hello.i</a></li>
+<li><a href="#org2dde367">4.3. 生成汇编语言文件 hello.s</a></li>
+<li><a href="#org5f0b124">4.4. 生成目标文件 hello.o</a></li>
+<li><a href="#orgaad5c50">4.5. 采用中间级文件生成可执行程序</a></li>
 </ul>
 </li>
-<li><a href="#org789ad90">5. 静态库的生成</a>
+<li><a href="#org6073d3a">5. 静态库的生成</a>
 <ul>
-<li><a href="#orgac794d4">5.1. 编译指令</a></li>
+<li><a href="#org4776f9c">5.1. 编译指令</a></li>
 </ul>
 </li>
-<li><a href="#org5b129cb">6. 动态库的生成</a></li>
-<li><a href="#org7001012">7. 结束语</a></li>
+<li><a href="#orga6ba984">6. 动态库的生成</a></li>
+<li><a href="#orgdbbab56">7. 结束语</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0879121" class="outline-2">
-<h2 id="org0879121"><span class="section-number-2">1</span> 说明</h2>
+<div id="outline-container-org28f7cac" class="outline-2">
+<h2 id="org28f7cac"><span class="section-number-2">1</span> 说明</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本文最早发布在CSDN：<a href="https://blog.csdn.net/cppgp/article/details/3457718">https://blog.csdn.net/cppgp/article/details/3457718</a>
@@ -59,8 +59,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgf77e2cb" class="outline-2">
-<h2 id="orgf77e2cb"><span class="section-number-2">2</span> 安装</h2>
+<div id="outline-container-orgfbabf80" class="outline-2">
+<h2 id="orgfbabf80"><span class="section-number-2">2</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Debian系统安装：
@@ -72,8 +72,8 @@ Debian系统安装：
 </div>
 </div>
 
-<div id="outline-container-org5afed21" class="outline-2">
-<h2 id="org5afed21"><span class="section-number-2">3</span> C编程中的文件后缀名介绍</h2>
+<div id="outline-container-org0b63371" class="outline-2">
+<h2 id="org0b63371"><span class="section-number-2">3</span> C编程中的文件后缀名介绍</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>.a 静态库（打包文件）</li>
@@ -98,8 +98,8 @@ Debian系统安装：
 </div>
 </div>
 
-<div id="outline-container-org9e9caef" class="outline-2">
-<h2 id="org9e9caef"><span class="section-number-2">4</span> hello.c的编译过程</h2>
+<div id="outline-container-org4913406" class="outline-2">
+<h2 id="org4913406"><span class="section-number-2">4</span> hello.c的编译过程</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-comment-delimiter">/*</span>
@@ -116,8 +116,8 @@ Debian系统安装：
 </div>
 </div>
 
-<div id="outline-container-org99d4d43" class="outline-3">
-<h3 id="org99d4d43"><span class="section-number-3">4.1</span> 直接生成可执行程序</h3>
+<div id="outline-container-orgece8f2f" class="outline-3">
+<h3 id="orgece8f2f"><span class="section-number-3">4.1</span> 直接生成可执行程序</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.c
@@ -138,8 +138,8 @@ hello,<span class="org-whitespace-space"> </span>world!
 </div>
 </div>
 
-<div id="outline-container-orgbdca371" class="outline-3">
-<h3 id="orgbdca371"><span class="section-number-3">4.2</span> 生成预处理后的文件 hello.i</h3>
+<div id="outline-container-org6e359e9" class="outline-3">
+<h3 id="org6e359e9"><span class="section-number-3">4.2</span> 生成预处理后的文件 hello.i</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-E<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.i
@@ -191,8 +191,8 @@ $<span class="org-whitespace-space"> </span>vi<span class="org-whitespace-space"
 </div>
 </div>
 
-<div id="outline-container-org2314cca" class="outline-3">
-<h3 id="org2314cca"><span class="section-number-3">4.3</span> 生成汇编语言文件 hello.s</h3>
+<div id="outline-container-org2dde367" class="outline-3">
+<h3 id="org2dde367"><span class="section-number-3">4.3</span> 生成汇编语言文件 hello.s</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.s
@@ -231,8 +231,8 @@ $<span class="org-whitespace-space"> </span>vi<span class="org-whitespace-space"
 </div>
 </div>
 
-<div id="outline-container-org3c274bd" class="outline-3">
-<h3 id="org3c274bd"><span class="section-number-3">4.4</span> 生成目标文件 hello.o</h3>
+<div id="outline-container-org5f0b124" class="outline-3">
+<h3 id="org5f0b124"><span class="section-number-3">4.4</span> 生成目标文件 hello.o</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.o
@@ -270,8 +270,8 @@ Contents<span class="org-whitespace-space"> </span>of<span class="org-whitespace
 </div>
 </div>
 
-<div id="outline-container-org5a8cbcc" class="outline-3">
-<h3 id="org5a8cbcc"><span class="section-number-3">4.5</span> 采用中间级文件生成可执行程序</h3>
+<div id="outline-container-orgaad5c50" class="outline-3">
+<h3 id="orgaad5c50"><span class="section-number-3">4.5</span> 采用中间级文件生成可执行程序</h3>
 <div class="outline-text-3" id="text-4-5">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.i
@@ -291,8 +291,8 @@ hello,<span class="org-whitespace-space"> </span>world!
 </div>
 </div>
 
-<div id="outline-container-org789ad90" class="outline-2">
-<h2 id="org789ad90"><span class="section-number-2">5</span> 静态库的生成</h2>
+<div id="outline-container-org6073d3a" class="outline-2">
+<h2 id="org6073d3a"><span class="section-number-2">5</span> 静态库的生成</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 linux下静态库的生成比较方便。在生成目标文件后用 ar 打包即可。
@@ -360,8 +360,8 @@ func2.c:
 </div>
 </div>
 
-<div id="outline-container-orgac794d4" class="outline-3">
-<h3 id="orgac794d4"><span class="section-number-3">5.1</span> 编译指令</h3>
+<div id="outline-container-org4776f9c" class="outline-3">
+<h3 id="org4776f9c"><span class="section-number-3">5.1</span> 编译指令</h3>
 <div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>func1.c
@@ -388,8 +388,8 @@ func2<span class="org-whitespace-space"> </span>return<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org5b129cb" class="outline-2">
-<h2 id="org5b129cb"><span class="section-number-2">6</span> 动态库的生成</h2>
+<div id="outline-container-orga6ba984" class="outline-2">
+<h2 id="orga6ba984"><span class="section-number-2">6</span> 动态库的生成</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 linux下动态库的生成通过GCC选项实现。案例程序和静态库中的相同。以下是操作指令：
@@ -435,8 +435,8 @@ func2<span class="org-whitespace-space"> </span>return<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org7001012" class="outline-2">
-<h2 id="org7001012"><span class="section-number-2">7</span> 结束语</h2>
+<div id="outline-container-orgdbbab56" class="outline-2">
+<h2 id="orgdbbab56"><span class="section-number-2">7</span> 结束语</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 本文简单介绍了linux下如何使用gcc进行编译程序、以及简单的静态、动态库的生成。

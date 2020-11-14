@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<a href="../../../index.html">Yanyg - Software Engineer</a>
 <div class="sitelinks">
   <a href="../../archives.html">Archives</a> |
   <a href="../../theindex.html">Index</a> |
@@ -26,22 +26,22 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org41174c5">1. Install</a></li>
-<li><a href="#org47eadff">2. errata/enhance</a>
+<li><a href="#org413e48e">1. Install</a></li>
+<li><a href="#org002e4c4">2. errata/enhance</a>
 <ul>
-<li><a href="#org47240fd">2.1. locate</a></li>
-<li><a href="#org43a91ec">2.2. 中文输入法</a></li>
-<li><a href="#org0243eba">2.3. fedora10 amsn 出现 tls 模块无法工作的错</a></li>
-<li><a href="#org79491ce">2.4. fedora 下给 firefox 安装 adobe flash player 插件</a></li>
-<li><a href="#orge8c0779">2.5. fedora10 yum install 错误：Package *.rpm is not signed</a></li>
+<li><a href="#org6e96811">2.1. locate</a></li>
+<li><a href="#org6e445f5">2.2. 中文输入法</a></li>
+<li><a href="#org12da733">2.3. fedora10 amsn 出现 tls 模块无法工作的错</a></li>
+<li><a href="#org99d6920">2.4. fedora 下给 firefox 安装 adobe flash player 插件</a></li>
+<li><a href="#orgae21441">2.5. fedora10 yum install 错误：Package *.rpm is not signed</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org41174c5" class="outline-2">
-<h2 id="org41174c5"><span class="section-number-2">1</span> Install</h2>
+<div id="outline-container-org413e48e" class="outline-2">
+<h2 id="org413e48e"><span class="section-number-2">1</span> Install</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近重新安装了一遍 windows Xp / fedora10，整理下安装过程：
@@ -122,12 +122,12 @@ locate: can not open `/var/lib/mlocate/mlocate.db': No such file or directory
 <hr />
 </div>
 </div>
-<div id="outline-container-org47eadff" class="outline-2">
-<h2 id="org47eadff"><span class="section-number-2">2</span> errata/enhance</h2>
+<div id="outline-container-org002e4c4" class="outline-2">
+<h2 id="org002e4c4"><span class="section-number-2">2</span> errata/enhance</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org47240fd" class="outline-3">
-<h3 id="org47240fd"><span class="section-number-3">2.1</span> locate</h3>
+<div id="outline-container-org6e96811" class="outline-3">
+<h3 id="org6e96811"><span class="section-number-3">2.1</span> locate</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 此错误和 locate 的工作方式相关。man locate 可获取详细信息。解决方法是执行 updatedb 命令。需要超级用户权限。
@@ -136,8 +136,8 @@ locate: can not open `/var/lib/mlocate/mlocate.db': No such file or directory
 </div>
 </div>
 
-<div id="outline-container-org43a91ec" class="outline-3">
-<h3 id="org43a91ec"><span class="section-number-3">2.2</span> 中文输入法</h3>
+<div id="outline-container-org6e445f5" class="outline-3">
+<h3 id="org6e445f5"><span class="section-number-3">2.2</span> 中文输入法</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 新安装的 fedora10 无法输入中文。解决方案如下：
@@ -161,8 +161,8 @@ locate: can not open `/var/lib/mlocate/mlocate.db': No such file or directory
 </div>
 </div>
 
-<div id="outline-container-org0243eba" class="outline-3">
-<h3 id="org0243eba"><span class="section-number-3">2.3</span> fedora10 amsn 出现 tls 模块无法工作的错</h3>
+<div id="outline-container-org12da733" class="outline-3">
+<h3 id="org12da733"><span class="section-number-3">2.3</span> fedora10 amsn 出现 tls 模块无法工作的错</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 安装 amsn 后运行，出现 tls 无法通过 selinux 的错误。我通过 chcon 添加了属性（通过 ls -Z 可查看相关属性）：
@@ -198,8 +198,8 @@ locate: can not open `/var/lib/mlocate/mlocate.db': No such file or directory
 </div>
 </div>
 
-<div id="outline-container-org79491ce" class="outline-3">
-<h3 id="org79491ce"><span class="section-number-3">2.4</span> fedora 下给 firefox 安装 adobe flash player 插件</h3>
+<div id="outline-container-org99d6920" class="outline-3">
+<h3 id="org99d6920"><span class="section-number-3">2.4</span> fedora 下给 firefox 安装 adobe flash player 插件</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 使用 yum、rpm 等尝试安装了一遍。全部失败（firefox查找不到）
@@ -208,8 +208,8 @@ locate: can not open `/var/lib/mlocate/mlocate.db': No such file or directory
 </div>
 </div>
 
-<div id="outline-container-orge8c0779" class="outline-3">
-<h3 id="orge8c0779"><span class="section-number-3">2.5</span> fedora10 yum install 错误：Package *.rpm is not signed</h3>
+<div id="outline-container-orgae21441" class="outline-3">
+<h3 id="orgae21441"><span class="section-number-3">2.5</span> fedora10 yum install 错误：Package *.rpm is not signed</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 不知道是否是因为关闭了 selinux 的原因，突然间在使用 yum 安装时出现如下错误：

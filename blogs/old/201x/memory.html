@@ -26,7 +26,7 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org236dbf0">1. <span class="todo TODO">TODO</span> 概述</a></li>
+<li><a href="#org4e4fcb7">1. <span class="todo TODO">TODO</span> 概述</a></li>
 <li><a href="#us">2. 用户态内存管理技术</a>
 <ul>
 <li><a href="#us-process-layout">2.1. 从程序地址空间布局谈起</a></li>
@@ -34,19 +34,19 @@
 <li><a href="#us-alsr">2.3. ASLR(地址空间布局随机化)策略</a></li>
 <li><a href="#us-stack">2.4. 栈空间管理</a></li>
 <li><a href="#us-heap">2.5. <span class="todo TODO">TODO</span> 堆内存管理</a></li>
-<li><a href="#org054ab84">2.6. 典型分配器分析</a>
+<li><a href="#org05e2c5e">2.6. 典型分配器分析</a>
 <ul>
-<li><a href="#org40fcd54">2.6.1. tcmalloc</a></li>
+<li><a href="#orgd382bee">2.6.1. tcmalloc</a></li>
 </ul>
 </li>
 <li><a href="#us-mempool">2.7. <span class="todo TODO">TODO</span> 内存池的实现</a></li>
 </ul>
 </li>
-<li><a href="#org289d381">3. 内核态内存管理</a>
+<li><a href="#org1caf290">3. 内核态内存管理</a>
 <ul>
-<li><a href="#orgc8ee352">3.1. dummy</a>
+<li><a href="#org27bbb6c">3.1. dummy</a>
 <ul>
-<li><a href="#org668985b">3.1.1. brk</a></li>
+<li><a href="#org2b8c6a0">3.1.1. brk</a></li>
 </ul>
 </li>
 </ul>
@@ -55,8 +55,8 @@
 </div>
 </div>
 
-<div id="outline-container-org236dbf0" class="outline-2">
-<h2 id="org236dbf0"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
+<div id="outline-container-org4e4fcb7" class="outline-2">
+<h2 id="org4e4fcb7"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> 概述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 待定内容：
@@ -65,11 +65,11 @@
 </div>
 </div>
 
-<div id="outline-container-org2208ff0" class="outline-2">
+<div id="outline-container-us" class="outline-2">
 <h2 id="us"><span class="section-number-2">2</span> 用户态内存管理技术</h2>
 <div class="outline-text-2" id="text-us">
 </div>
-<div id="outline-container-orgdccef9a" class="outline-3">
+<div id="outline-container-us-process-layout" class="outline-3">
 <h3 id="us-process-layout"><span class="section-number-3">2.1</span> 从程序地址空间布局谈起</h3>
 <div class="outline-text-3" id="text-us-process-layout">
 <p>
@@ -163,7 +163,7 @@ LINUX系统提供 <code>brk</code> 和 <code>mmap</code> 扩展/收缩堆内存�
 </div>
 </div>
 
-<div id="outline-container-org7e84675" class="outline-3">
+<div id="outline-container-us-exe-size-analysis" class="outline-3">
 <h3 id="us-exe-size-analysis"><span class="section-number-3">2.2</span> 可执行程序大小与地址空间分析</h3>
 <div class="outline-text-3" id="text-us-exe-size-analysis">
 <p>
@@ -227,7 +227,7 @@ main(400530)为main函数入口地址。
 </div>
 </div>
 
-<div id="outline-container-orgd4fb011" class="outline-3">
+<div id="outline-container-us-alsr" class="outline-3">
 <h3 id="us-alsr"><span class="section-number-3">2.3</span> ASLR(地址空间布局随机化)策略</h3>
 <div class="outline-text-3" id="text-us-alsr">
 <p>
@@ -294,7 +294,7 @@ lr--------.<span class="org-whitespace-space"> </span>1<span class="org-whitespa
 </div>
 </div>
 
-<div id="outline-container-orgf16bcde" class="outline-3">
+<div id="outline-container-us-stack" class="outline-3">
 <h3 id="us-stack"><span class="section-number-3">2.4</span> 栈空间管理</h3>
 <div class="outline-text-3" id="text-us-stack">
 <p>
@@ -359,7 +359,7 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org76d47a6" class="outline-3">
+<div id="outline-container-us-heap" class="outline-3">
 <h3 id="us-heap"><span class="section-number-3">2.5</span> <span class="todo TODO">TODO</span> 堆内存管理</h3>
 <div class="outline-text-3" id="text-us-heap">
 <ul class="org-ul">
@@ -401,12 +401,12 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org054ab84" class="outline-3">
-<h3 id="org054ab84"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
+<div id="outline-container-org05e2c5e" class="outline-3">
+<h3 id="org05e2c5e"><span class="section-number-3">2.6</span> 典型分配器分析</h3>
 <div class="outline-text-3" id="text-2-6">
 </div>
-<div id="outline-container-org40fcd54" class="outline-4">
-<h4 id="org40fcd54"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
+<div id="outline-container-orgd382bee" class="outline-4">
+<h4 id="orgd382bee"><span class="section-number-4">2.6.1</span> tcmalloc</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a>
@@ -416,7 +416,7 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 
 
-<div id="outline-container-org7548e0e" class="outline-3">
+<div id="outline-container-us-mempool" class="outline-3">
 <h3 id="us-mempool"><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 内存池的实现</h3>
 <div class="outline-text-3" id="text-us-mempool">
 <ul class="org-ul">
@@ -426,16 +426,16 @@ Segmentation<span class="org-whitespace-space"> </span>fault<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org289d381" class="outline-2">
-<h2 id="org289d381"><span class="section-number-2">3</span> 内核态内存管理</h2>
+<div id="outline-container-org1caf290" class="outline-2">
+<h2 id="org1caf290"><span class="section-number-2">3</span> 内核态内存管理</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgc8ee352" class="outline-3">
-<h3 id="orgc8ee352"><span class="section-number-3">3.1</span> dummy</h3>
+<div id="outline-container-org27bbb6c" class="outline-3">
+<h3 id="org27bbb6c"><span class="section-number-3">3.1</span> dummy</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org668985b" class="outline-4">
-<h4 id="org668985b"><span class="section-number-4">3.1.1</span> brk</h4>
+<div id="outline-container-org2b8c6a0" class="outline-4">
+<h4 id="org2b8c6a0"><span class="section-number-4">3.1.1</span> brk</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 brk stands for break. means program break

@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<a href="../../../index.html">Yanyg - SAN Software Engineer</a>
+<a href="../../../index.html">Yanyg - Software Engineer</a>
 <div class="sitelinks">
   <a href="../../archives.html">Archives</a> |
   <a href="../../theindex.html">Index</a> |
@@ -26,16 +26,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org748a4b3">1. 操作平台: Linux</a></li>
-<li><a href="#orgb09f557">2. 软件包安装(Debian)</a></li>
-<li><a href="#orgf63c591">3. 从一个例子谈起。</a>
+<li><a href="#org6954996">1. 操作平台: Linux</a></li>
+<li><a href="#orgc55a2b8">2. 软件包安装(Debian)</a></li>
+<li><a href="#orgf9c05f5">3. 从一个例子谈起。</a>
 <ul>
-<li><a href="#orgb1ddbbd">3.1. example</a></li>
-<li><a href="#orgf88a3e8">3.2. 创建hello目录和源代码hello.c：</a></li>
-<li><a href="#org04bf4e0">3.3. 创建 Makefile.am</a></li>
-<li><a href="#orgdbd4fe4">3.4. 用 autoscan 生成configure.ac的模板configure.scan</a></li>
-<li><a href="#org70033de">3.5. 使用autoreconf直接生成可执行configure并执行编译：</a></li>
-<li><a href="#org5ac0d69">3.6. 生成发行包并检测完整性：</a></li>
+<li><a href="#orgee61be0">3.1. example</a></li>
+<li><a href="#org6dbd50a">3.2. 创建hello目录和源代码hello.c：</a></li>
+<li><a href="#org725a379">3.3. 创建 Makefile.am</a></li>
+<li><a href="#orge4936cf">3.4. 用 autoscan 生成configure.ac的模板configure.scan</a></li>
+<li><a href="#org7a7eb12">3.5. 使用autoreconf直接生成可执行configure并执行编译：</a></li>
+<li><a href="#orgf01dde5">3.6. 生成发行包并检测完整性：</a></li>
 </ul>
 </li>
 </ul>
@@ -45,12 +45,12 @@
 Fist publish in <a href="https://blog.csdn.net/cppgp/article/details/7258875">https://blog.csdn.net/cppgp/article/details/7258875</a>
 </p>
 
-<div id="outline-container-org748a4b3" class="outline-2">
-<h2 id="org748a4b3"><span class="section-number-2">1</span> 操作平台: Linux</h2>
+<div id="outline-container-org6954996" class="outline-2">
+<h2 id="org6954996"><span class="section-number-2">1</span> 操作平台: Linux</h2>
 </div>
 
-<div id="outline-container-orgb09f557" class="outline-2">
-<h2 id="orgb09f557"><span class="section-number-2">2</span> 软件包安装(Debian)</h2>
+<div id="outline-container-orgc55a2b8" class="outline-2">
+<h2 id="orgc55a2b8"><span class="section-number-2">2</span> 软件包安装(Debian)</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>yes<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>apt-get<span class="org-whitespace-space"> </span>install<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>autoconf<span class="org-whitespace-space"> </span>automake<span class="org-whitespace-space"> </span>libtool
@@ -59,12 +59,12 @@ Fist publish in <a href="https://blog.csdn.net/cppgp/article/details/7258875">ht
 </div>
 </div>
 
-<div id="outline-container-orgf63c591" class="outline-2">
-<h2 id="orgf63c591"><span class="section-number-2">3</span> 从一个例子谈起。</h2>
+<div id="outline-container-orgf9c05f5" class="outline-2">
+<h2 id="orgf9c05f5"><span class="section-number-2">3</span> 从一个例子谈起。</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb1ddbbd" class="outline-3">
-<h3 id="orgb1ddbbd"><span class="section-number-3">3.1</span> example</h3>
+<div id="outline-container-orgee61be0" class="outline-3">
+<h3 id="orgee61be0"><span class="section-number-3">3.1</span> example</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 完整拷贝如下代码直接在终端执行或者保存为auto-example.sh，添加执行权限执行。
@@ -137,8 +137,8 @@ echo<span class="org-whitespace-space"> </span>"All<span class="org-whitespace-s
 </div>
 </div>
 
-<div id="outline-container-orgf88a3e8" class="outline-3">
-<h3 id="orgf88a3e8"><span class="section-number-3">3.2</span> 创建hello目录和源代码hello.c：</h3>
+<div id="outline-container-org6dbd50a" class="outline-3">
+<h3 id="org6dbd50a"><span class="section-number-3">3.2</span> 创建hello目录和源代码hello.c：</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>mkdir<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span><span class="org-builtin">cd</span><span class="org-whitespace-space"> </span>hello
@@ -155,8 +155,8 @@ echo<span class="org-whitespace-space"> </span>"All<span class="org-whitespace-s
 </div>
 </div>
 
-<div id="outline-container-org04bf4e0" class="outline-3">
-<h3 id="org04bf4e0"><span class="section-number-3">3.3</span> 创建 Makefile.am</h3>
+<div id="outline-container-org725a379" class="outline-3">
+<h3 id="org725a379"><span class="section-number-3">3.3</span> 创建 Makefile.am</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>Makefile.am<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>EOF
@@ -168,8 +168,8 @@ echo<span class="org-whitespace-space"> </span>"All<span class="org-whitespace-s
 </div>
 </div>
 
-<div id="outline-container-orgdbd4fe4" class="outline-3">
-<h3 id="orgdbd4fe4"><span class="section-number-3">3.4</span> 用 autoscan 生成configure.ac的模板configure.scan</h3>
+<div id="outline-container-orge4936cf" class="outline-3">
+<h3 id="orge4936cf"><span class="section-number-3">3.4</span> 用 autoscan 生成configure.ac的模板configure.scan</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>autoscan
@@ -231,8 +231,8 @@ AC_OUTPUT
 </div>
 </div>
 
-<div id="outline-container-org70033de" class="outline-3">
-<h3 id="org70033de"><span class="section-number-3">3.5</span> 使用autoreconf直接生成可执行configure并执行编译：</h3>
+<div id="outline-container-org7a7eb12" class="outline-3">
+<h3 id="org7a7eb12"><span class="section-number-3">3.5</span> 使用autoreconf直接生成可执行configure并执行编译：</h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>autoreconf<span class="org-whitespace-space"> </span>--install
@@ -274,8 +274,8 @@ make[1]:<span class="org-whitespace-space"> </span>Entering<span class="org-whit
 </div>
 </div>
 
-<div id="outline-container-org5ac0d69" class="outline-3">
-<h3 id="org5ac0d69"><span class="section-number-3">3.6</span> 生成发行包并检测完整性：</h3>
+<div id="outline-container-orgf01dde5" class="outline-3">
+<h3 id="orgf01dde5"><span class="section-number-3">3.6</span> 生成发行包并检测完整性：</h3>
 <div class="outline-text-3" id="text-3-6">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>dist<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>distcheck

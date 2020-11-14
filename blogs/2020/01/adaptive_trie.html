@@ -48,15 +48,15 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org44e7546">1. Optimize</a></li>
-<li><a href="#org3ffa353">2. Test Data</a>
+<li><a href="#orgd8bca2b">1. Optimize</a></li>
+<li><a href="#orgc1885ad">2. Test Data</a>
 <ul>
-<li><a href="#orga26df49">2.1. Traditional</a></li>
-<li><a href="#org2b43cee">2.2. Collapsing</a></li>
-<li><a href="#org105f6a3">2.3. Enlarge optimize data</a></li>
-<li><a href="#org1fea962">2.4. Enlarge and srhink without layer0</a></li>
-<li><a href="#org994232b">2.5. no small node</a></li>
-<li><a href="#orgc86aa84">2.6. with small node</a></li>
+<li><a href="#org4facd8b">2.1. Traditional</a></li>
+<li><a href="#org55be1c7">2.2. Collapsing</a></li>
+<li><a href="#org6c48169">2.3. Enlarge optimize data</a></li>
+<li><a href="#orgcea36f3">2.4. Enlarge and srhink without layer0</a></li>
+<li><a href="#org61ed64e">2.5. no small node</a></li>
+<li><a href="#orged2633a">2.6. with small node</a></li>
 </ul>
 </li>
 </ul>
@@ -78,8 +78,8 @@ Trie树分为内部节点(inner node)和叶子节点(leaf node)。内部节点�
 内部节点的地址，而叶子节点保存实际对象（或者对象指针）。
 </p>
 
-<div id="outline-container-org44e7546" class="outline-2">
-<h2 id="org44e7546"><span class="section-number-2">1</span> Optimize</h2>
+<div id="outline-container-orgd8bca2b" class="outline-2">
+<h2 id="orgd8bca2b"><span class="section-number-2">1</span> Optimize</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Adaptive包括三个优化：
@@ -130,16 +130,16 @@ Key，这个数据太小，因此内部节点使用率相当低。
 </div>
 </div>
 
-<div id="outline-container-org3ffa353" class="outline-2">
-<h2 id="org3ffa353"><span class="section-number-2">2</span> Test Data</h2>
+<div id="outline-container-orgc1885ad" class="outline-2">
+<h2 id="orgc1885ad"><span class="section-number-2">2</span> Test Data</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 16字节Key，每层4位，32层。
 </p>
 </div>
 
-<div id="outline-container-orga26df49" class="outline-3">
-<h3 id="orga26df49"><span class="section-number-3">2.1</span> Traditional</h3>
+<div id="outline-container-org4facd8b" class="outline-3">
+<h3 id="org4facd8b"><span class="section-number-3">2.1</span> Traditional</h3>
 <div class="outline-text-3" id="text-2-1">
 <table>
 
@@ -222,8 +222,8 @@ InternalNode结构体68字节，IDMem映射增加4个字节，因此每个Intern
 </div>
 </div>
 
-<div id="outline-container-org2b43cee" class="outline-3">
-<h3 id="org2b43cee"><span class="section-number-3">2.2</span> Collapsing</h3>
+<div id="outline-container-org55be1c7" class="outline-3">
+<h3 id="org55be1c7"><span class="section-number-3">2.2</span> Collapsing</h3>
 <div class="outline-text-3" id="text-2-2">
 <table>
 
@@ -3226,8 +3226,8 @@ InternalNode结构体68字节，IDMem映射增加4个字节，因此每个Intern
 </div>
 </div>
 
-<div id="outline-container-org105f6a3" class="outline-3">
-<h3 id="org105f6a3"><span class="section-number-3">2.3</span> Enlarge optimize data</h3>
+<div id="outline-container-org6c48169" class="outline-3">
+<h3 id="org6c48169"><span class="section-number-3">2.3</span> Enlarge optimize data</h3>
 <div class="outline-text-3" id="text-2-3">
 <table>
 
@@ -6263,8 +6263,8 @@ InternalNode结构体68字节，IDMem映射增加4个字节，因此每个Intern
 </div>
 </div>
 
-<div id="outline-container-org1fea962" class="outline-3">
-<h3 id="org1fea962"><span class="section-number-3">2.4</span> Enlarge and srhink without layer0</h3>
+<div id="outline-container-orgcea36f3" class="outline-3">
+<h3 id="orgcea36f3"><span class="section-number-3">2.4</span> Enlarge and srhink without layer0</h3>
 <div class="outline-text-3" id="text-2-4">
 <table>
 
@@ -8700,8 +8700,8 @@ InternalNode结构体68字节，IDMem映射增加4个字节，因此每个Intern
 </div>
 </div>
 
-<div id="outline-container-org994232b" class="outline-3">
-<h3 id="org994232b"><span class="section-number-3">2.5</span> no small node</h3>
+<div id="outline-container-org61ed64e" class="outline-3">
+<h3 id="org61ed64e"><span class="section-number-3">2.5</span> no small node</h3>
 <div class="outline-text-3" id="text-2-5">
 <table>
 
@@ -9042,8 +9042,8 @@ InternalNode结构体68字节，IDMem映射增加4个字节，因此每个Intern
 </div>
 </div>
 
-<div id="outline-container-orgc86aa84" class="outline-3">
-<h3 id="orgc86aa84"><span class="section-number-3">2.6</span> with small node</h3>
+<div id="outline-container-orged2633a" class="outline-3">
+<h3 id="orged2633a"><span class="section-number-3">2.6</span> with small node</h3>
 <div class="outline-text-3" id="text-2-6">
 <table>
 

@@ -26,13 +26,13 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org63aa712">1. 在ECS上打开反向代理</a></li>
-<li><a href="#orgd1c7735">2. 在家里机器上自动打开反向连接</a>
+<li><a href="#org243b028">1. 在ECS上打开反向代理</a></li>
+<li><a href="#org50fdbe6">2. 在家里机器上自动打开反向连接</a>
 <ul>
-<li><a href="#org2f378df">2.1. ECS主机映射</a></li>
-<li><a href="#org221c8aa">2.2. ssh测试</a></li>
-<li><a href="#org804536c">2.3. 建立开机自动连接</a></li>
-<li><a href="#org7cdbfa0">2.4. 现在只要家里开机，任何地方都可以远程过去：</a></li>
+<li><a href="#org74b486c">2.1. ECS主机映射</a></li>
+<li><a href="#orgb1235ed">2.2. ssh测试</a></li>
+<li><a href="#org264dc14">2.3. 建立开机自动连接</a></li>
+<li><a href="#org1c3a40b">2.4. 现在只要家里开机，任何地方都可以远程过去：</a></li>
 </ul>
 </li>
 </ul>
@@ -43,8 +43,8 @@
 因此用Aliyun的ECS开了一个反向代理。记录下配置。
 </p>
 
-<div id="outline-container-org63aa712" class="outline-2">
-<h2 id="org63aa712"><span class="section-number-2">1</span> 在ECS上打开反向代理</h2>
+<div id="outline-container-org243b028" class="outline-2">
+<h2 id="org243b028"><span class="section-number-2">1</span> 在ECS上打开反向代理</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <code>/etc/ssh/sshd_config</code> 添加一行：
@@ -74,12 +74,12 @@ GatewayPorts
 </div>
 </div>
 
-<div id="outline-container-orgd1c7735" class="outline-2">
-<h2 id="orgd1c7735"><span class="section-number-2">2</span> 在家里机器上自动打开反向连接</h2>
+<div id="outline-container-org50fdbe6" class="outline-2">
+<h2 id="org50fdbe6"><span class="section-number-2">2</span> 在家里机器上自动打开反向连接</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org2f378df" class="outline-3">
-<h3 id="org2f378df"><span class="section-number-3">2.1</span> ECS主机映射</h3>
+<div id="outline-container-org74b486c" class="outline-3">
+<h3 id="org74b486c"><span class="section-number-3">2.1</span> ECS主机映射</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 为实现方便，把ECS拿到的IP映射为名称a：
@@ -94,8 +94,8 @@ xxx.xxx.xxx.xxx<span class="org-whitespace-space"> </span>a
 </div>
 </div>
 
-<div id="outline-container-org221c8aa" class="outline-3">
-<h3 id="org221c8aa"><span class="section-number-3">2.2</span> ssh测试</h3>
+<div id="outline-container-orgb1235ed" class="outline-3">
+<h3 id="orgb1235ed"><span class="section-number-3">2.2</span> ssh测试</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 手动执行命令，尝试反向连接8888：
@@ -164,8 +164,8 @@ with -O forward the allocated port will be printed to the standard output.
 </div>
 </div>
 
-<div id="outline-container-org804536c" class="outline-3">
-<h3 id="org804536c"><span class="section-number-3">2.3</span> 建立开机自动连接</h3>
+<div id="outline-container-org264dc14" class="outline-3">
+<h3 id="org264dc14"><span class="section-number-3">2.3</span> 建立开机自动连接</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 使用systemd+autossh实现。
@@ -229,8 +229,8 @@ Enable service：
 </div>
 </div>
 
-<div id="outline-container-org7cdbfa0" class="outline-3">
-<h3 id="org7cdbfa0"><span class="section-number-3">2.4</span> 现在只要家里开机，任何地方都可以远程过去：</h3>
+<div id="outline-container-org1c3a40b" class="outline-3">
+<h3 id="org1c3a40b"><span class="section-number-3">2.4</span> 现在只要家里开机，任何地方都可以远程过去：</h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="org-src-container">
 <pre class="src src-sh">yanyg@t450:~/mnt/201911-22.backup$<span class="org-whitespace-space"> </span>ssh<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>8989<span class="org-whitespace-space"> </span>rt@a
