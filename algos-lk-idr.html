@@ -13,20 +13,20 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org22c805e">1. 介绍</a></li>
-<li><a href="#orge551968">2. 代码分析</a>
+<li><a href="#orgd64b79f">1. 介绍</a></li>
+<li><a href="#orgd95334d">2. 代码分析</a>
 <ul>
-<li><a href="#org7aacc0c">2.1. 数据结构</a></li>
-<li><a href="#orgf4b13e8">2.2. idr_alloc分析</a></li>
+<li><a href="#orga48fcd5">2.1. 数据结构</a></li>
+<li><a href="#org87bcc64">2.2. idr_alloc分析</a></li>
 </ul>
 </li>
-<li><a href="#org2342ac9">3. Reference Material</a></li>
+<li><a href="#org9ef1bb0">3. Reference Material</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org22c805e" class="outline-2">
-<h2 id="org22c805e"><span class="section-number-2">1</span> 介绍</h2>
+<div id="outline-container-orgd64b79f" class="outline-2">
+<h2 id="orgd64b79f"><span class="section-number-2">1</span> 介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 设备名称（块设备、I2C设备）、POSIX时钟。实现并不简单，因为其调用都在性能关键位置。
@@ -34,12 +34,12 @@
 </div>
 </div>
 
-<div id="outline-container-orge551968" class="outline-2">
-<h2 id="orge551968"><span class="section-number-2">2</span> 代码分析</h2>
+<div id="outline-container-orgd95334d" class="outline-2">
+<h2 id="orgd95334d"><span class="section-number-2">2</span> 代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7aacc0c" class="outline-3">
-<h3 id="org7aacc0c"><span class="section-number-3">2.1</span> 数据结构</h3>
+<div id="outline-container-orga48fcd5" class="outline-3">
+<h3 id="orga48fcd5"><span class="section-number-3">2.1</span> 数据结构</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span>{
@@ -83,8 +83,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgf4b13e8" class="outline-3">
-<h3 id="orgf4b13e8"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
+<div id="outline-container-org87bcc64" class="outline-3">
+<h3 id="org87bcc64"><span class="section-number-3">2.2</span> idr_alloc分析</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <code>idr_alloc</code> 函数原型如下：
@@ -117,8 +117,8 @@
 </div>
 
 
-<div id="outline-container-org2342ac9" class="outline-2">
-<h2 id="org2342ac9"><span class="section-number-2">3</span> Reference Material</h2>
+<div id="outline-container-org9ef1bb0" class="outline-2">
+<h2 id="org9ef1bb0"><span class="section-number-2">3</span> Reference Material</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>idr: Integer ID Management</dt><dd><a href="https://lwn.net/Articles/103209/">https://lwn.net/Articles/103209/</a></dd>

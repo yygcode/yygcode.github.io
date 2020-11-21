@@ -23,24 +23,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb18128e">DECLARATION</a></li>
-<li><a href="#org6c017d6">Abstract</a></li>
-<li><a href="#orgc8c7725">Keywords:</a></li>
-<li><a href="#org3071a1c">1. INTRODUCTION AND RELATED WORK</a></li>
-<li><a href="#orgd239e95">2. ARCHITECTURE</a>
+<li><a href="#org1d85399">DECLARATION</a></li>
+<li><a href="#org1bcb14b">Abstract</a></li>
+<li><a href="#org034fa6e">Keywords:</a></li>
+<li><a href="#orgd62ce98">1. INTRODUCTION AND RELATED WORK</a></li>
+<li><a href="#org19a0763">2. ARCHITECTURE</a>
 <ul>
-<li><a href="#org2fb2c1a">2.1. NameNode</a></li>
-<li><a href="#orge4b22c5">2.2. DataNodes</a></li>
-<li><a href="#orgd68a857">2.3. HDFS Client</a></li>
+<li><a href="#orga7ea961">2.1. NameNode</a></li>
+<li><a href="#orge49c44b">2.2. DataNodes</a></li>
+<li><a href="#org04606af">2.3. HDFS Client</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgb18128e" class="outline-2">
-<h2 id="orgb18128e">DECLARATION</h2>
-<div class="outline-text-2" id="text-orgb18128e">
+<div id="outline-container-org1d85399" class="outline-2">
+<h2 id="org1d85399">DECLARATION</h2>
+<div class="outline-text-2" id="text-org1d85399">
 <p>
 This page is the The Hadoop Distributed Filesystem paper. Original Paper Link
 is: <a href="http://storageconference.us/2010/Papers/MSST/Shvachko.pdf">http://storageconference.us/2010/Papers/MSST/Shvachko.pdf</a>
@@ -59,9 +59,9 @@ Sunnyvale, California USA
 </div>
 </div>
 
-<div id="outline-container-org6c017d6" class="outline-2">
-<h2 id="org6c017d6">Abstract</h2>
-<div class="outline-text-2" id="text-org6c017d6">
+<div id="outline-container-org1bcb14b" class="outline-2">
+<h2 id="org1bcb14b">Abstract</h2>
+<div class="outline-text-2" id="text-org1bcb14b">
 <p>
 The Hadoop Distributed File System (HDFS) is designed to store very large data
 sets reliably, and to stream those data sets at high bandwidth to user
@@ -75,17 +75,17 @@ Yahoo!.
 </div>
 </div>
 
-<div id="outline-container-orgc8c7725" class="outline-2">
-<h2 id="orgc8c7725">Keywords:</h2>
-<div class="outline-text-2" id="text-orgc8c7725">
+<div id="outline-container-org034fa6e" class="outline-2">
+<h2 id="org034fa6e">Keywords:</h2>
+<div class="outline-text-2" id="text-org034fa6e">
 <p>
 Hadoop, HDFS, distributed file system
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3071a1c" class="outline-2">
-<h2 id="org3071a1c"><span class="section-number-2">1</span> INTRODUCTION AND RELATED WORK</h2>
+<div id="outline-container-orgd62ce98" class="outline-2">
+<h2 id="orgd62ce98"><span class="section-number-2">1</span> INTRODUCTION AND RELATED WORK</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Hadoop [1][16][19] provides a distributed file system and a framework for the
@@ -197,12 +197,12 @@ using a hash function on the file name.
 </div>
 </div>
 
-<div id="outline-container-orgd239e95" class="outline-2">
-<h2 id="orgd239e95"><span class="section-number-2">2</span> ARCHITECTURE</h2>
+<div id="outline-container-org19a0763" class="outline-2">
+<h2 id="org19a0763"><span class="section-number-2">2</span> ARCHITECTURE</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org2fb2c1a" class="outline-3">
-<h3 id="org2fb2c1a"><span class="section-number-3">2.1</span> NameNode</h3>
+<div id="outline-container-orga7ea961" class="outline-3">
+<h3 id="orga7ea961"><span class="section-number-3">2.1</span> NameNode</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 The HDFS namespace is a hierarchy of files and directories. Files and
@@ -237,8 +237,8 @@ change over time and are not part of the persistent checkpoint.
 </div>
 </div>
 
-<div id="outline-container-orge4b22c5" class="outline-3">
-<h3 id="orge4b22c5"><span class="section-number-3">2.2</span> DataNodes</h3>
+<div id="outline-container-orge49c44b" class="outline-3">
+<h3 id="orge49c44b"><span class="section-number-3">2.2</span> DataNodes</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Each block replica on a DataNode is represented by two files in the local host’s
@@ -327,8 +327,8 @@ NameNode operations.
 </div>
 </div>
 
-<div id="outline-container-orgd68a857" class="outline-3">
-<h3 id="orgd68a857"><span class="section-number-3">2.3</span> HDFS Client</h3>
+<div id="outline-container-org04606af" class="outline-3">
+<h3 id="org04606af"><span class="section-number-3">2.3</span> HDFS Client</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 User applications access the file system using the HDFS client, a code library

@@ -24,13 +24,13 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org843639e">Abstract</a></li>
-<li><a href="#org54f9fba">1. Introduction</a></li>
-<li><a href="#org0e58c71">2. Background</a>
+<li><a href="#org0d8afb8">Abstract</a></li>
+<li><a href="#orgfa057d0">1. Introduction</a></li>
+<li><a href="#orgff9b330">2. Background</a>
 <ul>
-<li><a href="#orgbf7a5b4">2.1. Essentials of Distributed Storage Backends</a></li>
-<li><a href="#org080b965">2.2. Ceph Distributed Storage System Architecture</a></li>
-<li><a href="#org18e3877">2.3. Evolution of Ceph’s Storage Backend</a></li>
+<li><a href="#org4bac6a2">2.1. Essentials of Distributed Storage Backends</a></li>
+<li><a href="#org772bb81">2.2. Ceph Distributed Storage System Architecture</a></li>
+<li><a href="#org35d823c">2.3. Evolution of Ceph’s Storage Backend</a></li>
 </ul>
 </li>
 </ul>
@@ -55,9 +55,9 @@ ACM ISBN 978-1-4503-6873-5/19/10&#x2026;$15.00
 </p>
 </blockquote>
 
-<div id="outline-container-org843639e" class="outline-2">
-<h2 id="org843639e">Abstract</h2>
-<div class="outline-text-2" id="text-org843639e">
+<div id="outline-container-org0d8afb8" class="outline-2">
+<h2 id="org0d8afb8">Abstract</h2>
+<div class="outline-text-2" id="text-org0d8afb8">
 <p>
 For a decade, the Ceph distributed file system followed the conventional
 wisdom of building its storage backend on top of local file systems.
@@ -94,8 +94,8 @@ storage backend, file system
 </div>
 </div>
 
-<div id="outline-container-org54f9fba" class="outline-2">
-<h2 id="org54f9fba"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgfa057d0" class="outline-2">
+<h2 id="orgfa057d0"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Distributed file systems operate on a cluster of machines, each assigned
@@ -211,8 +211,8 @@ mechanisms (as opposed to copy-on-write).
 </div>
 </div>
 
-<div id="outline-container-org0e58c71" class="outline-2">
-<h2 id="org0e58c71"><span class="section-number-2">2</span> Background</h2>
+<div id="outline-container-orgff9b330" class="outline-2">
+<h2 id="orgff9b330"><span class="section-number-2">2</span> Background</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 This section aims to highlight the role of distributed storage backends and
@@ -224,8 +224,8 @@ paper.
 </p>
 </div>
 
-<div id="outline-container-orgbf7a5b4" class="outline-3">
-<h3 id="orgbf7a5b4"><span class="section-number-3">2.1</span> Essentials of Distributed Storage Backends</h3>
+<div id="outline-container-org4bac6a2" class="outline-3">
+<h3 id="org4bac6a2"><span class="section-number-3">2.1</span> Essentials of Distributed Storage Backends</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Distributed file systems aggregate storage space from multiple physical
@@ -290,11 +290,11 @@ are challenging for local, block-based file systems to adopt.
 </div>
 </div>
 
-<div id="outline-container-org080b965" class="outline-3">
-<h3 id="org080b965"><span class="section-number-3">2.2</span> Ceph Distributed Storage System Architecture</h3>
+<div id="outline-container-org772bb81" class="outline-3">
+<h3 id="org772bb81"><span class="section-number-3">2.2</span> Ceph Distributed Storage System Architecture</h3>
 <div class="outline-text-3" id="text-2-2">
 
-<div id="orgc743a6e" class="figure">
+<div id="org934c15e" class="figure">
 <p><img src="img/ceph10-figure1.png" alt="ceph10-figure1.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>High-level depiction of Ceph's architecture. A single pool with 3× replication is shown. Therefore, each placement group (PG) is replicated on three OSDs.</p>
@@ -341,11 +341,11 @@ interface, although clusters tend to be uniform in practice.
 </div>
 </div>
 
-<div id="outline-container-org18e3877" class="outline-3">
-<h3 id="org18e3877"><span class="section-number-3">2.3</span> Evolution of Ceph’s Storage Backend</h3>
+<div id="outline-container-org35d823c" class="outline-3">
+<h3 id="org35d823c"><span class="section-number-3">2.3</span> Evolution of Ceph’s Storage Backend</h3>
 <div class="outline-text-3" id="text-2-3">
 
-<div id="orga6920dd" class="figure">
+<div id="org921ee57" class="figure">
 <p><img src="img/ceph10-figure2.png" alt="ceph10-figure2.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Timeline of storage backend evolution in Ceph. For each backend, the period of development, and the period of being the default production backend is shown.</p>

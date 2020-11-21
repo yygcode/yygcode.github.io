@@ -23,26 +23,26 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org75a32b6">DECLARATION</a></li>
-<li><a href="#org63d7ee1">Abstract</a></li>
-<li><a href="#org25c0b3f">1. Introduction</a></li>
-<li><a href="#org73a7a59">2. Replicated state machines</a></li>
-<li><a href="#org31cad2a">3. What's wrong with Paxos?</a></li>
-<li><a href="#orgb3b17ac">4. Designing for understandability</a></li>
-<li><a href="#org31201aa">5. The Raft consensus algorithm</a>
+<li><a href="#orgbc514f1">DECLARATION</a></li>
+<li><a href="#org2d11dcb">Abstract</a></li>
+<li><a href="#orge64b583">1. Introduction</a></li>
+<li><a href="#orgdf021a3">2. Replicated state machines</a></li>
+<li><a href="#orgd14acab">3. What's wrong with Paxos?</a></li>
+<li><a href="#orgd6d66d7">4. Designing for understandability</a></li>
+<li><a href="#org3b76a12">5. The Raft consensus algorithm</a>
 <ul>
-<li><a href="#orgfe0b1fb">5.1. Raft basics</a></li>
-<li><a href="#orgdb3d80a">5.2. Leader election</a></li>
-<li><a href="#org050fdc4">5.3. Log replication</a></li>
+<li><a href="#org1c06077">5.1. Raft basics</a></li>
+<li><a href="#org0a61b97">5.2. Leader election</a></li>
+<li><a href="#org8ce1a4a">5.3. Log replication</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org75a32b6" class="outline-2">
-<h2 id="org75a32b6">DECLARATION</h2>
-<div class="outline-text-2" id="text-org75a32b6">
+<div id="outline-container-orgbc514f1" class="outline-2">
+<h2 id="orgbc514f1">DECLARATION</h2>
+<div class="outline-text-2" id="text-orgbc514f1">
 <p>
 This page is the In Search of an Understandable Consensus Algorithm
 (Extended Version)  paper. Original Paper Link
@@ -58,9 +58,9 @@ Stanford University
 </div>
 </div>
 
-<div id="outline-container-org63d7ee1" class="outline-2">
-<h2 id="org63d7ee1">Abstract</h2>
-<div class="outline-text-2" id="text-org63d7ee1">
+<div id="outline-container-org2d11dcb" class="outline-2">
+<h2 id="org2d11dcb">Abstract</h2>
+<div class="outline-text-2" id="text-org2d11dcb">
 <p>
 Raft is a consensus algorithm for managing a replicated log. It produces a
 result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its
@@ -76,8 +76,8 @@ the cluster membership, which uses overlapping majorities to guarantee safety.
 </div>
 </div>
 
-<div id="outline-container-org25c0b3f" class="outline-2">
-<h2 id="org25c0b3f"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orge64b583" class="outline-2">
+<h2 id="orge64b583"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Consensus algorithms allow a collection of machines to work as a coherent group
@@ -165,8 +165,8 @@ discusses related work (Section 10).
 </div>
 </div>
 
-<div id="outline-container-org73a7a59" class="outline-2">
-<h2 id="org73a7a59"><span class="section-number-2">2</span> Replicated state machines</h2>
+<div id="outline-container-orgdf021a3" class="outline-2">
+<h2 id="orgdf021a3"><span class="section-number-2">2</span> Replicated state machines</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Consensus algorithms typically arise in the context of replicated state machines
@@ -182,7 +182,7 @@ ZooKeeper [11].
 </p>
 
 
-<div id="orgac48480" class="figure">
+<div id="org157110e" class="figure">
 <p><img src="img/raft-figure1.jpg" alt="raft-figure1.jpg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Replicated state machine architecture. The consensus algorithm manages a replicated log containing state machine commands from clients. The state machines process identical sequences of commands from the logs, so they produce the same outputs.</p>
@@ -239,8 +239,8 @@ slow servers need not impact overall system performance.
 </div>
 </div>
 
-<div id="outline-container-org31cad2a" class="outline-2">
-<h2 id="org31cad2a"><span class="section-number-2">3</span> What's wrong with Paxos?</h2>
+<div id="outline-container-orgd14acab" class="outline-2">
+<h2 id="orgd14acab"><span class="section-number-2">3</span> What's wrong with Paxos?</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Over the last ten years, Leslie Lamport's Paxos protocol [15] has become almost
@@ -335,8 +335,8 @@ the result of that experiment.
 </div>
 </div>
 
-<div id="outline-container-orgb3b17ac" class="outline-2">
-<h2 id="orgb3b17ac"><span class="section-number-2">4</span> Designing for understandability</h2>
+<div id="outline-container-orgd6d66d7" class="outline-2">
+<h2 id="orgd6d66d7"><span class="section-number-2">4</span> Designing for understandability</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 We had several goals in designing Raft: it must provide a complete and practical
@@ -383,8 +383,8 @@ leader election algorithm.
 </div>
 </div>
 
-<div id="outline-container-org31201aa" class="outline-2">
-<h2 id="org31201aa"><span class="section-number-2">5</span> The Raft consensus algorithm</h2>
+<div id="outline-container-org3b76a12" class="outline-2">
+<h2 id="org3b76a12"><span class="section-number-2">5</span> The Raft consensus algorithm</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Raft is an algorithm for managing a replicated log of the form described in
@@ -399,7 +399,7 @@ figures are discussed piecewise over the rest of this section.
 <img src="img/raft-figure2-3.jpg" alt="raft-figure2-3.jpg" />
 </p>
 
-<div id="orga269886" class="figure">
+<div id="org6ef5e92" class="figure">
 <p><img src="img/raft-figure2-4.jpg" alt="raft-figure2-4.jpg" />
 </p>
 <p><span class="figure-number">Figure 2: </span>A condensed summary of the Raft consensus algorithm (excluding membership changes and log compaction). The server behavior in the upper-left box is described as a set of rules that trigger independently and repeatedly. Section numbers such as §5.2 indicate where particular features are discussed.A formal specification [31] describes the algorithm more precisely.</p>
@@ -446,15 +446,15 @@ availability and the role of timing in the system.
 </p>
 
 
-<div id="org4686995" class="figure">
+<div id="orgef8b5a5" class="figure">
 <p><img src="img/raft-figure3.jpg" alt="raft-figure3.jpg" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Raft guarantees that each of these properties is true at all times. The section numbers indicate where each property is discussed.</p>
 </div>
 </div>
 
-<div id="outline-container-orgfe0b1fb" class="outline-3">
-<h3 id="orgfe0b1fb"><span class="section-number-3">5.1</span> Raft basics</h3>
+<div id="outline-container-org1c06077" class="outline-3">
+<h3 id="org1c06077"><span class="section-number-3">5.1</span> Raft basics</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 A Raft cluster contains several servers; five is a typical number, which allows
@@ -468,7 +468,7 @@ candidate, is used to elect a new leader as described in Section 5.2. Figure 4
 shows the states and their transitions; the transitions are discussed below.
 </p>
 
-<div id="orgcc838bc" class="figure">
+<div id="org71448e9" class="figure">
 <p><img src="img/raft-figure4.jpg" alt="raft-figure4.jpg" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Server states. Followers only respond to requests from other servers. If a follower receives no communication, it becomes a candidate and initiates an election. A candidate that receives votes from a majority of the full cluster becomes the new leader. Leaders typically operate until they fail.</p>
@@ -485,7 +485,7 @@ begin shortly. Raft ensures that there is at most one leader in a given term.
 </p>
 
 
-<div id="orgc6e2048" class="figure">
+<div id="orgdf1355d" class="figure">
 <p><img src="img/raft-figure5.jpg" alt="raft-figure5.jpg" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Time is divided into terms, and each term begins with an election. After a successful election, a single leader manages the cluster until the end of the term. Some elections fail, in which case the term ends without choosing a leader. The transitions between terms may be observed at different times on different servers.</p>
@@ -516,8 +516,8 @@ timely manner, and they issue RPCs in parallel for best performance.
 </div>
 </div>
 
-<div id="outline-container-orgdb3d80a" class="outline-3">
-<h3 id="orgdb3d80a"><span class="section-number-3">5.2</span> Leader election</h3>
+<div id="outline-container-org0a61b97" class="outline-3">
+<h3 id="org0a61b97"><span class="section-number-3">5.2</span> Leader election</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Raft uses a heartbeat mechanism to trigger leader election. When servers start
@@ -597,8 +597,8 @@ obvious and understandable.
 </div>
 </div>
 
-<div id="outline-container-org050fdc4" class="outline-3">
-<h3 id="org050fdc4"><span class="section-number-3">5.3</span> Log replication</h3>
+<div id="outline-container-org8ce1a4a" class="outline-3">
+<h3 id="org8ce1a4a"><span class="section-number-3">5.3</span> Log replication</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 Once a leader has been elected, it begins servicing client requests. Each client
@@ -613,7 +613,7 @@ the client) until all followers eventually store all log entries.
 </p>
 
 
-<div id="org2f65d02" class="figure">
+<div id="orgbbe5a48" class="figure">
 <p><img src="img/raft-figure6.jpg" alt="raft-figure6.jpg" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Logs are composed of entries, which are numbered sequentially. Each entry contains the term in which it was created (the number in each box) and a command for the state machine. An entry is considered committed if it is safe for that entry to be applied to state machines.</p>

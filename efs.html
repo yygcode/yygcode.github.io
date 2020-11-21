@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>EFS - Elastic File System</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+</head>
+<body>
+<div id="content">
+<h1 class="title">EFS - Elastic File System</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb7ae531">1. 介绍</a>
+<ul>
+<li><a href="#org63662a9">1.1. 架构</a></li>
+<li><a href="#org7daf211">1.2. 功能</a></li>
+</ul>
+</li>
+<li><a href="#org367b5dc">2. 部署视图</a></li>
+<li><a href="#org04bf05e">3. 配置视图</a></li>
+<li><a href="#org1b5c604">4. 核心模块实现</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb7ae531" class="outline-2">
+<h2 id="orgb7ae531"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+EFS(Elastic File System, 弹性文件系统)是一个分布式文件系统。EFS运行在普通的廉价
+商用硬件设备上，但依然提供良好的容灾和性能。
+</p>
+
+<p>
+EFS功能与<a href="https://dl.acm.org/doi/proceedings/10.1145/945445">Google GFS</a>(or Colossus: The successor of GFS), Alibaba Pangu,
+<a href="https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html">Apache HDFS</a>, <a href="https://ceph.io/">ceph</a>类似。
+</p>
+
+<p>
+EFS使用C/C++语言实现。
+</p>
+</div>
+
+<div id="outline-container-org63662a9" class="outline-3">
+<h3 id="org63662a9"><span class="section-number-3">1.1</span> 架构</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<b>EFS</b> 在预期达成如下目标：
+</p>
+<ul class="org-ul">
+<li>可靠性：在持久性与主流产品对齐（12个9）；</li>
+<li>稳定性：在普通商用硬件上稳定运行，少量硬件损坏服务不中断（99.99%可服务性）</li>
+<li>可维护性：运维简单方便，易于上手；</li>
+<li>性能：平稳、低延时、无长尾问题；</li>
+<li>规模：单集群规模可以达到数万台；</li>
+</ul>
+
+<p>
+<b>EFS</b> 总体分为Master, ChunkServer, SDK, Supervisor四部分。
+</p>
+
+<p>
+<b>Master</b> 负责文件系统元数据，使用分布式架构实现：
+</p>
+<ul class="org-ul">
+<li>efs_root: 负责机器管理、数据分区管理；</li>
+<li>efs_namei: 负责目录空间管理，支持分区；</li>
+<li>efs_inode: 负责文件元数据管理，支持分区；</li>
+</ul>
+
+<p>
+<b>Master</b> 所有数据都以Mirror/EC方式保存在 <b>ChunkServer</b> 上。
+</p>
+
+<p>
+<b>ChunkServer</b> 实现单机引擎，只支持追加写，支持单客户端字节流写入，或者多客户端
+Record原子写入；
+</p>
+
+<p>
+<b>SDK</b> 提供类似 <b>Posix</b> 文件操作接口，但只支持追加写入。
+</p>
+
+<p>
+<b>Supervisor</b> 负责集群健康状态监控、告警上报、运维操作接入。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7daf211" class="outline-3">
+<h3 id="org7daf211"><span class="section-number-3">1.2</span> 功能</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<b>EFS</b> 提供如下功能：
+</p>
+<ul class="org-ul">
+<li>支持多卷；</li>
+<li>支持多副本/纠删（Mirror/EC），支持文件级别配置；</li>
+<li>支持追加写，随机读；</li>
+<li>支持端到端数据一致性；</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org367b5dc" class="outline-2">
+<h2 id="org367b5dc"><span class="section-number-2">2</span> 部署视图</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+TODO
+</p>
+</div>
+</div>
+
+<div id="outline-container-org04bf05e" class="outline-2">
+<h2 id="org04bf05e"><span class="section-number-2">3</span> 配置视图</h2>
+</div>
+
+<div id="outline-container-org1b5c604" class="outline-2">
+<h2 id="org1b5c604"><span class="section-number-2">4</span> 核心模块实现</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

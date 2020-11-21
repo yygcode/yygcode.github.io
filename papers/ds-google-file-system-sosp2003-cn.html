@@ -23,105 +23,105 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org89749f0">声明</a></li>
-<li><a href="#org8a0fcef">摘要</a></li>
-<li><a href="#org353aa4d">1. 导引</a></li>
-<li><a href="#org27eacc5">2. 设计概览</a>
+<li><a href="#orgd112e3c">声明</a></li>
+<li><a href="#org82ca1b6">摘要</a></li>
+<li><a href="#orgb1987f1">1. 导引</a></li>
+<li><a href="#orga9686bf">2. 设计概览</a>
 <ul>
-<li><a href="#org8767a80">2.1. 假设</a></li>
-<li><a href="#org24f11e0">2.2. 接口</a></li>
-<li><a href="#org9132e32">2.3. 架构</a></li>
-<li><a href="#org665734a">2.4. 单Master</a></li>
-<li><a href="#orge76c32f">2.5. chunk大小</a></li>
-<li><a href="#org9c74833">2.6. 元数据</a>
+<li><a href="#org773e306">2.1. 假设</a></li>
+<li><a href="#orge27430a">2.2. 接口</a></li>
+<li><a href="#orgfda0c98">2.3. 架构</a></li>
+<li><a href="#org0e7ba32">2.4. 单Master</a></li>
+<li><a href="#org0efff64">2.5. chunk大小</a></li>
+<li><a href="#org03a6445">2.6. 元数据</a>
 <ul>
-<li><a href="#org9c05af0">2.6.1. 内存数据结构</a></li>
-<li><a href="#org178bbad">2.6.2. chunk location</a></li>
-<li><a href="#orgbc7c75b">2.6.3. 操作日志</a></li>
+<li><a href="#orgca0c478">2.6.1. 内存数据结构</a></li>
+<li><a href="#orge084e83">2.6.2. chunk location</a></li>
+<li><a href="#org3f38282">2.6.3. 操作日志</a></li>
 </ul>
 </li>
-<li><a href="#org1111065">2.7. 一致性模型</a>
+<li><a href="#orgb2dcb10">2.7. 一致性模型</a>
 <ul>
-<li><a href="#org4e55a96">2.7.1. GFS提供的保证</a></li>
-<li><a href="#org118ff13">2.7.2. 对于应用程序的影响</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org364ece6">3. 系统交互</a>
-<ul>
-<li><a href="#org2500b88">3.1. 租约和变更顺序</a></li>
-<li><a href="#org20acb05">3.2. 数据流</a></li>
-<li><a href="#org3701d50">3.3. 原子性的记录append</a></li>
-<li><a href="#org159d382">3.4. 快照</a></li>
-</ul>
-</li>
-<li><a href="#orgbdf45e7">4. master操作</a>
-<ul>
-<li><a href="#orgb3e4d97">4.1. 名字空间管理和锁</a></li>
-<li><a href="#org5f6f02c">4.2. 备份放置</a></li>
-<li><a href="#orgb261ecc">4.3. 创建 重备份 重平衡</a></li>
-<li><a href="#org5197880">4.4. 垃圾回收</a>
-<ul>
-<li><a href="#org0514fee">4.4.1. 机制</a></li>
-<li><a href="#org3daef0d">4.4.2. 讨论</a></li>
-</ul>
-</li>
-<li><a href="#org7da55ce">4.5. 过期副本检测</a></li>
-</ul>
-</li>
-<li><a href="#org6475706">5. 容错和诊断</a>
-<ul>
-<li><a href="#org656ddc8">5.1. 高可用性</a>
-<ul>
-<li><a href="#orgfeeb9f4">5.1.1. 快速恢复</a></li>
-<li><a href="#orgd578bb5">5.1.2. chunk备份</a></li>
-<li><a href="#orgd377621">5.1.3. master备份</a></li>
-</ul>
-</li>
-<li><a href="#org77885a4">5.2. 数据完整性</a></li>
-<li><a href="#orgf56ef58">5.3. 诊断工具</a></li>
-</ul>
-</li>
-<li><a href="#org087a84c">6. 测量</a>
-<ul>
-<li><a href="#org27c4859">6.1. 小规模测试</a>
-<ul>
-<li><a href="#org8e9a69d">6.1.1. 读操作</a></li>
-<li><a href="#org04904d5">6.1.2. 写操作</a></li>
-<li><a href="#orgfafba0b">6.1.3. 记录追加</a></li>
-</ul>
-</li>
-<li><a href="#org8aedc66">6.2. 现实的集群</a>
-<ul>
-<li><a href="#orgcc8b878">6.2.1. 存储</a></li>
-<li><a href="#org67eaa6b">6.2.2. 元数据</a></li>
-<li><a href="#orgf571c58">6.2.3. 读写速率</a></li>
-<li><a href="#org2951753">6.2.4. master负载</a></li>
-<li><a href="#org5c1f53c">6.2.5. 恢复时间</a></li>
-</ul>
-</li>
-<li><a href="#org6d2dde6">6.3. 工作负载剖析</a>
-<ul>
-<li><a href="#org08c3479">6.3.1. 方法和说明</a></li>
-<li><a href="#orgdf6144a">6.3.2. chunkserver负载</a></li>
-<li><a href="#orge1947e3">6.3.3. append与write</a></li>
-<li><a href="#orgbc1b37f">6.3.4. master负载</a></li>
+<li><a href="#orga6421a2">2.7.1. GFS提供的保证</a></li>
+<li><a href="#org15ce23b">2.7.2. 对于应用程序的影响</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org0b813fe">7. 经验</a></li>
-<li><a href="#org827351c">8. 相关工作</a></li>
-<li><a href="#org0222e09">9. 总结</a></li>
-<li><a href="#org33d7e53">10. 致谢</a></li>
+<li><a href="#org5a1f8f1">3. 系统交互</a>
+<ul>
+<li><a href="#org601201e">3.1. 租约和变更顺序</a></li>
+<li><a href="#org0d5f5fb">3.2. 数据流</a></li>
+<li><a href="#org14a3d54">3.3. 原子性的记录append</a></li>
+<li><a href="#org6bb9b06">3.4. 快照</a></li>
+</ul>
+</li>
+<li><a href="#orgbce5b8a">4. master操作</a>
+<ul>
+<li><a href="#orgd65e302">4.1. 名字空间管理和锁</a></li>
+<li><a href="#org38bd3a2">4.2. 备份放置</a></li>
+<li><a href="#org215388f">4.3. 创建 重备份 重平衡</a></li>
+<li><a href="#org7b27d82">4.4. 垃圾回收</a>
+<ul>
+<li><a href="#orga575c09">4.4.1. 机制</a></li>
+<li><a href="#orgc7fa9ac">4.4.2. 讨论</a></li>
+</ul>
+</li>
+<li><a href="#org1eb1114">4.5. 过期副本检测</a></li>
+</ul>
+</li>
+<li><a href="#org426a913">5. 容错和诊断</a>
+<ul>
+<li><a href="#orged5ec25">5.1. 高可用性</a>
+<ul>
+<li><a href="#org61a2e5d">5.1.1. 快速恢复</a></li>
+<li><a href="#orga642ac6">5.1.2. chunk备份</a></li>
+<li><a href="#org393b990">5.1.3. master备份</a></li>
+</ul>
+</li>
+<li><a href="#org400af50">5.2. 数据完整性</a></li>
+<li><a href="#org3d71655">5.3. 诊断工具</a></li>
+</ul>
+</li>
+<li><a href="#org8ac742e">6. 测量</a>
+<ul>
+<li><a href="#orgb240355">6.1. 小规模测试</a>
+<ul>
+<li><a href="#org9f2f6c8">6.1.1. 读操作</a></li>
+<li><a href="#org28bfb0a">6.1.2. 写操作</a></li>
+<li><a href="#org02e5029">6.1.3. 记录追加</a></li>
+</ul>
+</li>
+<li><a href="#org11dc49e">6.2. 现实的集群</a>
+<ul>
+<li><a href="#orga37d5db">6.2.1. 存储</a></li>
+<li><a href="#org24bc227">6.2.2. 元数据</a></li>
+<li><a href="#org29c16bf">6.2.3. 读写速率</a></li>
+<li><a href="#org0d3eab2">6.2.4. master负载</a></li>
+<li><a href="#orgef1dd4b">6.2.5. 恢复时间</a></li>
+</ul>
+</li>
+<li><a href="#org3a34eed">6.3. 工作负载剖析</a>
+<ul>
+<li><a href="#orga7a75f1">6.3.1. 方法和说明</a></li>
+<li><a href="#org6e668a7">6.3.2. chunkserver负载</a></li>
+<li><a href="#orgd568300">6.3.3. append与write</a></li>
+<li><a href="#org8a7e430">6.3.4. master负载</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org70dda82">7. 经验</a></li>
+<li><a href="#org2f55f6c">8. 相关工作</a></li>
+<li><a href="#orgd53c627">9. 总结</a></li>
+<li><a href="#orgb297e4a">10. 致谢</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org89749f0" class="outline-2">
-<h2 id="org89749f0">声明</h2>
-<div class="outline-text-2" id="text-org89749f0">
+<div id="outline-container-orgd112e3c" class="outline-2">
+<h2 id="orgd112e3c">声明</h2>
+<div class="outline-text-2" id="text-orgd112e3c">
 <p>
 本文是段培乐(<a href="http://duanple.com">主页</a>)翻译的《Google文件系统》，整理在这里方便翻阅。
 </p>
@@ -146,7 +146,6 @@
 <li>Google文件系统下：<a href="http://duanple.com/?p=200">http://duanple.com/?p=200</a></li>
 </ul>
 
-
 <p>
 如下是转载部分;
 </p>
@@ -161,9 +160,9 @@
 </div>
 </div>
 
-<div id="outline-container-org8a0fcef" class="outline-2">
-<h2 id="org8a0fcef">摘要</h2>
-<div class="outline-text-2" id="text-org8a0fcef">
+<div id="outline-container-org82ca1b6" class="outline-2">
+<h2 id="org82ca1b6">摘要</h2>
+<div class="outline-text-2" id="text-org82ca1b6">
 <p>
 我们设计实现了google文件系统，一个面向大规模分布式数据密集性应用的可扩展分布式
 文件系统。它运行在廉价的商品化硬件上提供容错功能，为大量的客户端提供高的整体
@@ -199,8 +198,8 @@
 </div>
 </div>
 
-<div id="outline-container-org353aa4d" class="outline-2">
-<h2 id="org353aa4d"><span class="section-number-2">1</span> 导引</h2>
+<div id="outline-container-orgb1987f1" class="outline-2">
+<h2 id="orgb1987f1"><span class="section-number-2">1</span> 导引</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 为了满足google快速增长的数据处理需求，我们设计实现了google文件系统(GFS)。GFS与
@@ -249,12 +248,12 @@ GFS的一致性模型大大简化了文件系统，同时也没有给应用程�
 </div>
 </div>
 
-<div id="outline-container-org27eacc5" class="outline-2">
-<h2 id="org27eacc5"><span class="section-number-2">2</span> 设计概览</h2>
+<div id="outline-container-orga9686bf" class="outline-2">
+<h2 id="orga9686bf"><span class="section-number-2">2</span> 设计概览</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org8767a80" class="outline-3">
-<h3 id="org8767a80"><span class="section-number-3">2.1</span> 假设</h3>
+<div id="outline-container-org773e306" class="outline-3">
+<h3 id="org773e306"><span class="section-number-3">2.1</span> 假设</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 在设计一个满足我们需求的文件系统时，我们以一些充满了挑战和机遇的假设作为指南，
@@ -299,8 +298,8 @@ GFS的一致性模型大大简化了文件系统，同时也没有给应用程�
 </div>
 </div>
 
-<div id="outline-container-org24f11e0" class="outline-3">
-<h3 id="org24f11e0"><span class="section-number-3">2.2</span> 接口</h3>
+<div id="outline-container-orge27430a" class="outline-3">
+<h3 id="orge27430a"><span class="section-number-3">2.2</span> 接口</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 GFS提供一个熟悉的文件系统接口，尽管它并没有实现一个诸如POSIX那样的标准API。文件
@@ -318,14 +317,14 @@ Append操作允许多个客户端向同一个文件并发的操作，同时保�
 </div>
 </div>
 
-<div id="outline-container-org9132e32" class="outline-3">
-<h3 id="org9132e32"><span class="section-number-3">2.3</span> 架构</h3>
+<div id="outline-container-orgfda0c98" class="outline-3">
+<h3 id="orgfda0c98"><span class="section-number-3">2.3</span> 架构</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 一个GFS集群由一个master和多个chunkserver组成，可以被多个client访问，如图1所示。
 </p>
 
-<div id="org474a360" class="figure">
+<div id="org56c3052" class="figure">
 <p><img src="img/ds-gfs-figure1.jpg" alt="ds-gfs-figure1.jpg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Figure 1: GFS Archicture</p>
@@ -369,8 +368,8 @@ Chunkserver不需要进行文件数据缓存，是因为chunk是作为本地文�
 </div>
 </div>
 
-<div id="outline-container-org665734a" class="outline-3">
-<h3 id="org665734a"><span class="section-number-3">2.4</span> 单Master</h3>
+<div id="outline-container-org0e7ba32" class="outline-3">
+<h3 id="org0e7ba32"><span class="section-number-3">2.4</span> 单Master</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 只有一个master大大简化了我们的设计，而且使得master可以利用全局信息对chunk的放置
@@ -397,8 +396,8 @@ chunk的后续读操作就不需要client-master的通信了。事实上，客�
 </div>
 </div>
 
-<div id="outline-container-orge76c32f" class="outline-3">
-<h3 id="orge76c32f"><span class="section-number-3">2.5</span> chunk大小</h3>
+<div id="outline-container-org0efff64" class="outline-3">
+<h3 id="org0efff64"><span class="section-number-3">2.5</span> chunk大小</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Chunk大小是一个关键的设计参数。我们选择了64MB，远远大于现有的文件系统块。每个
@@ -434,8 +433,8 @@ chunk的副本作为普通的linux文件存储在chunkserver上，如果需要�
 </div>
 </div>
 
-<div id="outline-container-org9c74833" class="outline-3">
-<h3 id="org9c74833"><span class="section-number-3">2.6</span> 元数据</h3>
+<div id="outline-container-org03a6445" class="outline-3">
+<h3 id="org03a6445"><span class="section-number-3">2.6</span> 元数据</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Master存储了三个主要类型的元数据：文件和chunk名字空间，文件到chunk的映射信息，
@@ -447,8 +446,8 @@ Master存储了三个主要类型的元数据：文件和chunk名字空间，文
 </p>
 </div>
 
-<div id="outline-container-org9c05af0" class="outline-4">
-<h4 id="org9c05af0"><span class="section-number-4">2.6.1</span> 内存数据结构</h4>
+<div id="outline-container-orgca0c478" class="outline-4">
+<h4 id="orgca0c478"><span class="section-number-4">2.6.1</span> 内存数据结构</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 由于元数据存储在内存里，master的操作是很快的。因此对于master来说，可以简单有效地
@@ -472,8 +471,8 @@ chunk可能是未慢的。类似的，每个文件名字空间数据通常需要
 </div>
 </div>
 
-<div id="outline-container-org178bbad" class="outline-4">
-<h4 id="org178bbad"><span class="section-number-4">2.6.2</span> chunk location</h4>
+<div id="outline-container-orge084e83" class="outline-4">
+<h4 id="orge084e83"><span class="section-number-4">2.6.2</span> chunk location</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 Master并没有提供一个永久性的存储保存对于一个给定的chunk都是那些chunkserver保存了
@@ -498,8 +497,8 @@ Master并没有提供一个永久性的存储保存对于一个给定的chunk都
 </div>
 </div>
 
-<div id="outline-container-orgbc7c75b" class="outline-4">
-<h4 id="orgbc7c75b"><span class="section-number-4">2.6.3</span> 操作日志</h4>
+<div id="outline-container-org3f38282" class="outline-4">
+<h4 id="org3f38282"><span class="section-number-4">2.6.3</span> 操作日志</h4>
 <div class="outline-text-4" id="text-2-6-3">
 <p>
 操作日志包含了关键元数据改变的历史记录。它是GFS的核心。它不仅是元数据的唯一
@@ -540,8 +539,8 @@ Master通过重新执行操作日志来恢复它的文件系统。为了最小�
 </div>
 </div>
 
-<div id="outline-container-org1111065" class="outline-3">
-<h3 id="org1111065"><span class="section-number-3">2.7</span> 一致性模型</h3>
+<div id="outline-container-orgb2dcb10" class="outline-3">
+<h3 id="orgb2dcb10"><span class="section-number-3">2.7</span> 一致性模型</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 GFS使用的一个放松的一致性模型不但很好的支持了我们的高度分布式的应用，而且实现
@@ -550,8 +549,8 @@ GFS使用的一个放松的一致性模型不但很好的支持了我们的高�
 </p>
 </div>
 
-<div id="outline-container-org4e55a96" class="outline-4">
-<h4 id="org4e55a96"><span class="section-number-4">2.7.1</span> GFS提供的保证</h4>
+<div id="outline-container-orga6421a2" class="outline-4">
+<h4 id="orga6421a2"><span class="section-number-4">2.7.1</span> GFS提供的保证</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <p>
 文件名字空间的改变(比如文件创建)是原子性的。它们只由master进行处理：名字空间
@@ -651,8 +650,8 @@ chunk信息。此外，由于我们的大部分操作都是记录的append，因
 </div>
 </div>
 
-<div id="outline-container-org118ff13" class="outline-4">
-<h4 id="org118ff13"><span class="section-number-4">2.7.2</span> 对于应用程序的影响</h4>
+<div id="outline-container-org15ce23b" class="outline-4">
+<h4 id="org15ce23b"><span class="section-number-4">2.7.2</span> 对于应用程序的影响</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
 GFS应用程序可以通过使用简单的技术来适应这种放松的一致性模型，这些技术已经为其他
@@ -694,8 +693,8 @@ append-at-least-once语义，因为append二次也是可以的。如果我们要
 </div>
 </div>
 
-<div id="outline-container-org364ece6" class="outline-2">
-<h2 id="org364ece6"><span class="section-number-2">3</span> 系统交互</h2>
+<div id="outline-container-org5a1f8f1" class="outline-2">
+<h2 id="org5a1f8f1"><span class="section-number-2">3</span> 系统交互</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 我们是以尽量最小化master在所有操作中的参与度来设计系统的。在这个背景下，我们现在
@@ -704,8 +703,8 @@ append-at-least-once语义，因为append二次也是可以的。如果我们要
 </p>
 </div>
 
-<div id="outline-container-org2500b88" class="outline-3">
-<h3 id="org2500b88"><span class="section-number-3">3.1</span> 租约和变更顺序</h3>
+<div id="outline-container-org601201e" class="outline-3">
+<h3 id="org601201e"><span class="section-number-3">3.1</span> 租约和变更顺序</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 一个变更是指一个改变chunk的内容或者元信息的操作，比如写操作或者append操作。每个
@@ -729,7 +728,7 @@ master无法与主副本进行通信，它也可以在旧的租约过期后安�
 如图2，我们将用如下的数字标识的步骤来表示一个写操作的控制流程。
 </p>
 
-<div id="org275cebe" class="figure">
+<div id="org48593d2" class="figure">
 <p><img src="img/ds-gfs-figure2.jpg" alt="ds-gfs-figure2.jpg" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Write Control and Data Flow</p>
@@ -785,8 +784,8 @@ chunkserver会将数据存放在内部的LRU buffer里，直到数据被使用�
 </div>
 </div>
 
-<div id="outline-container-org20acb05" class="outline-3">
-<h3 id="org20acb05"><span class="section-number-3">3.2</span> 数据流</h3>
+<div id="outline-container-org0d5f5fb" class="outline-3">
+<h3 id="org0d5f5fb"><span class="section-number-3">3.2</span> 数据流</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 为了更有效的使用网络我们将数据流和控制流分离。控制流从client到达主副本，然后到达
@@ -819,8 +818,8 @@ chunkserver假设是S1，S1推送给最近的，假设S2，S2推送给S3，S4中
 </div>
 </div>
 
-<div id="outline-container-org3701d50" class="outline-3">
-<h3 id="org3701d50"><span class="section-number-3">3.3</span> 原子性的记录append</h3>
+<div id="outline-container-org14a3d54" class="outline-3">
+<h3 id="org14a3d54"><span class="section-number-3">3.3</span> 原子性的记录append</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 GFS提供一个原子性的append操作叫做record append(注意这与传统的append操作也是
@@ -863,8 +862,8 @@ GFS并不保证所有的副本在位级别上的一致性，它只保证数据�
 </div>
 </div>
 
-<div id="outline-container-org159d382" class="outline-3">
-<h3 id="org159d382"><span class="section-number-3">3.4</span> 快照</h3>
+<div id="outline-container-org6bb9b06" class="outline-3">
+<h3 id="org6bb9b06"><span class="section-number-3">3.4</span> 快照</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 快照操作可以非常快速的保存文件或者目录树的一个拷贝，同时可以最小化对于正在执行的
@@ -899,8 +898,8 @@ chunk的请求处理都没有什么不同：master为新才chunk C`的副本中�
 </div>
 </div>
 
-<div id="outline-container-orgbdf45e7" class="outline-2">
-<h2 id="orgbdf45e7"><span class="section-number-2">4</span> master操作</h2>
+<div id="outline-container-orgbce5b8a" class="outline-2">
+<h2 id="orgbce5b8a"><span class="section-number-2">4</span> master操作</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Master执行所有的名字空间操作。此外，它还管理整个系统的chunk备份：决定如何放置，
@@ -909,8 +908,8 @@ chunkserver间进行负载平衡，回收没有使用的存储空间。我们现
 </p>
 </div>
 
-<div id="outline-container-orgb3e4d97" class="outline-3">
-<h3 id="orgb3e4d97"><span class="section-number-3">4.1</span> 名字空间管理和锁</h3>
+<div id="outline-container-orgd65e302" class="outline-3">
+<h3 id="orgd65e302"><span class="section-number-3">4.1</span> 名字空间管理和锁</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 很多master操作都需要花费很长时间：比如，一个快照操作要撤销该快照所包含的chunk的
@@ -958,8 +957,8 @@ chunkserver间进行负载平衡，回收没有使用的存储空间。我们现
 </div>
 </div>
 
-<div id="outline-container-org5f6f02c" class="outline-3">
-<h3 id="org5f6f02c"><span class="section-number-3">4.2</span> 备份放置</h3>
+<div id="outline-container-org38bd3a2" class="outline-3">
+<h3 id="org38bd3a2"><span class="section-number-3">4.2</span> 备份放置</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 GFS在多个层次上都具有高度的分布式。它拥有数百个散步在多个机柜中的chunkserver。
@@ -981,8 +980,8 @@ Chunk的备份放置策略服务于两个目的：最大化数据可靠性和可
 </div>
 </div>
 
-<div id="outline-container-orgb261ecc" class="outline-3">
-<h3 id="orgb261ecc"><span class="section-number-3">4.3</span> 创建 重备份 重平衡</h3>
+<div id="outline-container-org215388f" class="outline-3">
+<h3 id="org215388f"><span class="section-number-3">4.3</span> 创建 重备份 重平衡</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Chunk副本的创建主要有三个原因：chunk的创建，重备份，重平衡。
@@ -1027,8 +1026,8 @@ clone的流量淹没client的流量，master限制整个集群已经每个chunks
 </div>
 </div>
 
-<div id="outline-container-org5197880" class="outline-3">
-<h3 id="org5197880"><span class="section-number-3">4.4</span> 垃圾回收</h3>
+<div id="outline-container-org7b27d82" class="outline-3">
+<h3 id="org7b27d82"><span class="section-number-3">4.4</span> 垃圾回收</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 文件删除后，GFS并不立即释放可用的物理存储。它会将这项工作推迟到文件和chunk级别的
@@ -1036,8 +1035,8 @@ clone的流量淹没client的流量，master限制整个集群已经每个chunks
 </p>
 </div>
 
-<div id="outline-container-org0514fee" class="outline-4">
-<h4 id="org0514fee"><span class="section-number-4">4.4.1</span> 机制</h4>
+<div id="outline-container-orga575c09" class="outline-4">
+<h4 id="orga575c09"><span class="section-number-4">4.4.1</span> 机制</h4>
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 当文件被应用程序删除时，master会将这个删除操作像其他变化一样理解写入日志。文件
@@ -1057,8 +1056,8 @@ Chunkserver就可以自由的删除这些chunk的那些副本了。
 </div>
 </div>
 
-<div id="outline-container-org3daef0d" class="outline-4">
-<h4 id="org3daef0d"><span class="section-number-4">4.4.2</span> 讨论</h4>
+<div id="outline-container-orgc7fa9ac" class="outline-4">
+<h4 id="orgc7fa9ac"><span class="section-number-4">4.4.2</span> 讨论</h4>
 <div class="outline-text-4" id="text-4-4-2">
 <p>
 尽管程序设计语言中的分布式垃圾回收是一个需要复杂解决方案的难解问题，但是在我们
@@ -1089,8 +1088,8 @@ chunkserver的握手。因此它们是绑在一块执行的，这样开销会被
 </div>
 </div>
 
-<div id="outline-container-org7da55ce" class="outline-3">
-<h3 id="org7da55ce"><span class="section-number-3">4.5</span> 过期副本检测</h3>
+<div id="outline-container-org1eb1114" class="outline-3">
+<h3 id="org1eb1114"><span class="section-number-3">4.5</span> 过期副本检测</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 如果chunkserver失败或者在它停机期间丢失了某些更新，chunk副本就可能变为过期的。
@@ -1117,8 +1116,8 @@ chunkserver执行操作时，总是会验证版本号，这样就使得它们总
 </div>
 </div>
 
-<div id="outline-container-org6475706" class="outline-2">
-<h2 id="org6475706"><span class="section-number-2">5</span> 容错和诊断</h2>
+<div id="outline-container-org426a913" class="outline-2">
+<h2 id="org426a913"><span class="section-number-2">5</span> 容错和诊断</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 在设计系统时，一个最大的挑战就是频繁的组件失败。组件的数量和质量使得这些问题变成
@@ -1128,8 +1127,8 @@ chunkserver执行操作时，总是会验证版本号，这样就使得它们总
 </p>
 </div>
 
-<div id="outline-container-org656ddc8" class="outline-3">
-<h3 id="org656ddc8"><span class="section-number-3">5.1</span> 高可用性</h3>
+<div id="outline-container-orged5ec25" class="outline-3">
+<h3 id="orged5ec25"><span class="section-number-3">5.1</span> 高可用性</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 在GFS的数百台服务器中，在任何时间总是有一些是不可用的。我们通过两个简单有效的
@@ -1137,8 +1136,8 @@ chunkserver执行操作时，总是会验证版本号，这样就使得它们总
 </p>
 </div>
 
-<div id="outline-container-orgfeeb9f4" class="outline-4">
-<h4 id="orgfeeb9f4"><span class="section-number-4">5.1.1</span> 快速恢复</h4>
+<div id="outline-container-org61a2e5d" class="outline-4">
+<h4 id="org61a2e5d"><span class="section-number-4">5.1.1</span> 快速恢复</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 Master和chunkserver都设计得无论怎么样地被终止，都可以在在几秒内恢复它们的状态并
@@ -1149,8 +1148,8 @@ Master和chunkserver都设计得无论怎么样地被终止，都可以在在几
 </div>
 </div>
 
-<div id="outline-container-orgd578bb5" class="outline-4">
-<h4 id="orgd578bb5"><span class="section-number-4">5.1.2</span> chunk备份</h4>
+<div id="outline-container-orga642ac6" class="outline-4">
+<h4 id="orga642ac6"><span class="section-number-4">5.1.2</span> chunk备份</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 正如之前讨论的，每个chunk备份在不同机柜上的多个chunkserver上。用户可以在不同名字
@@ -1164,8 +1163,8 @@ Master和chunkserver都设计得无论怎么样地被终止，都可以在在几
 </div>
 </div>
 
-<div id="outline-container-orgd377621" class="outline-4">
-<h4 id="orgd377621"><span class="section-number-4">5.1.3</span> master备份</h4>
+<div id="outline-container-org393b990" class="outline-4">
+<h4 id="org393b990"><span class="section-number-4">5.1.3</span> master备份</h4>
 <div class="outline-text-4" id="text-5-1-3">
 <p>
 为了可靠性，master的状态需要进行备份。它的操作日志和检查点备份在多台机器上。对于
@@ -1195,8 +1194,8 @@ chunkserver拉数据来定位chunk的副本，也会同它们交换握手信息�
 </div>
 </div>
 
-<div id="outline-container-org77885a4" class="outline-3">
-<h3 id="org77885a4"><span class="section-number-3">5.2</span> 数据完整性</h3>
+<div id="outline-container-org400af50" class="outline-3">
+<h3 id="org400af50"><span class="section-number-3">5.2</span> 数据完整性</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 每个chunkserver通过校验和来检测存储数据中的损坏。GFS集群通常具有分布在几百台
@@ -1257,8 +1256,8 @@ master则会用其他副本来clone这个chunk。当这个合法的新副本创�
 </div>
 </div>
 
-<div id="outline-container-orgf56ef58" class="outline-3">
-<h3 id="orgf56ef58"><span class="section-number-3">5.3</span> 诊断工具</h3>
+<div id="outline-container-org3d71655" class="outline-3">
+<h3 id="org3d71655"><span class="section-number-3">5.3</span> 诊断工具</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 全面而详细的诊断性的日志以很小的成本，带来了在问题分解，调试，性能分析上不可
@@ -1282,8 +1281,8 @@ RPC日志包含了所有的请求和响应信息，除了读写的文件数据�
 </div>
 </div>
 
-<div id="outline-container-org087a84c" class="outline-2">
-<h2 id="org087a84c"><span class="section-number-2">6</span> 测量</h2>
+<div id="outline-container-org8ac742e" class="outline-2">
+<h2 id="org8ac742e"><span class="section-number-2">6</span> 测量</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 在这一节，我们用一些小规模的测试来展示GFS架构和实现固有的一些瓶颈，有一些数字
@@ -1291,8 +1290,8 @@ RPC日志包含了所有的请求和响应信息，除了读写的文件数据�
 </p>
 </div>
 
-<div id="outline-container-org27c4859" class="outline-3">
-<h3 id="org27c4859"><span class="section-number-3">6.1</span> 小规模测试</h3>
+<div id="outline-container-orgb240355" class="outline-3">
+<h3 id="orgb240355"><span class="section-number-3">6.1</span> 小规模测试</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 我们在一个由一个master，两个master备份，16个chunkserver，16个client组成的GFS集群
@@ -1307,8 +1306,8 @@ chunkserver，数百个client。
 </p>
 </div>
 
-<div id="outline-container-org8e9a69d" class="outline-4">
-<h4 id="org8e9a69d"><span class="section-number-4">6.1.1</span> 读操作</h4>
+<div id="outline-container-org9f2f6c8" class="outline-4">
+<h4 id="org9f2f6c8"><span class="section-number-4">6.1.1</span> 读操作</h4>
 <div class="outline-text-4" id="text-6-1-1">
 <p>
 N个客户端从文件系统中并发读。每个客户端在一个320GB的文件集合里随机4MB进行读取。
@@ -1318,7 +1317,7 @@ N个客户端从文件系统中并发读。每个客户端在一个320GB的文�
 </p>
 
 
-<div id="org28914b9" class="figure">
+<div id="orgb10deea" class="figure">
 <p><img src="img/ds-gfs-figure3.jpg" alt="ds-gfs-figure3.jpg" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Figure 3: Aggregate Throughputs</p>
@@ -1335,8 +1334,8 @@ N个客户端从文件系统中并发读。每个客户端在一个320GB的文�
 </div>
 </div>
 
-<div id="outline-container-org04904d5" class="outline-4">
-<h4 id="org04904d5"><span class="section-number-4">6.1.2</span> 写操作</h4>
+<div id="outline-container-org28bfb0a" class="outline-4">
+<h4 id="org28bfb0a"><span class="section-number-4">6.1.2</span> 写操作</h4>
 <div class="outline-text-4" id="text-6-1-2">
 <p>
 N个客户端并行向N个不同的文件写数据。每个客户端以1MB的单个写操作总共向一个新文件
@@ -1364,8 +1363,8 @@ N个客户端并行向N个不同的文件写数据。每个客户端以1MB的单
 </div>
 </div>
 
-<div id="outline-container-orgfafba0b" class="outline-4">
-<h4 id="orgfafba0b"><span class="section-number-4">6.1.3</span> 记录追加</h4>
+<div id="outline-container-org02e5029" class="outline-4">
+<h4 id="org02e5029"><span class="section-number-4">6.1.3</span> 记录追加</h4>
 <div class="outline-text-4" id="text-6-1-3">
 <p>
 图3(c)展示了record append的性能。N个客户端向单个文件并行的append。性能取决于
@@ -1384,8 +1383,8 @@ append，在这里N和M通常是几十甚至几百大小。因此在我们的实
 </div>
 </div>
 
-<div id="outline-container-org8aedc66" class="outline-3">
-<h3 id="org8aedc66"><span class="section-number-3">6.2</span> 现实的集群</h3>
+<div id="outline-container-org11dc49e" class="outline-3">
+<h3 id="org11dc49e"><span class="section-number-3">6.2</span> 现实的集群</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 我们选择在google内部使用的两个集群进行测试作为相似的那些集群的一个代表。集群A
@@ -1396,8 +1395,8 @@ append，在这里N和M通常是几十甚至几百大小。因此在我们的实
 </p>
 </div>
 
-<div id="outline-container-orgcc8b878" class="outline-4">
-<h4 id="orgcc8b878"><span class="section-number-4">6.2.1</span> 存储</h4>
+<div id="outline-container-orga37d5db" class="outline-4">
+<h4 id="orga37d5db"><span class="section-number-4">6.2.1</span> 存储</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <table>
 <caption class="t-above"><span class="table-number">Table 2:</span> Characteristics of two GFS clusters</caption>
@@ -1483,8 +1482,8 @@ append，在这里N和M通常是几十甚至几百大小。因此在我们的实
 </div>
 </div>
 
-<div id="outline-container-org67eaa6b" class="outline-4">
-<h4 id="org67eaa6b"><span class="section-number-4">6.2.2</span> 元数据</h4>
+<div id="outline-container-org24bc227" class="outline-4">
+<h4 id="org24bc227"><span class="section-number-4">6.2.2</span> 元数据</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 所有的Chunkserver总共存储了数十G的元数据，大部分是用户数据的64kb块的校验和。
@@ -1508,8 +1507,8 @@ master的启动可能要慢一些，通常还需要30-60秒从所有的chunkserv
 </div>
 </div>
 
-<div id="outline-container-orgf571c58" class="outline-4">
-<h4 id="orgf571c58"><span class="section-number-4">6.2.3</span> 读写速率</h4>
+<div id="outline-container-org29c16bf" class="outline-4">
+<h4 id="org29c16bf"><span class="section-number-4">6.2.3</span> 读写速率</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <table>
 <caption class="t-above"><span class="table-number">Table 3:</span> Performance Metrics for Two GFS Clusters</caption>
@@ -1604,8 +1603,8 @@ master的启动可能要慢一些，通常还需要30-60秒从所有的chunkserv
 </div>
 </div>
 
-<div id="outline-container-org2951753" class="outline-4">
-<h4 id="org2951753"><span class="section-number-4">6.2.4</span> master负载</h4>
+<div id="outline-container-org0d3eab2" class="outline-4">
+<h4 id="org0d3eab2"><span class="section-number-4">6.2.4</span> master负载</h4>
 <div class="outline-text-4" id="text-6-2-4">
 <p>
 表3也表明发送给master的操作速率大概是每秒200-500个操作。Master可以轻易的处理这个
@@ -1622,8 +1621,8 @@ master的启动可能要慢一些，通常还需要30-60秒从所有的chunkserv
 </div>
 </div>
 
-<div id="outline-container-org5c1f53c" class="outline-4">
-<h4 id="org5c1f53c"><span class="section-number-4">6.2.5</span> 恢复时间</h4>
+<div id="outline-container-orgef1dd4b" class="outline-4">
+<h4 id="orgef1dd4b"><span class="section-number-4">6.2.5</span> 恢复时间</h4>
 <div class="outline-text-4" id="text-6-2-5">
 <p>
 一台Chunkserver失败后，它上面的那些chunk的副本数就会降低，必须进行clone以维持
@@ -1643,8 +1642,8 @@ B中的一个chunkserver。该chunkserver大概有15000个chunk，总共600GB的
 </div>
 </div>
 
-<div id="outline-container-org6d2dde6" class="outline-3">
-<h3 id="org6d2dde6"><span class="section-number-3">6.3</span> 工作负载剖析</h3>
+<div id="outline-container-org3a34eed" class="outline-3">
+<h3 id="org3a34eed"><span class="section-number-3">6.3</span> 工作负载剖析</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 在这一节，我们将继续在两个新的集群上对工作负载进行细致的对比分析。集群X是用于
@@ -1652,8 +1651,8 @@ B中的一个chunkserver。该chunkserver大概有15000个chunk，总共600GB的
 </p>
 </div>
 
-<div id="outline-container-org08c3479" class="outline-4">
-<h4 id="org08c3479"><span class="section-number-4">6.3.1</span> 方法和说明</h4>
+<div id="outline-container-orga7a75f1" class="outline-4">
+<h4 id="orga7a75f1"><span class="section-number-4">6.3.1</span> 方法和说明</h4>
 <div class="outline-text-4" id="text-6-3-1">
 <p>
 这些结果只包含了客户端产生的请求，因此它们反映了应用程序的对整个文件系统的工作
@@ -1678,8 +1677,8 @@ B中的一个chunkserver。该chunkserver大概有15000个chunk，总共600GB的
 </div>
 </div>
 
-<div id="outline-container-orgdf6144a" class="outline-4">
-<h4 id="orgdf6144a"><span class="section-number-4">6.3.2</span> chunkserver负载</h4>
+<div id="outline-container-org6e668a7" class="outline-4">
+<h4 id="org6e668a7"><span class="section-number-4">6.3.2</span> chunkserver负载</h4>
 <div class="outline-text-4" id="text-6-3-2">
 <table>
 <caption class="t-above"><span class="table-number">Table 4:</span> Operations Breakdown by Size (%)</caption>
@@ -1892,8 +1891,8 @@ B中的一个chunkserver。该chunkserver大概有15000个chunk，总共600GB的
 </div>
 </div>
 
-<div id="outline-container-orge1947e3" class="outline-4">
-<h4 id="orge1947e3"><span class="section-number-4">6.3.3</span> append与write</h4>
+<div id="outline-container-orgd568300" class="outline-4">
+<h4 id="orgd568300"><span class="section-number-4">6.3.3</span> append与write</h4>
 <div class="outline-text-4" id="text-6-3-3">
 <p>
 记录append操作被大量的应用尤其是在我们的产品系统中。对于集群X来说，按字节传输
@@ -1915,8 +1914,8 @@ write｝。对于集群X来说，在测量期间的记录append操作要低一�
 </div>
 </div>
 
-<div id="outline-container-orgbc1b37f" class="outline-4">
-<h4 id="orgbc1b37f"><span class="section-number-4">6.3.4</span> master负载</h4>
+<div id="outline-container-org8a7e430" class="outline-4">
+<h4 id="org8a7e430"><span class="section-number-4">6.3.4</span> master负载</h4>
 <div class="outline-text-4" id="text-6-3-4">
 <table>
 <caption class="t-above"><span class="table-number">Table 6:</span> Master Requests Breakdown by Type (%)</caption>
@@ -1995,8 +1994,8 @@ write｝。对于集群X来说，在测量期间的记录append操作要低一�
 </div>
 </div>
 
-<div id="outline-container-org0b813fe" class="outline-2">
-<h2 id="org0b813fe"><span class="section-number-2">7</span> 经验</h2>
+<div id="outline-container-org70dda82" class="outline-2">
+<h2 id="org70dda82"><span class="section-number-2">7</span> 经验</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 在构建和部署GFS的过程中，我们总结出了很多经验，观点和技术。
@@ -2040,8 +2039,8 @@ linux驱动，但是实际上它们只能在最近的一些上才能可靠的工
 </div>
 </div>
 
-<div id="outline-container-org827351c" class="outline-2">
-<h2 id="org827351c"><span class="section-number-2">8</span> 相关工作</h2>
+<div id="outline-container-org2f55f6c" class="outline-2">
+<h2 id="org2f55f6c"><span class="section-number-2">8</span> 相关工作</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 像其他的大型分布式文件系统比如AFS，GFS提供了一个本地的独立名字空间，使得数据可以
@@ -2098,8 +2097,8 @@ chunkserver。与NASD不同，chunkserver在需要时分配固定大小的chunk�
 </div>
 </div>
 
-<div id="outline-container-org0222e09" class="outline-2">
-<h2 id="org0222e09"><span class="section-number-2">9</span> 总结</h2>
+<div id="outline-container-orgd53c627" class="outline-2">
+<h2 id="orgd53c627"><span class="section-number-2">9</span> 总结</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 GFS包含了那些在商品化硬件上支持大规模数据处理的必要特征。尽管某些设计决定与我们
@@ -2136,8 +2135,8 @@ GFS成功地满足了我们的存储需求，同时除了作为产品数据处�
 </div>
 </div>
 
-<div id="outline-container-org33d7e53" class="outline-2">
-<h2 id="org33d7e53"><span class="section-number-2">10</span> 致谢</h2>
+<div id="outline-container-orgb297e4a" class="outline-2">
+<h2 id="orgb297e4a"><span class="section-number-2">10</span> 致谢</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 …….
