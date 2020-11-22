@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<title>Emacs Notes Emacs Configuration Org File</title>
+<title>Emacs Notes</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yanyg &lt;yygcode@gmail.com&gt; yonggang.yyg" />
+<meta name="author" content="yanyg &lt;yygcode@gmail.com&gt;" />
 <link rel="stylesheet" type="text/css" href="/themes/worg/style/worg.css" />
 <link rel="alternate stylesheet" type="text/css" href="/themes/worg/style/worg-classic.css" />
 <link rel="alternate stylesheet" type="text/css" href="/themes/worg/style/worg-zenburn.css" />
@@ -38,137 +38,138 @@
  |
  <a accesskey="H" href="index.html"> HOME </a>
 </div><div id="content">
-<h1 class="title">Emacs Notes Emacs Configuration Org File</h1>
+<h1 class="title">Emacs Notes</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4bdd285">1. Introduction</a>
+<li><a href="#org2ca399b">1. Style</a></li>
+<li><a href="#org4bdd285">2. Introduction</a>
 <ul>
-<li><a href="#org0f62f6e">1.1. What is Emacs</a></li>
-<li><a href="#orgfe61faa">1.2. Emacs and VI</a></li>
-<li><a href="#orgad6899d">1.3. Goals</a></li>
-<li><a href="#org5c7ee03">1.4. Install</a>
+<li><a href="#org0f62f6e">2.1. What is Emacs</a></li>
+<li><a href="#orgfe61faa">2.2. Emacs and VI</a></li>
+<li><a href="#orgad6899d">2.3. Goals</a></li>
+<li><a href="#org5c7ee03">2.4. Install</a>
 <ul>
-<li><a href="#orgfbc4655">1.4.1. Binary Install</a></li>
-<li><a href="#orgdd6e507">1.4.2. Source Install</a></li>
+<li><a href="#orgfbc4655">2.4.1. Binary Install</a></li>
+<li><a href="#orgdd6e507">2.4.2. Source Install</a></li>
 </ul>
 </li>
-<li><a href="#modifier-key">1.5. Modifier Key</a></li>
-<li><a href="#org8b1b29c">1.6. Config</a></li>
-<li><a href="#orgf0da4d4">1.7. Start</a></li>
-<li><a href="#orgd608447">1.8. References</a></li>
+<li><a href="#modifier-key">2.5. Modifier Key</a></li>
+<li><a href="#orgaace5f9">2.6. Config</a></li>
+<li><a href="#orgf0da4d4">2.7. Start</a></li>
+<li><a href="#org7642230">2.8. References</a></li>
 </ul>
 </li>
-<li><a href="#orgdc82ddc">2. Packagement</a>
+<li><a href="#orgdc82ddc">3. Packagement</a>
 <ul>
-<li><a href="#org7cf3d59">2.1. Package system</a></li>
-<li><a href="#org25a41ee">2.2. org-babel</a></li>
-<li><a href="#org81c8e15">2.3. Config</a></li>
-<li><a href="#orgb606dda">2.4. References</a></li>
+<li><a href="#org7cf3d59">3.1. Package system</a></li>
+<li><a href="#org25a41ee">3.2. org-babel</a></li>
+<li><a href="#org67f8720">3.3. Config</a></li>
+<li><a href="#orgc299e6a">3.4. References</a></li>
 </ul>
 </li>
-<li><a href="#org8ba1076">3. Keybinding</a></li>
-<li><a href="#org6c84c32">4. FAQ</a>
+<li><a href="#org8ba1076">4. Keybinding</a></li>
+<li><a href="#org6c84c32">5. FAQ</a>
 <ul>
-<li><a href="#orgf3a5292">4.1. Show pressed key</a></li>
-<li><a href="#orgb1d8726">4.2. GUI下无法输入中文</a></li>
-<li><a href="#org7e57041">4.3. 启动daemon，terminal下拉起emacsclient，输入中文时光标跳跃，且会把左边框弄乱</a></li>
+<li><a href="#orgf3a5292">5.1. Show pressed key</a></li>
+<li><a href="#orgb1d8726">5.2. GUI下无法输入中文</a></li>
+<li><a href="#org7e57041">5.3. 启动daemon，terminal下拉起emacsclient，输入中文时光标跳跃，且会把左边框弄乱</a></li>
 </ul>
 </li>
-<li><a href="#org87b3837">5. My Config</a>
+<li><a href="#org87b3837">6. My Config</a>
 <ul>
-<li><a href="#org5f62b85">5.1. github</a></li>
-<li><a href="#orge0fe988">5.2. init.el</a></li>
-<li><a href="#org11b02f9">5.3. auxiliary</a></li>
-<li><a href="#org53eabd8">5.4. package</a></li>
-<li><a href="#org5ff65e4">5.5. config.org</a>
+<li><a href="#org5f62b85">6.1. github</a></li>
+<li><a href="#orge0fe988">6.2. init.el</a></li>
+<li><a href="#org11b02f9">6.3. auxiliary</a></li>
+<li><a href="#org53eabd8">6.4. package</a></li>
+<li><a href="#org5ff65e4">6.5. config.org</a>
 <ul>
-<li><a href="#header">5.5.1. Header</a></li>
-<li><a href="#org0a1caee">5.5.2. Profiler</a>
+<li><a href="#header">6.5.1. Header</a></li>
+<li><a href="#org0a1caee">6.5.2. Profiler</a>
 <ul>
-<li><a href="#org979d646">5.5.2.1. Wrapper function</a></li>
-<li><a href="#org8966a1a">5.5.2.2. esup - startup profiler</a></li>
-<li><a href="#orga322206">5.5.2.3. benchmark - profile execution time</a></li>
+<li><a href="#org979d646">6.5.2.1. Wrapper function</a></li>
+<li><a href="#org8966a1a">6.5.2.2. esup - startup profiler</a></li>
+<li><a href="#orga322206">6.5.2.3. benchmark - profile execution time</a></li>
 </ul>
 </li>
-<li><a href="#org7a5e3f2">5.5.3. Auxiliary</a></li>
-<li><a href="#org1dbac45">5.5.4. keybinds</a>
+<li><a href="#org7a5e3f2">6.5.3. Auxiliary</a></li>
+<li><a href="#org1dbac45">6.5.4. keybinds</a>
 <ul>
-<li><a href="#org87c10f2">5.5.4.1. introduction</a></li>
-<li><a href="#org07b629f">5.5.4.2. basic keybind</a></li>
-<li><a href="#org398809f">5.5.4.3. browse code keybind</a></li>
-<li><a href="#org4e25e79">5.5.4.4. command-frequencey analysis</a></li>
-<li><a href="#org4850ec6">5.5.4.5. which key - keybinds help</a></li>
+<li><a href="#org87c10f2">6.5.4.1. introduction</a></li>
+<li><a href="#org07b629f">6.5.4.2. basic keybind</a></li>
+<li><a href="#org398809f">6.5.4.3. browse code keybind</a></li>
+<li><a href="#org4e25e79">6.5.4.4. command-frequencey analysis</a></li>
+<li><a href="#org4850ec6">6.5.4.5. which key - keybinds help</a></li>
 </ul>
 </li>
-<li><a href="#org6bc6cb0">5.5.5. Editor</a></li>
-<li><a href="#org277bf2a">5.5.6. Display</a>
+<li><a href="#org6bc6cb0">6.5.5. Editor</a></li>
+<li><a href="#org277bf2a">6.5.6. Display</a>
 <ul>
-<li><a href="#orgafb8bb1">5.5.6.1. behavior</a></li>
-<li><a href="#org1eb6d38">5.5.6.2. font</a></li>
-<li><a href="#orga428c23">5.5.6.3. modeline</a></li>
-<li><a href="#org502024f">5.5.6.4. theme</a></li>
-<li><a href="#orgf046f5f">5.5.6.5. ui</a></li>
-<li><a href="#org915f089">5.5.6.6. window</a></li>
+<li><a href="#orgafb8bb1">6.5.6.1. behavior</a></li>
+<li><a href="#org1eb6d38">6.5.6.2. font</a></li>
+<li><a href="#orga428c23">6.5.6.3. modeline</a></li>
+<li><a href="#org502024f">6.5.6.4. theme</a></li>
+<li><a href="#orgf046f5f">6.5.6.5. ui</a></li>
+<li><a href="#org915f089">6.5.6.6. window</a></li>
 </ul>
 </li>
-<li><a href="#orgc953933">5.5.7. Efficiency</a>
+<li><a href="#orgc953933">6.5.7. Efficiency</a>
 <ul>
-<li><a href="#orgfc692a8">5.5.7.1. abbrev</a></li>
-<li><a href="#org7dd1fb4">5.5.7.2. company</a></li>
-<li><a href="#org43feda8">5.5.7.3. dictionary</a></li>
-<li><a href="#org914178c">5.5.7.4. eldoc - minor mode for lisp</a></li>
-<li><a href="#orge859eb5">5.5.7.5. expand-region</a></li>
-<li><a href="#org5ce3c72">5.5.7.6. helpful</a></li>
-<li><a href="#org5842185">5.5.7.7. flycheck</a></li>
-<li><a href="#org50d8f74">5.5.7.8. highlight parenthesis</a></li>
-<li><a href="#org07aa7ee">5.5.7.9. highlight-symbol</a></li>
-<li><a href="#org504b5bd">5.5.7.10. helm</a></li>
-<li><a href="#orgd1b5a81">5.5.7.11. hungry delete</a></li>
-<li><a href="#orgc117373">5.5.7.12. iedit</a></li>
-<li><a href="#org3318b74">5.5.7.13. mouse</a></li>
-<li><a href="#org8e27a4f">5.5.7.14. smartparens</a></li>
-<li><a href="#orgb547751">5.5.7.15. swiper</a></li>
-<li><a href="#org04d754b">5.5.7.16. undo tree</a></li>
-<li><a href="#orge99ba94">5.5.7.17. zop-to-char</a></li>
+<li><a href="#orgfc692a8">6.5.7.1. abbrev</a></li>
+<li><a href="#org7dd1fb4">6.5.7.2. company</a></li>
+<li><a href="#org43feda8">6.5.7.3. dictionary</a></li>
+<li><a href="#org914178c">6.5.7.4. eldoc - minor mode for lisp</a></li>
+<li><a href="#orge859eb5">6.5.7.5. expand-region</a></li>
+<li><a href="#org5ce3c72">6.5.7.6. helpful</a></li>
+<li><a href="#org5842185">6.5.7.7. flycheck</a></li>
+<li><a href="#org50d8f74">6.5.7.8. highlight parenthesis</a></li>
+<li><a href="#org07aa7ee">6.5.7.9. highlight-symbol</a></li>
+<li><a href="#org504b5bd">6.5.7.10. helm</a></li>
+<li><a href="#orgd1b5a81">6.5.7.11. hungry delete</a></li>
+<li><a href="#orgc117373">6.5.7.12. iedit</a></li>
+<li><a href="#org3318b74">6.5.7.13. mouse</a></li>
+<li><a href="#org8e27a4f">6.5.7.14. smartparens</a></li>
+<li><a href="#orgb547751">6.5.7.15. swiper</a></li>
+<li><a href="#org04d754b">6.5.7.16. undo tree</a></li>
+<li><a href="#orge99ba94">6.5.7.17. zop-to-char</a></li>
 </ul>
 </li>
-<li><a href="#org4a8bf52">5.5.8. Development</a>
+<li><a href="#org4a8bf52">6.5.8. Development</a>
 <ul>
-<li><a href="#org6d00c17">5.5.8.1. prog</a></li>
-<li><a href="#orgb8e3fbd">5.5.8.2. asm</a></li>
-<li><a href="#org9161720">5.5.8.3. cmake</a></li>
-<li><a href="#org417e464">5.5.8.4. cross-reference</a></li>
-<li><a href="#org9b05050">5.5.8.5. c/c++</a></li>
-<li><a href="#org8016633">5.5.8.6. projectile</a></li>
-<li><a href="#orgaadc4d2">5.5.8.7. sr-speedbar</a></li>
-<li><a href="#org319751c">5.5.8.8. whitespace</a></li>
-<li><a href="#orgc357b46">5.5.8.9. yasnippet</a></li>
+<li><a href="#org6d00c17">6.5.8.1. prog</a></li>
+<li><a href="#orgb8e3fbd">6.5.8.2. asm</a></li>
+<li><a href="#org9161720">6.5.8.3. cmake</a></li>
+<li><a href="#org417e464">6.5.8.4. cross-reference</a></li>
+<li><a href="#org9b05050">6.5.8.5. c/c++</a></li>
+<li><a href="#org8016633">6.5.8.6. projectile</a></li>
+<li><a href="#orgaadc4d2">6.5.8.7. sr-speedbar</a></li>
+<li><a href="#org319751c">6.5.8.8. whitespace</a></li>
+<li><a href="#orgc357b46">6.5.8.9. yasnippet</a></li>
 </ul>
 </li>
-<li><a href="#orge93be0f">5.5.9. Orgmode</a>
+<li><a href="#orge93be0f">6.5.9. Orgmode</a>
 <ul>
-<li><a href="#orge44fcdf">5.5.9.1. basic</a></li>
-<li><a href="#org407702c">5.5.9.2. pomodoro</a></li>
-<li><a href="#org64c61a4">5.5.9.3. publish</a></li>
+<li><a href="#orge44fcdf">6.5.9.1. basic</a></li>
+<li><a href="#org407702c">6.5.9.2. pomodoro</a></li>
+<li><a href="#org64c61a4">6.5.9.3. publish</a></li>
 </ul>
 </li>
-<li><a href="#org34e8f9c">5.5.10. Platform</a>
+<li><a href="#org34e8f9c">6.5.10. Platform</a>
 <ul>
-<li><a href="#orgfa349ea">5.5.10.1. windows</a></li>
-<li><a href="#orgb522190">5.5.10.2. mac</a></li>
-<li><a href="#org6b4a0b8">5.5.10.3. linux</a></li>
+<li><a href="#orgfa349ea">6.5.10.1. windows</a></li>
+<li><a href="#orgb522190">6.5.10.2. mac</a></li>
+<li><a href="#org6b4a0b8">6.5.10.3. linux</a></li>
 </ul>
 </li>
-<li><a href="#orgec079c0">5.5.11. File mode</a>
+<li><a href="#orgec079c0">6.5.11. File mode</a>
 <ul>
-<li><a href="#orgd06c72a">5.5.11.1. protobuf</a></li>
-<li><a href="#org80c9c72">5.5.11.2. log view</a></li>
+<li><a href="#orgd06c72a">6.5.11.1. protobuf</a></li>
+<li><a href="#org80c9c72">6.5.11.2. log view</a></li>
 </ul>
 </li>
-<li><a href="#org5811dd0">5.5.12. Footer</a></li>
-<li><a href="#org73a8744">5.5.13. Appendix</a></li>
+<li><a href="#org5811dd0">6.5.12. Footer</a></li>
+<li><a href="#org73a8744">6.5.13. Appendix</a></li>
 </ul>
 </li>
 </ul>
@@ -176,21 +177,26 @@
 </ul>
 </div>
 </div>
-<p>
-查看<a href="index.html">readtheorg</a>排版格式。
-</p>
-
 <p>
 DATE: 2019-02-03
 </p>
 
-<div id="outline-container-org4bdd285" class="outline-2">
-<h2 id="org4bdd285"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org2ca399b" class="outline-2">
+<h2 id="org2ca399b"><span class="section-number-2">1</span> Style</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+查看 <a href="index.html">readtheorg</a> 排版格式。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4bdd285" class="outline-2">
+<h2 id="org4bdd285"><span class="section-number-2">2</span> Introduction</h2>
+<div class="outline-text-2" id="text-2">
 </div>
 <div id="outline-container-org0f62f6e" class="outline-3">
-<h3 id="org0f62f6e"><span class="section-number-3">1.1</span> What is Emacs</h3>
-<div class="outline-text-3" id="text-1-1">
+<h3 id="org0f62f6e"><span class="section-number-3">2.1</span> What is Emacs</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 <b>Emacs</b> (EDitor MACros, <i>ˈiːmæks</i>)是一个文本编辑器家族，具备可扩展特征。<a href="https://www.gnu.org/software/emacs/">
 GNU Emacs</a>是使用最为广泛的Emacs实现，具备可扩展、可定制、自文档化、实时显示特点，
@@ -212,8 +218,8 @@ Emacs在终端与X视窗(图形界面/Windows窗口)下都有良好的使用体�
 </div>
 
 <div id="outline-container-orgfe61faa" class="outline-3">
-<h3 id="orgfe61faa"><span class="section-number-3">1.2</span> Emacs and VI</h3>
-<div class="outline-text-3" id="text-1-2">
+<h3 id="orgfe61faa"><span class="section-number-3">2.2</span> Emacs and VI</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 20世纪70年代是编辑器的井喷期，1972年发布的Emacs与1976年发布的VI使用最为广泛。
 Emacs与VI(VIM)都有较强的可定制性、趣味性，熟练掌握后可改善工作效率。然而，对比
@@ -311,8 +317,8 @@ Browse模式(<a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-bro
 </div>
 
 <div id="outline-container-orgad6899d" class="outline-3">
-<h3 id="orgad6899d"><span class="section-number-3">1.3</span> Goals</h3>
-<div class="outline-text-3" id="text-1-3">
+<h3 id="orgad6899d"><span class="section-number-3">2.3</span> Goals</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 对于我而言，对编辑器核心需求，按照重要性排序如下：
 </p>
@@ -335,12 +341,12 @@ Browse模式(<a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-bro
 </div>
 
 <div id="outline-container-org5c7ee03" class="outline-3">
-<h3 id="org5c7ee03"><span class="section-number-3">1.4</span> Install</h3>
-<div class="outline-text-3" id="text-1-4">
+<h3 id="org5c7ee03"><span class="section-number-3">2.4</span> Install</h3>
+<div class="outline-text-3" id="text-2-4">
 </div>
 <div id="outline-container-orgfbc4655" class="outline-4">
-<h4 id="orgfbc4655"><span class="section-number-4">1.4.1</span> Binary Install</h4>
-<div class="outline-text-4" id="text-1-4-1">
+<h4 id="orgfbc4655"><span class="section-number-4">2.4.1</span> Binary Install</h4>
+<div class="outline-text-4" id="text-2-4-1">
 <dl class="org-dl">
 <dt>Mac</dt><dd><a href="https://emacsformacosx.com/">https://emacsformacosx.com/</a></dd>
 <dt>Linux/Windows</dt><dd><a href="https://www.gnu.org/software/emacs/">https://www.gnu.org/software/emacs/</a></dd>
@@ -349,8 +355,8 @@ Browse模式(<a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-bro
 </div>
 
 <div id="outline-container-orgdd6e507" class="outline-4">
-<h4 id="orgdd6e507"><span class="section-number-4">1.4.2</span> Source Install</h4>
-<div class="outline-text-4" id="text-1-4-2">
+<h4 id="orgdd6e507"><span class="section-number-4">2.4.2</span> Source Install</h4>
+<div class="outline-text-4" id="text-2-4-2">
 <p>
 Download source from git then compile:
 </p>
@@ -367,7 +373,7 @@ Download source from git then compile:
 </div>
 
 <div id="outline-container-modifier-key" class="outline-3">
-<h3 id="modifier-key"><span class="section-number-3">1.5</span> Modifier Key</h3>
+<h3 id="modifier-key"><span class="section-number-3">2.5</span> Modifier Key</h3>
 <div class="outline-text-3" id="text-modifier-key">
 <p>
 Emacs重度依赖各种修饰键(Modifier Key)的组合，因此被调侃Emacs是
@@ -384,9 +390,9 @@ Meta与Alt是历史产物，当前的标准PC键盘中没有Meta，Emacs默认�
 </div>
 </div>
 
-<div id="outline-container-org8b1b29c" class="outline-3">
-<h3 id="org8b1b29c"><span class="section-number-3">1.6</span> Config</h3>
-<div class="outline-text-3" id="text-1-6">
+<div id="outline-container-orgaace5f9" class="outline-3">
+<h3 id="orgaace5f9"><span class="section-number-3">2.6</span> Config</h3>
+<div class="outline-text-3" id="text-2-6">
 <p>
 Emacs默认配置文件是 <code>$HOME/.emacs.d/init.el</code> ，启动时没有 <code>$HOME/.emacs.d/</code> 目录
 则自动创建。配置文件随时间逐渐变多，有时会引入一些错误需要回滚，建议用git进行
@@ -397,8 +403,8 @@ Emacs默认配置文件是 <code>$HOME/.emacs.d/init.el</code> ，启动时没�
 </div>
 
 <div id="outline-container-orgf0da4d4" class="outline-3">
-<h3 id="orgf0da4d4"><span class="section-number-3">1.7</span> Start</h3>
-<div class="outline-text-3" id="text-1-7">
+<h3 id="orgf0da4d4"><span class="section-number-3">2.7</span> Start</h3>
+<div class="outline-text-3" id="text-2-7">
 <p>
 终端执行 <code>emacs</code> 或者在启动菜单查找 <code>emacs</code> 启动，按下 <code>C-x C-c</code> 退出。
 </p>
@@ -418,9 +424,9 @@ For Newbie:
 </div>
 </div>
 
-<div id="outline-container-orgd608447" class="outline-3">
-<h3 id="orgd608447"><span class="section-number-3">1.8</span> References</h3>
-<div class="outline-text-3" id="text-1-8">
+<div id="outline-container-org7642230" class="outline-3">
+<h3 id="org7642230"><span class="section-number-3">2.8</span> References</h3>
+<div class="outline-text-3" id="text-2-8">
 <dl class="org-dl">
 <dt>GNU Emacs</dt><dd><a href="https://www.gnu.org/software/emacs/">https://www.gnu.org/software/emacs/</a></dd>
 <dt>Emacs WIKI EN</dt><dd><a href="https://en.wikipedia.org/wiki/Emacs">https://en.wikipedia.org/wiki/Emacs</a></dd>
@@ -435,12 +441,12 @@ For Newbie:
 </div>
 
 <div id="outline-container-orgdc82ddc" class="outline-2">
-<h2 id="orgdc82ddc"><span class="section-number-2">2</span> Packagement</h2>
-<div class="outline-text-2" id="text-2">
+<h2 id="orgdc82ddc"><span class="section-number-2">3</span> Packagement</h2>
+<div class="outline-text-2" id="text-3">
 </div>
 <div id="outline-container-org7cf3d59" class="outline-3">
-<h3 id="org7cf3d59"><span class="section-number-3">2.1</span> Package system</h3>
-<div class="outline-text-3" id="text-2-1">
+<h3 id="org7cf3d59"><span class="section-number-3">3.1</span> Package system</h3>
+<div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>加载包管理系统；</li>
 <li>设置下载package的服务站点package-archives；
@@ -473,8 +479,8 @@ For Newbie:
 </div>
 
 <div id="outline-container-org25a41ee" class="outline-3">
-<h3 id="org25a41ee"><span class="section-number-3">2.2</span> org-babel</h3>
-<div class="outline-text-3" id="text-2-2">
+<h3 id="org25a41ee"><span class="section-number-3">3.2</span> org-babel</h3>
+<div class="outline-text-3" id="text-3-2">
 <ul class="org-ul">
 <li>使用org-babel-load-file加载org文件中的lisp代码；</li>
 <li>使用org mode literate programming(文学编程)配置emacs；</li>
@@ -482,9 +488,9 @@ For Newbie:
 </div>
 </div>
 
-<div id="outline-container-org81c8e15" class="outline-3">
-<h3 id="org81c8e15"><span class="section-number-3">2.3</span> Config</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org67f8720" class="outline-3">
+<h3 id="org67f8720"><span class="section-number-3">3.3</span> Config</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el</a>.
 相关环境变量：
@@ -529,9 +535,9 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 </div>
 
-<div id="outline-container-orgb606dda" class="outline-3">
-<h3 id="orgb606dda"><span class="section-number-3">2.4</span> References</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgc299e6a" class="outline-3">
+<h3 id="orgc299e6a"><span class="section-number-3">3.4</span> References</h3>
+<div class="outline-text-3" id="text-3-4">
 <dl class="org-dl">
 <dt>use-package</dt><dd><a href="https://jwiegley.github.io/use-package/">https://jwiegley.github.io/use-package/</a></dd>
 <dt>org mode</dt><dd><a href="https://orgmode.org/">https://orgmode.org/</a></dd>
@@ -545,16 +551,16 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org8ba1076" class="outline-2">
-<h2 id="org8ba1076"><span class="section-number-2">3</span> Keybinding</h2>
+<h2 id="org8ba1076"><span class="section-number-2">4</span> Keybinding</h2>
 </div>
 
 <div id="outline-container-org6c84c32" class="outline-2">
-<h2 id="org6c84c32"><span class="section-number-2">4</span> FAQ</h2>
-<div class="outline-text-2" id="text-4">
+<h2 id="org6c84c32"><span class="section-number-2">5</span> FAQ</h2>
+<div class="outline-text-2" id="text-5">
 </div>
 <div id="outline-container-orgf3a5292" class="outline-3">
-<h3 id="orgf3a5292"><span class="section-number-3">4.1</span> Show pressed key</h3>
-<div class="outline-text-3" id="text-4-1">
+<h3 id="orgf3a5292"><span class="section-number-3">5.1</span> Show pressed key</h3>
+<div class="outline-text-3" id="text-5-1">
 <ul class="org-ul">
 <li>M-x: command-log-mode</li>
 <li>M-x: clm/open-command-log-buffer</li>
@@ -563,8 +569,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-orgb1d8726" class="outline-3">
-<h3 id="orgb1d8726"><span class="section-number-3">4.2</span> GUI下无法输入中文</h3>
-<div class="outline-text-3" id="text-4-2">
+<h3 id="orgb1d8726"><span class="section-number-3">5.2</span> GUI下无法输入中文</h3>
+<div class="outline-text-3" id="text-5-2">
 <ul class="org-ul">
 <li>启动需要设置支持的term和LC_CTYPE;</li>
 <li>TERM=xterm LC_CTYPE=zh_CN.UTF-8 emacs</li>
@@ -573,8 +579,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org7e57041" class="outline-3">
-<h3 id="org7e57041"><span class="section-number-3">4.3</span> 启动daemon，terminal下拉起emacsclient，输入中文时光标跳跃，且会把左边框弄乱</h3>
-<div class="outline-text-3" id="text-4-3">
+<h3 id="org7e57041"><span class="section-number-3">5.3</span> 启动daemon，terminal下拉起emacsclient，输入中文时光标跳跃，且会把左边框弄乱</h3>
+<div class="outline-text-3" id="text-5-3">
 <ul class="org-ul">
 <li>同上，是因为语言支持的原因</li>
 <li>TERM=xterm LC_CTYPE=zh_CN.UTF-8 emacs &#x2013;daemon</li>
@@ -584,12 +590,12 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org87b3837" class="outline-2">
-<h2 id="org87b3837"><span class="section-number-2">5</span> My Config</h2>
-<div class="outline-text-2" id="text-5">
+<h2 id="org87b3837"><span class="section-number-2">6</span> My Config</h2>
+<div class="outline-text-2" id="text-6">
 </div>
 <div id="outline-container-org5f62b85" class="outline-3">
-<h3 id="org5f62b85"><span class="section-number-3">5.1</span> github</h3>
-<div class="outline-text-3" id="text-5-1">
+<h3 id="org5f62b85"><span class="section-number-3">6.1</span> github</h3>
+<div class="outline-text-3" id="text-6-1">
 <p>
 <a href="https://github.com/yygcode/.emacs.d">https://github.com/yygcode/.emacs.d</a>
 </p>
@@ -597,8 +603,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-orge0fe988" class="outline-3">
-<h3 id="orge0fe988"><span class="section-number-3">5.2</span> init.el</h3>
-<div class="outline-text-3" id="text-5-2">
+<h3 id="orge0fe988"><span class="section-number-3">6.2</span> init.el</h3>
+<div class="outline-text-3" id="text-6-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;;</span><span class="org-whitespace-space"> </span><span class="org-comment">~/.emacs.d/init.el</span><span class="org-whitespace-space"> </span><span class="org-comment">---</span><span class="org-whitespace-space"> </span><span class="org-comment">Emacs</span><span class="org-whitespace-space"> </span><span class="org-comment">Initialization</span><span class="org-whitespace-space"> </span><span class="org-comment">Entry</span>
 
@@ -706,8 +712,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org11b02f9" class="outline-3">
-<h3 id="org11b02f9"><span class="section-number-3">5.3</span> auxiliary</h3>
-<div class="outline-text-3" id="text-5-3">
+<h3 id="org11b02f9"><span class="section-number-3">6.3</span> auxiliary</h3>
+<div class="outline-text-3" id="text-6-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;;</span><span class="org-whitespace-space"> </span><span class="org-comment">y-auxiliary.el</span><span class="org-whitespace-space"> </span><span class="org-comment">---</span><span class="org-whitespace-space"> </span><span class="org-comment">Misc</span><span class="org-whitespace-space"> </span><span class="org-comment">Auxiliary</span><span class="org-whitespace-space"> </span><span class="org-comment">Routines</span><span class="org-whitespace-space"> </span><span class="org-comment">-*-</span><span class="org-whitespace-space"> </span><span class="org-comment">lexical-binding:t</span><span class="org-whitespace-space"> </span><span class="org-comment">-*-</span>
 
@@ -1086,8 +1092,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org53eabd8" class="outline-3">
-<h3 id="org53eabd8"><span class="section-number-3">5.4</span> package</h3>
-<div class="outline-text-3" id="text-5-4">
+<h3 id="org53eabd8"><span class="section-number-3">6.4</span> package</h3>
+<div class="outline-text-3" id="text-6-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;;</span><span class="org-whitespace-space"> </span><span class="org-comment">y-package.el</span><span class="org-whitespace-space"> </span><span class="org-comment">---</span><span class="org-whitespace-space"> </span><span class="org-comment">Package</span><span class="org-whitespace-space"> </span><span class="org-comment">management</span><span class="org-whitespace-space">  </span><span class="org-comment">-*-</span><span class="org-whitespace-space"> </span><span class="org-comment">lexical-binding:t</span><span class="org-whitespace-space"> </span><span class="org-comment">-*-</span>
 
@@ -1259,12 +1265,11 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 
 <div id="outline-container-org5ff65e4" class="outline-3">
-<h3 id="org5ff65e4"><span class="section-number-3">5.5</span> config.org</h3>
-<div class="outline-text-3" id="text-5-5">
+<h3 id="org5ff65e4"><span class="section-number-3">6.5</span> config.org</h3>
+<div class="outline-text-3" id="text-6-5">
 </div>
-
 <div id="outline-container-header" class="outline-4">
-<h4 id="header"><span class="section-number-4">5.5.1</span> Header</h4>
+<h4 id="header"><span class="section-number-4">6.5.1</span> Header</h4>
 <div class="outline-text-4" id="text-header">
 <p>
 This section has no actual effect, you can remove this section safely. It's just
@@ -1321,12 +1326,12 @@ satisfing the elisp file format requirement. Refer to follow links:
 </div>
 
 <div id="outline-container-org0a1caee" class="outline-4">
-<h4 id="org0a1caee"><span class="section-number-4">5.5.2</span> Profiler</h4>
-<div class="outline-text-4" id="text-5-5-2">
+<h4 id="org0a1caee"><span class="section-number-4">6.5.2</span> Profiler</h4>
+<div class="outline-text-4" id="text-6-5-2">
 </div>
 <div id="outline-container-org979d646" class="outline-5">
-<h5 id="org979d646"><span class="section-number-5">5.5.2.1</span> Wrapper function</h5>
-<div class="outline-text-5" id="text-5-5-2-1">
+<h5 id="org979d646"><span class="section-number-5">6.5.2.1</span> Wrapper function</h5>
+<div class="outline-text-5" id="text-6-5-2-1">
 <table>
 
 
@@ -1362,8 +1367,8 @@ satisfing the elisp file format requirement. Refer to follow links:
 </div>
 
 <div id="outline-container-org8966a1a" class="outline-5">
-<h5 id="org8966a1a"><span class="section-number-5">5.5.2.2</span> esup - startup profiler</h5>
-<div class="outline-text-5" id="text-5-5-2-2">
+<h5 id="org8966a1a"><span class="section-number-5">6.5.2.2</span> esup - startup profiler</h5>
+<div class="outline-text-5" id="text-6-5-2-2">
 <p>
 <a href="init.el">init.el</a> only set package archive and org, then use org-babel load config.org
 to complete the rest(vast majority, main part) configurations. <a href="https://github.com/jschaf/esup">Esup</a> provides
@@ -1421,8 +1426,8 @@ analyze config.org time proportion.
 </div>
 
 <div id="outline-container-orga322206" class="outline-5">
-<h5 id="orga322206"><span class="section-number-5">5.5.2.3</span> benchmark - profile execution time</h5>
-<div class="outline-text-5" id="text-5-5-2-3">
+<h5 id="orga322206"><span class="section-number-5">6.5.2.3</span> benchmark - profile execution time</h5>
+<div class="outline-text-5" id="text-6-5-2-3">
 <p>
 <b>Notice</b> Import benchmark-init after package esup for esup enhancement.
 </p>
@@ -1462,8 +1467,8 @@ analyze config.org time proportion.
 </div>
 
 <div id="outline-container-org7a5e3f2" class="outline-4">
-<h4 id="org7a5e3f2"><span class="section-number-4">5.5.3</span> Auxiliary</h4>
-<div class="outline-text-4" id="text-5-5-3">
+<h4 id="org7a5e3f2"><span class="section-number-4">6.5.3</span> Auxiliary</h4>
+<div class="outline-text-4" id="text-6-5-3">
 <p>
 Misc helper routines.
 </p>
@@ -1475,16 +1480,16 @@ Misc helper routines.
 </div>
 
 <div id="outline-container-org1dbac45" class="outline-4">
-<h4 id="org1dbac45"><span class="section-number-4">5.5.4</span> keybinds</h4>
-<div class="outline-text-4" id="text-5-5-4">
+<h4 id="org1dbac45"><span class="section-number-4">6.5.4</span> keybinds</h4>
+<div class="outline-text-4" id="text-6-5-4">
 </div>
 <div id="outline-container-org87c10f2" class="outline-5">
-<h5 id="org87c10f2"><span class="section-number-5">5.5.4.1</span> introduction</h5>
-<div class="outline-text-5" id="text-5-5-4-1">
+<h5 id="org87c10f2"><span class="section-number-5">6.5.4.1</span> introduction</h5>
+<div class="outline-text-5" id="text-6-5-4-1">
 </div>
 <ol class="org-ol">
 <li><a id="org2af8181"></a>principle<br />
-<div class="outline-text-6" id="text-5-5-4-1-1">
+<div class="outline-text-6" id="text-6-5-4-1-1">
 <ul class="org-ul">
 <li>compat both in terminal and X windows</li>
 <li>High frequency operation gives a shorter key sequence</li>
@@ -1496,8 +1501,8 @@ Misc helper routines.
 </div>
 
 <div id="outline-container-org07b629f" class="outline-5">
-<h5 id="org07b629f"><span class="section-number-5">5.5.4.2</span> basic keybind</h5>
-<div class="outline-text-5" id="text-5-5-4-2">
+<h5 id="org07b629f"><span class="section-number-5">6.5.4.2</span> basic keybind</h5>
+<div class="outline-text-5" id="text-6-5-4-2">
 <p>
 Turn off minor mode y/keymap-global-mode if you don't like.
 </p>
@@ -1510,12 +1515,12 @@ Turn off minor mode y/keymap-global-mode if you don't like.
 </div>
 
 <div id="outline-container-org398809f" class="outline-5">
-<h5 id="org398809f"><span class="section-number-5">5.5.4.3</span> browse code keybind</h5>
+<h5 id="org398809f"><span class="section-number-5">6.5.4.3</span> browse code keybind</h5>
 </div>
 
 <div id="outline-container-org4e25e79" class="outline-5">
-<h5 id="org4e25e79"><span class="section-number-5">5.5.4.4</span> command-frequencey analysis</h5>
-<div class="outline-text-5" id="text-5-5-4-4">
+<h5 id="org4e25e79"><span class="section-number-5">6.5.4.4</span> command-frequencey analysis</h5>
+<div class="outline-text-5" id="text-6-5-4-4">
 <p>
 See Ergo stastics: <a href="http://ergoemacs.org/emacs/command-frequency.html">http://ergoemacs.org/emacs/command-frequency.html</a>.
 </p>
@@ -1580,8 +1585,8 @@ contents dynamically.
 </div>
 
 <div id="outline-container-org4850ec6" class="outline-5">
-<h5 id="org4850ec6"><span class="section-number-5">5.5.4.5</span> which key - keybinds help</h5>
-<div class="outline-text-5" id="text-5-5-4-5">
+<h5 id="org4850ec6"><span class="section-number-5">6.5.4.5</span> which key - keybinds help</h5>
+<div class="outline-text-5" id="text-6-5-4-5">
 <p>
 <code>which-key</code> is a minor mode for Emacs that displays the key bindings following
 your currently entered incomplete command (a prefix) in a popup. For example,
@@ -1617,8 +1622,8 @@ this command.
 </div>
 
 <div id="outline-container-org6bc6cb0" class="outline-4">
-<h4 id="org6bc6cb0"><span class="section-number-4">5.5.5</span> Editor</h4>
-<div class="outline-text-4" id="text-5-5-5">
+<h4 id="org6bc6cb0"><span class="section-number-4">6.5.5</span> Editor</h4>
+<div class="outline-text-4" id="text-6-5-5">
 <p>
 Editor behaviors.
 </p>
@@ -1630,12 +1635,12 @@ Editor behaviors.
 </div>
 
 <div id="outline-container-org277bf2a" class="outline-4">
-<h4 id="org277bf2a"><span class="section-number-4">5.5.6</span> Display</h4>
-<div class="outline-text-4" id="text-5-5-6">
+<h4 id="org277bf2a"><span class="section-number-4">6.5.6</span> Display</h4>
+<div class="outline-text-4" id="text-6-5-6">
 </div>
 <div id="outline-container-orgafb8bb1" class="outline-5">
-<h5 id="orgafb8bb1"><span class="section-number-5">5.5.6.1</span> behavior</h5>
-<div class="outline-text-5" id="text-5-5-6-1">
+<h5 id="orgafb8bb1"><span class="section-number-5">6.5.6.1</span> behavior</h5>
+<div class="outline-text-5" id="text-6-5-6-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
 (<span class="org-keyword">require</span><span class="org-whitespace-space"> </span>'<span class="org-constant">display-line-numbers</span>)
@@ -1667,8 +1672,8 @@ Editor behaviors.
 </div>
 
 <div id="outline-container-org1eb6d38" class="outline-5">
-<h5 id="org1eb6d38"><span class="section-number-5">5.5.6.2</span> font</h5>
-<div class="outline-text-5" id="text-5-5-6-2">
+<h5 id="org1eb6d38"><span class="section-number-5">6.5.6.2</span> font</h5>
+<div class="outline-text-5" id="text-6-5-6-2">
 <p>
 elisp Chapter 39 section 39.12 describes more technology about faces. Read it
 for more details:
@@ -1832,8 +1837,8 @@ Set different font for different major mode. See
 </div>
 
 <div id="outline-container-orga428c23" class="outline-5">
-<h5 id="orga428c23"><span class="section-number-5">5.5.6.3</span> modeline</h5>
-<div class="outline-text-5" id="text-5-5-6-3">
+<h5 id="orga428c23"><span class="section-number-5">6.5.6.3</span> modeline</h5>
+<div class="outline-text-5" id="text-6-5-6-3">
 <ul class="org-ul">
 <li>Smart mode line. Try sml/apply-theme if want more.</li>
 <li>Diminish used to hide minor info</li>
@@ -1868,8 +1873,8 @@ Set different font for different major mode. See
 </div>
 
 <div id="outline-container-org502024f" class="outline-5">
-<h5 id="org502024f"><span class="section-number-5">5.5.6.4</span> theme</h5>
-<div class="outline-text-5" id="text-5-5-6-4">
+<h5 id="org502024f"><span class="section-number-5">6.5.6.4</span> theme</h5>
+<div class="outline-text-5" id="text-6-5-6-4">
 <p>
 Theme is another important display aspect. Manual
 <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Custom-Themes.html">https://www.gnu.org/software/emacs/manual/html_node/emacs/Custom-Themes.html</a>,
@@ -1921,8 +1926,8 @@ and select zenburn as default.
 </div>
 
 <div id="outline-container-orgf046f5f" class="outline-5">
-<h5 id="orgf046f5f"><span class="section-number-5">5.5.6.5</span> ui</h5>
-<div class="outline-text-5" id="text-5-5-6-5">
+<h5 id="orgf046f5f"><span class="section-number-5">6.5.6.5</span> ui</h5>
+<div class="outline-text-5" id="text-6-5-6-5">
 <p>
 Config for emacs daemon and non-daemon.
 </p>
@@ -1990,8 +1995,8 @@ Config for emacs daemon and non-daemon.
 </div>
 
 <div id="outline-container-org915f089" class="outline-5">
-<h5 id="org915f089"><span class="section-number-5">5.5.6.6</span> window</h5>
-<div class="outline-text-5" id="text-5-5-6-6">
+<h5 id="org915f089"><span class="section-number-5">6.5.6.6</span> window</h5>
+<div class="outline-text-5" id="text-6-5-6-6">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">hydra</span>
 <span class="org-whitespace-space">  </span><span class="org-builtin">:init</span>
@@ -2016,12 +2021,12 @@ Config for emacs daemon and non-daemon.
 </div>
 
 <div id="outline-container-orgc953933" class="outline-4">
-<h4 id="orgc953933"><span class="section-number-4">5.5.7</span> Efficiency</h4>
-<div class="outline-text-4" id="text-5-5-7">
+<h4 id="orgc953933"><span class="section-number-4">6.5.7</span> Efficiency</h4>
+<div class="outline-text-4" id="text-6-5-7">
 </div>
 <div id="outline-container-orgfc692a8" class="outline-5">
-<h5 id="orgfc692a8"><span class="section-number-5">5.5.7.1</span> abbrev</h5>
-<div class="outline-text-5" id="text-5-5-7-1">
+<h5 id="orgfc692a8"><span class="section-number-5">6.5.7.1</span> abbrev</h5>
+<div class="outline-text-5" id="text-6-5-7-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">require</span><span class="org-whitespace-space"> </span>'<span class="org-constant">abbrev</span>)
 (diminish<span class="org-whitespace-space"> </span>'abbrev-mode)
@@ -2030,8 +2035,8 @@ Config for emacs daemon and non-daemon.
 </div>
 </div>
 <div id="outline-container-org7dd1fb4" class="outline-5">
-<h5 id="org7dd1fb4"><span class="section-number-5">5.5.7.2</span> company</h5>
-<div class="outline-text-5" id="text-5-5-7-2">
+<h5 id="org7dd1fb4"><span class="section-number-5">6.5.7.2</span> company</h5>
+<div class="outline-text-5" id="text-6-5-7-2">
 <p>
 <b>company</b> is a text completion framework. it means complete anything.
 gitub <a href="https://github.com/company-mode/company-mode">https://github.com/company-mode/company-mode</a>.
@@ -2058,12 +2063,12 @@ material:
 </div>
 
 <div id="outline-container-org43feda8" class="outline-5">
-<h5 id="org43feda8"><span class="section-number-5">5.5.7.3</span> dictionary</h5>
-<div class="outline-text-5" id="text-5-5-7-3">
+<h5 id="org43feda8"><span class="section-number-5">6.5.7.3</span> dictionary</h5>
+<div class="outline-text-5" id="text-6-5-7-3">
 </div>
 <ol class="org-ol">
 <li><a id="orge9e70d2"></a>youdao<br />
-<div class="outline-text-6" id="text-5-5-7-3-1">
+<div class="outline-text-6" id="text-6-5-7-3-1">
 <ul class="org-ul">
 <li>Homepage: <a href="https://github.com/xuchunyang/youdao-dictionary.el">GitHub Youdao</a></li>
 </ul>
@@ -2082,8 +2087,8 @@ material:
 </div>
 
 <div id="outline-container-org914178c" class="outline-5">
-<h5 id="org914178c"><span class="section-number-5">5.5.7.4</span> eldoc - minor mode for lisp</h5>
-<div class="outline-text-5" id="text-5-5-7-4">
+<h5 id="org914178c"><span class="section-number-5">6.5.7.4</span> eldoc - minor mode for lisp</h5>
+<div class="outline-text-5" id="text-6-5-7-4">
 <p>
 eldoc mode is a buffer-local minor mode.  when enabled, the echo
 area displays information about a function or variable in the
@@ -2113,8 +2118,8 @@ eldoc is a builtin package.
 </div>
 
 <div id="outline-container-orge859eb5" class="outline-5">
-<h5 id="orge859eb5"><span class="section-number-5">5.5.7.5</span> expand-region</h5>
-<div class="outline-text-5" id="text-5-5-7-5">
+<h5 id="orge859eb5"><span class="section-number-5">6.5.7.5</span> expand-region</h5>
+<div class="outline-text-5" id="text-6-5-7-5">
 <ul class="org-ul">
 <li>melpa: <a href="https://melpa.org/#/expand-region">https://melpa.org/#/expand-region</a></li>
 <li>github: <a href="https://github.com/magnars/expand-region.el">https://github.com/magnars/expand-region.el</a></li>
@@ -2143,8 +2148,8 @@ eldoc is a builtin package.
 </div>
 
 <div id="outline-container-org5ce3c72" class="outline-5">
-<h5 id="org5ce3c72"><span class="section-number-5">5.5.7.6</span> helpful</h5>
-<div class="outline-text-5" id="text-5-5-7-6">
+<h5 id="org5ce3c72"><span class="section-number-5">6.5.7.6</span> helpful</h5>
+<div class="outline-text-5" id="text-6-5-7-6">
 <p>
 <b>Helpful</b> is an alternative to the built-in Emacs help that provides much more
 contextual information.
@@ -2166,8 +2171,8 @@ contextual information.
 </div>
 
 <div id="outline-container-org5842185" class="outline-5">
-<h5 id="org5842185"><span class="section-number-5">5.5.7.7</span> flycheck</h5>
-<div class="outline-text-5" id="text-5-5-7-7">
+<h5 id="org5842185"><span class="section-number-5">6.5.7.7</span> flycheck</h5>
+<div class="outline-text-5" id="text-6-5-7-7">
 <p>
 flycheck is a modern on-the-fly syntax checking package. homepage is
 <a href="https://www.flycheck.org/en/latest/">https://www.flycheck.org/en/latest/</a>.
@@ -2199,8 +2204,8 @@ for mac compatiblity: <a href="https://github.com/purcell/exec-path-from-shell">
 </div>
 
 <div id="outline-container-org50d8f74" class="outline-5">
-<h5 id="org50d8f74"><span class="section-number-5">5.5.7.8</span> highlight parenthesis</h5>
-<div class="outline-text-5" id="text-5-5-7-8">
+<h5 id="org50d8f74"><span class="section-number-5">6.5.7.8</span> highlight parenthesis</h5>
+<div class="outline-text-5" id="text-6-5-7-8">
 <ul class="org-ul">
 <li>github: <a href="https://github.com/tsdh/highlight-parentheses.el">https://github.com/tsdh/highlight-parentheses.el</a></li>
 </ul>
@@ -2220,8 +2225,8 @@ for mac compatiblity: <a href="https://github.com/purcell/exec-path-from-shell">
 </div>
 
 <div id="outline-container-org07aa7ee" class="outline-5">
-<h5 id="org07aa7ee"><span class="section-number-5">5.5.7.9</span> highlight-symbol</h5>
-<div class="outline-text-5" id="text-5-5-7-9">
+<h5 id="org07aa7ee"><span class="section-number-5">6.5.7.9</span> highlight-symbol</h5>
+<div class="outline-text-5" id="text-6-5-7-9">
 <ul class="org-ul">
 <li>Github: <a href="https://github.com/nschum/highlight-symbol.el">https://github.com/nschum/highlight-symbol.el</a></li>
 </ul>
@@ -2251,8 +2256,8 @@ for mac compatiblity: <a href="https://github.com/purcell/exec-path-from-shell">
 </div>
 
 <div id="outline-container-org504b5bd" class="outline-5">
-<h5 id="org504b5bd"><span class="section-number-5">5.5.7.10</span> helm</h5>
-<div class="outline-text-5" id="text-5-5-7-10">
+<h5 id="org504b5bd"><span class="section-number-5">6.5.7.10</span> helm</h5>
+<div class="outline-text-5" id="text-6-5-7-10">
 <p>
 <b>Helm</b> is an Emacs framework for incremental completions and narrowing
 selections.
@@ -2280,8 +2285,8 @@ selections.
 </div>
 
 <div id="outline-container-orgd1b5a81" class="outline-5">
-<h5 id="orgd1b5a81"><span class="section-number-5">5.5.7.11</span> hungry delete</h5>
-<div class="outline-text-5" id="text-5-5-7-11">
+<h5 id="orgd1b5a81"><span class="section-number-5">6.5.7.11</span> hungry delete</h5>
+<div class="outline-text-5" id="text-6-5-7-11">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">hungry-delete</span>
 <span class="org-whitespace-space">  </span><span class="org-builtin">:diminish</span>
@@ -2293,8 +2298,8 @@ selections.
 </div>
 
 <div id="outline-container-orgc117373" class="outline-5">
-<h5 id="orgc117373"><span class="section-number-5">5.5.7.12</span> iedit</h5>
-<div class="outline-text-5" id="text-5-5-7-12">
+<h5 id="orgc117373"><span class="section-number-5">6.5.7.12</span> iedit</h5>
+<div class="outline-text-5" id="text-6-5-7-12">
 <ul class="org-ul">
 <li>Github: <a href="https://github.com/victorhge/iedit">https://github.com/victorhge/iedit</a></li>
 </ul>
@@ -2309,8 +2314,8 @@ selections.
 </div>
 
 <div id="outline-container-org3318b74" class="outline-5">
-<h5 id="org3318b74"><span class="section-number-5">5.5.7.13</span> mouse</h5>
-<div class="outline-text-5" id="text-5-5-7-13">
+<h5 id="org3318b74"><span class="section-number-5">6.5.7.13</span> mouse</h5>
+<div class="outline-text-5" id="text-6-5-7-13">
 <p>
 Disable mouse globally.
 </p>
@@ -2326,8 +2331,8 @@ Disable mouse globally.
 </div>
 
 <div id="outline-container-org8e27a4f" class="outline-5">
-<h5 id="org8e27a4f"><span class="section-number-5">5.5.7.14</span> smartparens</h5>
-<div class="outline-text-5" id="text-5-5-7-14">
+<h5 id="org8e27a4f"><span class="section-number-5">6.5.7.14</span> smartparens</h5>
+<div class="outline-text-5" id="text-6-5-7-14">
 <p>
 Smartparens is a minor mode for dealing with pairs in Emacs.
 </p>
@@ -2371,8 +2376,8 @@ Smartparens is a minor mode for dealing with pairs in Emacs.
 </div>
 
 <div id="outline-container-orgb547751" class="outline-5">
-<h5 id="orgb547751"><span class="section-number-5">5.5.7.15</span> swiper</h5>
-<div class="outline-text-5" id="text-5-5-7-15">
+<h5 id="orgb547751"><span class="section-number-5">6.5.7.15</span> swiper</h5>
+<div class="outline-text-5" id="text-6-5-7-15">
 <p>
 <b>Swiper</b> is a flexible, simple tools for minibuffer completion in Emacs.
 </p>
@@ -2430,8 +2435,8 @@ Smartparens is a minor mode for dealing with pairs in Emacs.
 </div>
 
 <div id="outline-container-org04d754b" class="outline-5">
-<h5 id="org04d754b"><span class="section-number-5">5.5.7.16</span> undo tree</h5>
-<div class="outline-text-5" id="text-5-5-7-16">
+<h5 id="org04d754b"><span class="section-number-5">6.5.7.16</span> undo tree</h5>
+<div class="outline-text-5" id="text-6-5-7-16">
 <ul class="org-ul">
 <li>Github: <a href="https://github.com/apchamberlain/undo-tree.el">https://github.com/apchamberlain/undo-tree.el</a></li>
 </ul>
@@ -2448,8 +2453,8 @@ Smartparens is a minor mode for dealing with pairs in Emacs.
 </div>
 
 <div id="outline-container-orge99ba94" class="outline-5">
-<h5 id="orge99ba94"><span class="section-number-5">5.5.7.17</span> zop-to-char</h5>
-<div class="outline-text-5" id="text-5-5-7-17">
+<h5 id="orge99ba94"><span class="section-number-5">6.5.7.17</span> zop-to-char</h5>
+<div class="outline-text-5" id="text-6-5-7-17">
 <p>
 Visual zap-to-char.
 </p>
@@ -2465,12 +2470,12 @@ Visual zap-to-char.
 </div>
 
 <div id="outline-container-org4a8bf52" class="outline-4">
-<h4 id="org4a8bf52"><span class="section-number-4">5.5.8</span> Development</h4>
-<div class="outline-text-4" id="text-5-5-8">
+<h4 id="org4a8bf52"><span class="section-number-4">6.5.8</span> Development</h4>
+<div class="outline-text-4" id="text-6-5-8">
 </div>
 <div id="outline-container-org6d00c17" class="outline-5">
-<h5 id="org6d00c17"><span class="section-number-5">5.5.8.1</span> prog</h5>
-<div class="outline-text-5" id="text-5-5-8-1">
+<h5 id="org6d00c17"><span class="section-number-5">6.5.8.1</span> prog</h5>
+<div class="outline-text-5" id="text-6-5-8-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">require</span><span class="org-whitespace-space"> </span>'<span class="org-constant">prog-mode</span>)
 (define-key<span class="org-whitespace-space"> </span>prog-mode-map<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"C-c</span><span class="org-whitespace-space"> </span><span class="org-string">C-c"</span>)<span class="org-whitespace-space"> </span>#'y/comment-or-uncomment)
@@ -2480,11 +2485,11 @@ Visual zap-to-char.
 </div>
 
 <div id="outline-container-orgb8e3fbd" class="outline-5">
-<h5 id="orgb8e3fbd"><span class="section-number-5">5.5.8.2</span> asm</h5>
+<h5 id="orgb8e3fbd"><span class="section-number-5">6.5.8.2</span> asm</h5>
 </div>
 <div id="outline-container-org9161720" class="outline-5">
-<h5 id="org9161720"><span class="section-number-5">5.5.8.3</span> cmake</h5>
-<div class="outline-text-5" id="text-5-5-8-3">
+<h5 id="org9161720"><span class="section-number-5">6.5.8.3</span> cmake</h5>
+<div class="outline-text-5" id="text-6-5-8-3">
 <p>
 <b>cmake-mode</b> is major-mode for editing CMake sources.
 </p>
@@ -2495,8 +2500,8 @@ Visual zap-to-char.
 </div>
 </div>
 <div id="outline-container-org417e464" class="outline-5">
-<h5 id="org417e464"><span class="section-number-5">5.5.8.4</span> cross-reference</h5>
-<div class="outline-text-5" id="text-5-5-8-4">
+<h5 id="org417e464"><span class="section-number-5">6.5.8.4</span> cross-reference</h5>
+<div class="outline-text-5" id="text-6-5-8-4">
 <p>
 Put all in y-xref.el
 </p>
@@ -2516,12 +2521,12 @@ Put all in y-xref.el
 </div>
 
 <div id="outline-container-org9b05050" class="outline-5">
-<h5 id="org9b05050"><span class="section-number-5">5.5.8.5</span> c/c++</h5>
-<div class="outline-text-5" id="text-5-5-8-5">
+<h5 id="org9b05050"><span class="section-number-5">6.5.8.5</span> c/c++</h5>
+<div class="outline-text-5" id="text-6-5-8-5">
 </div>
 <ol class="org-ol">
 <li><a id="org6abcf5e"></a>keybind<br />
-<div class="outline-text-6" id="text-5-5-8-5-1">
+<div class="outline-text-6" id="text-6-5-8-5-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">require</span><span class="org-whitespace-space"> </span>'<span class="org-constant">cc-mode</span>)
 (define-key<span class="org-whitespace-space"> </span>c-mode-map<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"C-c</span><span class="org-whitespace-space"> </span><span class="org-string">C-c"</span>)<span class="org-whitespace-space"> </span>#'y/comment-or-uncomment)
@@ -2531,7 +2536,7 @@ Put all in y-xref.el
 </div>
 </li>
 <li><a id="orge53f796"></a>c++ modern font<br />
-<div class="outline-text-6" id="text-5-5-8-5-2">
+<div class="outline-text-6" id="text-6-5-8-5-2">
 <p>
 <b>modern-cpp-font-lock</b> Syntax highlighting support for "Modern C++" - until
 C++20 and Technical Specification.
@@ -2557,7 +2562,7 @@ C++20 and Technical Specification.
 </li>
 
 <li><a id="orgbe76a06"></a>c/c++ style<br />
-<div class="outline-text-6" id="text-5-5-8-5-3">
+<div class="outline-text-6" id="text-6-5-8-5-3">
 <p>
 Use c-guess-no-install and c-guess-view to generate style template.
 Read variable c-offsets-alist for more details.
@@ -2823,7 +2828,7 @@ Read variable c-offsets-alist for more details.
 </li>
 
 <li><a id="org9340ddd"></a>c/c++ call-graph<br />
-<div class="outline-text-6" id="text-5-5-8-5-4">
+<div class="outline-text-6" id="text-6-5-8-5-4">
 <p>
 C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.com/beacoder/call-graph</a>
 </p>
@@ -2839,7 +2844,7 @@ C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.
 </li>
 
 <li><a id="orgf5a1f0c"></a>cwarn<br />
-<div class="outline-text-6" id="text-5-5-8-5-5">
+<div class="outline-text-6" id="text-6-5-8-5-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">cwarn</span>
 <span class="org-whitespace-space">  </span><span class="org-builtin">:diminish</span><span class="org-whitespace-space"> </span>cwarn)
@@ -2851,8 +2856,8 @@ C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.
 </div>
 
 <div id="outline-container-org8016633" class="outline-5">
-<h5 id="org8016633"><span class="section-number-5">5.5.8.6</span> projectile</h5>
-<div class="outline-text-5" id="text-5-5-8-6">
+<h5 id="org8016633"><span class="section-number-5">6.5.8.6</span> projectile</h5>
+<div class="outline-text-5" id="text-6-5-8-6">
 <p>
 <b>Projectile</b> is a project interaction library for Emacs.
 </p>
@@ -2875,8 +2880,8 @@ C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.
 </div>
 
 <div id="outline-container-orgaadc4d2" class="outline-5">
-<h5 id="orgaadc4d2"><span class="section-number-5">5.5.8.7</span> sr-speedbar</h5>
-<div class="outline-text-5" id="text-5-5-8-7">
+<h5 id="orgaadc4d2"><span class="section-number-5">6.5.8.7</span> sr-speedbar</h5>
+<div class="outline-text-5" id="text-6-5-8-7">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">sr-speedbar</span>
 <span class="org-whitespace-space">  </span><span class="org-builtin">:init</span>
@@ -2902,8 +2907,8 @@ C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.
 </div>
 
 <div id="outline-container-org319751c" class="outline-5">
-<h5 id="org319751c"><span class="section-number-5">5.5.8.8</span> whitespace</h5>
-<div class="outline-text-5" id="text-5-5-8-8">
+<h5 id="org319751c"><span class="section-number-5">6.5.8.8</span> whitespace</h5>
+<div class="outline-text-5" id="text-6-5-8-8">
 <p>
 <b>whitespace</b> render a space, tabs, newlines to a visible glyph.
 </p>
@@ -2952,8 +2957,8 @@ C++ call graph: <a href="https://github.com/beacoder/call-graph">https://github.
 </div>
 
 <div id="outline-container-orgc357b46" class="outline-5">
-<h5 id="orgc357b46"><span class="section-number-5">5.5.8.9</span> yasnippet</h5>
-<div class="outline-text-5" id="text-5-5-8-9">
+<h5 id="orgc357b46"><span class="section-number-5">6.5.8.9</span> yasnippet</h5>
+<div class="outline-text-5" id="text-6-5-8-9">
 <p>
 <b>YASnippet</b> is a template system for Emacs. It allows you to type an
 abbreviation and automatically expand it into function templates. Bundled
@@ -2979,12 +2984,12 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-orge93be0f" class="outline-4">
-<h4 id="orge93be0f"><span class="section-number-4">5.5.9</span> Orgmode</h4>
-<div class="outline-text-4" id="text-5-5-9">
+<h4 id="orge93be0f"><span class="section-number-4">6.5.9</span> Orgmode</h4>
+<div class="outline-text-4" id="text-6-5-9">
 </div>
 <div id="outline-container-orge44fcdf" class="outline-5">
-<h5 id="orge44fcdf"><span class="section-number-5">5.5.9.1</span> basic</h5>
-<div class="outline-text-5" id="text-5-5-9-1">
+<h5 id="orge44fcdf"><span class="section-number-5">6.5.9.1</span> basic</h5>
+<div class="outline-text-5" id="text-6-5-9-1">
 <ul class="org-ul">
 <li>org and org-plus-contrib
 <ul class="org-ul">
@@ -3008,8 +3013,8 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-org407702c" class="outline-5">
-<h5 id="org407702c"><span class="section-number-5">5.5.9.2</span> pomodoro</h5>
-<div class="outline-text-5" id="text-5-5-9-2">
+<h5 id="org407702c"><span class="section-number-5">6.5.9.2</span> pomodoro</h5>
+<div class="outline-text-5" id="text-6-5-9-2">
 <ul class="org-ul">
 <li><a href="https://github.com/lolownia/org-pomodoro">https://github.com/lolownia/org-pomodoro</a></li>
 </ul>
@@ -3027,8 +3032,8 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-org64c61a4" class="outline-5">
-<h5 id="org64c61a4"><span class="section-number-5">5.5.9.3</span> publish</h5>
-<div class="outline-text-5" id="text-5-5-9-3">
+<h5 id="org64c61a4"><span class="section-number-5">6.5.9.3</span> publish</h5>
+<div class="outline-text-5" id="text-6-5-9-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">require</span><span class="org-whitespace-space"> </span>'<span class="org-constant">y-publish</span>)
 </pre>
@@ -3038,12 +3043,12 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-org34e8f9c" class="outline-4">
-<h4 id="org34e8f9c"><span class="section-number-4">5.5.10</span> Platform</h4>
-<div class="outline-text-4" id="text-5-5-10">
+<h4 id="org34e8f9c"><span class="section-number-4">6.5.10</span> Platform</h4>
+<div class="outline-text-4" id="text-6-5-10">
 </div>
 <div id="outline-container-orgfa349ea" class="outline-5">
-<h5 id="orgfa349ea"><span class="section-number-5">5.5.10.1</span> windows</h5>
-<div class="outline-text-5" id="text-5-5-10-1">
+<h5 id="orgfa349ea"><span class="section-number-5">6.5.10.1</span> windows</h5>
+<div class="outline-text-5" id="text-6-5-10-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">when</span><span class="org-whitespace-space"> </span>(string-equal<span class="org-whitespace-space"> </span>system-type<span class="org-whitespace-space"> </span><span class="org-string">"windows-nt"</span>)
 <span class="org-whitespace-space">  </span>(<span class="org-keyword">unless</span><span class="org-whitespace-space"> </span>(getenv<span class="org-whitespace-space"> </span><span class="org-string">"HOME"</span>)
@@ -3059,8 +3064,8 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-orgb522190" class="outline-5">
-<h5 id="orgb522190"><span class="section-number-5">5.5.10.2</span> mac</h5>
-<div class="outline-text-5" id="text-5-5-10-2">
+<h5 id="orgb522190"><span class="section-number-5">6.5.10.2</span> mac</h5>
+<div class="outline-text-5" id="text-6-5-10-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">exec-path-from-shell</span>
 <span class="org-whitespace-space">  </span><span class="org-builtin">:demand</span><span class="org-whitespace-space"> </span>t
@@ -3095,8 +3100,8 @@ HTML, CSS and more.
 </div>
 
 <div id="outline-container-org6b4a0b8" class="outline-5">
-<h5 id="org6b4a0b8"><span class="section-number-5">5.5.10.3</span> linux</h5>
-<div class="outline-text-5" id="text-5-5-10-3">
+<h5 id="org6b4a0b8"><span class="section-number-5">6.5.10.3</span> linux</h5>
+<div class="outline-text-5" id="text-6-5-10-3">
 <p>
 Optimize fcitx behavior.
 </p>
@@ -3116,12 +3121,12 @@ Optimize fcitx behavior.
 </div>
 
 <div id="outline-container-orgec079c0" class="outline-4">
-<h4 id="orgec079c0"><span class="section-number-4">5.5.11</span> File mode</h4>
-<div class="outline-text-4" id="text-5-5-11">
+<h4 id="orgec079c0"><span class="section-number-4">6.5.11</span> File mode</h4>
+<div class="outline-text-4" id="text-6-5-11">
 </div>
 <div id="outline-container-orgd06c72a" class="outline-5">
-<h5 id="orgd06c72a"><span class="section-number-5">5.5.11.1</span> protobuf</h5>
-<div class="outline-text-5" id="text-5-5-11-1">
+<h5 id="orgd06c72a"><span class="section-number-5">6.5.11.1</span> protobuf</h5>
+<div class="outline-text-5" id="text-6-5-11-1">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">protobuf-mode</span>)
 </pre>
@@ -3130,8 +3135,8 @@ Optimize fcitx behavior.
 </div>
 
 <div id="outline-container-org80c9c72" class="outline-5">
-<h5 id="org80c9c72"><span class="section-number-5">5.5.11.2</span> log view</h5>
-<div class="outline-text-5" id="text-5-5-11-2">
+<h5 id="org80c9c72"><span class="section-number-5">6.5.11.2</span> log view</h5>
+<div class="outline-text-5" id="text-6-5-11-2">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span class="org-keyword">use-package</span><span class="org-whitespace-space"> </span><span class="org-constant">logview</span>)
 </pre>
@@ -3141,8 +3146,8 @@ Optimize fcitx behavior.
 </div>
 
 <div id="outline-container-org5811dd0" class="outline-4">
-<h4 id="org5811dd0"><span class="section-number-4">5.5.12</span> Footer</h4>
-<div class="outline-text-4" id="text-5-5-12">
+<h4 id="org5811dd0"><span class="section-number-4">6.5.12</span> Footer</h4>
+<div class="outline-text-4" id="text-6-5-12">
 <p>
 Refer to <a href="#header">header</a> for more details.
 </p>
@@ -3158,8 +3163,8 @@ Refer to <a href="#header">header</a> for more details.
 </div>
 
 <div id="outline-container-org73a8744" class="outline-4">
-<h4 id="org73a8744"><span class="section-number-4">5.5.13</span> Appendix</h4>
-<div class="outline-text-4" id="text-5-5-13">
+<h4 id="org73a8744"><span class="section-number-4">6.5.13</span> Appendix</h4>
+<div class="outline-text-4" id="text-6-5-13">
 <p>
 Gook Luck, Guys.
 </p>
