@@ -7,6 +7,7 @@
 <meta name="author" content="yanyg &lt;yygcode@gmail.com&gt;" />
 <link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/rtd-full.css"/>
 <script src="/themes/jquery/2.1.3/jquery.min.js"></script>
 <script src="/themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
@@ -58,20 +59,37 @@
 </ul>
 </li>
 <li><a href="#modifier-key">2.5. Modifier Key</a></li>
-<li><a href="#org6caea68">2.6. Config</a></li>
+<li><a href="#orgb147782">2.6. Config</a></li>
 <li><a href="#orgfd23938">2.7. Start</a></li>
-<li><a href="#orge1a380e">2.8. References</a></li>
+<li><a href="#org036c8c5">2.8. References</a></li>
 </ul>
 </li>
 <li><a href="#org75ff9b6">3. Packagement</a>
 <ul>
 <li><a href="#org5c7c6f4">3.1. Package system</a></li>
 <li><a href="#org986b3c4">3.2. org-babel</a></li>
-<li><a href="#orgdd4ecc0">3.3. Config</a></li>
-<li><a href="#orgb13b49d">3.4. References</a></li>
+<li><a href="#org9e276d4">3.3. Config</a></li>
+<li><a href="#orgeff9ac0">3.4. References</a></li>
 </ul>
 </li>
-<li><a href="#org174026b">4. Keybinding</a></li>
+<li><a href="#org174026b">4. Keybinding</a>
+<ul>
+<li><a href="#org57c724c">4.1. Keybind Basic</a></li>
+<li><a href="#orga134674">4.2. Keybind Rules</a></li>
+<li><a href="#orge66ff8f">4.3. Keybind Description</a>
+<ul>
+<li><a href="#orga900eeb">4.3.1. 与默认配置</a></li>
+</ul>
+</li>
+<li><a href="#orgb3d791c">4.4. ASCII Controll Characters</a></li>
+<li><a href="#orgdf08a1b">4.5. How Computer process Keyboard Input</a></li>
+<li><a href="#org94a83bf">4.6. Most Important Keybinds</a></li>
+<li><a href="#org4a82b0a">4.7. Customize keybind</a></li>
+<li><a href="#orgc031b01">4.8. Lookup keybinds</a></li>
+<li><a href="#orgb32005a">4.9. Cheatsheet</a></li>
+<li><a href="#orgfe5d750">4.10. References</a></li>
+</ul>
+</li>
 <li><a href="#orgf49d1cf">5. FAQ</a>
 <ul>
 <li><a href="#org2d44a1b">5.1. Show pressed key</a></li>
@@ -392,8 +410,8 @@ Meta与Alt是历史产物，当前的标准PC键盘中没有Meta，Emacs默认�
 </div>
 </div>
 
-<div id="outline-container-org6caea68" class="outline-3">
-<h3 id="org6caea68"><span class="section-number-3">2.6</span> Config</h3>
+<div id="outline-container-orgb147782" class="outline-3">
+<h3 id="orgb147782"><span class="section-number-3">2.6</span> Config</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Emacs默认配置文件是 <code>$HOME/.emacs.d/init.el</code> ，启动时没有 <code>$HOME/.emacs.d/</code> 目录
@@ -426,8 +444,8 @@ For Newbie:
 </div>
 </div>
 
-<div id="outline-container-orge1a380e" class="outline-3">
-<h3 id="orge1a380e"><span class="section-number-3">2.8</span> References</h3>
+<div id="outline-container-org036c8c5" class="outline-3">
+<h3 id="org036c8c5"><span class="section-number-3">2.8</span> References</h3>
 <div class="outline-text-3" id="text-2-8">
 <dl class="org-dl">
 <dt>GNU Emacs</dt><dd><a href="https://www.gnu.org/software/emacs/">https://www.gnu.org/software/emacs/</a></dd>
@@ -490,8 +508,8 @@ For Newbie:
 </div>
 </div>
 
-<div id="outline-container-orgdd4ecc0" class="outline-3">
-<h3 id="orgdd4ecc0"><span class="section-number-3">3.3</span> Config</h3>
+<div id="outline-container-org9e276d4" class="outline-3">
+<h3 id="org9e276d4"><span class="section-number-3">3.3</span> Config</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el</a>.
@@ -537,8 +555,8 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 </div>
 </div>
 
-<div id="outline-container-orgb13b49d" class="outline-3">
-<h3 id="orgb13b49d"><span class="section-number-3">3.4</span> References</h3>
+<div id="outline-container-orgeff9ac0" class="outline-3">
+<h3 id="orgeff9ac0"><span class="section-number-3">3.4</span> References</h3>
 <div class="outline-text-3" id="text-3-4">
 <dl class="org-dl">
 <dt>use-package</dt><dd><a href="https://jwiegley.github.io/use-package/">https://jwiegley.github.io/use-package/</a></dd>
@@ -554,6 +572,763 @@ See <a href="https://github.com/yygcode/.emacs.d/blob/master/lisp/y-package.el">
 
 <div id="outline-container-org174026b" class="outline-2">
 <h2 id="org174026b"><span class="section-number-2">4</span> Keybinding</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org57c724c" class="outline-3">
+<h3 id="org57c724c"><span class="section-number-3">4.1</span> Keybind Basic</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+本文不描述emacs keybind的基础知识，参阅<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Keymaps.html#Keymaps">Elisp KeyMaps</a>和<a href="https://www.gnu.org/software/emacs/manual/html_node/eintr/Keybindings.html#Keybindings">Emacs Manual Keybinding</a>，
+以及<a href="https://www.masteringemacs.org/article/mastering-key-bindings-emacs">Mastering-key-bindings-emacs</a>等资料。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga134674" class="outline-3">
+<h3 id="orga134674"><span class="section-number-3">4.2</span> Keybind Rules</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Emacs在图形界面(GUI)和终端(Terminal)下对修饰键(Modifier Key)的支持差别巨大：
+</p>
+<ul class="org-ul">
+<li>GUI界面下使用28位的字符，Meta/Control/Shift/Hyper/Super/Alt分别占据
+\(2^{27} ~ 2^{22}\) 位，详细参见<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Keyboard-Events.html#Keyboard-Events">Elisp Keyboard Events</a>；</li>
+<li>Terminal有多个标准（例如VT100/VT102），这些标准在ASCII字符集的基础上，定义
+特定的扩展序列(转义序列)，实现颜色设置、光标移动等功能。其中Ctrl与字母的组合
+编码为ASCII控制字符 <code>0x00~0x1F</code> ，Meta与字母的组合转义为 <code>ESC character</code> 。
+例如， <code>C-a</code> 实际是ASCII码 <code>SOH HEX 01=，而 =M-x</code> 和 <code>ESC x</code> 等效，都是序列
+<code>0x1B 0x78</code> 。Shift/Hyper/Super/Alt都无法传送到终端。</li>
+</ul>
+
+<p>
+上述描述中提到的Meta，在键盘上标注为Alt，而这里提到的Alt，在一般键盘上不存在。
+</p>
+
+<p>
+好消息是Emacs隐藏了GUI和Terminal下修饰键带来的差异，例如，用户只需要定义
+<code>C-a</code> ，而不用关注究竟是GUI输入的Code \(0x2000061\) 还是Terminal下的 \(0x01\) 。
+考虑我的主要工作内容是连接到远程终端写代码，配置要满足GUI和Terminal的兼容性，
+因此只使用 <code>Ctrl/Meta/ESC</code> 修饰键。
+</p>
+
+<p>
+部分键序(Key Sequence)会被终端拦截，例如默认配置 <code>C-z</code> 终端挂起程序，我习惯的
+<code>tmux</code> 配置 <code>C-z</code> 是tmux prefix key, <code>C-z C-n</code> 切换到下一个panel。这些键序都
+无法到达emacs被终端直接消费。
+</p>
+
+<p>
+快捷键的绑定要遵循最小立异原则，这里有两点考虑：要相信大多数的默认配置是经过
+长时间考量的合适配置；最小差异化配置可以让其他人更容易上手。
+</p>
+
+<p>
+键盘输入与手掌位置、键所在位置相关。部分区域键输入更快，连续两次输入同一个键
+比输入两个不同的键更快。例如，输入 <code>C-x C-x</code> 比 <code>C-g C-g</code> 要更快，输入
+<code>C-f C-f</code> 比 <code>C-f C-v</code> 要更快。
+</p>
+
+<p>
+现在可以整理出keybind的基本原则了：
+</p>
+<ul class="org-ul">
+<li>保持GUI与Terminal下的兼容；</li>
+<li>不使用终端拦截的键序；</li>
+<li>高频输入提供输入更快、更短的键序(key sequence)。</li>
+<li>尽量与默认配置保持一致；</li>
+</ul>
+
+<p>
+上述规则按照优先级排序。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge66ff8f" class="outline-3">
+<h3 id="orge66ff8f"><span class="section-number-3">4.3</span> Keybind Description</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li>Reserved <code>C-z</code></li>
+<li>Change <code>C-o</code> to switch window, rebind open-line(<code>C-o</code>) with <code>C-x C-x C-o</code>,
+Rebind exchange-point-and-mark(<code>C-x C-x</code>) to <code>C-x C-x C-x</code></li>
+</ul>
+</div>
+
+<div id="outline-container-orga900eeb" class="outline-4">
+<h4 id="orga900eeb"><span class="section-number-4">4.3.1</span> 与默认配置</h4>
+</div>
+</div>
+<div id="outline-container-orgb3d791c" class="outline-3">
+<h3 id="orgb3d791c"><span class="section-number-3">4.4</span> ASCII Controll Characters</h3>
+<div class="outline-text-3" id="text-4-4">
+<table>
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">DEC</th>
+<th scope="col" class="org-right">HEX</th>
+<th scope="col" class="org-right">OCT</th>
+<th scope="col" class="org-left">SHOW</th>
+<th scope="col" class="org-left">KEY</th>
+<th scope="col" class="org-left">Function or Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-left">^@</td>
+<td class="org-left">C-2, C-@, C-SPC</td>
+<td class="org-left">set-mark-command</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-left">^A</td>
+<td class="org-left">C-a</td>
+<td class="org-left">move-beginning-of-line</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-left">^B</td>
+<td class="org-left">C-b</td>
+<td class="org-left">backward-char</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">3</td>
+<td class="org-right">3</td>
+<td class="org-left">^C</td>
+<td class="org-left">C-c</td>
+<td class="org-left">&lt;Key-prefix-custom&gt;</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-left">^D</td>
+<td class="org-left">C-d</td>
+<td class="org-left">delete-char</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">5</td>
+<td class="org-right">5</td>
+<td class="org-left">^E</td>
+<td class="org-left">C-e</td>
+<td class="org-left">move-end-of-line</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">6</td>
+<td class="org-right">6</td>
+<td class="org-left">^F</td>
+<td class="org-left">C-f</td>
+<td class="org-left">forward-char</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">7</td>
+<td class="org-right">7</td>
+<td class="org-left">^G</td>
+<td class="org-left">C-g</td>
+<td class="org-left">keyboard-quit</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-right">8</td>
+<td class="org-right">10</td>
+<td class="org-left">^H</td>
+<td class="org-left">C-h</td>
+<td class="org-left">&lt;Key-prefix-help&gt;</td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-right">9</td>
+<td class="org-right">11</td>
+<td class="org-left">^I</td>
+<td class="org-left">C-i</td>
+<td class="org-left">TAB Key</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-right">A</td>
+<td class="org-right">12</td>
+<td class="org-left">^J</td>
+<td class="org-left">C-j</td>
+<td class="org-left">LF key &lt;line feed&gt;</td>
+</tr>
+
+<tr>
+<td class="org-right">11</td>
+<td class="org-right">B</td>
+<td class="org-right">13</td>
+<td class="org-left">^K</td>
+<td class="org-left">C-k</td>
+<td class="org-left">kill-line</td>
+</tr>
+
+<tr>
+<td class="org-right">12</td>
+<td class="org-right">C</td>
+<td class="org-right">14</td>
+<td class="org-left">^L</td>
+<td class="org-left">C-l</td>
+<td class="org-left">recenter-top-bottom</td>
+</tr>
+
+<tr>
+<td class="org-right">13</td>
+<td class="org-right">D</td>
+<td class="org-right">15</td>
+<td class="org-left">^M</td>
+<td class="org-left">C-m</td>
+<td class="org-left">CR Key &lt;carriage return&gt;</td>
+</tr>
+
+<tr>
+<td class="org-right">14</td>
+<td class="org-right">E</td>
+<td class="org-right">16</td>
+<td class="org-left">^N</td>
+<td class="org-left">C-n</td>
+<td class="org-left">next-line</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">F</td>
+<td class="org-right">17</td>
+<td class="org-left">^O</td>
+<td class="org-left">C-o</td>
+<td class="org-left">other-window</td>
+</tr>
+
+<tr>
+<td class="org-right">16</td>
+<td class="org-right">10</td>
+<td class="org-right">20</td>
+<td class="org-left">^P</td>
+<td class="org-left">C-p</td>
+<td class="org-left">previous-line</td>
+</tr>
+
+<tr>
+<td class="org-right">17</td>
+<td class="org-right">11</td>
+<td class="org-right">21</td>
+<td class="org-left">^Q</td>
+<td class="org-left">C-q</td>
+<td class="org-left">quoted-insert</td>
+</tr>
+
+<tr>
+<td class="org-right">18</td>
+<td class="org-right">12</td>
+<td class="org-right">22</td>
+<td class="org-left">^R</td>
+<td class="org-left">C-r</td>
+<td class="org-left">backward-search</td>
+</tr>
+
+<tr>
+<td class="org-right">19</td>
+<td class="org-right">13</td>
+<td class="org-right">23</td>
+<td class="org-left">^S</td>
+<td class="org-left">C-s</td>
+<td class="org-left">forward-search</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-right">14</td>
+<td class="org-right">24</td>
+<td class="org-left">^T</td>
+<td class="org-left">C-t</td>
+<td class="org-left">transpose-char</td>
+</tr>
+
+<tr>
+<td class="org-right">21</td>
+<td class="org-right">15</td>
+<td class="org-right">25</td>
+<td class="org-left">^U</td>
+<td class="org-left">C-u</td>
+<td class="org-left">universal-argument</td>
+</tr>
+
+<tr>
+<td class="org-right">22</td>
+<td class="org-right">16</td>
+<td class="org-right">26</td>
+<td class="org-left">^V</td>
+<td class="org-left">C-v</td>
+<td class="org-left">scroll-up-command</td>
+</tr>
+
+<tr>
+<td class="org-right">23</td>
+<td class="org-right">17</td>
+<td class="org-right">27</td>
+<td class="org-left">^W</td>
+<td class="org-left">C-w</td>
+<td class="org-left">kill-region</td>
+</tr>
+
+<tr>
+<td class="org-right">24</td>
+<td class="org-right">18</td>
+<td class="org-right">30</td>
+<td class="org-left">^X</td>
+<td class="org-left">C-x</td>
+<td class="org-left">&lt;Key-prefix-executor&gt;</td>
+</tr>
+
+<tr>
+<td class="org-right">25</td>
+<td class="org-right">19</td>
+<td class="org-right">31</td>
+<td class="org-left">^Y</td>
+<td class="org-left">C-y</td>
+<td class="org-left">yank</td>
+</tr>
+
+<tr>
+<td class="org-right">26</td>
+<td class="org-right">1A</td>
+<td class="org-right">32</td>
+<td class="org-left">^Z</td>
+<td class="org-left">C-z</td>
+<td class="org-left">suspend-frame</td>
+</tr>
+
+<tr>
+<td class="org-right">27</td>
+<td class="org-right">1B</td>
+<td class="org-right">33</td>
+<td class="org-left">^[</td>
+<td class="org-left">C-[</td>
+<td class="org-left">ESC key the same with Alt+key</td>
+</tr>
+
+<tr>
+<td class="org-right">28</td>
+<td class="org-right">1C</td>
+<td class="org-right">34</td>
+<td class="org-left">^\</td>
+<td class="org-left">C-\</td>
+<td class="org-left">toggle-input-method</td>
+</tr>
+
+<tr>
+<td class="org-right">29</td>
+<td class="org-right">1D</td>
+<td class="org-right">35</td>
+<td class="org-left">^]</td>
+<td class="org-left">C-]</td>
+<td class="org-left">abort-recusive-edit</td>
+</tr>
+
+<tr>
+<td class="org-right">30</td>
+<td class="org-right">1E</td>
+<td class="org-right">36</td>
+<td class="org-left">^^</td>
+<td class="org-left">C-^</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">31</td>
+<td class="org-right">1F</td>
+<td class="org-right">37</td>
+<td class="org-left">^_</td>
+<td class="org-left">C-_</td>
+<td class="org-left">undo-tree-undo</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+*
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdf08a1b" class="outline-3">
+<h3 id="orgdf08a1b"><span class="section-number-3">4.5</span> How Computer process Keyboard Input</h3>
+<div class="outline-text-3" id="text-4-5">
+<ul class="org-ul">
+<li>Scan code: hardware generates one scan code when a physical key press, and
+generate another scan code when the key released. Use showkey -s to get the
+detail:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>showkey<span class="org-whitespace-space"> </span>-s
+0x01<span class="org-whitespace-space"> </span>0x9c
+</pre>
+</div>
+<p>
+0x1c and 0x9c will be generated if ESC press and release.
+</p>
+
+<ul class="org-ul">
+<li>Key Code: translate scan code to key press and release. e.g., ESC will
+generate keycode 1 press and release. Use showkey -k to get the detail:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>showkey<span class="org-whitespace-space"> </span>-k
+press<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>(program<span class="org-whitespace-space"> </span>terminates<span class="org-whitespace-space"> </span>10s<span class="org-whitespace-space"> </span>after<span class="org-whitespace-space"> </span>last<span class="org-whitespace-space"> </span>keypress)...
+keycode<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space"> </span>press
+keycode<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space"> </span>release
+^[
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>ascii code
+translate to ascii code. e.g.: ESC to  27 0x33 0x1b.</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>showkey<span class="org-whitespace-space"> </span>-a
+Press<span class="org-whitespace-space"> </span>any<span class="org-whitespace-space"> </span>keys<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>Ctrl-D<span class="org-whitespace-space"> </span>will<span class="org-whitespace-space"> </span>terminate<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>program
+
+^[<span class="org-whitespace-space">       </span>27<span class="org-whitespace-space"> </span>0033<span class="org-whitespace-space"> </span>0x1b
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org94a83bf" class="outline-3">
+<h3 id="org94a83bf"><span class="section-number-3">4.6</span> Most Important Keybinds</h3>
+<div class="outline-text-3" id="text-4-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybind</th>
+<th scope="col" class="org-left">Default Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x C-c</td>
+<td class="org-left">save-buffers-kill-terminal</td>
+<td class="org-left">Offer to save each buffer, then exit</td>
+</tr>
+
+<tr>
+<td class="org-left">M-x</td>
+<td class="org-left">execute-extended-command</td>
+<td class="org-left">Execute Command</td>
+</tr>
+
+<tr>
+<td class="org-left">C-g</td>
+<td class="org-left">keyboard-quit</td>
+<td class="org-left">Abort current command</td>
+</tr>
+
+<tr>
+<td class="org-left">C-u</td>
+<td class="org-left">universal-argument</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-f</td>
+<td class="org-left">find-file</td>
+<td class="org-left">Switch to a buffer visiting file</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-s</td>
+<td class="org-left">save-buffer</td>
+<td class="org-left">Save current buffer in visited file if modified</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-w</td>
+<td class="org-left">write-file</td>
+<td class="org-left">write current buffer to filename</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f</td>
+<td class="org-left">forward-char</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-b</td>
+<td class="org-left">backward-char</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M-f</td>
+<td class="org-left">forward-word</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M-b</td>
+<td class="org-left">backward-word</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-p</td>
+<td class="org-left">previous-line</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-n</td>
+<td class="org-left">next-line</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-h</td>
+<td class="org-left">describe-prefix-bindings</td>
+<td class="org-left">Describe the bindings of the prefi</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-c</td>
+<td class="org-left">describe-copying</td>
+<td class="org-left">Copyright</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-f</td>
+<td class="org-left">view-emacs-FAQ</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-h</td>
+<td class="org-left">help-for-help</td>
+<td class="org-left">Help command description</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h b</td>
+<td class="org-left">describe-bindings</td>
+<td class="org-left">Display a buffer showing a list of all all defined keys</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h c</td>
+<td class="org-left">describe-key-briefly</td>
+<td class="org-left">Print the name of the function KEY invokes</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h k</td>
+<td class="org-left">describe-key</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h l</td>
+<td class="org-left">view-lossage</td>
+<td class="org-left">Display last few input keystrokes and the commands run</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h m</td>
+<td class="org-left">describe-mode</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h o</td>
+<td class="org-left">describe-symbols</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h i</td>
+<td class="org-left">info</td>
+<td class="org-left">Enter documentation browser</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h r</td>
+<td class="org-left">info-emacs-manual</td>
+<td class="org-left">Emacs manual</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h t</td>
+<td class="org-left">help-with-tutorial</td>
+<td class="org-left">Emacs tutorial</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h w</td>
+<td class="org-left">where-is</td>
+<td class="org-left">Print message listing key sequences that invoke the command</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h p</td>
+<td class="org-left">finder-by-keyword</td>
+<td class="org-left">Find packages matching a given keyword</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h s</td>
+<td class="org-left">describe-syntax</td>
+<td class="org-left">Describe the syntax specifications in the syntax table of BUFFER</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h v</td>
+<td class="org-left">describe-variable</td>
+<td class="org-left">Display the full documentation of VARIABLE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org4a82b0a" class="outline-3">
+<h3 id="org4a82b0a"><span class="section-number-3">4.7</span> Customize keybind</h3>
+<div class="outline-text-3" id="text-4-7">
+<ul class="org-ul">
+<li>See <a href="01-introduction.html#modifier-key">01-introduction modifier key</a>;</li>
+<li>functions: global-set-key, define-key, kbd, mapc</li>
+<li>See <code>~/.emacs.d/config.org</code></li>
+<li>example</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(global-set-key<span class="org-whitespace-space"> </span><span class="org-string">"\C-b"</span><span class="org-whitespace-space"> </span>#'backward-char)
+(define-key<span class="org-whitespace-space"> </span>global-map<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"M-f"</span>)<span class="org-whitespace-space"> </span>#'forward-word)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc031b01" class="outline-3">
+<h3 id="orgc031b01"><span class="section-number-3">4.8</span> Lookup keybinds</h3>
+<div class="outline-text-3" id="text-4-8">
+<ul class="org-ul">
+<li>查看所有的keybinds: <code>C-h b</code></li>
+<li>查看以 <code>C-x</code> 为前缀的keybinds: <code>C-x C-h</code></li>
+<li>查看C-f的详细描述： <code>C-h k C-f</code></li>
+<li>查看M-x的概要描述： <code>C-h c M-x</code></li>
+</ul>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key Seq</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-h b</td>
+<td class="org-left">List all defined keys</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h c</td>
+<td class="org-left">Print the function name KEY invokes</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h k</td>
+<td class="org-left">Print the documentation of the function invoked by KEY</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-h</td>
+<td class="org-left">Describe the bindings of the prefix used to reach this command.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgb32005a" class="outline-3">
+<h3 id="orgb32005a"><span class="section-number-3">4.9</span> Cheatsheet</h3>
+<div class="outline-text-3" id="text-4-9">
+<p>
+See <a href="keybinding-cheatsheet.html">Keybinding Cheatsheet</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfe5d750" class="outline-3">
+<h3 id="orgfe5d750"><span class="section-number-3">4.10</span> References</h3>
+<div class="outline-text-3" id="text-4-10">
+<dl class="org-dl">
+<dt>Keyboard Events</dt><dd><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Keyboard-Events.html#Keyboard-Events">https://www.gnu.org/software/emacs/manual/html_node/elisp/Keyboard-Events.html#Keyboard-Events</a></dd>
+<dt>ISO/IEC 6429</dt><dd><a href="https://www.iso.org/standard/12781.html">https://www.iso.org/standard/12781.html</a></dd>
+<dt>Ergo Keybinds Example</dt><dd><a href="http://ergoemacs.org/emacs/keyboard_shortcuts_examples.html">http://ergoemacs.org/emacs/keyboard_shortcuts_examples.html</a></dd>
+<dt>Function Keys</dt><dd><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Function-Keys.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Function-Keys.html</a></dd>
+<dt>XFree86 CSI</dt><dd><a href="https://www.xfree86.org/4.8.0/ctlseqs.html">https://www.xfree86.org/4.8.0/ctlseqs.html</a></dd>
+<dt>VT100</dt><dd><a href="https://www.vt100.net/docs/vt510-rm/chapter8">https://www.vt100.net/docs/vt510-rm/chapter8</a></dd>
+<dt>C0 and C1 characters</dt><dd><a href="https://en.wikipedia.org/wiki/C0_and_C1_control_codes">https://en.wikipedia.org/wiki/C0_and_C1_control_codes</a></dd>
+<dt>ANSI Escape Code</dt><dd><a href="https://en.wikipedia.org/wiki/ANSI_escape_code">https://en.wikipedia.org/wiki/ANSI_escape_code</a></dd>
+<dt>Terminator Docs</dt><dd><a href="https://terminator-gtk3.readthedocs.io/en/latest/">https://terminator-gtk3.readthedocs.io/en/latest/</a></dd>
+<dt>VT100</dt><dd><a href="https://en.wikipedia.org/wiki/VT100">https://en.wikipedia.org/wiki/VT100</a></dd>
+<dt>Emacs keyBind Shortcut</dt><dd><a href="http://ergoemacs.org/emacs/ergonomic_emacs_keybinding.html">http://ergoemacs.org/emacs/ergonomic_emacs_keybinding.html</a></dd>
+<dt>Emacs Scrolling</dt><dd><a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html">https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html</a></dd>
+<dt>Emacs Translation Keymaps</dt><dd><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html#Translation-Keymaps">https://www.gnu.org/software/emacs/manual/html_node/elisp/Translation-Keymaps.html#Translation-Keymaps</a></dd>
+<dt>Summary of ANSI Standards for ASCII terminal</dt><dd><a href="https://real-world-systems.com/docs/ANSIcode.html">https://real-world-systems.com/docs/ANSIcode.html</a></dd>
+</dl>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgf49d1cf" class="outline-2">
