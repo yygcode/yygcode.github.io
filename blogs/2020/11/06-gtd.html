@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Getting Things Done</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Getting Things Done</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9435799">1. 配置</a>
+<ul>
+<li><a href="#org8263151">1.1. directory</a></li>
+<li><a href="#org217d6d8">1.2. variable</a></li>
+</ul>
+</li>
+<li><a href="#orgb26682e">2. 任务类型</a>
+<ul>
+<li><a href="#orgb13b838">2.1. capture template</a></li>
+<li><a href="#org6a4392c">2.2. keybinding</a></li>
+</ul>
+</li>
+<li><a href="#orgb08f303">3. 使用</a></li>
+<li><a href="#org9b71256">4. Reference</a></li>
+</ul>
+</div>
+</div>
+<p>
+开始玩儿EMACS是因为<a href="https://orgmode.org/worg/org-gtd-etc.html">Org GTD</a>。GTD工作流程主要包括下面几部分：
+</p>
+<dl class="org-dl">
+<dt>Capture</dt><dd>记录想法</dd>
+<dt>Agenda</dt><dd>查看计划</dd>
+<dt>Clock</dt><dd>记录时间花费</dd>
+<dt>State</dt><dd>TODO/DONE状态转换</dd>
+<dt>Refile</dt><dd>调整结构</dd>
+<dt>Archive</dt><dd>结束归档</dd>
+</dl>
+
+<div id="outline-container-org9435799" class="outline-2">
+<h2 id="org9435799"><span class="section-number-2">1</span> 配置</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org8263151" class="outline-3">
+<h3 id="org8263151"><span class="section-number-3">1.1</span> directory</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+设置GTD工作目录文件： <code>~/docs/gtd</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defconst</span><span class="org-whitespace-space"> </span><span class="org-variable-name">y/org-directory</span><span class="org-whitespace-space"> </span>(expand-file-name<span class="org-whitespace-space"> </span><span class="org-string">"~/docs"</span>)
+<span class="org-whitespace-space">  </span><span class="org-doc">"Directory</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">org</span><span class="org-whitespace-space"> </span><span class="org-doc">mode."</span>)
+(<span class="org-keyword">defvar</span><span class="org-whitespace-space"> </span><span class="org-variable-name">y/gtd-directory</span><span class="org-whitespace-space"> </span>(concat<span class="org-whitespace-space"> </span>y/org-directory<span class="org-whitespace-space"> </span><span class="org-string">"/gtd"</span>)
+<span class="org-whitespace-space">  </span><span class="org-doc">"Getting</span><span class="org-whitespace-space"> </span><span class="org-doc">things</span><span class="org-whitespace-space"> </span><span class="org-doc">done</span><span class="org-whitespace-space"> </span><span class="org-doc">directory."</span>)
+(<span class="org-keyword">defun</span><span class="org-whitespace-space"> </span><span class="org-function-name">y/gtd-file-meeting</span>()
+<span class="org-whitespace-space">  </span><span class="org-doc">"GTD</span><span class="org-whitespace-space"> </span><span class="org-doc">filename</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">meeting."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/meeting.org"</span>))
+(<span class="org-keyword">defun</span><span class="org-whitespace-space"> </span><span class="org-function-name">y/gtd-file-code</span>()
+<span class="org-whitespace-space">  </span><span class="org-doc">"GTD</span><span class="org-whitespace-space"> </span><span class="org-doc">filename</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">code."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/code.org"</span>))
+
+(<span class="org-keyword">defun</span><span class="org-whitespace-space"> </span><span class="org-function-name">y/gtd-file-idea</span>()
+<span class="org-whitespace-space">  </span><span class="org-doc">"GTD</span><span class="org-whitespace-space"> </span><span class="org-doc">filename</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">idea."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/idea.org"</span>))
+
+(<span class="org-keyword">defun</span><span class="org-whitespace-space"> </span><span class="org-function-name">y/gtd-file-blog</span>()
+<span class="org-whitespace-space">  </span><span class="org-doc">"GTD</span><span class="org-whitespace-space"> </span><span class="org-doc">filename</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">blog."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/blog.org"</span>))
+
+(<span class="org-keyword">defun</span><span class="org-whitespace-space"> </span><span class="org-function-name">y/gtd-file-task</span>()
+<span class="org-whitespace-space">  </span><span class="org-doc">"GTD</span><span class="org-whitespace-space"> </span><span class="org-doc">filename</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">task."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/task.org"</span>))
+
+(<span class="org-keyword">defvar</span><span class="org-whitespace-space"> </span><span class="org-variable-name">y/gtd-file-archive</span>
+<span class="org-whitespace-space">  </span><span class="org-string">"GTD</span><span class="org-whitespace-space"> </span><span class="org-string">filename</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">refile."</span>
+<span class="org-whitespace-space">  </span>(concat<span class="org-whitespace-space"> </span>y/gtd-directory<span class="org-whitespace-space"> </span><span class="org-string">"/archive.org"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org217d6d8" class="outline-3">
+<h3 id="org217d6d8"><span class="section-number-3">1.2</span> variable</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>使用相对路径</li>
+<li>设置时间格式</li>
+<li>如果设置LANG/LC_CTYPE是zh_CN.UTF-8，设置 <code>system-time-locale</code> 依然
+使用英文格式时间</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span><span class="org-whitespace-space"> </span>system-time-locale<span class="org-whitespace-space"> </span><span class="org-string">"C"</span>)<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">;;</span><span class="org-whitespace-space"> </span><span class="org-comment">show</span><span class="org-whitespace-space"> </span><span class="org-comment">english</span><span class="org-whitespace-space"> </span><span class="org-comment">date</span><span class="org-whitespace-space"> </span><span class="org-comment">even</span><span class="org-whitespace-space"> </span><span class="org-comment">LANG</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">zh_CN.UTF-8</span>
+(<span class="org-keyword">setq-default</span><span class="org-whitespace-space"> </span>org-display-custom-times<span class="org-whitespace-space"> </span>t)
+(<span class="org-keyword">setq</span><span class="org-whitespace-space"> </span>org-src-fontify-natively<span class="org-whitespace-space"> </span>t
+<span class="org-whitespace-space">      </span>org-adapt-indentation<span class="org-whitespace-space"> </span>nil
+<span class="org-whitespace-space">      </span>org-link-file-path-type<span class="org-whitespace-space"> </span>'relative
+<span class="org-whitespace-space">      </span>org-support-shift-select<span class="org-whitespace-space"> </span>t
+<span class="org-whitespace-space">      </span>org-directory<span class="org-whitespace-space"> </span>y/org-directory
+<span class="org-whitespace-space">      </span>org-default-notes-file<span class="org-whitespace-space"> </span>(concat<span class="org-whitespace-space"> </span>y/org-directory<span class="org-whitespace-space"> </span><span class="org-string">"/notes.org"</span>)
+<span class="org-whitespace-space">      </span>org-agenda-files<span class="org-whitespace-space"> </span>(list<span class="org-whitespace-space"> </span>y/gtd-directory
+<span class="org-whitespace-space">                             </span>org-default-notes-file)
+<span class="org-whitespace-space">      </span>org-refile-targets<span class="org-whitespace-space"> </span>'((org-agenda-files<span class="org-whitespace-space"> </span><span class="org-builtin">:maxlevel</span><span class="org-whitespace-space"> </span>.<span class="org-whitespace-space"> </span>3))
+<span class="org-whitespace-space">      </span><span class="org-comment-delimiter">;;</span><span class="org-whitespace-space"> </span><span class="org-comment">org-refile-targets</span><span class="org-whitespace-space"> </span><span class="org-comment">'((y/gtd-file-archive</span><span class="org-whitespace-space"> </span><span class="org-comment">:maxlevel</span><span class="org-whitespace-space"> </span><span class="org-comment">.</span><span class="org-whitespace-space"> </span><span class="org-comment">3))</span>
+<span class="org-whitespace-space">      </span>org-time-stamp-custom-formats<span class="org-whitespace-space"> </span>'(<span class="org-string">"&lt;%F</span><span class="org-whitespace-space"> </span><span class="org-string">%a&gt;"</span><span class="org-whitespace-space"> </span>.
+<span class="org-whitespace-space">                                      </span><span class="org-string">"&lt;%F</span><span class="org-whitespace-space"> </span><span class="org-string">%a</span><span class="org-whitespace-space"> </span><span class="org-string">%H:%M&gt;"</span>))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb26682e" class="outline-2">
+<h2 id="orgb26682e"><span class="section-number-2">2</span> 任务类型</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+From <a href="https://www.zhihu.com/question/20247508">https://www.zhihu.com/question/20247508</a>:
+</p>
+<ul class="org-ul">
+<li>重要紧急：救火</li>
+<li>重要不紧急：规划</li>
+<li>不重要但紧急：琐事</li>
+<li>不重要不紧急：休闲</li>
+</ul>
+</div>
+
+<div id="outline-container-orgb13b838" class="outline-3">
+<h3 id="orgb13b838"><span class="section-number-3">2.1</span> capture template</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span><span class="org-whitespace-space"> </span>org-capture-templates
+<span class="org-whitespace-space">      </span>'((<span class="org-string">"m"</span><span class="org-whitespace-space"> </span><span class="org-string">"Meeting"</span><span class="org-whitespace-space"> </span>entry
+<span class="org-whitespace-space">         </span>(file+headline<span class="org-whitespace-space"> </span>y/gtd-file-meeting<span class="org-whitespace-space"> </span><span class="org-string">"Meetings"</span>)
+<span class="org-whitespace-space">         </span><span class="org-string">"*</span><span class="org-whitespace-space"> </span><span class="org-string">%?\nSCHEDULED:</span><span class="org-whitespace-space"> </span><span class="org-string">%^T\nFrom:</span><span class="org-whitespace-space"> </span><span class="org-string">%a\n:END:\n"</span>)
+<span class="org-whitespace-space">        </span>(<span class="org-string">"c"</span><span class="org-whitespace-space"> </span><span class="org-string">"Code"</span><span class="org-whitespace-space"> </span>entry
+<span class="org-whitespace-space">         </span>(file+headline<span class="org-whitespace-space"> </span>y/gtd-file-code<span class="org-whitespace-space"> </span><span class="org-string">"CodeRef"</span>)
+<span class="org-whitespace-space">         </span><span class="org-string">"*</span><span class="org-whitespace-space"> </span><span class="org-string">%?\n%a\n:END:\n"</span>)
+<span class="org-whitespace-space">        </span>(<span class="org-string">"i"</span><span class="org-whitespace-space"> </span><span class="org-string">"Idea"</span><span class="org-whitespace-space"> </span>entry
+<span class="org-whitespace-space">         </span>(file+headline<span class="org-whitespace-space"> </span>y/gtd-file-idea<span class="org-whitespace-space"> </span><span class="org-string">"Ideas"</span>)
+<span class="org-whitespace-space">         </span><span class="org-string">"*</span><span class="org-whitespace-space"> </span><span class="org-string">%?\nSCHEDULED:</span><span class="org-whitespace-space"> </span><span class="org-string">%T\n:END:\n"</span>)
+<span class="org-whitespace-space">        </span>(<span class="org-string">"b"</span><span class="org-whitespace-space"> </span><span class="org-string">"Blog"</span><span class="org-whitespace-space"> </span>entry
+<span class="org-whitespace-space">         </span>(file+headline<span class="org-whitespace-space"> </span>y/gtd-file-blog<span class="org-whitespace-space"> </span><span class="org-string">"Blogs"</span>)
+<span class="org-whitespace-space">         </span><span class="org-string">"*</span><span class="org-whitespace-space"> </span><span class="org-string">%?\nSCHEDULED:</span><span class="org-whitespace-space"> </span><span class="org-string">%T\n:END:\n"</span>)
+<span class="org-whitespace-space">        </span>(<span class="org-string">"t"</span><span class="org-whitespace-space"> </span><span class="org-string">"Task"</span><span class="org-whitespace-space"> </span>entry
+<span class="org-whitespace-space">         </span>(file+headline<span class="org-whitespace-space"> </span>y/gtd-file-task<span class="org-whitespace-space"> </span><span class="org-string">"Tasks"</span>)
+<span class="org-whitespace-space">         </span><span class="org-string">"*</span><span class="org-whitespace-space"> </span><span class="org-string">%?\nSCHEDULED:</span><span class="org-whitespace-space"> </span><span class="org-string">%T\n:END:\n"</span>)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6a4392c" class="outline-3">
+<h3 id="org6a4392c"><span class="section-number-3">2.2</span> keybinding</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(y/keymap-set-key<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"C-c</span><span class="org-whitespace-space"> </span><span class="org-string">c"</span>)<span class="org-whitespace-space"> </span>#'org-capture)
+(y/keymap-set-key<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"C-c</span><span class="org-whitespace-space"> </span><span class="org-string">a"</span>)<span class="org-whitespace-space"> </span>#'org-agenda)
+(y/keymap-set-key<span class="org-whitespace-space"> </span>(kbd<span class="org-whitespace-space"> </span><span class="org-string">"C-c</span><span class="org-whitespace-space"> </span><span class="org-string">t"</span>)<span class="org-whitespace-space"> </span>#'org-insert-structure-template)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb08f303" class="outline-2">
+<h2 id="orgb08f303"><span class="section-number-2">3</span> 使用</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Capture: <code>C-c c</code></li>
+<li>Agenda: <code>C-c a</code></li>
+</ul>
+
+<p>
+Agenda Example:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Friday<span class="org-whitespace-space">     </span>27<span class="org-whitespace-space"> </span>November<span class="org-whitespace-space"> </span>2020
+Saturday<span class="org-whitespace-space">   </span>28<span class="org-whitespace-space"> </span>November<span class="org-whitespace-space"> </span>2020
+<span class="org-whitespace-space">               </span>8:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">              </span>10:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">              </span>12:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">              </span>14:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">  </span>archive:<span class="org-whitespace-space">    </span>15:35......
+<span class="org-whitespace-space">              </span>16:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">  </span>task:<span class="org-whitespace-space">       </span>17:04......<span class="org-whitespace-space"> </span>Scheduled:<span class="org-whitespace-space">  </span><span class="custom">TODO</span><span class="org-whitespace-space"> </span>Read<span class="org-whitespace-space"> </span>paper<span class="org-whitespace-space"> </span>dynamo
+<span class="org-whitespace-space">              </span>18:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">              </span>20:00......<span class="org-whitespace-space"> </span>----------------
+<span class="org-whitespace-space">              </span>23:37......<span class="org-whitespace-space"> </span>now<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>-
+<span class="org-whitespace-space">  </span>notes:<span class="org-whitespace-space">      </span>Scheduled:<span class="org-whitespace-space">  </span><span class="custom">TODO</span><span class="org-whitespace-space"> </span>Summary<span class="org-whitespace-space"> </span>GFS<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>points
+<span class="org-whitespace-space">  </span>notes:<span class="org-whitespace-space">      </span>In<span class="org-whitespace-space">   </span>2<span class="org-whitespace-space"> </span>d.:<span class="org-whitespace-space">  </span><span class="custom">TODO</span><span class="org-whitespace-space"> </span>Summary<span class="org-whitespace-space"> </span>GFS<span class="org-whitespace-space"> </span>key<span class="org-whitespace-space"> </span>points
+Sunday<span class="org-whitespace-space">     </span>29<span class="org-whitespace-space"> </span>November<span class="org-whitespace-space"> </span>2020
+<span class="org-whitespace-space">  </span>notes:<span class="org-whitespace-space">      </span>12:19......<span class="org-whitespace-space"> </span>Scheduled:<span class="org-whitespace-space">  </span>MEETING<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>discuss<span class="org-whitespace-space"> </span>HDFS
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9b71256" class="outline-2">
+<h2 id="org9b71256"><span class="section-number-2">4</span> Reference</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>My Workflow with ORG-AGENDA</dt><dd><a href="http://www.cachestocaches.com/2016/9/my-workflow-org-agenda/">http://www.cachestocaches.com/2016/9/my-workflow-org-agenda/</a></dd>
+<dt>Capture Manual</dt><dd><a href="https://orgmode.org/manual/Capture.html">https://orgmode.org/manual/Capture.html</a></dd>
+<dt>Agenda Manual</dt><dd><a href="https://orgmode.org/manual/Agenda-Views.html">https://orgmode.org/manual/Agenda-Views.html</a></dd>
+<dt>Orgmode for GTD</dt><dd><a href="https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html">https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html</a></dd>
+<dt>Refile</dt><dd><a href="https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html">https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html</a></dd>
+<dt>Org-mode and GTD</dt><dd><a href="https://creamidea.github.io/static/html/articles/Orgmode-And-GTD.html">https://creamidea.github.io/static/html/articles/Orgmode-And-GTD.html</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
