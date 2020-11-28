@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>在Emacs下绘制UML图</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">在Emacs下绘制UML图</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5811c01">1. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+最近想画几个UML图，Emacs配置记录如下：
+</p>
+
+<p>
+Download plantuml.jar: <a href="https://plantuml.com/">https://plantuml.com/</a>. And put it to
+~/.emacs.d/external/.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>wget<span class="org-whitespace-space"> </span>https://jaist.dl.sourceforge.net/project/plantuml/plantuml.jar?<span class="org-variable-name">viasf</span>=1
+~$<span class="org-whitespace-space"> </span>mv<span class="org-whitespace-space"> </span>plantuml.jar?<span class="org-variable-name">viasf</span>=1<span class="org-whitespace-space"> </span>~/.emacs.d/external/plantuml.jar
+</pre>
+</div>
+
+<p>
+Config org babel:
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">(org-babel-do-load-languages
+<span class="org-whitespace-space"> </span>'org-babel-load-languages
+<span class="org-whitespace-space"> </span>'(<span class="org-comment-delimiter">;;</span><span class="org-whitespace-space"> </span><span class="org-comment">other</span><span class="org-whitespace-space"> </span><span class="org-comment">Babel</span><span class="org-whitespace-space"> </span><span class="org-comment">languages</span>
+<span class="org-whitespace-space">   </span>(plantuml<span class="org-whitespace-space"> </span>.<span class="org-whitespace-space"> </span>t)))
+
+(<span class="org-keyword">setq</span><span class="org-whitespace-space"> </span>org-plantuml-jar-path
+<span class="org-whitespace-space">      </span>(expand-file-name<span class="org-whitespace-space"> </span><span class="org-string">"~/.emacs.d/external/plantuml.jar"</span>))
+</pre>
+</div>
+
+<p>
+Try:
+</p>
+<div class="org-src-container">
+<pre class="src src-plantuml">Alice -&gt; Bob: synchronous call
+Alice -&gt;&gt; Bob: asynchronous call
+</pre>
+</div>
+
+<p>
+Another example
+</p>
+<div class="org-src-container">
+<pre class="src src-plantuml">title Example Sequence Diagram
+activate Client
+Client -&gt; Server: Session Initiation
+note right: Client requests new session
+activate Server
+Client &lt;-- Server: Authorization Request
+note left: Server requires authentication
+Client -&gt; Server: Authorization Response
+note right: Client provides authentication details
+Server --&gt; Client: Session Token
+note left: Session established
+deactivate Server
+Client -&gt; Client: Saves token
+deactivate Client
+</pre>
+</div>
+
+<p>
+Another example:
+</p>
+<div class="org-src-container">
+<pre class="src src-plantuml">'http://click.sourceforge.net/images/activity-diagram-small.png
+title Servlet Container
+
+(*) --&gt; "ClickServlet.handleRequest()"
+--&gt; "new Page"
+
+if "Page.onSecurityCheck" then
+  -&gt;[true] "Page.onInit()"
+
+  if "isForward?" then
+    -&gt;[no] "Process controls"
+
+    if "continue processing?" then
+      --&gt;[yes] ===RENDERING===
+    else
+      --&gt;[no] ===REDIRECT_CHECK===
+    endif
+
+  else
+    --&gt;[yes] ===RENDERING===
+  endif
+
+  if "is Post?" then
+    --&gt;[yes] "Page.onPost()"
+    --&gt; "Page.onRender()" as render
+    --&gt; ===REDIRECT_CHECK===
+  else
+    --&gt;[no] "Page.onGet()"
+    --&gt; render
+  endif
+
+else
+  --&gt;[false] ===REDIRECT_CHECK===
+endif
+
+if "Do redirect?" then
+  -&gt;[yes] "redirect request"
+  --&gt; ==BEFORE_DESTORY===
+else
+  if "Do Forward?" then
+    -left-&gt;[yes] "Forward request"
+    --&gt; ==BEFORE_DESTORY===
+  else
+    -right-&gt;[no] "Render page template"
+    --&gt; ==BEFORE_DESTORY===
+  endif
+endif
+
+--&gt; "Page.onDestory()"
+--&gt;(*)
+</pre>
+</div>
+
+<div id="outline-container-org5811c01" class="outline-2">
+<h2 id="org5811c01"><span class="section-number-2">1</span> References</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li><a href="http://archive.3zso.com/archives/plantuml-quickstart.html">http://archive.3zso.com/archives/plantuml-quickstart.html</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
