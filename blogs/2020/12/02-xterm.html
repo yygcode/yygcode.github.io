@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Xterm Config</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Xterm Config</h1>
+<p>
+最近两年一直在用<a href="https://github.com/gnome-terminator/terminator">terminator</a>做终端，用<a href="https://github.com/tmux/tmux/wiki">tmux</a>复用，terminator自身的特性基本没用。
+最近想做点视频，要用到<a href="https://www.thregr.org/~wavexx/software/screenkey/">screenkey</a>显示字符，screenkey在terminator工作不正常，在
+xterm下工作正常，决定配置下xterm替换掉terminator。
+</p>
+
+<p>
+<code>man xterm</code> 查看option，把默认配置写入到随便什么文件，比如.xterm.conf：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">!<span class="org-whitespace-space"> </span>Use<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>nice<span class="org-whitespace-space"> </span>truetype<span class="org-whitespace-space"> </span>font<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>size<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>default...
+xterm*faceName:<span class="org-whitespace-space"> </span>Source<span class="org-whitespace-space"> </span>Code<span class="org-whitespace-space"> </span>Pro,<span class="org-whitespace-space"> </span>DejaVu<span class="org-whitespace-space"> </span>Sans<span class="org-whitespace-space"> </span>Mono<span class="org-whitespace-space"> </span>Book
+xterm*faceSize:<span class="org-whitespace-space"> </span>12
+
+!<span class="org-whitespace-space"> </span>Every<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>login<span class="org-whitespace-space"> </span>shell<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>default<span class="org-whitespace-space"> </span>(for<span class="org-whitespace-space"> </span>inclusion<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>all<span class="org-whitespace-space"> </span>necessary<span class="org-whitespace-space"> </span>enviro<span class="org-whitespace-line">nment</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">variables)</span>
+xterm*loginshell:<span class="org-whitespace-space"> </span>true
+
+!<span class="org-whitespace-space"> </span>I<span class="org-whitespace-space"> </span>like<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>LOT<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>scrollback...
+xterm*savelines:<span class="org-whitespace-space"> </span>100000
+
+!<span class="org-whitespace-space"> </span>double-click<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>select<span class="org-whitespace-space"> </span>whole<span class="org-whitespace-space"> </span>URLs<span class="org-whitespace-space"> </span>:D
+xterm*charClass:<span class="org-whitespace-space"> </span>33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
+xterm*termName:<span class="org-whitespace-space"> </span>xterm-24bits
+
+!<span class="org-whitespace-space"> </span>zenburn<span class="org-whitespace-space"> </span>theme
+xterm*foreground:<span class="org-whitespace-space"> </span>rgb:f8/f8/f2
+xterm*background:<span class="org-whitespace-space"> </span>rgb:27/28/22
+xterm*color0:<span class="org-whitespace-space"> </span>rgb:27/28/22
+xterm*color1:<span class="org-whitespace-space"> </span>rgb:f9/26/72
+xterm*color2:<span class="org-whitespace-space"> </span>rgb:a6/e2/2e
+xterm*color3:<span class="org-whitespace-space"> </span>rgb:f4/bf/75
+xterm*color4:<span class="org-whitespace-space"> </span>rgb:66/d9/ef
+xterm*color5:<span class="org-whitespace-space"> </span>rgb:ae/81/ff
+xterm*color6:<span class="org-whitespace-space"> </span>rgb:a1/ef/e4
+xterm*color7:<span class="org-whitespace-space"> </span>rgb:f8/f8/f2
+xterm*color8:<span class="org-whitespace-space"> </span>rgb:75/71/5e
+xterm*color9:<span class="org-whitespace-space"> </span>rgb:f9/26/72
+xterm*color10:<span class="org-whitespace-space"> </span>rgb:a6/e2/2e
+xterm*color11:<span class="org-whitespace-space"> </span>rgb:f4/bf/75
+xterm*color12:<span class="org-whitespace-space"> </span>rgb:66/d9/ef
+xterm*color13:<span class="org-whitespace-space"> </span>rgb:ae/81/ff
+xterm*color14:<span class="org-whitespace-space"> </span>rgb:a1/ef/e4
+xterm*color15:<span class="org-whitespace-space"> </span>rgb:f9/f8/f5
+
+!<span class="org-whitespace-space"> </span>full<span class="org-whitespace-space"> </span>screen,<span class="org-whitespace-space"> </span>no<span class="org-whitespace-space">  </span>scrollbar
+xterm*fullscreen:<span class="org-whitespace-space"> </span>true
+xterm*rightScrollBar:<span class="org-whitespace-space"> </span>false
+xterm*scrollBar:<span class="org-whitespace-space"> </span>false
+
+xterm*title:<span class="org-whitespace-space"> </span>xterm
+xterm*utf8Title:<span class="org-whitespace-space"> </span>true
+
+!<span class="org-whitespace-space"> </span>stop<span class="org-whitespace-space"> </span>output<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>terminal<span class="org-whitespace-space"> </span>from<span class="org-whitespace-space"> </span>jumping<span class="org-whitespace-space"> </span>down<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>bottom<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>scroll<span class="org-whitespace-space"> </span>again
+xterm*scrollTtyOutput:<span class="org-whitespace-space"> </span>false
+
+xterm*utf8:<span class="org-whitespace-space"> </span>true
+xterm*utf8Fonts:<span class="org-whitespace-space"> </span>true
+xterm*eightBitInput:<span class="org-whitespace-space"> </span>false
+xterm*altSendsEscape:<span class="org-whitespace-space"> </span>true
+</pre>
+</div>
+
+<p>
+执行命令导入配置：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">xrdb<span class="org-whitespace-space"> </span>-merge<span class="org-whitespace-space"> </span>~/.xterm.conf
+</pre>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
