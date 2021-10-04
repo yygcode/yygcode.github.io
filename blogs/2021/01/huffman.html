@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Huffman编码</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Huffman编码</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org1326237">1. 原理</a></li>
+<li><a href="#org2e7588f">2. 实现</a></li>
+</ul>
+</div>
+</div>
+<blockquote>
+<p>
+WIKI:
+</p>
+
+<p>
+霍夫曼编码(Huffman coding)，又译哈夫曼编码，赫夫曼编码，是一种用于无损数据压缩的
+熵编码（权编码）算法。美国计算机科学家David Albert Huffman在1952年发明。
+</p>
+</blockquote>
+
+<p>
+相关论文：A method for the Construction of Minimum-Redundancy Codes.
+</p>
+
+<div id="outline-container-org1326237" class="outline-2">
+<h2 id="org1326237"><span class="section-number-2">1</span> 原理</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+HuffmanCoding根据符号的频率决定编码。符号频率越高则符号编码越短，相反则符号越长。
+</p>
+
+<p>
+考虑FORGET五个字母的编码，假定其出现频率如下：
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Symbol</td>
+<td class="org-right">F</td>
+<td class="org-right">O</td>
+<td class="org-right">R</td>
+<td class="org-right">G</td>
+<td class="org-right">E</td>
+<td class="org-right">T</td>
+</tr>
+
+<tr>
+<td class="org-left">Frequency</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+<td class="org-right">7</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+按照如下方式迭代操作生成HuffmanCoding Tree：
+</p>
+<ul class="org-ul">
+<li>按照出现频率大小对符号排序；</li>
+<li>频率最小的两个字母相加形成一个新的节点（内部节点）；</li>
+<li>用新的内部节点替换这两个相加的字母，继续比较频率；</li>
+</ul>
+
+<p>
+最终生成如下图：
+</p>
+<div class="org-src-container">
+<pre class="src src-text"><span class="org-whitespace-space">         </span>25
+<span class="org-whitespace-space">      </span>__/<span class="org-whitespace-space">   </span>\__
+<span class="org-whitespace-space">     </span>/<span class="org-whitespace-space">         </span>\
+<span class="org-whitespace-space">    </span>10<span class="org-whitespace-space">          </span>15
+<span class="org-whitespace-space">   </span>/<span class="org-whitespace-space">  </span>\<span class="org-whitespace-space">        </span>/<span class="org-whitespace-space">  </span>\
+<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space">    </span>\<span class="org-whitespace-space">      </span>8<span class="org-whitespace-space">    </span>\
+<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>\<span class="org-whitespace-space">    </span>\<span class="org-whitespace-space">    </span>/<span class="org-whitespace-space"> </span>\<span class="org-whitespace-space">    </span>\
+2<span class="org-whitespace-space">   </span>3<span class="org-whitespace-space">    </span>5<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space">   </span>4<span class="org-whitespace-space">    </span>7
+F<span class="org-whitespace-space">   </span>O<span class="org-whitespace-space">    </span>E<span class="org-whitespace-space">  </span>R<span class="org-whitespace-space">   </span>G<span class="org-whitespace-space">    </span>T
+</pre>
+</div>
+
+<p>
+FORGET的编码结果则是：
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Symbol</td>
+<td class="org-right">F</td>
+<td class="org-right">O</td>
+<td class="org-right">R</td>
+<td class="org-right">G</td>
+<td class="org-right">E</td>
+<td class="org-right">T</td>
+</tr>
+
+<tr>
+<td class="org-left">Frequency</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+<td class="org-right">7</td>
+</tr>
+
+<tr>
+<td class="org-left">Code</td>
+<td class="org-right">000</td>
+<td class="org-right">001</td>
+<td class="org-right">100</td>
+<td class="org-right">101</td>
+<td class="org-right">01</td>
+<td class="org-right">11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org2e7588f" class="outline-2">
+<h2 id="org2e7588f"><span class="section-number-2">2</span> 实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+HuffmanCoding最主要的工作是实现一个HuffmanTree，HuffmanTree是一个二叉树，包含两种节点：
+</p>
+<ul class="org-ul">
+<li>叶子节点包括：Symbol、Frequency、指向父节点的链接；</li>
+<li>内部节点包括：左右子节点的链接、Frequencey(左右子节点Frequency之和)、指向
+父节点的链接；</li>
+</ul>
+
+<p>
+用0与1分别表示指向左子节点与右子节点，最后完成的树共有n个终端节点与n-1个非终端节点。
+</p>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

@@ -26,30 +26,30 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org05ec83e">1. RWLock</a>
+<li><a href="#orgbd4b64e">1. RWLock</a>
 <ul>
-<li><a href="#org56827ed">1.1. WriteFirst</a></li>
-<li><a href="#org7f734e5">1.2. ReadFirst</a></li>
+<li><a href="#orga87c0cb">1.1. WriteFirst</a></li>
+<li><a href="#org678fefe">1.2. ReadFirst</a></li>
 </ul>
 </li>
-<li><a href="#org9d9038c">2. SequenceLock</a></li>
-<li><a href="#org407c54c">3. Mutex</a></li>
-<li><a href="#org50e8d1b">4. SpinLock</a></li>
-<li><a href="#orgac95d67">5. Atomic</a></li>
-<li><a href="#org1748644">6. CountDown</a></li>
-<li><a href="#org558a5ae">7. Future</a></li>
-<li><a href="#orgec8a9af">8. SyncClosure</a></li>
-<li><a href="#org257f706">9. RCU</a></li>
+<li><a href="#org43d9299">2. SequenceLock</a></li>
+<li><a href="#org85d6f1b">3. Mutex</a></li>
+<li><a href="#org47337f1">4. SpinLock</a></li>
+<li><a href="#org90d62ba">5. Atomic</a></li>
+<li><a href="#orga4f49af">6. CountDown</a></li>
+<li><a href="#orga486139">7. Future</a></li>
+<li><a href="#orgab64081">8. SyncClosure</a></li>
+<li><a href="#org8802d71">9. RCU</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org05ec83e" class="outline-2">
-<h2 id="org05ec83e"><span class="section-number-2">1</span> RWLock</h2>
+<div id="outline-container-orgbd4b64e" class="outline-2">
+<h2 id="orgbd4b64e"><span class="section-number-2">1</span> RWLock</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org56827ed" class="outline-3">
-<h3 id="org56827ed"><span class="section-number-3">1.1</span> WriteFirst</h3>
+<div id="outline-container-orga87c0cb" class="outline-3">
+<h3 id="orga87c0cb"><span class="section-number-3">1.1</span> WriteFirst</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>特定位标1表示有写在等待，读排队等待；</li>
@@ -58,8 +58,8 @@
 </div>
 </div>
 
-<div id="outline-container-org7f734e5" class="outline-3">
-<h3 id="org7f734e5"><span class="section-number-3">1.2</span> ReadFirst</h3>
+<div id="outline-container-org678fefe" class="outline-3">
+<h3 id="org678fefe"><span class="section-number-3">1.2</span> ReadFirst</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>先自增锁计数；</li>
@@ -70,8 +70,8 @@
 </div>
 </div>
 
-<div id="outline-container-org9d9038c" class="outline-2">
-<h2 id="org9d9038c"><span class="section-number-2">2</span> SequenceLock</h2>
+<div id="outline-container-org43d9299" class="outline-2">
+<h2 id="org43d9299"><span class="section-number-2">2</span> SequenceLock</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-text">//<span class="org-whitespace-space"> </span>Writer:
@@ -92,27 +92,27 @@
 </div>
 </div>
 
-<div id="outline-container-org407c54c" class="outline-2">
-<h2 id="org407c54c"><span class="section-number-2">3</span> Mutex</h2>
+<div id="outline-container-org85d6f1b" class="outline-2">
+<h2 id="org85d6f1b"><span class="section-number-2">3</span> Mutex</h2>
 </div>
 
-<div id="outline-container-org50e8d1b" class="outline-2">
-<h2 id="org50e8d1b"><span class="section-number-2">4</span> SpinLock</h2>
+<div id="outline-container-org47337f1" class="outline-2">
+<h2 id="org47337f1"><span class="section-number-2">4</span> SpinLock</h2>
 </div>
-<div id="outline-container-orgac95d67" class="outline-2">
-<h2 id="orgac95d67"><span class="section-number-2">5</span> Atomic</h2>
+<div id="outline-container-org90d62ba" class="outline-2">
+<h2 id="org90d62ba"><span class="section-number-2">5</span> Atomic</h2>
 </div>
-<div id="outline-container-org1748644" class="outline-2">
-<h2 id="org1748644"><span class="section-number-2">6</span> CountDown</h2>
+<div id="outline-container-orga4f49af" class="outline-2">
+<h2 id="orga4f49af"><span class="section-number-2">6</span> CountDown</h2>
 </div>
-<div id="outline-container-org558a5ae" class="outline-2">
-<h2 id="org558a5ae"><span class="section-number-2">7</span> Future</h2>
+<div id="outline-container-orga486139" class="outline-2">
+<h2 id="orga486139"><span class="section-number-2">7</span> Future</h2>
 </div>
-<div id="outline-container-orgec8a9af" class="outline-2">
-<h2 id="orgec8a9af"><span class="section-number-2">8</span> SyncClosure</h2>
+<div id="outline-container-orgab64081" class="outline-2">
+<h2 id="orgab64081"><span class="section-number-2">8</span> SyncClosure</h2>
 </div>
-<div id="outline-container-org257f706" class="outline-2">
-<h2 id="org257f706"><span class="section-number-2">9</span> RCU</h2>
+<div id="outline-container-org8802d71" class="outline-2">
+<h2 id="org8802d71"><span class="section-number-2">9</span> RCU</h2>
 </div>
 
 <script src="https://utteranc.es/client.js"

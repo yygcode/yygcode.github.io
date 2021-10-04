@@ -26,16 +26,16 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0a62977">1. boot.S: GRUB引导第一步</a>
+<li><a href="#org6e545fe">1. boot.S: GRUB引导第一步</a>
 <ul>
-<li><a href="#org76a11be">1.1. 相关BIOS例程</a>
+<li><a href="#orgcce8d9c">1.1. 相关BIOS例程</a>
 <ul>
-<li><a href="#org48f1901">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
-<li><a href="#orga6f4c9c">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
-<li><a href="#org6a6f382">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
-<li><a href="#org1a92f1b">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
-<li><a href="#orge24b82c">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
-<li><a href="#orgdc3c422">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
+<li><a href="#orgf97458a">1.1.1. 磁盘扩展探测: INT 13H, AH=41H</a></li>
+<li><a href="#orgb854955">1.1.2. LBA模式读: INT 13H, AH=42H</a></li>
+<li><a href="#orgc228165">1.1.3. CHS参数获取: INT 13H, AH=08H</a></li>
+<li><a href="#orgbb9e428">1.1.4. CHS模式读: INT 13H, AH=02H</a></li>
+<li><a href="#org77a23cc">1.1.5. 复位磁盘驱动器: INT 13H, AH=00H</a></li>
+<li><a href="#org092073f">1.1.6. 字符输出: INT 10H, AH=0EH</a></li>
 </ul>
 </li>
 </ul>
@@ -44,8 +44,8 @@
 </div>
 </div>
 
-<div id="outline-container-org0a62977" class="outline-2">
-<h2 id="org0a62977"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
+<div id="outline-container-org6e545fe" class="outline-2">
+<h2 id="org6e545fe"><span class="section-number-2">1</span> boot.S: GRUB引导第一步</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主要工作包括：配置寄存器；设置堆栈；检测引导盘；检测引导盘读取模式；读取另一扇区指令。这个过程用到几个BIOS例程，并且对主引导记录（MBR, Master Boot Record）结构有很大的依赖。因此boot.S我们分作四步进行详细描述：
@@ -60,8 +60,8 @@ boot.S位于目录boot/i386/pc/。这部分指令被加载到0x7C00~0x7DFF。主
 在本节最后，我们实现一个简单的boot.S，这个boot.S仅仅通过BIOS例程，向终端输出文本。
 </p>
 </div>
-<div id="outline-container-org76a11be" class="outline-3">
-<h3 id="org76a11be"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
+<div id="outline-container-orgcce8d9c" class="outline-3">
+<h3 id="orgcce8d9c"><span class="section-number-3">1.1</span> 相关BIOS例程</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读支持、LBA方式读、CHS参数获取、CHS方式读、磁盘复位。磁盘读取出现LBA/CHS两种模式（其实LBA又分为28-bit、48-bit、64-bit三种），是因为在磁盘的发展历史上，由于对磁盘容量的错误估量，导致容量屏障的出现，而不得不进行接口更改、扩展。历史上出现的容量屏障主要有四次：
@@ -81,8 +81,8 @@ boot.S用到五个磁盘相关的BIOS例程。分别是：探测磁盘扩展读�
 </p>
 </div>
 
-<div id="outline-container-org48f1901" class="outline-4">
-<h4 id="org48f1901"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
+<div id="outline-container-orgf97458a" class="outline-4">
+<h4 id="orgf97458a"><span class="section-number-4">1.1.1</span> 磁盘扩展探测: INT 13H, AH=41H</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 检测磁盘扩展读（LBA/CHS）支持情况。详细描述如下。
@@ -136,8 +136,8 @@ CX        接口支持掩码
 </div>
 </div>
 
-<div id="outline-container-orga6f4c9c" class="outline-4">
-<h4 id="orga6f4c9c"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
+<div id="outline-container-orgb854955" class="outline-4">
+<h4 id="orgb854955"><span class="section-number-4">1.1.2</span> LBA模式读: INT 13H, AH=42H</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 LBA模式的读采用打包的数据结构作为参数。
@@ -215,8 +215,8 @@ AH        返回码
 </div>
 </div>
 
-<div id="outline-container-org6a6f382" class="outline-4">
-<h4 id="org6a6f382"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
+<div id="outline-container-orgc228165" class="outline-4">
+<h4 id="orgc228165"><span class="section-number-4">1.1.3</span> CHS参数获取: INT 13H, AH=08H</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 获取驱动器CHS参数。如下。
@@ -266,8 +266,8 @@ CX        逻辑柱面索引最大值和逻辑扇区数
 </div>
 </div>
 
-<div id="outline-container-org1a92f1b" class="outline-4">
-<h4 id="org1a92f1b"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
+<div id="outline-container-orgbb9e428" class="outline-4">
+<h4 id="orgbb9e428"><span class="section-number-4">1.1.4</span> CHS模式读: INT 13H, AH=02H</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 CHS模式读扇区。需要注意缓冲区没有超出该段寻址范围。
@@ -376,8 +376,8 @@ CHS读结束后，通过CF判断是否成功。
 </div>
 </div>
 
-<div id="outline-container-orge24b82c" class="outline-4">
-<h4 id="orge24b82c"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
+<div id="outline-container-org77a23cc" class="outline-4">
+<h4 id="org77a23cc"><span class="section-number-4">1.1.5</span> 复位磁盘驱动器: INT 13H, AH=00H</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 复位磁盘驱动器。如下。
@@ -418,8 +418,8 @@ AH        状态
 </div>
 </div>
 
-<div id="outline-container-orgdc3c422" class="outline-4">
-<h4 id="orgdc3c422"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
+<div id="outline-container-org092073f" class="outline-4">
+<h4 id="org092073f"><span class="section-number-4">1.1.6</span> 字符输出: INT 10H, AH=0EH</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <p>
 BIOS使用INT 10H图形服务，可以用来设置图形模式、输出字符或字符串、以及基本图形（图形模式下读取/写入像素）。
@@ -470,7 +470,7 @@ INT 10H, AH=0EH调用无返回值。
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

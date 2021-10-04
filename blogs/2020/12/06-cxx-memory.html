@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>C/C++程序内存问题分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C/C++程序内存问题分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7f59fa6">1. 踩坏core分析</a></li>
+<li><a href="#org8640d1a">2. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+今年遇到过几个内存问题：
+</p>
+<ul class="org-ul">
+<li>内存泄漏
+<ul class="org-ul">
+<li>san</li>
+<li>tcmalloc stat</li>
+</ul></li>
+<li>内存未达到cgroup上限分配失败
+<ul class="org-ul">
+<li><p>
+max_map_count太多，无法建立更多vma映射了
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t430:~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/sys/vm/max_map_count
+65530
+</pre>
+</div>
+<p>
+一般是调用mprotect/mmap使用了太多vma区段导致，调大这个参数既可；
+</p></li>
+</ul></li>
+<li>踩坏导致core</li>
+</ul>
+
+<div id="outline-container-org7f59fa6" class="outline-2">
+<h2 id="org7f59fa6"><span class="section-number-2">1</span> 踩坏core分析</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+string是定义在栈上，进程core在了~basic_string上。gdb看到this指针不对。同时用
+gdb看栈地址上的string符合预期。分析寄存器，看到r13设置后没有修改，~basic_string
+直接使用的r13做为this指针。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8640d1a" class="outline-2">
+<h2 id="org8640d1a"><span class="section-number-2">2</span> References</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

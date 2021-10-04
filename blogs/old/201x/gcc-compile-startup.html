@@ -26,19 +26,19 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga05c09b">1. C编程中的文件后缀名介绍</a></li>
-<li><a href="#org74e007c">2. hello.c</a>
+<li><a href="#org4cd2a95">1. C编程中的文件后缀名介绍</a></li>
+<li><a href="#orgc715d69">2. hello.c</a>
 <ul>
-<li><a href="#orga8c1013">2.1. executable output</a></li>
-<li><a href="#orgb3234b0">2.2. 预处理文件 hello.i</a></li>
-<li><a href="#org4b4645e">2.3. asm output</a></li>
-<li><a href="#org17d2f8a">2.4. objective output</a></li>
-<li><a href="#org7b22bfa">2.5. step one by one</a></li>
+<li><a href="#org4aea6e6">2.1. executable output</a></li>
+<li><a href="#orgfed2b54">2.2. 预处理文件 hello.i</a></li>
+<li><a href="#org9b8967b">2.3. asm output</a></li>
+<li><a href="#org882622b">2.4. objective output</a></li>
+<li><a href="#org6c0692a">2.5. step one by one</a></li>
 </ul>
 </li>
-<li><a href="#orgae27d0b">3. 静态库/static library</a></li>
-<li><a href="#org104a6a9">4. 静态库/dynamic library</a></li>
-<li><a href="#org0a00419">5. 结束语</a></li>
+<li><a href="#org0e989d4">3. 静态库/static library</a></li>
+<li><a href="#org5124e6f">4. 静态库/dynamic library</a></li>
+<li><a href="#org877d950">5. 结束语</a></li>
 </ul>
 </div>
 </div>
@@ -46,8 +46,8 @@
 CSDN: <a href="http://blog.csdn.net/cppgp/article/details/3457718">http://blog.csdn.net/cppgp/article/details/3457718</a>
 </p>
 
-<div id="outline-container-orga05c09b" class="outline-2">
-<h2 id="orga05c09b"><span class="section-number-2">1</span> C编程中的文件后缀名介绍</h2>
+<div id="outline-container-org4cd2a95" class="outline-2">
+<h2 id="org4cd2a95"><span class="section-number-2">1</span> C编程中的文件后缀名介绍</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>.a 静态库（打包文件）</li>
@@ -70,8 +70,8 @@ GCC的选项-aux-info帮我们生成；*.i是经过预处理后的源码，是�
 </div>
 </div>
 
-<div id="outline-container-org74e007c" class="outline-2">
-<h2 id="org74e007c"><span class="section-number-2">2</span> hello.c</h2>
+<div id="outline-container-orgc715d69" class="outline-2">
+<h2 id="orgc715d69"><span class="section-number-2">2</span> hello.c</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-comment-delimiter">/*</span>
@@ -88,8 +88,8 @@ GCC的选项-aux-info帮我们生成；*.i是经过预处理后的源码，是�
 </div>
 </div>
 
-<div id="outline-container-orga8c1013" class="outline-3">
-<h3 id="orga8c1013"><span class="section-number-3">2.1</span> executable output</h3>
+<div id="outline-container-org4aea6e6" class="outline-3">
+<h3 id="org4aea6e6"><span class="section-number-3">2.1</span> executable output</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.c
@@ -110,8 +110,8 @@ hello,<span class="org-whitespace-space"> </span>world!
 </div>
 </div>
 
-<div id="outline-container-orgb3234b0" class="outline-3">
-<h3 id="orgb3234b0"><span class="section-number-3">2.2</span> 预处理文件 hello.i</h3>
+<div id="outline-container-orgfed2b54" class="outline-3">
+<h3 id="orgfed2b54"><span class="section-number-3">2.2</span> 预处理文件 hello.i</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-E<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.i
@@ -163,8 +163,8 @@ $<span class="org-whitespace-space"> </span>vi<span class="org-whitespace-space"
 </div>
 </div>
 
-<div id="outline-container-org4b4645e" class="outline-3">
-<h3 id="org4b4645e"><span class="section-number-3">2.3</span> asm output</h3>
+<div id="outline-container-org9b8967b" class="outline-3">
+<h3 id="org9b8967b"><span class="section-number-3">2.3</span> asm output</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-S<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.s
@@ -203,8 +203,8 @@ $<span class="org-whitespace-space"> </span>vi<span class="org-whitespace-space"
 </div>
 </div>
 
-<div id="outline-container-org17d2f8a" class="outline-3">
-<h3 id="org17d2f8a"><span class="section-number-3">2.4</span> objective output</h3>
+<div id="outline-container-org882622b" class="outline-3">
+<h3 id="org882622b"><span class="section-number-3">2.4</span> objective output</h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-c<span class="org-whitespace-space"> </span>hello.c<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello.o
@@ -242,8 +242,8 @@ Contents<span class="org-whitespace-space"> </span>of<span class="org-whitespace
 </div>
 </div>
 
-<div id="outline-container-org7b22bfa" class="outline-3">
-<h3 id="org7b22bfa"><span class="section-number-3">2.5</span> step one by one</h3>
+<div id="outline-container-org6c0692a" class="outline-3">
+<h3 id="org6c0692a"><span class="section-number-3">2.5</span> step one by one</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="org-src-container">
 <pre class="src src-sh">$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>hello<span class="org-whitespace-space"> </span>hello.i
@@ -262,8 +262,8 @@ $<span class="org-whitespace-space"> </span>./hello
 </div>
 </div>
 
-<div id="outline-container-orgae27d0b" class="outline-2">
-<h2 id="orgae27d0b"><span class="section-number-2">3</span> 静态库/static library</h2>
+<div id="outline-container-org0e989d4" class="outline-2">
+<h2 id="org0e989d4"><span class="section-number-2">3</span> 静态库/static library</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 linux下静态库的生成比较方便。在生成目标文件后用 ar 打包即可。在中大型项目中一个
@@ -349,8 +349,8 @@ func2<span class="org-whitespace-space"> </span>return<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org104a6a9" class="outline-2">
-<h2 id="org104a6a9"><span class="section-number-2">4</span> 静态库/dynamic library</h2>
+<div id="outline-container-org5124e6f" class="outline-2">
+<h2 id="org5124e6f"><span class="section-number-2">4</span> 静态库/dynamic library</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-sh">&#39318;&#20808;&#25105;&#20204;&#29983;&#25104;&#30446;&#26631;&#25991;&#20214;&#65292;&#20294;&#26159;&#38656;&#35201;&#21152;&#32534;&#35793;&#22120;&#36873;&#39033;<span class="org-whitespace-space"> </span>-fpic<span class="org-whitespace-space"> </span>&#21644;&#38142;&#25509;&#22120;&#36873;&#39033;<span class="org-whitespace-space"> </span>-shared
@@ -391,8 +391,8 @@ func2<span class="org-whitespace-space"> </span>return<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org0a00419" class="outline-2">
-<h2 id="org0a00419"><span class="section-number-2">5</span> 结束语</h2>
+<div id="outline-container-org877d950" class="outline-2">
+<h2 id="org877d950"><span class="section-number-2">5</span> 结束语</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 本文简单介绍了linux下如何使用gcc进行编译程序、以及简单的静态、动态库的生成。静态库
@@ -414,7 +414,7 @@ func2<span class="org-whitespace-space"> </span>return<span class="org-whitespac
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

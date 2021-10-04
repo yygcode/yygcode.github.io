@@ -26,18 +26,18 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org99b503b">1. int _access( const char *path, int mode );</a></li>
-<li><a href="#org31cae09">2. int _chdir( const char *dirname );</a></li>
-<li><a href="#org1f5347b">3. int _chdrive( int drive );</a></li>
-<li><a href="#orgcf73882">4. int _findclose( long handle );</a></li>
-<li><a href="#org51b81b4">5. long _findfirst( char *filespec, struct _finddata_t *fileinfo );</a></li>
-<li><a href="#org95c56c4">6. int _findnext( long handle, struct _finddata_t *fileinfo );</a></li>
-<li><a href="#orge1f1a0f">7. char *_getcwd( char *buffer, int maxlen );</a></li>
-<li><a href="#org8b333a4">8. char *_getdcwd( int drive, char *buffer, int maxlen );</a></li>
-<li><a href="#org41ec2fd">9. int _getdrive( void );</a></li>
-<li><a href="#org479e16e">10. unsigned long _getdrives(void);</a></li>
-<li><a href="#org56d48ad">11. int _mkdir( const char *dirname );</a></li>
-<li><a href="#orgfed6cd9">12. int _rmdir( const char *dirname );</a></li>
+<li><a href="#orgc8c60ff">1. int _access( const char *path, int mode );</a></li>
+<li><a href="#org77e38e2">2. int _chdir( const char *dirname );</a></li>
+<li><a href="#org9e0d782">3. int _chdrive( int drive );</a></li>
+<li><a href="#org23b597e">4. int _findclose( long handle );</a></li>
+<li><a href="#orgf955e88">5. long _findfirst( char *filespec, struct _finddata_t *fileinfo );</a></li>
+<li><a href="#orgafb83f3">6. int _findnext( long handle, struct _finddata_t *fileinfo );</a></li>
+<li><a href="#orge6adf12">7. char *_getcwd( char *buffer, int maxlen );</a></li>
+<li><a href="#orgd9205e7">8. char *_getdcwd( int drive, char *buffer, int maxlen );</a></li>
+<li><a href="#org87fd212">9. int _getdrive( void );</a></li>
+<li><a href="#orgf6eab55">10. unsigned long _getdrives(void);</a></li>
+<li><a href="#orgbe35fd4">11. int _mkdir( const char *dirname );</a></li>
+<li><a href="#org9ebb47f">12. int _rmdir( const char *dirname );</a></li>
 </ul>
 </div>
 </div>
@@ -48,8 +48,8 @@
 //按照字母顺序排列
 </p>
 
-<div id="outline-container-org99b503b" class="outline-2">
-<h2 id="org99b503b"><span class="section-number-2">1</span> int _access( const char *path, int mode );</h2>
+<div id="outline-container-orgc8c60ff" class="outline-2">
+<h2 id="orgc8c60ff"><span class="section-number-2">1</span> int _access( const char *path, int mode );</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>功   能 : 测定文件/目录存取权限.</li>
@@ -69,8 +69,8 @@ EACCES 没有相应权限</li>
 </div>
 </div>
 
-<div id="outline-container-org31cae09" class="outline-2">
-<h2 id="org31cae09"><span class="section-number-2">2</span> int _chdir( const char *dirname );</h2>
+<div id="outline-container-org77e38e2" class="outline-2">
+<h2 id="org77e38e2"><span class="section-number-2">2</span> int _chdir( const char *dirname );</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>功   能 : 更改当前工作目录.</li>
@@ -82,8 +82,8 @@ ENOENT 该路径不存在</li>
 </div>
 </div>
 
-<div id="outline-container-org1f5347b" class="outline-2">
-<h2 id="org1f5347b"><span class="section-number-2">3</span> int _chdrive( int drive );</h2>
+<div id="outline-container-org9e0d782" class="outline-2">
+<h2 id="org9e0d782"><span class="section-number-2">3</span> int _chdrive( int drive );</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>功   能 : 更改当前工作驱动器.</li>
@@ -99,8 +99,8 @@ ENOENT 该路径不存在</li>
 </div>
 </div>
 
-<div id="outline-container-orgcf73882" class="outline-2">
-<h2 id="orgcf73882"><span class="section-number-2">4</span> int _findclose( long handle );</h2>
+<div id="outline-container-org23b597e" class="outline-2">
+<h2 id="org23b597e"><span class="section-number-2">4</span> int _findclose( long handle );</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>功   能 : 关闭搜寻句柄并释放相应资源</li>
@@ -114,8 +114,8 @@ ENOENT 没有更多的符合该泛式的文件</li>
 </div>
 </div>
 
-<div id="outline-container-org51b81b4" class="outline-2">
-<h2 id="org51b81b4"><span class="section-number-2">5</span> long _findfirst( char *filespec, struct _finddata_t *fileinfo );</h2>
+<div id="outline-container-orgf955e88" class="outline-2">
+<h2 id="orgf955e88"><span class="section-number-2">5</span> long _findfirst( char *filespec, struct _finddata_t *fileinfo );</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>功   能 : 提供与filespec指定入口泛式匹配的第一个文件.通常后继用_findnext函数后续使用来完成某泛式下的文件遍历.</li>
@@ -130,8 +130,8 @@ EINVAL 无效文件名</li>
 </div>
 </div>
 
-<div id="outline-container-org95c56c4" class="outline-2">
-<h2 id="org95c56c4"><span class="section-number-2">6</span> int _findnext( long handle, struct _finddata_t *fileinfo );</h2>
+<div id="outline-container-orgafb83f3" class="outline-2">
+<h2 id="orgafb83f3"><span class="section-number-2">6</span> int _findnext( long handle, struct _finddata_t *fileinfo );</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>功   能 : 按照前面_findfirst中的泛式规则，查找下一个符合该泛式的文件，并以 此为依据修改fileinfo中的值</li>
@@ -146,8 +146,8 @@ ENOENT 没有更多的符合该泛式的文件</li>
 </div>
 
 
-<div id="outline-container-orge1f1a0f" class="outline-2">
-<h2 id="orge1f1a0f"><span class="section-number-2">7</span> char *_getcwd( char *buffer, int maxlen );</h2>
+<div id="outline-container-orge6adf12" class="outline-2">
+<h2 id="orge6adf12"><span class="section-number-2">7</span> char *_getcwd( char *buffer, int maxlen );</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>功   能 : 获得当前工作目录.</li>
@@ -163,8 +163,8 @@ ERANGE 结果超出范围</li>
 </div>
 </div>
 
-<div id="outline-container-org8b333a4" class="outline-2">
-<h2 id="org8b333a4"><span class="section-number-2">8</span> char *_getdcwd( int drive, char *buffer, int maxlen );</h2>
+<div id="outline-container-orgd9205e7" class="outline-2">
+<h2 id="orgd9205e7"><span class="section-number-2">8</span> char *_getdcwd( int drive, char *buffer, int maxlen );</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 功   能 : 获得指定驱动器的当前工作路径.
@@ -181,8 +181,8 @@ ERANGE 结果超出范围</li>
 </div>
 </div>
 
-<div id="outline-container-org41ec2fd" class="outline-2">
-<h2 id="org41ec2fd"><span class="section-number-2">9</span> int _getdrive( void );</h2>
+<div id="outline-container-org87fd212" class="outline-2">
+<h2 id="org87fd212"><span class="section-number-2">9</span> int _getdrive( void );</h2>
 <div class="outline-text-2" id="text-9">
 <ul class="org-ul">
 <li>功   能 : 获得当前磁盘驱动器.</li>
@@ -192,8 +192,8 @@ ERANGE 结果超出范围</li>
 </div>
 </div>
 
-<div id="outline-container-org479e16e" class="outline-2">
-<h2 id="org479e16e"><span class="section-number-2">10</span> unsigned long _getdrives(void);</h2>
+<div id="outline-container-orgf6eab55" class="outline-2">
+<h2 id="orgf6eab55"><span class="section-number-2">10</span> unsigned long _getdrives(void);</h2>
 <div class="outline-text-2" id="text-10">
 <ul class="org-ul">
 <li>功   能 : 获得当前所有驱动器.</li>
@@ -208,8 +208,8 @@ bit 2 &lt;==&gt; C
 </div>
 </div>
 
-<div id="outline-container-org56d48ad" class="outline-2">
-<h2 id="org56d48ad"><span class="section-number-2">11</span> int _mkdir( const char *dirname );</h2>
+<div id="outline-container-orgbe35fd4" class="outline-2">
+<h2 id="orgbe35fd4"><span class="section-number-2">11</span> int _mkdir( const char *dirname );</h2>
 <div class="outline-text-2" id="text-11">
 <ul class="org-ul">
 <li>功   能 : 创建一个新目录,目录名为dirname.</li>
@@ -223,8 +223,8 @@ ENOENT   无该文件或目录</li>
 </div>
 </div>
 
-<div id="outline-container-orgfed6cd9" class="outline-2">
-<h2 id="orgfed6cd9"><span class="section-number-2">12</span> int _rmdir( const char *dirname );</h2>
+<div id="outline-container-org9ebb47f" class="outline-2">
+<h2 id="org9ebb47f"><span class="section-number-2">12</span> int _rmdir( const char *dirname );</h2>
 <div class="outline-text-2" id="text-12">
 <ul class="org-ul">
 <li>功   能 : 删除名为dirname的目录.</li>
@@ -265,7 +265,7 @@ ENOENT     无该文件或目录</li>
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

@@ -26,30 +26,30 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1f8963a">1. 描述</a></li>
-<li><a href="#org2ebf1ef">2. 技术点备忘</a>
+<li><a href="#orgc8a6e1c">1. 描述</a></li>
+<li><a href="#org95808ab">2. 技术点备忘</a>
 <ul>
-<li><a href="#org23a523e">2.1. openssl加解密</a></li>
-<li><a href="#org39dc345">2.2. objcopy转换任意文件为二进制目标对象</a></li>
-<li><a href="#org1d9051b">2.3. strip symbol</a></li>
-<li><a href="#org39e6a7b">2.4. gpg howto</a></li>
+<li><a href="#org056bbd6">2.1. openssl加解密</a></li>
+<li><a href="#org7414e49">2.2. objcopy转换任意文件为二进制目标对象</a></li>
+<li><a href="#org1684a3b">2.3. strip symbol</a></li>
+<li><a href="#orgdb532d1">2.4. gpg howto</a></li>
 </ul>
 </li>
-<li><a href="#org6673a00">3. 其他设计事项</a>
+<li><a href="#org60832a9">3. 其他设计事项</a>
 <ul>
-<li><a href="#org9befe84">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
-<li><a href="#org7f1d1dd">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
-<li><a href="#orge3c88b5">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
-<li><a href="#orge441e62">3.4. 充分应用非对称加密提高可靠性</a></li>
+<li><a href="#orgf15805d">3.1. 为保证尽可能多的平台兼容性，使用静态链接</a></li>
+<li><a href="#org63ccc53">3.2. 关键二进制程序静态链接生成，内置到二进制发布包中</a></li>
+<li><a href="#org72eb500">3.3. 交互式输入密码策略，降低可用性，但更安全</a></li>
+<li><a href="#org3d2484a">3.4. 充分应用非对称加密提高可靠性</a></li>
 </ul>
 </li>
-<li><a href="#org780d6ab">4. References</a></li>
+<li><a href="#org6d12363">4. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org1f8963a" class="outline-2">
-<h2 id="org1f8963a"><span class="section-number-2">1</span> 描述</h2>
+<div id="outline-container-orgc8a6e1c" class="outline-2">
+<h2 id="orgc8a6e1c"><span class="section-number-2">1</span> 描述</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 最近需要完成一个小的加密工具，有较高安全要求，并要求快速完成，但对加解密性能
@@ -62,12 +62,12 @@
 </div>
 </div>
 
-<div id="outline-container-org2ebf1ef" class="outline-2">
-<h2 id="org2ebf1ef"><span class="section-number-2">2</span> 技术点备忘</h2>
+<div id="outline-container-org95808ab" class="outline-2">
+<h2 id="org95808ab"><span class="section-number-2">2</span> 技术点备忘</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org23a523e" class="outline-3">
-<h3 id="org23a523e"><span class="section-number-3">2.1</span> openssl加解密</h3>
+<div id="outline-container-org056bbd6" class="outline-3">
+<h3 id="org056bbd6"><span class="section-number-3">2.1</span> openssl加解密</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>openssl<span class="org-whitespace-space"> </span>enc<span class="org-whitespace-space"> </span>-pass<span class="org-whitespace-space"> </span>pass:123<span class="org-whitespace-space"> </span>-e<span class="org-whitespace-space"> </span>-aes-256-cbc<span class="org-whitespace-space"> </span>-in<span class="org-whitespace-space"> </span>test.txt<span class="org-whitespace-space"> </span>-out<span class="org-whitespace-space"> </span>test.txt.enc
@@ -103,8 +103,8 @@ Cipher<span class="org-whitespace-space"> </span>Types
 </div>
 </div>
 
-<div id="outline-container-org39dc345" class="outline-3">
-<h3 id="org39dc345"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
+<div id="outline-container-org7414e49" class="outline-3">
+<h3 id="org7414e49"><span class="section-number-3">2.2</span> objcopy转换任意文件为二进制目标对象</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>objcopy<span class="org-whitespace-space"> </span>-I<span class="org-whitespace-space"> </span>binary<span class="org-whitespace-space"> </span>-O<span class="org-whitespace-space"> </span>elf64-x86-64<span class="org-whitespace-space"> </span>-B<span class="org-whitespace-space"> </span>i386<span class="org-whitespace-space"> </span>file.in<span class="org-whitespace-space"> </span>file.o
@@ -130,8 +130,8 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org1d9051b" class="outline-3">
-<h3 id="org1d9051b"><span class="section-number-3">2.3</span> strip symbol</h3>
+<div id="outline-container-org1684a3b" class="outline-3">
+<h3 id="org1684a3b"><span class="section-number-3">2.3</span> strip symbol</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">~$<span class="org-whitespace-space"> </span>strip<span class="org-whitespace-space"> </span>--strip-all<span class="org-whitespace-space"> </span>test
@@ -140,8 +140,8 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org39e6a7b" class="outline-3">
-<h3 id="org39e6a7b"><span class="section-number-3">2.4</span> gpg howto</h3>
+<div id="outline-container-orgdb532d1" class="outline-3">
+<h3 id="orgdb532d1"><span class="section-number-3">2.4</span> gpg howto</h3>
 <div class="outline-text-3" id="text-2-4">
 <ul class="org-ul">
 <li>See <a href="tools-encrypt-gpg.html">tools-encrypt-gpg.html</a></li>
@@ -150,26 +150,26 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 </div>
 
-<div id="outline-container-org6673a00" class="outline-2">
-<h2 id="org6673a00"><span class="section-number-2">3</span> 其他设计事项</h2>
+<div id="outline-container-org60832a9" class="outline-2">
+<h2 id="org60832a9"><span class="section-number-2">3</span> 其他设计事项</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org9befe84" class="outline-3">
-<h3 id="org9befe84"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
+<div id="outline-container-orgf15805d" class="outline-3">
+<h3 id="orgf15805d"><span class="section-number-3">3.1</span> 为保证尽可能多的平台兼容性，使用静态链接</h3>
 </div>
-<div id="outline-container-org7f1d1dd" class="outline-3">
-<h3 id="org7f1d1dd"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
+<div id="outline-container-org63ccc53" class="outline-3">
+<h3 id="org63ccc53"><span class="section-number-3">3.2</span> 关键二进制程序静态链接生成，内置到二进制发布包中</h3>
 </div>
-<div id="outline-container-orge3c88b5" class="outline-3">
-<h3 id="orge3c88b5"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
+<div id="outline-container-org72eb500" class="outline-3">
+<h3 id="org72eb500"><span class="section-number-3">3.3</span> 交互式输入密码策略，降低可用性，但更安全</h3>
 </div>
-<div id="outline-container-orge441e62" class="outline-3">
-<h3 id="orge441e62"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
+<div id="outline-container-org3d2484a" class="outline-3">
+<h3 id="org3d2484a"><span class="section-number-3">3.4</span> 充分应用非对称加密提高可靠性</h3>
 </div>
 </div>
 
-<div id="outline-container-org780d6ab" class="outline-2">
-<h2 id="org780d6ab"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-org6d12363" class="outline-2">
+<h2 id="org6d12363"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>GPG入门：<a href="tools-encrypt-gpg.html">GPG - encrypt tools in this site</a></li>
@@ -189,7 +189,7 @@ extern<span class="org-whitespace-space"> </span>const<span class="org-whitespac
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

@@ -13,36 +13,36 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4965554">1. 增值服务 - 数据保护</a>
+<li><a href="#org69a02a2">1. 增值服务 - 数据保护</a>
 <ul>
-<li><a href="#orga2491f5">1.1. 快照</a>
+<li><a href="#org3464cf8">1.1. 快照</a>
 <ul>
-<li><a href="#org88b3049">1.1.1. 介绍</a></li>
-<li><a href="#orged9c541">1.1.2. 功能清单</a></li>
-<li><a href="#orgfe01377">1.1.3. 系统影响</a></li>
-<li><a href="#org77d2e19">1.1.4. 用户场景</a></li>
-<li><a href="#orga04a25e">1.1.5. 原理及实现</a></li>
+<li><a href="#org3d6540a">1.1.1. 介绍</a></li>
+<li><a href="#orgdb323a4">1.1.2. 功能清单</a></li>
+<li><a href="#org0877a4c">1.1.3. 系统影响</a></li>
+<li><a href="#orgb19815e">1.1.4. 用户场景</a></li>
+<li><a href="#orgfc06aa6">1.1.5. 原理及实现</a></li>
 </ul>
 </li>
-<li><a href="#org525c1d1">1.2. 镜像</a>
+<li><a href="#orgeba69f6">1.2. 镜像</a>
 <ul>
-<li><a href="#org750ac2c">1.2.1. 介绍</a></li>
+<li><a href="#org7a00355">1.2.1. 介绍</a></li>
 </ul>
 </li>
-<li><a href="#org9750876">1.3. 克隆</a></li>
-<li><a href="#org330b654">1.4. 远程复制</a></li>
-<li><a href="#org7ea7205">1.5. 双活</a></li>
-<li><a href="#orgd0e76c7">1.6. 异构虚拟化</a></li>
+<li><a href="#org45b89a0">1.3. 克隆</a></li>
+<li><a href="#orge264c8a">1.4. 远程复制</a></li>
+<li><a href="#org9459784">1.5. 双活</a></li>
+<li><a href="#org5964517">1.6. 异构虚拟化</a></li>
 </ul>
 </li>
-<li><a href="#org4878114">2. 主机适配 - Target基本功能</a></li>
-<li><a href="#org73b8460">3. 主机适配 - 虚拟化应用VAAI</a></li>
-<li><a href="#org45c927a">4. 主机适配 - Targe</a></li>
-<li><a href="#orgf19dee5">5. 性能加速 - 缓存技术</a>
+<li><a href="#org8de4c25">2. 主机适配 - Target基本功能</a></li>
+<li><a href="#orgeaa8dfa">3. 主机适配 - 虚拟化应用VAAI</a></li>
+<li><a href="#org73057e3">4. 主机适配 - Targe</a></li>
+<li><a href="#org302cc8d">5. 性能加速 - 缓存技术</a>
 <ul>
-<li><a href="#org810dede">5.1. 总体介绍</a></li>
-<li><a href="#orgbdbf307">5.2. 缓存分区</a></li>
-<li><a href="#orgf8c8cd1">5.3. 缓存保护</a></li>
+<li><a href="#orgd3fb8da">5.1. 总体介绍</a></li>
+<li><a href="#org656dd6c">5.2. 缓存分区</a></li>
+<li><a href="#orge92d153">5.3. 缓存保护</a></li>
 </ul>
 </li>
 </ul>
@@ -52,16 +52,16 @@
 本文基于IO栈从上往下顺序, 介绍SAN存储特性.
 </p>
 
-<div id="outline-container-org4965554" class="outline-2">
-<h2 id="org4965554"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
+<div id="outline-container-org69a02a2" class="outline-2">
+<h2 id="org69a02a2"><span class="section-number-2">1</span> 增值服务 - 数据保护</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orga2491f5" class="outline-3">
-<h3 id="orga2491f5"><span class="section-number-3">1.1</span> 快照</h3>
+<div id="outline-container-org3464cf8" class="outline-3">
+<h3 id="org3464cf8"><span class="section-number-3">1.1</span> 快照</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org88b3049" class="outline-4">
-<h4 id="org88b3049"><span class="section-number-4">1.1.1</span> 介绍</h4>
+<div id="outline-container-org3d6540a" class="outline-4">
+<h4 id="org3d6540a"><span class="section-number-4">1.1.1</span> 介绍</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 在不中断正常业务前提下, 生成源卷某一时间点的副本. 一般在秒级时间内可生成.
@@ -81,8 +81,8 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-orged9c541" class="outline-4">
-<h4 id="orged9c541"><span class="section-number-4">1.1.2</span> 功能清单</h4>
+<div id="outline-container-orgdb323a4" class="outline-4">
+<h4 id="orgdb323a4"><span class="section-number-4">1.1.2</span> 功能清单</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>创建</li>
@@ -94,60 +94,60 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 </div>
 
-<div id="outline-container-orgfe01377" class="outline-4">
-<h4 id="orgfe01377"><span class="section-number-4">1.1.3</span> 系统影响</h4>
+<div id="outline-container-org0877a4c" class="outline-4">
+<h4 id="org0877a4c"><span class="section-number-4">1.1.3</span> 系统影响</h4>
 </div>
 
-<div id="outline-container-org77d2e19" class="outline-4">
-<h4 id="org77d2e19"><span class="section-number-4">1.1.4</span> 用户场景</h4>
+<div id="outline-container-orgb19815e" class="outline-4">
+<h4 id="orgb19815e"><span class="section-number-4">1.1.4</span> 用户场景</h4>
 </div>
 
-<div id="outline-container-orga04a25e" class="outline-4">
-<h4 id="orga04a25e"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
+<div id="outline-container-orgfc06aa6" class="outline-4">
+<h4 id="orgfc06aa6"><span class="section-number-4">1.1.5</span> 原理及实现</h4>
 </div>
 </div>
-<div id="outline-container-org525c1d1" class="outline-3">
-<h3 id="org525c1d1"><span class="section-number-3">1.2</span> 镜像</h3>
+<div id="outline-container-orgeba69f6" class="outline-3">
+<h3 id="orgeba69f6"><span class="section-number-3">1.2</span> 镜像</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-org750ac2c" class="outline-4">
-<h4 id="org750ac2c"><span class="section-number-4">1.2.1</span> 介绍</h4>
+<div id="outline-container-org7a00355" class="outline-4">
+<h4 id="org7a00355"><span class="section-number-4">1.2.1</span> 介绍</h4>
 </div>
 </div>
-<div id="outline-container-org9750876" class="outline-3">
-<h3 id="org9750876"><span class="section-number-3">1.3</span> 克隆</h3>
+<div id="outline-container-org45b89a0" class="outline-3">
+<h3 id="org45b89a0"><span class="section-number-3">1.3</span> 克隆</h3>
 </div>
-<div id="outline-container-org330b654" class="outline-3">
-<h3 id="org330b654"><span class="section-number-3">1.4</span> 远程复制</h3>
+<div id="outline-container-orge264c8a" class="outline-3">
+<h3 id="orge264c8a"><span class="section-number-3">1.4</span> 远程复制</h3>
 </div>
-<div id="outline-container-org7ea7205" class="outline-3">
-<h3 id="org7ea7205"><span class="section-number-3">1.5</span> 双活</h3>
+<div id="outline-container-org9459784" class="outline-3">
+<h3 id="org9459784"><span class="section-number-3">1.5</span> 双活</h3>
 </div>
-<div id="outline-container-orgd0e76c7" class="outline-3">
-<h3 id="orgd0e76c7"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
+<div id="outline-container-org5964517" class="outline-3">
+<h3 id="org5964517"><span class="section-number-3">1.6</span> 异构虚拟化</h3>
 </div>
 </div>
-<div id="outline-container-org4878114" class="outline-2">
-<h2 id="org4878114"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
+<div id="outline-container-org8de4c25" class="outline-2">
+<h2 id="org8de4c25"><span class="section-number-2">2</span> 主机适配 - Target基本功能</h2>
 </div>
-<div id="outline-container-org73b8460" class="outline-2">
-<h2 id="org73b8460"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
+<div id="outline-container-orgeaa8dfa" class="outline-2">
+<h2 id="orgeaa8dfa"><span class="section-number-2">3</span> 主机适配 - 虚拟化应用VAAI</h2>
 </div>
-<div id="outline-container-org45c927a" class="outline-2">
-<h2 id="org45c927a"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
+<div id="outline-container-org73057e3" class="outline-2">
+<h2 id="org73057e3"><span class="section-number-2">4</span> 主机适配 - Targe</h2>
 </div>
-<div id="outline-container-orgf19dee5" class="outline-2">
-<h2 id="orgf19dee5"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
+<div id="outline-container-org302cc8d" class="outline-2">
+<h2 id="org302cc8d"><span class="section-number-2">5</span> 性能加速 - 缓存技术</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org810dede" class="outline-3">
-<h3 id="org810dede"><span class="section-number-3">5.1</span> 总体介绍</h3>
+<div id="outline-container-orgd3fb8da" class="outline-3">
+<h3 id="orgd3fb8da"><span class="section-number-3">5.1</span> 总体介绍</h3>
 </div>
-<div id="outline-container-orgbdbf307" class="outline-3">
-<h3 id="orgbdbf307"><span class="section-number-3">5.2</span> 缓存分区</h3>
+<div id="outline-container-org656dd6c" class="outline-3">
+<h3 id="org656dd6c"><span class="section-number-3">5.2</span> 缓存分区</h3>
 </div>
-<div id="outline-container-orgf8c8cd1" class="outline-3">
-<h3 id="orgf8c8cd1"><span class="section-number-3">5.3</span> 缓存保护</h3>
+<div id="outline-container-orge92d153" class="outline-3">
+<h3 id="orge92d153"><span class="section-number-3">5.3</span> 缓存保护</h3>
 </div>
 </div>
 
@@ -163,7 +163,7 @@ IBM SVC FlashCopy, Huawei HyperSnap都是采用写时复制技术实现的快照
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

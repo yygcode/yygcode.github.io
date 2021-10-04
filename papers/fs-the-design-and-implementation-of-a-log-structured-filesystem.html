@@ -23,31 +23,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3925163">DECLARATION</a></li>
-<li><a href="#org3317866">Abstract</a></li>
-<li><a href="#org0fc2240">1. Introduction</a></li>
-<li><a href="#orgc8a7e5d">2. Design for file systems of the 1990's</a>
+<li><a href="#orgfed3dbb">DECLARATION</a></li>
+<li><a href="#org0177070">Abstract</a></li>
+<li><a href="#orga6f1da6">1. Introduction</a></li>
+<li><a href="#org64f0cb9">2. Design for file systems of the 1990's</a>
 <ul>
-<li><a href="#org90e1f14">2.1. Technology</a></li>
-<li><a href="#orgb35270e">2.2. Workloads</a></li>
-<li><a href="#org8988ea1">2.3. Problems with existing file systems</a></li>
+<li><a href="#orgc7c0157">2.1. Technology</a></li>
+<li><a href="#org798b801">2.2. Workloads</a></li>
+<li><a href="#org39f833c">2.3. Problems with existing file systems</a></li>
 </ul>
 </li>
-<li><a href="#orgd2d7cd2">3. Log-structured file systems</a>
+<li><a href="#org96b4dbf">3. Log-structured file systems</a>
 <ul>
-<li><a href="#org77b7751">3.1. File location and reading</a></li>
-<li><a href="#orgbda0cbb">3.2. Free space management: segments</a></li>
-<li><a href="#org1b26106">3.3. Segment cleaning mechanism</a></li>
-<li><a href="#orgb1853ec">3.4. Segment cleaning policies</a></li>
+<li><a href="#org6a5efed">3.1. File location and reading</a></li>
+<li><a href="#org9a2ae2b">3.2. Free space management: segments</a></li>
+<li><a href="#orgdf329b8">3.3. Segment cleaning mechanism</a></li>
+<li><a href="#orge2689bd">3.4. Segment cleaning policies</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org3925163" class="outline-2">
-<h2 id="org3925163">DECLARATION</h2>
-<div class="outline-text-2" id="text-org3925163">
+<div id="outline-container-orgfed3dbb" class="outline-2">
+<h2 id="orgfed3dbb">DECLARATION</h2>
+<div class="outline-text-2" id="text-orgfed3dbb">
 <p>
 This page is The Design and Implementation of a Log-Structured File System
 paper. Original Paper Link is:
@@ -86,9 +86,9 @@ July 24, 1991
 </div>
 </div>
 
-<div id="outline-container-org3317866" class="outline-2">
-<h2 id="org3317866">Abstract</h2>
-<div class="outline-text-2" id="text-org3317866">
+<div id="outline-container-org0177070" class="outline-2">
+<h2 id="org0177070">Abstract</h2>
+<div class="outline-text-2" id="text-org0177070">
 <p>
 This paper presents a new technique for disk storage management called a
 log-structured file system. A log-structured file system writes all
@@ -109,8 +109,8 @@ can use only 5-10%.
 </div>
 </div>
 
-<div id="outline-container-org0fc2240" class="outline-2">
-<h2 id="org0fc2240"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orga6f1da6" class="outline-2">
+<h2 id="orga6f1da6"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Over the last decade CPU speeds have increased dramatically while disk access
@@ -186,8 +186,8 @@ Section 7 concludes.
 </div>
 </div>
 
-<div id="outline-container-orgc8a7e5d" class="outline-2">
-<h2 id="orgc8a7e5d"><span class="section-number-2">2</span> Design for file systems of the 1990's</h2>
+<div id="outline-container-org64f0cb9" class="outline-2">
+<h2 id="org64f0cb9"><span class="section-number-2">2</span> Design for file systems of the 1990's</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 File system design is governed by two general forces: technology, which provides
@@ -200,8 +200,8 @@ and technology changes.
 </p>
 </div>
 
-<div id="outline-container-org90e1f14" class="outline-3">
-<h3 id="org90e1f14"><span class="section-number-3">2.1</span> Technology</h3>
+<div id="outline-container-orgc7c0157" class="outline-3">
+<h3 id="orgc7c0157"><span class="section-number-3">2.1</span> Technology</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Three components of technology are particularly significant for file system
@@ -249,8 +249,8 @@ recovery, non-volatile RAM may be used for the write buffer.
 </div>
 </div>
 
-<div id="outline-container-orgb35270e" class="outline-3">
-<h3 id="orgb35270e"><span class="section-number-3">2.2</span> Workloads</h3>
+<div id="outline-container-org798b801" class="outline-3">
+<h3 id="org798b801"><span class="section-number-3">2.2</span> Workloads</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Several different file system workloads are common in computer applications. One
@@ -277,8 +277,8 @@ LFS work well for large files as well as small ones.
 </div>
 </div>
 
-<div id="outline-container-org8988ea1" class="outline-3">
-<h3 id="org8988ea1"><span class="section-number-3">2.3</span> Problems with existing file systems</h3>
+<div id="outline-container-org39f833c" class="outline-3">
+<h3 id="org39f833c"><span class="section-number-3">2.3</span> Problems with existing file systems</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Current file systems suffer from two general problems that make it hard for them
@@ -322,8 +322,8 @@ other file systems.
 </div>
 </div>
 
-<div id="outline-container-orgd2d7cd2" class="outline-2">
-<h2 id="orgd2d7cd2"><span class="section-number-2">3</span> Log-structured file systems</h2>
+<div id="outline-container-org96b4dbf" class="outline-2">
+<h2 id="org96b4dbf"><span class="section-number-2">3</span> Log-structured file systems</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The fundamental idea of a log-structured file system is to improve write
@@ -430,8 +430,8 @@ LFS contains neither a bitmap nor a free list.
 </p>
 </div>
 
-<div id="outline-container-org77b7751" class="outline-3">
-<h3 id="org77b7751"><span class="section-number-3">3.1</span> File location and reading</h3>
+<div id="outline-container-org6a5efed" class="outline-3">
+<h3 id="org6a5efed"><span class="section-number-3">3.1</span> File location and reading</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Although the term "log-structured" might suggest that sequential scans are
@@ -484,8 +484,8 @@ inode map blocks to record the new inode locations.
 </div>
 </div>
 
-<div id="outline-container-orgbda0cbb" class="outline-3">
-<h3 id="orgbda0cbb"><span class="section-number-3">3.2</span> Free space management: segments</h3>
+<div id="outline-container-org9a2ae2b" class="outline-3">
+<h3 id="org9a2ae2b"><span class="section-number-3">3.2</span> Free space management: segments</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The most difficult design issue for log-structured file systems is the
@@ -544,8 +544,8 @@ either 512 kilobytes or one megabyte.
 </div>
 </div>
 
-<div id="outline-container-org1b26106" class="outline-3">
-<h3 id="org1b26106"><span class="section-number-3">3.3</span> Segment cleaning mechanism</h3>
+<div id="outline-container-orgdf329b8" class="outline-3">
+<h3 id="orgdf329b8"><span class="section-number-3">3.3</span> Segment cleaning mechanism</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The process of copying live data out of a segment is called segment cleaning. In
@@ -598,8 +598,8 @@ restore consistency after crashes.
 </div>
 </div>
 
-<div id="outline-container-orgb1853ec" class="outline-3">
-<h3 id="orgb1853ec"><span class="section-number-3">3.4</span> Segment cleaning policies</h3>
+<div id="outline-container-orge2689bd" class="outline-3">
+<h3 id="orge2689bd"><span class="section-number-3">3.4</span> Segment cleaning policies</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 Given the basic mechanism described above, four policy issues must be addressed:
@@ -709,7 +709,7 @@ form the current Unix FFS; the utilization must be less than
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

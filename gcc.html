@@ -35,43 +35,43 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0e7be84">1. Attributes</a>
+<li><a href="#orgddce970">1. Attributes</a>
 <ul>
-<li><a href="#orgec5f691">1.1. 别名/alias</a></li>
-<li><a href="#org996836e">1.2. __builtin_expect</a>
+<li><a href="#org5475a8f">1.1. 别名/alias</a></li>
+<li><a href="#orgc86bf11">1.2. __builtin_expect</a>
 <ul>
-<li><a href="#orgd8617cb">1.2.1. 应用</a></li>
-<li><a href="#org26fc6b1">1.2.2. 说明</a></li>
-<li><a href="#org0da3064">1.2.3. 性能差异测试</a></li>
-<li><a href="#org3c462e3">1.2.4. onlinedocs</a></li>
-<li><a href="#org20ecd7a">1.2.5. manpages</a></li>
+<li><a href="#org99287b7">1.2.1. 应用</a></li>
+<li><a href="#orga0f7c39">1.2.2. 说明</a></li>
+<li><a href="#org3b6481e">1.2.3. 性能差异测试</a></li>
+<li><a href="#org91e66b9">1.2.4. onlinedocs</a></li>
+<li><a href="#orga283128">1.2.5. manpages</a></li>
 </ul>
 </li>
-<li><a href="#orgd3dc0a3">1.3. __builtin_constant_p</a></li>
-<li><a href="#org7e65b83">1.4. weak</a></li>
+<li><a href="#org082c27e">1.3. __builtin_constant_p</a></li>
+<li><a href="#orgbc9f334">1.4. weak</a></li>
 </ul>
 </li>
-<li><a href="#orgedd61b2">2. Debug Skills/调试技巧</a>
+<li><a href="#org6e19c17">2. Debug Skills/调试技巧</a>
 <ul>
-<li><a href="#org69f523d">2.1. -Wl,-wrap</a>
+<li><a href="#org3b76a7e">2.1. -Wl,-wrap</a>
 <ul>
-<li><a href="#org6472162">2.1.1. Usage: Wrap system or customized library functions</a></li>
-<li><a href="#org7977772">2.1.2. Example for wrap library malloc and free</a></li>
+<li><a href="#org1c228b8">2.1.1. Usage: Wrap system or customized library functions</a></li>
+<li><a href="#org74d17b1">2.1.2. Example for wrap library malloc and free</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org19bda66">3. References</a></li>
+<li><a href="#org1f91d9d">3. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org0e7be84" class="outline-2">
-<h2 id="org0e7be84"><span class="section-number-2">1</span> Attributes</h2>
+<div id="outline-container-orgddce970" class="outline-2">
+<h2 id="orgddce970"><span class="section-number-2">1</span> Attributes</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgec5f691" class="outline-3">
-<h3 id="orgec5f691"><span class="section-number-3">1.1</span> 别名/alias</h3>
+<div id="outline-container-org5475a8f" class="outline-3">
+<h3 id="org5475a8f"><span class="section-number-3">1.1</span> 别名/alias</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 GCC手册<a href="https://gcc.gnu.org/onlinedocs/gcc-7.2.0/gcc/Common-Function-Attributes.html#Common-Function-Attributes">Common Function Attribute</a>介绍，该特性导入一个符号的别名。如下示例：
@@ -133,12 +133,12 @@ GCC手册<a href="https://gcc.gnu.org/onlinedocs/gcc-7.2.0/gcc/Common-Function-A
 </div>
 </div>
 </div>
-<div id="outline-container-org996836e" class="outline-3">
-<h3 id="org996836e"><span class="section-number-3">1.2</span> __builtin_expect</h3>
+<div id="outline-container-orgc86bf11" class="outline-3">
+<h3 id="orgc86bf11"><span class="section-number-3">1.2</span> __builtin_expect</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgd8617cb" class="outline-4">
-<h4 id="orgd8617cb"><span class="section-number-4">1.2.1</span> 应用</h4>
+<div id="outline-container-org99287b7" class="outline-4">
+<h4 id="org99287b7"><span class="section-number-4">1.2.1</span> 应用</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 Kernel常见的\(likely/unlikely\)基于此实现：
@@ -165,8 +165,8 @@ glibc中有类似定义：
 </div>
 </div>
 
-<div id="outline-container-org26fc6b1" class="outline-4">
-<h4 id="org26fc6b1"><span class="section-number-4">1.2.2</span> 说明</h4>
+<div id="outline-container-orga0f7c39" class="outline-4">
+<h4 id="orga0f7c39"><span class="section-number-4">1.2.2</span> 说明</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <p>
 基于分支预测，辅助编译器生成更高效代码。\(if (__builtin_expect(expr, 0))\)表示
@@ -286,8 +286,8 @@ glibc中有类似定义：
 </div>
 </div>
 
-<div id="outline-container-org0da3064" class="outline-4">
-<h4 id="org0da3064"><span class="section-number-4">1.2.3</span> 性能差异测试</h4>
+<div id="outline-container-org3b6481e" class="outline-4">
+<h4 id="org3b6481e"><span class="section-number-4">1.2.3</span> 性能差异测试</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <p>
 <a href="http://blog.man7.org/2012/10/how-much-do-builtinexpect-likely-and.html">How much do __builtin_expect(), likely(), and unlikely() improve performance?</a>描述
@@ -316,8 +316,8 @@ glibc中有类似定义：
 </div>
 </div>
 
-<div id="outline-container-org3c462e3" class="outline-4">
-<h4 id="org3c462e3"><span class="section-number-4">1.2.4</span> onlinedocs</h4>
+<div id="outline-container-org91e66b9" class="outline-4">
+<h4 id="org91e66b9"><span class="section-number-4">1.2.4</span> onlinedocs</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <ul class="org-ul">
 <li>LINK: <a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html</a></li>
@@ -339,8 +339,8 @@ when testing pointer or floating-point values.
 </div>
 </div>
 </div>
-<div id="outline-container-org20ecd7a" class="outline-4">
-<h4 id="org20ecd7a"><span class="section-number-4">1.2.5</span> manpages</h4>
+<div id="outline-container-orga283128" class="outline-4">
+<h4 id="orga283128"><span class="section-number-4">1.2.5</span> manpages</h4>
 <div class="outline-text-4" id="text-1-2-5">
 <blockquote>
 <p>
@@ -367,8 +367,8 @@ builtin-expect-probability
 </div>
 </div>
 
-<div id="outline-container-orgd3dc0a3" class="outline-3">
-<h3 id="orgd3dc0a3"><span class="section-number-3">1.3</span> __builtin_constant_p</h3>
+<div id="outline-container-org082c27e" class="outline-3">
+<h3 id="org082c27e"><span class="section-number-3">1.3</span> __builtin_constant_p</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 GCC内置函数__builtin_constant_p(expr)用来检测expr是否为编译期常数，为编译期常数
@@ -474,20 +474,20 @@ Linux Kernel较多了使用此特性：
 </div>
 </div>
 
-<div id="outline-container-org7e65b83" class="outline-3">
-<h3 id="org7e65b83"><span class="section-number-3">1.4</span> weak</h3>
+<div id="outline-container-orgbc9f334" class="outline-3">
+<h3 id="orgbc9f334"><span class="section-number-3">1.4</span> weak</h3>
 </div>
 </div>
-<div id="outline-container-orgedd61b2" class="outline-2">
-<h2 id="orgedd61b2"><span class="section-number-2">2</span> Debug Skills/调试技巧</h2>
+<div id="outline-container-org6e19c17" class="outline-2">
+<h2 id="org6e19c17"><span class="section-number-2">2</span> Debug Skills/调试技巧</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org69f523d" class="outline-3">
-<h3 id="org69f523d"><span class="section-number-3">2.1</span> -Wl,-wrap</h3>
+<div id="outline-container-org3b76a7e" class="outline-3">
+<h3 id="org3b76a7e"><span class="section-number-3">2.1</span> -Wl,-wrap</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org6472162" class="outline-4">
-<h4 id="org6472162"><span class="section-number-4">2.1.1</span> Usage: Wrap system or customized library functions</h4>
+<div id="outline-container-org1c228b8" class="outline-4">
+<h4 id="org1c228b8"><span class="section-number-4">2.1.1</span> Usage: Wrap system or customized library functions</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ul class="org-ul">
 <li>For function func, define __wrap_func and extern __real_func;</li>
@@ -495,8 +495,8 @@ Linux Kernel较多了使用此特性：
 </div>
 </div>
 
-<div id="outline-container-org7977772" class="outline-4">
-<h4 id="org7977772"><span class="section-number-4">2.1.2</span> Example for wrap library malloc and free</h4>
+<div id="outline-container-org74d17b1" class="outline-4">
+<h4 id="org74d17b1"><span class="section-number-4">2.1.2</span> Example for wrap library malloc and free</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <div class="org-src-container">
 <pre class="src src-C"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
@@ -545,8 +545,8 @@ Linux Kernel较多了使用此特性：
 </div>
 </div>
 
-<div id="outline-container-org19bda66" class="outline-2">
-<h2 id="org19bda66"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org1f91d9d" class="outline-2">
+<h2 id="org1f91d9d"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <dl class="org-dl">
 <dt>gcc docs</dt><dd><a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html</a></dd>
@@ -568,7 +568,7 @@ Linux Kernel较多了使用此特性：
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

@@ -48,21 +48,21 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga16b039">1. 评估进程执行时间</a></li>
-<li><a href="#org42b71e8">2. 代码段执行时间评估</a>
+<li><a href="#org849eca9">1. 评估进程执行时间</a></li>
+<li><a href="#org43d56a8">2. 代码段执行时间评估</a>
 <ul>
-<li><a href="#orgd0d3487">2.1. Methods</a></li>
-<li><a href="#org04a898b">2.2. Test Results</a></li>
+<li><a href="#org255a05f">2.1. Methods</a></li>
+<li><a href="#orga27e9f3">2.2. Test Results</a></li>
 </ul>
 </li>
-<li><a href="#orgd5de265">3. Test Code</a></li>
-<li><a href="#org2553681">4. 参考资源</a></li>
+<li><a href="#org9d84846">3. Test Code</a></li>
+<li><a href="#org5969ae6">4. 参考资源</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga16b039" class="outline-2">
-<h2 id="orga16b039"><span class="section-number-2">1</span> 评估进程执行时间</h2>
+<div id="outline-container-org849eca9" class="outline-2">
+<h2 id="org849eca9"><span class="section-number-2">1</span> 评估进程执行时间</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Shell环境下使用time评估。bash shell有内置的time，系统提供功能更多的time命令
@@ -96,12 +96,12 @@ Time:
 </div>
 </div>
 
-<div id="outline-container-org42b71e8" class="outline-2">
-<h2 id="org42b71e8"><span class="section-number-2">2</span> 代码段执行时间评估</h2>
+<div id="outline-container-org43d56a8" class="outline-2">
+<h2 id="org43d56a8"><span class="section-number-2">2</span> 代码段执行时间评估</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd0d3487" class="outline-3">
-<h3 id="orgd0d3487"><span class="section-number-3">2.1</span> Methods</h3>
+<div id="outline-container-org255a05f" class="outline-3">
+<h3 id="org255a05f"><span class="section-number-3">2.1</span> Methods</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 使用\(time\)、\(gettimeofday\)、\(clock\_gettime\)获取秒、微秒、纳秒级别的时间
@@ -111,8 +111,8 @@ CPU主频相同)的时间精度。
 </div>
 </div>
 
-<div id="outline-container-org04a898b" class="outline-3">
-<h3 id="org04a898b"><span class="section-number-3">2.2</span> Test Results</h3>
+<div id="outline-container-orga27e9f3" class="outline-3">
+<h3 id="orga27e9f3"><span class="section-number-3">2.2</span> Test Results</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 通过测试代码，在我的T430(CPU 2.89Hz Cores 4)上2594 TSC为1微秒(10<sup>-6</sup>)，2.8 TSC
@@ -202,8 +202,8 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-orgd5de265" class="outline-2">
-<h2 id="orgd5de265"><span class="section-number-2">3</span> Test Code</h2>
+<div id="outline-container-org9d84846" class="outline-2">
+<h2 id="org9d84846"><span class="section-number-2">3</span> Test Code</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 如下是benchmark-time.c代码：
@@ -400,8 +400,8 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-org2553681" class="outline-2">
-<h2 id="org2553681"><span class="section-number-2">4</span> 参考资源</h2>
+<div id="outline-container-org5969ae6" class="outline-2">
+<h2 id="org5969ae6"><span class="section-number-2">4</span> 参考资源</h2>
 <div class="outline-text-2" id="text-4">
 <dl class="org-dl">
 <dt>LWN - X86: Unify/Rewrite SMP TSC sync mode</dt><dd><a href="https://lwn.net/Articles/211051/">https://lwn.net/Articles/211051/</a></dd>
@@ -430,7 +430,7 @@ clock_gettime<span class="org-whitespace-space"> </span>test<span class="org-whi
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>

@@ -48,9 +48,9 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgce9aa0e">1. diskboot.S执行时的环境</a></li>
-<li><a href="#orge29839b">2. diskboot.S代码结构</a></li>
-<li><a href="#org038a9ba">3. diskboot.S详细注释</a></li>
+<li><a href="#org2ff5514">1. diskboot.S执行时的环境</a></li>
+<li><a href="#org2fa6e6a">2. diskboot.S代码结构</a></li>
+<li><a href="#orgaa267ff">3. diskboot.S详细注释</a></li>
 </ul>
 </div>
 </div>
@@ -74,8 +74,8 @@ diskboot.img加载GRUB内核到0x8200开始的内存位置，并将系统控制�
 本章最后也模拟一个diskboot的实现。
 </p>
 
-<div id="outline-container-orgce9aa0e" class="outline-2">
-<h2 id="orgce9aa0e"><span class="section-number-2">1</span> diskboot.S执行时的环境</h2>
+<div id="outline-container-org2ff5514" class="outline-2">
+<h2 id="org2ff5514"><span class="section-number-2">1</span> diskboot.S执行时的环境</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 boot.img跳转到bootdisk.img之前，已经配置好堆栈和一些寄存器及参数值。因此diskboot假设如下条件已经是满足的：
@@ -94,8 +94,8 @@ DL中包含正确的引导驱动器；SI指向DAP地址，因此-1(%si)确定磁
 </div>
 </div>
 
-<div id="outline-container-orge29839b" class="outline-2">
-<h2 id="orge29839b"><span class="section-number-2">2</span> diskboot.S代码结构</h2>
+<div id="outline-container-org2fa6e6a" class="outline-2">
+<h2 id="org2fa6e6a"><span class="section-number-2">2</span> diskboot.S代码结构</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 diskboot.S生成512字节机器码，其中0x0~0x147共328字节是指令，0x148~0x1FF共184字节用来保存数据集，
@@ -133,8 +133,8 @@ BIOS读中断过程（LBA/CHS）参考boot.S中的注释，此处不再重复。
 </div>
 </div>
 
-<div id="outline-container-org038a9ba" class="outline-2">
-<h2 id="org038a9ba"><span class="section-number-2">3</span> diskboot.S详细注释</h2>
+<div id="outline-container-orgaa267ff" class="outline-2">
+<h2 id="orgaa267ff"><span class="section-number-2">3</span> diskboot.S详细注释</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 CSDN：<a href="https://blog.csdn.net/cppgp/article/details/6408235">https://blog.csdn.net/cppgp/article/details/6408235</a>
@@ -16065,7 +16065,7 @@ CSDN：<a href="https://blog.csdn.net/cppgp/article/details/6408235">https://blo
 </div>
 <div id="postamble" class="status">
 <div class="copyright">
-2012-2020 Copyright&copy; <i> YANYG - Powered by Emacs Orgmode</i>
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
 </div>
 </div>
 </body>
