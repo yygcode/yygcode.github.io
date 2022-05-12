@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>分布式存储系统介绍</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/styles/readtheorg/css/readtheorg.css"/>
+<script src="/themes/jquery/2.1.3/jquery.min.js"></script>
+<script src="/themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../index.html"> UP </a>
+ |
+ <a accesskey="H" href="../index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">分布式存储系统介绍</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2550e94">1. Reference</a>
+<ul>
+<li><a href="#org2deeb76">1.1. Distributed Filesystem</a>
+<ul>
+<li><a href="#org41e916c">1.1.1. GFS: Google File system</a></li>
+<li><a href="#orgfe6d521">1.1.2. Lustre</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2550e94" class="outline-2">
+<h2 id="org2550e94"><span class="section-number-2">1</span> Reference</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org2deeb76" class="outline-3">
+<h3 id="org2deeb76"><span class="section-number-3">1.1</span> Distributed Filesystem</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org41e916c" class="outline-4">
+<h4 id="org41e916c"><span class="section-number-4">1.1.1</span> GFS: Google File system</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+GFS是Google内部使用的分布式系统，2003年在SOSP发布论文&lt;The Google File System&gt;。
+GFS的第二代产品是Colossus，网上可见零星介绍，但没有发表论文。论文的第一作者
+Sanjay Ghemawat，与Jeff Dean一起，开发了Google Mapreduce, BigTable, Spanner,
+Tensorflow等产品。
+</p>
+
+<p>
+HDFS是GFS的开源实现，阿里云盘古1设计与其十分类似。
+</p>
+
+<p>
+论文: <a href="https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf">https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf</a>
+Github papers: <a href="https://github.com/yygcode/papers/blob/master/distributed-system/ds-google-gfs-sosp2003.pdf">https://github.com/yygcode/papers/blob/master/distributed-system/ds-google-gfs-sosp2003.pdf</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfe6d521" class="outline-4">
+<h4 id="orgfe6d521"><span class="section-number-4">1.1.2</span> Lustre</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+HomePage: <a href="https://www.lustre.org/">https://www.lustre.org/</a>
+</p>
+
+<p>
+GNU GPLv2开源码授权的分布式文件系统，代码在Github上可获得：
+<a href="http://wiki.lustre.org/Compiling_Lustre">http://wiki.lustre.org/Compiling_Lustre</a>
+</p>
+
+<p>
+用户手册：<a href="http://doc.lustre.org/lustre_manual.pdf">http://doc.lustre.org/lustre_manual.pdf</a>，
+以及github papers：<a href="https://github.com/yygcode/papers/blob/master/fs/fs-lustre-manual.pdf">https://github.com/yygcode/papers/blob/master/fs/fs-lustre-manual.pdf</a> 。
+</p>
+
+<p>
+维基介绍：
+</p>
+<blockquote>
+<p>
+From <a href="https://zh.wikipedia.org/wiki/Lustre">https://zh.wikipedia.org/wiki/Lustre</a>
+</p>
+
+<p>
+Lustre，一种平行分布式文件系统，通常用于大型计算机集群和超级电脑。Lustre是源自
+Linux和Cluster的混成词。最早在1999年，由皮特·布拉姆（英语：Peter Braam）创建的
+集群文件系统公司（英语：Cluster File Systems Inc.）开始研发，于2003年发布
+Lustre 1.0。采用GNU GPLv2开源码授权。
+</p>
+
+<p>
+历史
+Lustre文件系统架构是Peter Braam1999年开始的一个研究项目，皮特当时在卡内基梅隆大学
+担任教职。2001年皮特成立了自己的公司——聚类文件系统。2007年9月，升阳公司收购集群
+文件系统公司的资产，包括其知识产权。Sun在其高性能计算硬件产品中提供Lustre，以期将
+Lustre引入自家的ZFS和Solaris操作系统。2008年11月，Braam离开了升阳微系统，由
+Eric Barton和Andreas Dilger接管Lustre项目。2010年，甲骨文公司收购Sun，开始管理和
+发布Lustre。
+</p>
+
+<p>
+架构
+Lustre文件系统包括三种主要的功能单元。
+</p>
+
+<p>
+元数据服务器（metadata servers，MDSes）。一个Lustre文件系统通常拥有两个元数据
+服务器（active和standby），一个元数据服务器则拥有若干元数据目标（metadata targets，
+MDTs）。元数据目标存储名字空间元数据：文件名、目录、访问权限、文件结构等信息。不同于
+诸如GPFS和PanFS等基于块并由元数据服务器控制所有块分配的分布式文件系统，Lustre元数据
+服务器仅仅关心路径搜索和权限检查而不会牵涉任何的文件I/O操作。该特性避免元数据服务器
+成为集群扩展的瓶颈。单个文件系统拥有多个元数据目标是从2.4开始引入的新特性。
+</p>
+
+<p>
+对象存储服务器（object storage servers，OSSes）将文件数据存储于一个或多个对象存储
+目标（object storage targets，OSTs）中。取决于服务器硬件，一个对象存储服务器通常有
+二到八个对象存储目标，每个对象存储目标管理一个本地文件系统。Lustre文件系统的空间
+等于所有对象存储目标的容量总和。
+</p>
+
+<p>
+客户机（Clients）能访问并使用数据。Lustre为所有客户机提供统一的名字空间。MDT、OST和
+Client可以位于同一节点（通常用于测试），但在典型的生产环境中这些功能组件安装在使用
+网络进行通信的不同节点。 Lustre Network（LNET）层可以使用多种类型的网络互连，包括
+InfiniBand、以太网等。如果远程直接内存访问（RDMA）传输可用，Lustre将利用它提高
+吞吐量降低CPU使用率。
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
