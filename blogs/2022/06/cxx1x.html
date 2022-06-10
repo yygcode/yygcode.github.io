@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>C++ 1X 常用语法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C++ 1X 常用语法</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5ea6ca8">1. 基本语法示例</a></li>
+<li><a href="#orgf235eae">2. Memory Model</a>
+<ul>
+<li><a href="#org23d5937">2.1. 乱序</a></li>
+<li><a href="#org7701205">2.2. 参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5ea6ca8" class="outline-2">
+<h2 id="org5ea6ca8"><span class="section-number-2">1</span> 基本语法示例</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">1.</span><span class="org-whitespace-space"> </span><span class="org-comment">prevent</span><span class="org-whitespace-space"> </span><span class="org-comment">recursive</span><span class="org-whitespace-space"> </span><span class="org-comment">include</span>
+<span class="org-preprocessor">#pragma</span><span class="org-whitespace-space"> </span><span class="org-preprocessor">once</span>
+
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string&gt;</span>
+
+<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Code</span>
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+};
+
+<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Example</span>
+{
+<span class="org-keyword">public</span>:
+<span class="org-whitespace-space">  </span><span class="org-function-name">Example</span>()<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">default</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">default</span><span class="org-whitespace-space"> </span><span class="org-comment">constructor</span>
+<span class="org-whitespace-space">  </span>~<span class="org-function-name">Example</span>()<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">default</span>;
+<span class="org-whitespace-space">  </span><span class="org-function-name">Example</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">j</span>);
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">delegating</span><span class="org-whitespace-space"> </span><span class="org-comment">constructor</span>
+<span class="org-whitespace-space">  </span><span class="org-function-name">Example</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span>)<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>Example(i,<span class="org-whitespace-space"> </span>100)<span class="org-whitespace-space"> </span>{}
+<span class="org-whitespace-space">  </span><span class="org-function-name">Example</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">Example</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">other</span>);
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">move</span><span class="org-whitespace-space"> </span><span class="org-comment">constructor,</span><span class="org-whitespace-space"> </span><span class="org-comment">noexception</span>
+<span class="org-whitespace-space">  </span><span class="org-function-name">Example</span>(<span class="org-type">Example</span><span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-variable-name">other</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">noexcept</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">Example</span>&amp;<span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">=</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">Example</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">other</span>);
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">move</span><span class="org-whitespace-space"> </span><span class="org-comment">assignment</span>
+<span class="org-whitespace-space">  </span><span class="org-type">Example</span>&amp;<span class="org-whitespace-space"> </span><span class="org-keyword">operator</span><span class="org-function-name">=</span>(<span class="org-type">Example</span><span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-variable-name">other</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">noexcept</span>;
+<span class="org-keyword">private</span>:
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">mInterval</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>100;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">init</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">place</span>
+<span class="org-whitespace-space">  </span><span class="org-constant">std</span>::<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">mSignature</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">"ExampleObj"</span>;
+};
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">disallow</span><span class="org-whitespace-space"> </span><span class="org-comment">derive</span><span class="org-whitespace-space"> </span><span class="org-comment">from</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">class</span>
+<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Example</span><span class="org-whitespace-space"> </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">IoStream</span>
+{
+<span class="org-keyword">public</span>:
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-variable-name">Print</span>(<span class="org-function-name">...</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">override</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">IoStream</span><span class="org-whitespace-space"> </span><span class="org-comment">MUST</span><span class="org-whitespace-space"> </span><span class="org-comment">have</span><span class="org-whitespace-space"> </span><span class="org-comment">virtual</span><span class="org-whitespace-space"> </span><span class="org-comment">member</span><span class="org-whitespace-space"> </span><span class="org-comment">function</span><span class="org-whitespace-space"> </span><span class="org-comment">Print.</span>
+};
+
+<span class="org-keyword">enum</span><span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">State</span>:<span class="org-whitespace-space"> </span><span class="org-type">uint8_t</span>
+{
+<span class="org-whitespace-space">  </span><span class="org-variable-name">INIT</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0,
+<span class="org-whitespace-space">  </span><span class="org-variable-name">CHECKIN</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1,
+<span class="org-whitespace-space">  </span><span class="org-variable-name">SEALED</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2,
+};
+<span class="org-keyword">static_assert</span>(<span class="org-keyword">sizeof</span>(State)<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span><span class="org-string">"State</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">Uint8"</span>);
+
+<span class="org-keyword">enum</span><span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">FileType</span>
+{
+
+<span class="org-whitespace-space">  </span><span class="org-variable-name">REPLICATION</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1,
+<span class="org-whitespace-space">  </span><span class="org-variable-name">EC</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2,
+};
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">alias</span><span class="org-whitespace-space"> </span><span class="org-comment">name</span>
+<span class="org-keyword">using</span><span class="org-whitespace-space"> </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>::<span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::Closure;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">compiling</span><span class="org-whitespace-space"> </span><span class="org-comment">const</span>
+<span class="org-keyword">constexpr</span><span class="org-whitespace-space"> </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">MAGIC</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">0x</span><span class="org-constant">f8f8f8f8</span>;
+
+<span class="org-type">uint64_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">var</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>100;
+<span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">var2</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>var;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">initialization</span><span class="org-whitespace-space"> </span><span class="org-comment">list</span>
+<span class="org-constant">std</span>::<span class="org-type">vector</span>&lt;<span class="org-type">int</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">intVec</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>{1,<span class="org-whitespace-space"> </span>2,<span class="org-whitespace-space"> </span>3};
+
+<span class="org-type">Example</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">pObj</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">nullptr</span>;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">right</span><span class="org-whitespace-space"> </span><span class="org-comment">angle</span><span class="org-whitespace-space"> </span><span class="org-comment">brackets</span>
+<span class="org-keyword">using</span><span class="org-whitespace-space"> </span><span class="org-type">TypeVec</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">std</span>::<span class="org-type">map</span>&lt;<span class="org-type">int</span>,<span class="org-whitespace-space"> </span><span class="org-constant">std</span>::<span class="org-type">vector</span>&lt;<span class="org-constant">std</span>::<span class="org-type">string</span>&gt;&gt;;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">iterate</span><span class="org-whitespace-space"> </span><span class="org-comment">stl</span>
+<span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">e</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>vec)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">__thread</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">thread_local</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">allow</span><span class="org-whitespace-space"> </span><span class="org-comment">non-pod</span><span class="org-whitespace-space"> </span><span class="org-comment">type;</span>
+<span class="org-keyword">thread_local</span><span class="org-whitespace-space"> </span><span class="org-constant">std</span>::<span class="org-type">vector</span>&lt;<span class="org-type">int</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">tlsVec</span>;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">STL</span>
+<span class="org-constant">std</span>::mutex;
+<span class="org-constant">std</span>::<span class="org-type">lock_guard</span>&lt;<span class="org-constant">std</span>::mutex&gt;;
+<span class="org-constant">std</span>::conditional_variable;
+<span class="org-constant">std</span>::<span class="org-type">atomic</span>&lt;<span class="org-type">int</span>&gt;;
+<span class="org-constant">std</span>::<span class="org-type">tuple</span>&lt;<span class="org-type">int</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span>,<span class="org-whitespace-space"> </span><span class="org-type">string</span>&gt;;
+<span class="org-constant">std</span>::<span class="org-type">array</span>&lt;<span class="org-type">int</span>&gt;;
+<span class="org-constant">std</span>::unordered_set,<span class="org-whitespace-space"> </span><span class="org-constant">std</span>::unordered_map,<span class="org-whitespace-space"> </span><span class="org-function-name">...</span>;
+<span class="org-constant">std</span>::<span class="org-type">unique_ptr</span>&lt;Obj&gt;;
+<span class="org-constant">std</span>::chrono;
+<span class="org-constant">std</span>::thread;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf235eae" class="outline-2">
+<h2 id="orgf235eae"><span class="section-number-2">2</span> Memory Model</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org23d5937" class="outline-3">
+<h3 id="org23d5937"><span class="section-number-3">2.1</span> 乱序</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>编译器单线程优化；</li>
+<li>CPU乱序执行；</li>
+<li>CPU L1/L2/L3 Cache；</li>
+<li>多线程共享，通过原子操作或锁，告知编译器/CPU保证一致性；</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">init</span>
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">y</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Thread</span><span class="org-whitespace-space"> </span><span class="org-comment">1:</span>
+x<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+y<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Thread</span><span class="org-whitespace-space"> </span><span class="org-comment">2:</span>
+<span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(y<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>1)
+{
+<span class="org-whitespace-space">  </span>ASSERT(x<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>1);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7701205" class="outline-3">
+<h3 id="org7701205"><span class="section-number-3">2.2</span> 参考资料</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li><a href="https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/">https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/</a></li>
+<li><a href="https://herbsutter.com/2013/10/28/reader-qa-acquirerelease-and-sequential-consistency/">https://herbsutter.com/2013/10/28/reader-qa-acquirerelease-and-sequential-consistency/</a></li>
+<li><a href="https://preshing.com/20120913/acquire-and-release-semantics/">https://preshing.com/20120913/acquire-and-release-semantics/</a></li>
+<li><a href="https://www.youtube.com/watch?v=ZQFzMfHIxng">https://www.youtube.com/watch?v=ZQFzMfHIxng</a></li>
+<li>C++ concurrency in action</li>
+<li>Memory ordering in P6 and more recent processors</li>
+<li>PowerPC Virtual Environment Architecture, Lock Acquisition and Release</li>
+</ul>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
