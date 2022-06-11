@@ -37,6 +37,7 @@
 <li><a href="#orgf870e5b">1.2.1. Implement</a></li>
 </ul>
 </li>
+<li><a href="#org62eb756">1.3. Longest Substring Without Repeating Characters</a></li>
 </ul>
 </li>
 </ul>
@@ -324,8 +325,10 @@ Memory Usage: 71.5 MB, less than 50.19% of C++ online submissions for Add Two Nu
 </blockquote>
 
 <p>
-力扣跑了下，结果更好。国内厂家的硬件看来更优秀(也可能case更少？)：
+力扣跑了下，结果更好。国内厂家的硬件看来更优秀(也可能case更少？)。一个朋友告诉我，这个
+时间是相对的，只具备参考意义。
 </p>
+
 <blockquote>
 <p>
 执行结果： 通过
@@ -338,6 +341,134 @@ Memory Usage: 71.5 MB, less than 50.19% of C++ online submissions for Add Two Nu
 </p>
 </blockquote>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org62eb756" class="outline-3">
+<h3 id="org62eb756"><span class="section-number-3">1.3</span> Longest Substring Without Repeating Characters</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+2022-06-11
+</p>
+<blockquote>
+<p>
+Given a string s, find the length of the longest substring without repeating
+characters.
+</p>
+
+<p>
+Example 1:<br />
+Input: s = "abcabcbb"<br />
+Output: 3<br />
+Explanation: The answer is "abc", with the length of 3.<br />
+</p>
+
+<p>
+Example 2:<br />
+Input: s = "bbbbb"<br />
+Output: 1<br />
+Explanation: The answer is "b", with the length of 1.
+</p>
+
+<p>
+Example 3:<br />
+Input: s = "pwwkew"<br />
+Output: 3<br />
+Explanation: The answer is "wke", with the length of 3.<br />
+Notice that the answer must be a substring, "pwke" is a subsequence and not a
+substring.
+</p>
+
+
+<p>
+Constraints:<br />
+</p>
+<ul class="org-ul">
+<li>0 &lt;= s.length &lt;= 5 * 10^4</li>
+<li>s consists of English letters, digits, symbols and spaces.</li>
+</ul>
+</blockquote>
+
+<p>
+Implementation:
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">lengthOfLongestSubstring</span>(<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(s.empty())
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-constant">std</span>::<span class="org-type">unordered_map</span>&lt;<span class="org-type">char</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">hm</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">static_cast</span>&lt;<span class="org-type">int</span>&gt;(s.length());
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">maxdis</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">winstart</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">case</span><span class="org-whitespace-space"> </span><span class="org-comment">1:</span><span class="org-whitespace-space"> </span><span class="org-comment">abcde</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">         </span><span class="org-comment">^</span><span class="org-whitespace-space">    </span><span class="org-comment">^</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">         </span><span class="org-comment">winstart</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">0;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">         </span><span class="org-comment">maxdis=1;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">         </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">n</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">winstart</span><span class="org-whitespace-space"> </span><span class="org-comment">after</span><span class="org-whitespace-space"> </span><span class="org-comment">loop;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">case</span><span class="org-whitespace-space"> </span><span class="org-comment">2:</span><span class="org-whitespace-space"> </span><span class="org-comment">dvdfv</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">           </span><span class="org-comment">^</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">           </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">maxdis=2;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">               </span><span class="org-comment">winstart=1;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">             </span><span class="org-comment">^</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">             </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">maxdis=4-1=3;</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space">                 </span><span class="org-comment">winstart=2;</span>
+<span class="org-whitespace-space">    </span>hm[s[0]]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++i)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">it</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>hm.find(s[i]);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(hm.end()<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>it<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>it-&gt;second<span class="org-whitespace-space"> </span>&gt;=<span class="org-whitespace-space"> </span>winstart)
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">distance</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>winstart;
+<span class="org-whitespace-space">            </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(distance<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>maxdis)
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span>maxdis<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>distance;
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">            </span>winstart<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>it-&gt;second<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">            </span>it-&gt;second<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">        </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span>hm[s[i]]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">distance</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>winstart;
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(distance<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>maxdis)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>maxdis<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>distance;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>maxdis;
+}
+</pre>
+</div>
+
+<p>
+Result:
+</p>
+<blockquote>
+<p>
+Runtime: 23 ms, faster than 57.38% of C++ online submissions for Longest
+Substring Without Repeating Characters.
+Memory Usage: 8.3 MB, less than 73.86% of C++ online submissions for Longest
+Substring Without Repeating Characters.
+</p>
+</blockquote>
+
+<p>
+考虑Key的范围比较有限(uint8)，尝试用rbtree替换掉hash。结果好了一点：
+</p>
+<blockquote>
+<p>
+Runtime: 18 ms, faster than 67.93% of C++ online submissions for Longest
+Substring Without Repeating Characters.
+Memory Usage: 8.5 MB, less than 48.70% of C++ online submissions for Longest
+Substring Without Repeating Characters.
+</p>
+</blockquote>
 </div>
 </div>
 </div>
