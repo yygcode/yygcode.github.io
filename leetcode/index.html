@@ -28,10 +28,15 @@
 <li><a href="#orgc6add83">1.1. Two sum</a>
 <ul>
 <li><a href="#orgd202f38">1.1.1. Method1 : Brute Force</a></li>
+<li><a href="#orgf309427">1.1.2. Method2 : Hash Map</a></li>
+<li><a href="#org7f44f9f">1.1.3. Optimize Performance</a></li>
 </ul>
 </li>
-<li><a href="#orgf309427">1.2. Method2 : Hash Map</a></li>
-<li><a href="#org7f44f9f">1.3. Optimize Performance</a></li>
+<li><a href="#orgc2ef7b1">1.2. Add Two Numbers</a>
+<ul>
+<li><a href="#orgf870e5b">1.2.1. Implement</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -46,8 +51,13 @@
 <h3 id="orgc6add83"><span class="section-number-3">1.1</span> Two sum</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-<a href="https://leetcode.com/problems/two-sum/">https://leetcode.com/problems/two-sum/</a>
+2022-06-11:
 </p>
+<ul class="org-ul">
+<li><a href="https://leetcode.com/problems/two-sum/">https://leetcode.com/problems/two-sum/</a></li>
+<li><a href="https://leetcode.cn/problems/two-sum/">https://leetcode.cn/problems/two-sum/</a></li>
+</ul>
+
 <blockquote>
 <p>
 Given an array of integers nums and an integer target, return indices of
@@ -92,11 +102,10 @@ Output: [0,1]
 </ul>
 </div>
 </div>
-</div>
 
-<div id="outline-container-orgf309427" class="outline-3">
-<h3 id="orgf309427"><span class="section-number-3">1.2</span> Method2 : Hash Map</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgf309427" class="outline-4">
+<h4 id="orgf309427"><span class="section-number-4">1.1.2</span> Method2 : Hash Map</h4>
+<div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>Time Complexity: O(n)</li>
 <li>Space Complexity: O(n)</li>
@@ -144,11 +153,11 @@ How to optimize it ?
 </div>
 </div>
 
-<div id="outline-container-org7f44f9f" class="outline-3">
-<h3 id="org7f44f9f"><span class="section-number-3">1.3</span> Optimize Performance</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org7f44f9f" class="outline-4">
+<h4 id="org7f44f9f"><span class="section-number-4">1.1.3</span> Optimize Performance</h4>
+<div class="outline-text-4" id="text-1-1-3">
 <p>
-可以把hash插入和查找合并为一看看：
+Merge hash find and insert in one loop.
 </p>
 <div class="org-src-container">
 <pre class="src src-c++"><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Solution</span><span class="org-whitespace-space"> </span>{
@@ -182,6 +191,129 @@ Runtime: 3 ms, faster than 99.87% of C++ online submissions for Two Sum.
 Memory Usage: 10.8 MB, less than 46.35% of C++ online submissions for Two Sum.
 </p>
 </blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc2ef7b1" class="outline-3">
+<h3 id="orgc2ef7b1"><span class="section-number-3">1.2</span> Add Two Numbers</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+2022-06-11
+</p>
+<ul class="org-ul">
+<li><a href="https://leetcode.com/problems/add-two-numbers/">https://leetcode.com/problems/add-two-numbers/</a></li>
+</ul>
+<blockquote>
+<p>
+You are given two non-empty linked lists representing two non-negative integers.
+The digits are stored in reverse order, and each of their nodes contains a
+single digit. Add the two numbers and return the sum as a linked list.
+</p>
+
+<p>
+You may assume the two numbers do not contain any leading zero, except the
+number 0 itself.
+</p>
+
+<p>
+Example1:<br />
+(2) -&gt; (4) -&gt; (3)
+(5) -&gt; (6) -&gt; (4)
+</p>
+<hr />
+<p>
+(7) -&gt; (0) -&gt; (8)
+</p>
+
+<p>
+Input: l1 = [2,4,3], l2 = [5,6,4]<br />
+Output: [7,0,8]<br />
+Explanation: 342 + 465 = 807.
+</p>
+
+<p>
+Example 2:<br />
+Input: l1 = [0], l2 = [0]<br />
+Output: [0]
+</p>
+
+<p>
+Example 3:<br />
+Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]<br />
+Output: [8,9,9,9,0,0,0,1]
+</p>
+
+<p>
+Constraints:
+</p>
+<ul class="org-ul">
+<li>The number of nodes in each linked list is in the range [1, 100].</li>
+<li>0 &lt;= Node.val &lt;= 9</li>
+<li>It is guaranteed that the list represents a number that does not have leading
+zeros.</li>
+</ul>
+</blockquote>
+</div>
+
+<div id="outline-container-orgf870e5b" class="outline-4">
+<h4 id="orgf870e5b"><span class="section-number-4">1.2.1</span> Implement</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">addTwoNumbers</span>(<span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">l1</span>,<span class="org-whitespace-space"> </span><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">l2</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">carry</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">malloc</span><span class="org-whitespace-space"> </span><span class="org-comment">optimize:</span>
+<span class="org-whitespace-space">    </span><span class="org-type">ListNode</span><span class="org-whitespace-space"> </span><span class="org-variable-name">head</span>;
+<span class="org-whitespace-space">    </span><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">curr</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;head;
+<span class="org-whitespace-space">    </span>curr-&gt;val<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span>curr-&gt;next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">nullptr</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(<span class="org-constant">nullptr</span><span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>l1<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span><span class="org-constant">nullptr</span><span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>l2)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">val</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l1-&gt;val<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>l2-&gt;val<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>carry;
+<span class="org-whitespace-space">        </span>carry<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>val<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">        </span><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ListNode</span>(val<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10);
+<span class="org-whitespace-space">        </span>curr-&gt;next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">        </span>curr<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">        </span>l1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l1-&gt;next;
+<span class="org-whitespace-space">        </span>l2<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l2-&gt;next;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-constant">nullptr</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>l1)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>l1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l2;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(<span class="org-constant">nullptr</span><span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>l1)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">val</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l1-&gt;val<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>carry;
+<span class="org-whitespace-space">        </span>carry<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>val<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">        </span><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ListNode</span>(val<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10);
+<span class="org-whitespace-space">        </span>curr-&gt;next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">        </span>curr<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">        </span>l1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>l1-&gt;next;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(0<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>carry)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">ListNode</span>*<span class="org-whitespace-space"> </span><span class="org-variable-name">node</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ListNode</span>(carry);
+<span class="org-whitespace-space">        </span>curr-&gt;next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>node;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>head.next;
+}
+</pre>
+</div>
+
+<p>
+Result:
+</p>
+<blockquote>
+<p>
+Runtime: 40 ms, faster than 75.88% of C++ online submissions for Add Two Numbers.
+Memory Usage: 71.5 MB, less than 50.19% of C++ online submissions for Add Two Numbers.
+</p>
+</blockquote>
+</div>
 </div>
 </div>
 </div>
