@@ -62,7 +62,7 @@
 <li><a href="#org62eb756">1.3. Longest Substring Without Repeating Characters</a></li>
 <li><a href="#orgb179d4c">1.4. Median of Two Sorted Arrays</a>
 <ul>
-<li><a href="#org6c8be5b">1.4.1. 代码实现</a></li>
+<li><a href="#org30e5447">1.4.1. 代码实现</a></li>
 </ul>
 </li>
 <li><a href="#org0bbbb59">1.5. Longest Palindromic Substring</a>
@@ -74,19 +74,36 @@
 </li>
 <li><a href="#org41ce71b">1.6. Zigzag Conversion</a>
 <ul>
-<li><a href="#org16a9027">1.6.1. 问题分析</a></li>
-<li><a href="#orgc805ebd">1.6.2. 代码实现</a></li>
+<li><a href="#org376a962">1.6.1. 问题分析</a></li>
+<li><a href="#org0298af4">1.6.2. 代码实现</a></li>
 </ul>
 </li>
 <li><a href="#orgd27f7db">1.7. Reverse Integer</a>
 <ul>
-<li><a href="#orga19ff23">1.7.1. 问题分析</a></li>
-<li><a href="#org5f5999b">1.7.2. 代码实现</a></li>
+<li><a href="#orgdc67de1">1.7.1. 问题分析</a></li>
+<li><a href="#org89fba1e">1.7.2. 代码实现</a></li>
 </ul>
 </li>
-<li><a href="#org4322c44">1.8. String to Integer (atoi)</a></li>
+<li><a href="#org4322c44">1.8. String to Integer (atoi)</a>
+<ul>
+<li><a href="#orgaa01f70">1.8.1. 问题分析</a></li>
+<li><a href="#org641fd3c">1.8.2. 代码实现</a></li>
 </ul>
 </li>
+<li><a href="#orga938f58">1.9. Palindrome Number</a>
+<ul>
+<li><a href="#org0e56480">1.9.1. 问题分析</a></li>
+<li><a href="#orgb617e59">1.9.2. 实现代码</a></li>
+</ul>
+</li>
+<li><a href="#org218fc01">1.10. Regular Expression Matching</a>
+<ul>
+<li><a href="#org6da2d89">1.10.1. 问题分析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org9ff4964">2. Hot 100 11-20</a></li>
 </ul>
 </div>
 </div>
@@ -560,8 +577,8 @@ Constraints:
 </blockquote>
 </div>
 
-<div id="outline-container-org6c8be5b" class="outline-4">
-<h4 id="org6c8be5b"><span class="section-number-4">1.4.1</span> 代码实现</h4>
+<div id="outline-container-org30e5447" class="outline-4">
+<h4 id="org30e5447"><span class="section-number-4">1.4.1</span> 代码实现</h4>
 <div class="outline-text-4" id="text-1-4-1">
 <div class="org-src-container">
 <pre class="src src-c++"><span class="org-type">double</span><span class="org-whitespace-space"> </span><span class="org-function-name">findMedianSortedArrays</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">vector</span>&lt;<span class="org-type">int</span>&gt;&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">nums1</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">vector</span>&lt;<span class="org-type">int</span>&gt;&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">nums2</span><span class="org-whitespace-line">)</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
@@ -738,10 +755,10 @@ Palindromic Substring.
 <div class="org-src-container">
 <pre class="src src-text">The<span class="org-whitespace-space"> </span>string<span class="org-whitespace-space"> </span>"PAYPALISHIRING"<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>written<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>zigzag<span class="org-whitespace-space"> </span>pattern<span class="org-whitespace-space"> </span>on<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>given<span class="org-whitespace-space"> </span>number<span class="org-whitespace-space"> </span>of
 rows<span class="org-whitespace-space"> </span>like<span class="org-whitespace-space"> </span>this:<span class="org-whitespace-space"> </span>(you<span class="org-whitespace-space"> </span>may<span class="org-whitespace-space"> </span>want<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>display<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>pattern<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>fixed<span class="org-whitespace-space"> </span>font<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>better
-legibility)\\
-P<span class="org-whitespace-space">   </span>A<span class="org-whitespace-space">   </span>H<span class="org-whitespace-space">   </span>N\\
-A<span class="org-whitespace-space"> </span>P<span class="org-whitespace-space"> </span>L<span class="org-whitespace-space"> </span>S<span class="org-whitespace-space"> </span>I<span class="org-whitespace-space"> </span>I<span class="org-whitespace-space"> </span>G\\
-Y<span class="org-whitespace-space">   </span>I<span class="org-whitespace-space">   </span>R\\
+legibility)
+P<span class="org-whitespace-space">   </span>A<span class="org-whitespace-space">   </span>H<span class="org-whitespace-space">   </span>N
+A<span class="org-whitespace-space"> </span>P<span class="org-whitespace-space"> </span>L<span class="org-whitespace-space"> </span>S<span class="org-whitespace-space"> </span>I<span class="org-whitespace-space"> </span>I<span class="org-whitespace-space"> </span>G
+Y<span class="org-whitespace-space">   </span>I<span class="org-whitespace-space">   </span>R
 And<span class="org-whitespace-space"> </span>then<span class="org-whitespace-space"> </span>read<span class="org-whitespace-space"> </span>line<span class="org-whitespace-space"> </span>by<span class="org-whitespace-space"> </span>line:<span class="org-whitespace-space"> </span>"PAHNAPLSIIGYIR"
 
 Write<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>code<span class="org-whitespace-space"> </span>that<span class="org-whitespace-space"> </span>will<span class="org-whitespace-space"> </span>take<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>string<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>conversion<span class="org-whitespace-space"> </span>given<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>number
@@ -749,28 +766,28 @@ of<span class="org-whitespace-space"> </span>rows:
 
 string<span class="org-whitespace-space"> </span>convert(string<span class="org-whitespace-space"> </span>s,<span class="org-whitespace-space"> </span>int<span class="org-whitespace-space"> </span>numRows);
 
-Example<span class="org-whitespace-space"> </span>1:\\
-Input:<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>"PAYPALISHIRING",<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3\\
-Output:<span class="org-whitespace-space"> </span>"PAHNAPLSIIGYIR"\\
+Example<span class="org-whitespace-space"> </span>1:
+Input:<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>"PAYPALISHIRING",<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3
+Output:<span class="org-whitespace-space"> </span>"PAHNAPLSIIGYIR"
 
-Example<span class="org-whitespace-space"> </span>2:\\
-Input:<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>"PAYPALISHIRING",<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>4\\
-Output:<span class="org-whitespace-space"> </span>"PINALSIGYAHRPI"\\
-Explanation:\\
-P<span class="org-whitespace-space">     </span>I<span class="org-whitespace-space">    </span>N\\
-A<span class="org-whitespace-space">   </span>L<span class="org-whitespace-space"> </span>S<span class="org-whitespace-space">  </span>I<span class="org-whitespace-space"> </span>G\\
-Y<span class="org-whitespace-space"> </span>A<span class="org-whitespace-space">   </span>H<span class="org-whitespace-space"> </span>R\\
-P<span class="org-whitespace-space">     </span>I\\
+Example<span class="org-whitespace-space"> </span>2:
+Input:<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>"PAYPALISHIRING",<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>4
+Output:<span class="org-whitespace-space"> </span>"PINALSIGYAHRPI"
+Explanation:
+P<span class="org-whitespace-space">     </span>I<span class="org-whitespace-space">    </span>N
+A<span class="org-whitespace-space">   </span>L<span class="org-whitespace-space"> </span>S<span class="org-whitespace-space">  </span>I<span class="org-whitespace-space"> </span>G
+Y<span class="org-whitespace-space"> </span>A<span class="org-whitespace-space">   </span>H<span class="org-whitespace-space"> </span>R
+P<span class="org-whitespace-space">     </span>I
 
-Example<span class="org-whitespace-space"> </span>3:\\
+Example<span class="org-whitespace-space"> </span>3:
 Input:<span class="org-whitespace-space"> </span>s<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>"A",<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1
 Output:<span class="org-whitespace-space"> </span>"A"
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org16a9027" class="outline-4">
-<h4 id="org16a9027"><span class="section-number-4">1.6.1</span> 问题分析</h4>
+<div id="outline-container-org376a962" class="outline-4">
+<h4 id="org376a962"><span class="section-number-4">1.6.1</span> 问题分析</h4>
 <div class="outline-text-4" id="text-1-6-1">
 <p>
 把原始数据的下标(SourceIndex)按照Zigtag摆放，做个特征观察：
@@ -801,8 +818,8 @@ Output:<span class="org-whitespace-space"> </span>"A"
 </div>
 </div>
 
-<div id="outline-container-orgc805ebd" class="outline-4">
-<h4 id="orgc805ebd"><span class="section-number-4">1.6.2</span> 代码实现</h4>
+<div id="outline-container-org0298af4" class="outline-4">
+<h4 id="org0298af4"><span class="section-number-4">1.6.2</span> 代码实现</h4>
 <div class="outline-text-4" id="text-1-6-2">
 <div class="org-src-container">
 <pre class="src src-c++"><span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-function-name">convert</span>(<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numRows</span>)<span class="org-whitespace-space"> </span>{
@@ -902,8 +919,8 @@ Constraints:
 </blockquote>
 </div>
 
-<div id="outline-container-orga19ff23" class="outline-4">
-<h4 id="orga19ff23"><span class="section-number-4">1.7.1</span> 问题分析</h4>
+<div id="outline-container-orgdc67de1" class="outline-4">
+<h4 id="orgdc67de1"><span class="section-number-4">1.7.1</span> 问题分析</h4>
 <div class="outline-text-4" id="text-1-7-1">
 <p>
 仅仅是模10, 除10, 以及用 INT_MIN/INT_MAX 处理个溢出，这题目没啥意思。
@@ -923,8 +940,8 @@ Constraints:
 </div>
 </div>
 
-<div id="outline-container-org5f5999b" class="outline-4">
-<h4 id="org5f5999b"><span class="section-number-4">1.7.2</span> 代码实现</h4>
+<div id="outline-container-org89fba1e" class="outline-4">
+<h4 id="org89fba1e"><span class="section-number-4">1.7.2</span> 代码实现</h4>
 <div class="outline-text-4" id="text-1-7-2">
 <div class="org-src-container">
 <pre class="src src-c++"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">reverse</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>)<span class="org-whitespace-space"> </span>{
@@ -1033,10 +1050,11 @@ The<span class="org-whitespace-space"> </span>algorithm<span class="org-whitespa
 4.<span class="org-whitespace-space"> </span>Convert<span class="org-whitespace-space"> </span>these<span class="org-whitespace-space"> </span>digits<span class="org-whitespace-space"> </span>into<span class="org-whitespace-space"> </span>an<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>(i.e.<span class="org-whitespace-space"> </span>"123"<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>123,<span class="org-whitespace-space"> </span>"0032"<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span>32).<span class="org-whitespace-space"> </span>If
 <span class="org-whitespace-space">   </span>no<span class="org-whitespace-space"> </span>digits<span class="org-whitespace-space"> </span>were<span class="org-whitespace-space"> </span>read,<span class="org-whitespace-space"> </span>then<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>0.<span class="org-whitespace-space"> </span>Change<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>sign<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>necessary
 <span class="org-whitespace-space">   </span>(from<span class="org-whitespace-space"> </span>step<span class="org-whitespace-space"> </span>2).
-5.<span class="org-whitespace-space"> </span>If<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>out<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>32-bit<span class="org-whitespace-space"> </span>signed<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>range<span class="org-whitespace-space"> </span>[-231,<span class="org-whitespace-space"> </span>231<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1],
-<span class="org-whitespace-space">   </span>then<span class="org-whitespace-space"> </span>clamp<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>so<span class="org-whitespace-space"> </span>that<span class="org-whitespace-space"> </span>it<span class="org-whitespace-space"> </span>remains<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>range.<span class="org-whitespace-space"> </span>Specifically,
-<span class="org-whitespace-space">   </span>integers<span class="org-whitespace-space"> </span>less<span class="org-whitespace-space"> </span>than<span class="org-whitespace-space"> </span>-231<span class="org-whitespace-space"> </span>should<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>clamped<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>-231,<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>integers<span class="org-whitespace-space"> </span>greater
-<span class="org-whitespace-space">   </span>than<span class="org-whitespace-space"> </span>231<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>should<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>clamped<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>231<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1.
+5.<span class="org-whitespace-space"> </span>If<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>out<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>32-bit<span class="org-whitespace-space"> </span>signed<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>range
+<span class="org-whitespace-space">   </span>[-2^{31},<span class="org-whitespace-space"> </span>2^{31}<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1],<span class="org-whitespace-space"> </span>then<span class="org-whitespace-space"> </span>clamp<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>so<span class="org-whitespace-space"> </span>that<span class="org-whitespace-space"> </span>it<span class="org-whitespace-space"> </span>remains<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>the
+<span class="org-whitespace-space">   </span>range.<span class="org-whitespace-space"> </span>Specifically,<span class="org-whitespace-space"> </span>integers<span class="org-whitespace-space"> </span>less<span class="org-whitespace-space"> </span>than<span class="org-whitespace-space"> </span>-231<span class="org-whitespace-space"> </span>should<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>clamped<span class="org-whitespace-space"> </span>to
+<span class="org-whitespace-space">   </span>-2^{31},<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>integers<span class="org-whitespace-space"> </span>greater<span class="org-whitespace-space"> </span>than<span class="org-whitespace-space"> </span>2^{31}<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>should<span class="org-whitespace-space"> </span>be<span class="org-whitespace-space"> </span>clamped<span class="org-whitespace-space"> </span>to
+<span class="org-whitespace-space">   </span>2^{31}<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1.
 6.<span class="org-whitespace-space"> </span>Return<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>the<span class="org-whitespace-space"> </span>final<span class="org-whitespace-space"> </span>result.
 
 Note:
@@ -1094,7 +1112,272 @@ Constraints:
 </pre>
 </div>
 </div>
+
+<div id="outline-container-orgaa01f70" class="outline-4">
+<h4 id="orgaa01f70"><span class="section-number-4">1.8.1</span> 问题分析</h4>
+<div class="outline-text-4" id="text-1-8-1">
+<p>
+如同题目Reverse Integer一样处理边界，其他没啥难度。
+</p>
 </div>
+</div>
+
+<div id="outline-container-org641fd3c" class="outline-4">
+<h4 id="org641fd3c"><span class="section-number-4">1.8.2</span> 代码实现</h4>
+<div class="outline-text-4" id="text-1-8-2">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">myAtoi</span>(<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>)<span class="org-whitespace-space"> </span>{
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">constexpr</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">maxLimit</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>INT_MAX<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">    </span><span class="org-keyword">constexpr</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">minLimit</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>INT_MIN<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">    </span><span class="org-keyword">constexpr</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">maxMod</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>INT_MAX<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">    </span><span class="org-keyword">constexpr</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">minMod</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>INT_MIN<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10;
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">idx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">static_cast</span>&lt;<span class="org-type">int</span>&gt;(s.length());
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(<span class="org-string">'</span><span class="org-whitespace-space"> </span><span class="org-string">'</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>s[idx])
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>++idx;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-variable-name">isPositive</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">true</span>;
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-string">'-'</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>s[idx]<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span><span class="org-string">'+'</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>s[idx])
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>isPositive<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-string">'+'</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>s[idx]);
+<span class="org-whitespace-space">        </span>++idx;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(isPositive)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(isdigit(s[idx]))
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">d</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s[idx]<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span><span class="org-string">'0'</span>;
+<span class="org-whitespace-space">            </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(maxLimit<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>ret<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span>(maxLimit<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>d<span class="org-whitespace-space"> </span>&lt;=<span class="org-whitespace-space"> </span>maxMod))
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>*=<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>d;
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">            </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-preprocessor">INT32_MAX</span>;
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">            </span>++idx;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(isdigit(s[idx]))
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">d</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-(s[idx]<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span><span class="org-string">'0'</span>);
+<span class="org-whitespace-space">            </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(minLimit<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>ret<span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span>(minLimit<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>d<span class="org-whitespace-space"> </span>&gt;=<span class="org-whitespace-space"> </span>minMod))
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>*=<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">                </span>ret<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>d;
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">            </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-preprocessor">INT32_MIN</span>;
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">            </span>++idx;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
+}
+</pre>
+</div>
+
+<p>
+Result:
+</p>
+<blockquote>
+<p>
+Runtime: 5 ms, faster than 43.05% of C++ online submissions for String to
+Integer (atoi).<br />
+Memory Usage: 7 MB, less than 53.53% of C++ online submissions for String
+to Integer (atoi).
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga938f58" class="outline-3">
+<h3 id="orga938f58"><span class="section-number-3">1.9</span> Palindrome Number</h3>
+<div class="outline-text-3" id="text-1-9">
+<blockquote>
+<p>
+Given an integer x, return true if x is palindrome integer.
+</p>
+
+<p>
+An integer is a palindrome when it reads the same backward as forward.
+</p>
+
+<p>
+For example, 121 is a palindrome while 123 is not.
+</p>
+
+<p>
+Example 1:<br />
+Input: x = 121<br />
+Output: true<br />
+Explanation: 121 reads as 121 from left to right and from right to left.
+</p>
+
+<p>
+Example 2:<br />
+Input: x = -121<br />
+Output: false<br />
+Explanation: From left to right, it reads -121. From right to left, it
+becomes 121-. Therefore it is not a palindrome.
+</p>
+
+<p>
+Example 3:<br />
+Input: x = 10<br />
+Output: false<br />
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+</p>
+
+<p>
+Constraints:
+</p>
+<ul class="org-ul">
+<li>-2<sup>31</sup> &lt;= x &lt;= 2<sup>31</sup> - 1</li>
+</ul>
+
+<p>
+Follow up: Could you solve it without converting the integer to a string?
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org0e56480" class="outline-4">
+<h4 id="org0e56480"><span class="section-number-4">1.9.1</span> 问题分析</h4>
+</div>
+
+<div id="outline-container-orgb617e59" class="outline-4">
+<h4 id="orgb617e59"><span class="section-number-4">1.9.2</span> 实现代码</h4>
+<div class="outline-text-4" id="text-1-9-2">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-function-name">isPalindrome</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(x<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>0)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">false</span>;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ds</span>[10];
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dn</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">    </span>ds[0]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">    </span>x<span class="org-whitespace-space"> </span>/=<span class="org-whitespace-space"> </span>10;
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(x)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>ds[dn]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">        </span>x<span class="org-whitespace-space"> </span>/=<span class="org-whitespace-space"> </span>10;
+<span class="org-whitespace-space">        </span>++dn;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">middle</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dn<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>2;
+<span class="org-whitespace-space">    </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span><span class="org-variable-name">j</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dn<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>middle;<span class="org-whitespace-space"> </span>++i,<span class="org-whitespace-space"> </span>--j)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ds[i]<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>ds[j])
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">false</span>;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">true</span>;
+}
+</pre>
+</div>
+
+<p>
+Result:
+</p>
+<blockquote>
+<p>
+Runtime: 14 ms, faster than 76.36% of C++ online submissions for Palindrome
+Number.<br />
+Memory Usage: 5.8 MB, less than 91.12% of C++ online submissions for
+Palindrome Number.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org218fc01" class="outline-3">
+<h3 id="org218fc01"><span class="section-number-3">1.10</span> Regular Expression Matching</h3>
+<div class="outline-text-3" id="text-1-10">
+<blockquote>
+<p>
+Given an input string s and a pattern p, implement regular expression matching
+with support for '.' and '*' where:
+</p>
+
+<ul class="org-ul">
+<li>'.' Matches any single character.</li>
+<li>'*' Matches zero or more of the preceding element.</li>
+</ul>
+
+<p>
+The matching should cover the <b>entire</b> input string (not partial).
+</p>
+
+<p>
+Example 1:<br />
+Input: s = "aa", p = "a"<br />
+Output: false<br />
+Explanation: "a" does not match the entire string "aa".<br />
+</p>
+
+<p>
+Example 2:<br />
+Input: s = "aa", p = "a*"<br />
+Output: true<br />
+Explanation: '*' means zero or more of the preceding element, 'a'. Therefore,
+by repeating 'a' once, it becomes "aa".
+</p>
+
+<p>
+Example 3:<br />
+Input: s = "ab", p = ".*"<br />
+Output: true<br />
+Explanation: ".*" means "zero or more (*) of any character (.)".
+</p>
+
+<p>
+Constraints:
+</p>
+<ul class="org-ul">
+<li>1 &lt;= s.length &lt;= 20</li>
+<li>1 &lt;= p.length &lt;= 30</li>
+<li>s contains only lowercase English letters.</li>
+<li>p contains only lowercase English letters, '.', and '*'.</li>
+<li>It is guaranteed for each appearance of the character '*', there will be a
+previous valid character to match.</li>
+</ul>
+</blockquote>
+</div>
+
+<div id="outline-container-org6da2d89" class="outline-4">
+<h4 id="org6da2d89"><span class="section-number-4">1.10.1</span> 问题分析</h4>
+<div class="outline-text-4" id="text-1-10-1">
+<p>
+动态规划，下周末做吧。
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9ff4964" class="outline-2">
+<h2 id="org9ff4964"><span class="section-number-2">2</span> Hot 100 11-20</h2>
 </div>
 
 <script src="https://utteranc.es/client.js"
