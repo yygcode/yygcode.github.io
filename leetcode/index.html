@@ -11,6 +11,28 @@
 <script src="/themes/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/themes/readtheorg/styles/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="/themes/readtheorg/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -23,7 +45,7 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org76d1636">1. Hot 100</a>
+<li><a href="#org6146e59">1. Hot 100 1-10</a>
 <ul>
 <li><a href="#orgc6add83">1.1. Two sum</a>
 <ul>
@@ -46,14 +68,20 @@
 <li><a href="#orgbdc0ed7">1.5.3. Manacher算法</a></li>
 </ul>
 </li>
+<li><a href="#org41ce71b">1.6. Zigzag Conversion</a>
+<ul>
+<li><a href="#org42ff54d">1.6.1. 问题分析</a></li>
+<li><a href="#orge15167b">1.6.2. 代码实现</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org76d1636" class="outline-2">
-<h2 id="org76d1636"><span class="section-number-2">1</span> Hot 100</h2>
+<div id="outline-container-org6146e59" class="outline-2">
+<h2 id="org6146e59"><span class="section-number-2">1</span> Hot 100 1-10</h2>
 <div class="outline-text-2" id="text-1">
 </div>
 <div id="outline-container-orgc6add83" class="outline-3">
@@ -682,13 +710,152 @@ Palindromic Substring.
 
 <ul class="org-ul">
 <li>时间复杂度：O(n^2)</li>
-<li>空间复杂度：O(N^2)</li>
+<li>空间复杂度：O(n^2)</li>
+<li>tag对交线及左下一半空间是没有使用的，特殊设计下，可以节省tag一半空间；</li>
 </ul>
 </div>
 </div>
 
 <div id="outline-container-orgbdc0ed7" class="outline-4">
 <h4 id="orgbdc0ed7"><span class="section-number-4">1.5.3</span> Manacher算法</h4>
+</div>
+</div>
+
+<div id="outline-container-org41ce71b" class="outline-3">
+<h3 id="org41ce71b"><span class="section-number-3">1.6</span> Zigzag Conversion</h3>
+<div class="outline-text-3" id="text-1-6">
+<blockquote>
+<p>
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of
+rows like this: (you may want to display this pattern in a fixed font for better
+legibility)<br />
+P   A   H   N<br />
+A P L S I I G<br />
+Y   I   R<br />
+And then read line by line: "PAHNAPLSIIGYIR"
+</p>
+
+<p>
+Write the code that will take a string and make this conversion given a number
+of rows:
+</p>
+
+<p>
+string convert(string s, int numRows);
+</p>
+
+<p>
+Example 1:<br />
+Input: s = "PAYPALISHIRING", numRows = 3<br />
+Output: "PAHNAPLSIIGYIR"<br />
+</p>
+
+<p>
+Example 2:<br />
+Input: s = "PAYPALISHIRING", numRows = 4<br />
+Output: "PINALSIGYAHRPI"<br />
+Explanation:<br />
+P     I    N<br />
+A   L S  I G<br />
+Y A   H R<br />
+P     I<br />
+</p>
+
+<p>
+Example 3:<br />
+Input: s = "A", numRows = 1
+Output: "A"
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org42ff54d" class="outline-4">
+<h4 id="org42ff54d"><span class="section-number-4">1.6.1</span> 问题分析</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<p>
+把原始数据的下标(SourceIndex)按照Zigtag摆放，做个特征观察：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">//<span class="org-whitespace-space"> </span>s.length()<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>15,<span class="org-whitespace-space"> </span>rows=3
+0<span class="org-whitespace-space">     </span>4<span class="org-whitespace-space">     </span>8<span class="org-whitespace-space">       </span>12
+1<span class="org-whitespace-space">  </span>3<span class="org-whitespace-space">  </span>5<span class="org-whitespace-space">  </span>7<span class="org-whitespace-space">  </span>9<span class="org-whitespace-space">   </span>11<span class="org-whitespace-space">  </span>13<span class="org-whitespace-space">  </span>15
+2<span class="org-whitespace-space">     </span>6<span class="org-whitespace-space">     </span>10<span class="org-whitespace-space">      </span>14
+
+//<span class="org-whitespace-space"> </span>s.length()<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>15,<span class="org-whitespace-space"> </span>rows=4
+0<span class="org-whitespace-space">       </span>6<span class="org-whitespace-space">          </span>12
+1<span class="org-whitespace-space">    </span>5<span class="org-whitespace-space">  </span>7<span class="org-whitespace-space">      </span>11<span class="org-whitespace-space">  </span>13
+2<span class="org-whitespace-space">  </span>4<span class="org-whitespace-space">    </span>8<span class="org-whitespace-space">  </span>10<span class="org-whitespace-space">      </span>14
+3<span class="org-whitespace-space">       </span>9<span class="org-whitespace-space">          </span>15
+</pre>
+</div>
+<ul class="org-ul">
+<li>元素在垂直线和对交线上；</li>
+<li>把垂直线之后，对交线上的元素和垂直线合并到一起，称为一个列（col）；</li>
+<li>可以得出:
+<ul class="org-ul">
+<li>垂直线元素下标 \(IndexOfVertical  = col * (rows*2 - 2) + row\);</li>
+<li>对交线元素下标 \(IndexOfIntersect = col * (rows*2 - 2) + (numRows - 1) * 2 - row\)</li>
+</ul></li>
+<li>按照row, col两层循环的方式访问，O(n)就能做完字符串处理。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge15167b" class="outline-4">
+<h4 id="orge15167b"><span class="section-number-4">1.6.2</span> 代码实现</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-function-name">convert</span>(<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numRows</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(numRows<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>2)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>s;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">static_cast</span>&lt;<span class="org-type">int</span>&gt;(s.length());
+<span class="org-whitespace-space">    </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numRowsMinus1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>numRows<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">    </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">countOfFixedCol</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>numRowsMinus1<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>2;
+<span class="org-whitespace-space">    </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fixedCols</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(n<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>countOfFixedCol<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1)<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>countOfFixedCol;
+
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">idx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span>ret.resize(n);
+<span class="org-whitespace-space">    </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">r</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>r<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>numRows;<span class="org-whitespace-space"> </span>++r)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">srcVerticalIdx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>r;
+<span class="org-whitespace-space">        </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">col</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;<span class="org-whitespace-space"> </span>col<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>fixedCols<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>srcVerticalIdx<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n;<span class="org-whitespace-space"> </span>++col)
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span>ret[idx++]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s[srcVerticalIdx];
+
+<span class="org-whitespace-space">            </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(r<span class="org-whitespace-space"> </span>%<span class="org-whitespace-space"> </span>numRowsMinus1)
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">srcIntersectIdx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>srcVerticalIdx<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>countOfFixedCol<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>r<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>r;
+<span class="org-whitespace-space">                </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(srcIntersectIdx<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>n)
+<span class="org-whitespace-space">                </span>{
+<span class="org-whitespace-space">                    </span>ret[idx++]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>s[srcIntersectIdx];
+<span class="org-whitespace-space">                </span>}
+<span class="org-whitespace-space">            </span>}
+
+<span class="org-whitespace-space">            </span>srcVerticalIdx<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>countOfFixedCol;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>ret;
+}
+</pre>
+</div>
+
+<p>
+Results:
+</p>
+<blockquote>
+<p>
+Runtime: 0 ms, faster than 100.00% of C++ online submissions for Zigzag
+Conversion.<br />
+Memory Usage: 7.9 MB, less than 99.10% of C++ online submissions for Zigzag
+Conversion.
+</p>
+</blockquote>
+</div>
 </div>
 </div>
 </div>
