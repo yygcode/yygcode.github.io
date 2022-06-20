@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>RDMA网络学习笔记(1)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">RDMA网络学习笔记(1)</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgde642bc">1. 网络发展</a></li>
+<li><a href="#org10c6e09">2. 协议</a></li>
+<li><a href="#org719c20c">3. 单网卡多协议多队列</a></li>
+<li><a href="#orgb393c82">4. 存储网络组件目标</a></li>
+<li><a href="#org31950ed">5. 开源软件</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgde642bc" class="outline-2">
+<h2 id="orgde642bc"><span class="section-number-2">1</span> 网络发展</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+25G网络全面商用，100G网络批量上线，200G网络即将到来。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org10c6e09" class="outline-2">
+<h2 id="org10c6e09"><span class="section-number-2">2</span> 协议</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+iWARP: Internet Wide Area RDMA Protocol. 2007年OpenFabric联盟(主要成员包括IBM, EMC,
+Intel等)公布的标准。IETF规范。
+</p>
+
+<p>
+RoCE: RDMA over Converged(融合的) Ethernet. 2010年Infiniband行业协会
+(Mellanox/Broadcom)推出的规范。在以太网上实现的RDMA。2014年提出RoCEv2，
+使用UDP封装，网络层遵循Eth+IP，传输层使用IB，完全融合现有以太网基础设施。
+RoCE网络需要支持DCB的网络交换机，以支持PFC(Priority Flow Control)流控。PFC
+机制根据拥塞状态发送PAUSE，逐级反压进行流控。
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Items</th>
+<th scope="col" class="org-left">RocE</th>
+<th scope="col" class="org-left">RoCEv2</th>
+<th scope="col" class="org-left">iWARP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">RDMA NIC Required</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+</tr>
+
+<tr>
+<td class="org-left">Network Layer</td>
+<td class="org-left">IB</td>
+<td class="org-left">UDP/IP</td>
+<td class="org-left">TCP/IP</td>
+</tr>
+
+<tr>
+<td class="org-left">Transport Protocol</td>
+<td class="org-left">IB</td>
+<td class="org-left">IB</td>
+<td class="org-left">iWARP</td>
+</tr>
+
+<tr>
+<td class="org-left">RDMA verbs support</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+</tr>
+
+<tr>
+<td class="org-left">Switch Required</td>
+<td class="org-left">DCB</td>
+<td class="org-left">DCB</td>
+<td class="org-left">Not Required</td>
+</tr>
+
+<tr>
+<td class="org-left">Congestion(拥塞) Management</td>
+<td class="org-left">QCN</td>
+<td class="org-left">ECN/CNP</td>
+<td class="org-left">TCP/IP, RFC 3168 ECN</td>
+</tr>
+
+<tr>
+<td class="org-left">Routable</td>
+<td class="org-left">No</td>
+<td class="org-left">Yes</td>
+<td class="org-left">Y</td>
+</tr>
+</tbody>
+</table>
+<p>
+RoCE/RoCEv2 Vendor: Emulex, Mellanox, Broadcom, Qlogic
+iWARP Vendor: Intel, Chelsio
+</p>
+
+<p>
+目前主流RDMA为RoCEv2。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org719c20c" class="outline-2">
+<h2 id="org719c20c"><span class="section-number-2">3</span> 单网卡多协议多队列</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+内核态TCP/IP, 用户态TCP/IP，以及RDMA传输并存。并通过TCP/IP走控制命令，通过RDMA
+传输数据，既简化逻辑，同时满足性能需求。
+</p>
+
+<p>
+通过NIC FLOW DIRECTOR技术，NIC把数据包直接推送到对应的Queue，实现不同驱动、完全
+无锁的数据处理。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb393c82" class="outline-2">
+<h2 id="orgb393c82"><span class="section-number-2">4</span> 存储网络组件目标</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>低延时：RDMA网络RoundTrip控制在10us；</li>
+<li>低消耗：硬件Offload，降低CPU消耗; TSP, LRO, FPGA；</li>
+<li>高并发：网卡分流，无锁多队列，完全并发；</li>
+<li>运维友好：升级；</li>
+<li>内存管理：零拷贝，大页；</li>
+<li>编解码：控制链路Protobuf，数据链路RawData；</li>
+<li>全链路用户态处理，Polling机制，Run To Completion线程模型；
+<ul class="org-ul">
+<li>How To Reduce CPU ？</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org31950ed" class="outline-2">
+<h2 id="org31950ed"><span class="section-number-2">5</span> 开源软件</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>DPDK驱动
+<ul class="org-ul">
+<li><a href="https://www.dpdk.org/">https://www.dpdk.org/</a></li>
+<li><a href="https://doc.dpdk.org/guides/prog_guide/">https://doc.dpdk.org/guides/prog_guide/</a></li>
+</ul></li>
+
+<li>协议栈
+<ul class="org-ul">
+<li>Seastar
+<ul class="org-ul">
+<li>Github: <a href="https://github.com/scylladb/seastar">https://github.com/scylladb/seastar</a></li>
+<li>Benchmark: <a href="https://github.com/scylladb/seastar/wiki/HTTPD-benchmark">https://github.com/scylladb/seastar/wiki/HTTPD-benchmark</a></li>
+</ul></li>
+<li>mTcp
+<ul class="org-ul">
+<li>Github: <a href="https://github.com/mtcp-stack/mtcp">https://github.com/mtcp-stack/mtcp</a></li>
+</ul></li>
+<li>f-stack
+<ul class="org-ul">
+<li>Github: <a href="https://github.com/F-Stack/f-stack">https://github.com/F-Stack/f-stack</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

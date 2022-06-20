@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>分治，动态规划与贪心算法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">分治，动态规划与贪心算法</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb525cdc">1. 分治算法(Divide and Conquer)</a>
+<ul>
+<li><a href="#org9fc1e05">1.1. 方法</a></li>
+<li><a href="#orgde4cfd3">1.2. 示例</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb525cdc" class="outline-2">
+<h2 id="orgb525cdc"><span class="section-number-2">1</span> 分治算法(Divide and Conquer)</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org9fc1e05" class="outline-3">
+<h3 id="org9fc1e05"><span class="section-number-3">1.1</span> 方法</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+典型三步：
+</p>
+<ul class="org-ul">
+<li>分解(Divide)：把问题划分为子问题；子问题形式与原问题一致，但规模更小；</li>
+<li>解决(Conquer)：递归求解子问题；子问题规模足够小时，停止递归，直接求解；</li>
+<li>合并(Combine)：组合子问题的解，得到原问题的解。</li>
+</ul>
+
+\begin{equation}
+T(n) = \left\{
+\begin{aligned}
+1 \qquad \qquad if n = 1\\
+T(\frac{n}{2}) \qquad if n > 1
+\end{aligned}
+\right\}
+\end{equation}
+</div>
+</div>
+
+<div id="outline-container-orgde4cfd3" class="outline-3">
+<h3 id="orgde4cfd3"><span class="section-number-3">1.2</span> 示例</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+From 算法导论，最大子数组问题。
+</p>
+
+<p>
+给定数组:<br />
+13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -15, -22, 15, -4, 7<br />
+找出最大子数组，这个子数组之后，是所有子数组里最大的。
+</p>
+
+<p>
+暴力破解法可以在O(n^2)时间内完成，尝试用分治算法求解。
+</p>
+
+<p>
+考虑子数组[i..j]中间位置mid，[i..j]可以划分为两个子数组[i..mid], [mid+1, j]，只要找到
+最大子数组[i..mid]和[mid+1 .. j]，合并就能得到最大的[i..j]。
+</p>
+
+<p>
+书中给出的伪代码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">FIND-MAX-CROSSING-SUBARRAY(A,<span class="org-whitespace-space"> </span>low,<span class="org-whitespace-space"> </span>mid,<span class="org-whitespace-space"> </span>high)
+1<span class="org-whitespace-space"> </span>left-sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-&#8734;
+2<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0
+3<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>i<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>mid<span class="org-whitespace-space"> </span>downto<span class="org-whitespace-space"> </span>low
+4<span class="org-whitespace-space">     </span>sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>A[i]
+5<span class="org-whitespace-space">     </span>if<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>left-sum
+6<span class="org-whitespace-space">         </span>left-sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>sum
+7<span class="org-whitespace-space">         </span>max-left<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i
+8<span class="org-whitespace-space"> </span>right-sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-&#8734;
+9<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0
+10<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>j<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>mid<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>high
+11<span class="org-whitespace-space">    </span>sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>A[j]
+12<span class="org-whitespace-space">    </span>if<span class="org-whitespace-space"> </span>sum<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>right-sum
+13<span class="org-whitespace-space">        </span>right-sum<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>sum
+14<span class="org-whitespace-space">        </span>max-right<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>j
+15<span class="org-whitespace-space"> </span>return<span class="org-whitespace-space"> </span>(max-left,<span class="org-whitespace-space"> </span>max-right,<span class="org-whitespace-space"> </span>left-sum<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>right-sum)
+</pre>
+</div>
+
+<p>
+写个C版本的跑跑看:
+</p>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
