@@ -57,6 +57,11 @@
 </ul>
 </div>
 </div>
+<ul class="org-ul">
+<li>子问题非重复求解，用分治；</li>
+<li>子问题重复求解，组合得到原问题解，用动态规划；</li>
+<li>贪心算法可求解的，动态规划总可求解；贪心适用于原问题做出一个最优选择后，只剩下一个子问题需要求解的场景；组合最优选择和子问题的解，可得出原问题的解；贪心算法只要可解，预期实现比动态规划更简单。</li>
+</ul>
 
 <div id="outline-container-orgb525cdc" class="outline-2">
 <h2 id="orgb525cdc"><span class="section-number-2">1</span> 分治算法(Divide and Conquer)</h2>
@@ -103,8 +108,7 @@ From 算法导论，最大子数组问题。
 </p>
 
 <p>
-考虑子数组[i..j]中间位置mid，[i..j]可以划分为两个子数组[i..mid], [mid+1, j]，只要找到
-最大子数组[i..mid]和[mid+1 .. j]，合并就能得到最大的[i..j]。
+考虑子数组[i..j]中间位置mid，[i..j]可以划分为两个子数组[i..mid], [mid+1, j]，只要找到最大子数组[i..mid]和[mid+1 .. j]，合并就能得到最大的[i..j]。
 </p>
 
 <p>
