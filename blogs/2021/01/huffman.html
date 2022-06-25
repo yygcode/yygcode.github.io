@@ -8,6 +8,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
 <script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -27,7 +49,12 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#org1326237">1. 原理</a></li>
-<li><a href="#org2e7588f">2. 实现</a></li>
+<li><a href="#org2e7588f">2. 实现</a>
+<ul>
+<li><a href="#orgc8bb3d1">2.1. 需求描述</a></li>
+<li><a href="#orgbb4a975">2.2. 代码片段</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -37,10 +64,13 @@ WIKI:
 </p>
 
 <p>
-霍夫曼编码(Huffman coding)，又译哈夫曼编码，赫夫曼编码，是一种用于无损数据压缩的
-熵编码（权编码）算法。美国计算机科学家David Albert Huffman在1952年发明。
+霍夫曼编码(Huffman coding)，又译哈夫曼编码，赫夫曼编码，是一种用于无损数据压缩的熵编码（权编码）算法。美国计算机科学家David Albert Huffman在1952年发明。
 </p>
 </blockquote>
+
+<p>
+存储索引具有高频重复特征，可以通过HuffmanCoding做高效压缩。需要解决编码和查找两个操作。
+</p>
 
 <p>
 相关论文：A method for the Construction of Minimum-Redundancy Codes.
@@ -98,13 +128,17 @@ HuffmanCoding根据符号的频率决定编码。符号频率越高则符号编�
 </table>
 
 <p>
-按照如下方式迭代操作生成HuffmanCoding Tree：
+HuffmanCoding是一种贪心算法，是一种前缀码。Huffman设计了一个贪心算法构造最优前缀码。按照如下方式迭代操作生成HuffmanCoding Tree：
 </p>
 <ul class="org-ul">
 <li>按照出现频率大小对符号排序；</li>
 <li>频率最小的两个字母相加形成一个新的节点（内部节点）；</li>
 <li>用新的内部节点替换这两个相加的字母，继续比较频率；</li>
 </ul>
+
+<p>
+上述过程可以使用一个最小二叉堆实现，时间复杂度为\(O(n \log n)\)
+</p>
 
 <p>
 最终生成如下图：
@@ -186,13 +220,51 @@ HuffmanCoding最主要的工作是实现一个HuffmanTree，HuffmanTree是一个
 </p>
 <ul class="org-ul">
 <li>叶子节点包括：Symbol、Frequency、指向父节点的链接；</li>
-<li>内部节点包括：左右子节点的链接、Frequencey(左右子节点Frequency之和)、指向
-父节点的链接；</li>
+<li>内部节点包括：左右子节点的链接、Frequencey(左右子节点Frequency之和)、指向父节点的链接；</li>
 </ul>
 
 <p>
 用0与1分别表示指向左子节点与右子节点，最后完成的树共有n个终端节点与n-1个非终端节点。
 </p>
+</div>
+
+<div id="outline-container-orgc8bb3d1" class="outline-3">
+<h3 id="orgc8bb3d1"><span class="section-number-3">2.1</span> 需求描述</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+元数据一般用做映射。例如，对象 object 2MB-4MB 数据保存在 file3 offset 100MB处，就是一条元数据（KV里也称为一行/row）。
+</p>
+
+<p>
+编码之后的数据，需要支持相对快速的查询。这可以通过构建一个稀疏Key索引实现。即一批key
+插入一条索引，检索时，可以先用二分快速确定范围。编码时，按照key的有序进行数据编码，可简化稀疏key的生成。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb4a975" class="outline-3">
+<h3 id="orgbb4a975"><span class="section-number-3">2.2</span> 代码片段</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">HuffmanCoder</span>::<span class="org-function-name">AddSymbol</span>(<span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">symbol</span>,<span class="org-whitespace-space"> </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">freq</span>)
+{
+<span class="org-whitespace-space">    </span>mHashMap[symbol]<span class="org-whitespace-space"> </span>+=<span class="org-whitespace-space"> </span>freq;
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">HuffmanCoder</span>::<span class="org-function-name">GenerateCode</span>()
+{
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Use</span><span class="org-whitespace-space"> </span><span class="org-comment">sort</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">greedy</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">generate</span><span class="org-whitespace-space"> </span><span class="org-comment">huffman,</span><span class="org-whitespace-space"> </span><span class="org-comment">see</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Introduction</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">Algorithms,</span><span class="org-whitespace-space"> </span><span class="org-comment">Chapter</span><span class="org-whitespace-space"> </span><span class="org-comment">16.</span>
+}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Encode</span><span class="org-whitespace-space"> </span><span class="org-comment">@code</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">@buf</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">@bit</span><span class="org-whitespace-space"> </span><span class="org-comment">offset.</span>
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">HuffmanCoder</span>::<span class="org-function-name">Encode</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">code</span>,<span class="org-whitespace-space"> </span><span class="org-type">uint8_t</span><span class="org-whitespace-space"> </span>**<span class="org-variable-name">buf</span>,<span class="org-whitespace-space"> </span><span class="org-type">uint8_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">bit</span>);
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Decode</span><span class="org-whitespace-space"> </span><span class="org-comment">@code</span><span class="org-whitespace-space"> </span><span class="org-comment">from</span><span class="org-whitespace-space"> </span><span class="org-comment">@buf</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">@bit</span><span class="org-whitespace-space"> </span><span class="org-comment">offset.</span>
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">HuffmanCoder</span>::<span class="org-function-name">Decode</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">uint8_t</span><span class="org-whitespace-space"> </span>**<span class="org-variable-name">buf</span>,<span class="org-whitespace-space"> </span><span class="org-type">uint8_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">bit</span>,<span class="org-whitespace-space"> </span><span class="org-type">uint32_t</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">code</span>);
+</pre>
+</div>
+</div>
 </div>
 </div>
 
