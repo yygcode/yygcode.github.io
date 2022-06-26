@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>C++ Memory Model</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C++ Memory Model</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org457bfe0">1. 一个例子</a>
+<ul>
+<li><a href="#orgf702b29">1.1. 乱序执行</a></li>
+</ul>
+</li>
+<li><a href="#org31046e9">2. 程序并发</a></li>
+<li><a href="#org63d0730">3. Memory Model</a>
+<ul>
+<li><a href="#org2ad3720">3.1. Weak vs. Strong Memory Model</a></li>
+<li><a href="#orgd2ed31b">3.2. Memory order in c++</a>
+<ul>
+<li><a href="#org065d34e">3.2.1. Relaxed - memory_order_relaxed</a></li>
+<li><a href="#org3c03469">3.2.2. Acquire - memory_order_acquire</a></li>
+<li><a href="#org35b592d">3.2.3. Release - memory_order_release</a></li>
+<li><a href="#orgea8909a">3.2.4. Acquire-Release - memory_order_acq_rel</a></li>
+<li><a href="#orgb3d412a">3.2.5. Sequence - memory_order_seq_cst</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org527500a">4. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org457bfe0" class="outline-2">
+<h2 id="org457bfe0"><span class="section-number-2">1</span> 一个例子</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgf702b29" class="outline-3">
+<h3 id="orgf702b29"><span class="section-number-3">1.1</span> 乱序执行</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+下面代码在x86下工作正常，在arm上频繁输出错误，观察到的，b比a大1或2。参考强内存模型与弱内存模型：<a href="https://preshing.com/20120930/weak-vs-strong-memory-models/">https://preshing.com/20120930/weak-vs-strong-memory-models/</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;pthread.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;time.h&gt;</span>
+
+<span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">a</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">b</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+
+<span class="org-type">void</span>*<span class="org-whitespace-space"> </span><span class="org-function-name">thread_func</span>(<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">arg</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-type">time_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tmOld</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">cc</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(1)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">read</span><span class="org-whitespace-space"> </span><span class="org-comment">b</span><span class="org-whitespace-space"> </span><span class="org-comment">first,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">read</span><span class="org-whitespace-space"> </span><span class="org-comment">a;</span>
+<span class="org-whitespace-space">        </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rb</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*(<span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span><span class="org-type">long</span>*)&amp;b;
+<span class="org-whitespace-space">        </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ra</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>*(<span class="org-keyword">volatile</span><span class="org-whitespace-space"> </span><span class="org-type">long</span>*)&amp;a;
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(rb<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>ra)
+<span class="org-whitespace-space">        </span>{
+<span class="org-whitespace-space">            </span>++cc;
+<span class="org-whitespace-space">            </span><span class="org-type">time_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tmCur</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>time(<span class="org-constant">NULL</span>);
+<span class="org-whitespace-space">            </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(tmCur<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>tmOld<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>1)
+<span class="org-whitespace-space">            </span>{
+<span class="org-whitespace-space">                </span>tmOld<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>tmCur;
+<span class="org-whitespace-space">                </span>printf(<span class="org-string">"Caught</span><span class="org-whitespace-space"> </span><span class="org-string">out-of-order(total=%lu).</span><span class="org-whitespace-space"> </span><span class="org-string">a=%ld,</span><span class="org-whitespace-space"> </span><span class="org-string">b=%ld\n"</span>,
+<span class="org-whitespace-space">                       </span>cc,<span class="org-whitespace-space"> </span>ra,<span class="org-whitespace-space"> </span>rb);
+<span class="org-whitespace-space">            </span>}
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>;
+}
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">    </span><span class="org-type">pthread_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tid</span>;
+<span class="org-whitespace-space">    </span>pthread_create(&amp;tid,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>,<span class="org-whitespace-space"> </span>thread_func,<span class="org-whitespace-space"> </span><span class="org-constant">NULL</span>);
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(1)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">increment</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">first,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">increment</span><span class="org-whitespace-space"> </span><span class="org-comment">b;</span>
+<span class="org-whitespace-space">        </span>++a;
+<span class="org-whitespace-space">        </span>++b;
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org31046e9" class="outline-2">
+<h2 id="org31046e9"><span class="section-number-2">2</span> 程序并发</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>编译器在保证单线程正确性的前提下做优化；</li>
+<li>编译器假设代码（程序员）是正确的前提下做优化；</li>
+<li>处理器乱序执行；
+<ul class="org-ul">
+<li>Professional Assembly Language 描述了CPU乱序执行引擎；</li>
+</ul></li>
+<li>CPU缓存未同步
+<ul class="org-ul">
+<li><p>
+Store buffer From Stackoverflow <a href="https://stackoverflow.com/questions/11105827/what-is-a-store-buffer">https://stackoverflow.com/questions/11105827/what-is-a-store-buffer</a>
+</p>
+<blockquote>
+<p>
+A store buffer is a speculative structure that exists in the CPU, just like
+the load queue and is for allowing the CPU to speculate on stores. A write
+combining buffer is part of the memory system and essentially takes a bunch
+of small writes (think 8 byte writes) and packs them into a single larger
+transaction (a 64-byte cache line) before sending them to the memory system.
+These writes are not speculative and are part of the coherence protocol.
+The goal is to save bus bandwidth. Typically, a write combining buffer is
+used for uncached writes to I/O devices (often for graphics cards). It's
+typical in I/O devices to do a bunch of programming of device registers
+by doing 8 byte writes and the write combining buffer allows those writes
+to be combined into larger transactions when shipping them out past the
+cache.
+</p>
+</blockquote></li>
+<li>L1, L2, L3 Cache;</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org63d0730" class="outline-2">
+<h2 id="org63d0730"><span class="section-number-2">3</span> Memory Model</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org2ad3720" class="outline-3">
+<h3 id="org2ad3720"><span class="section-number-3">3.1</span> Weak vs. Strong Memory Model</h3>
+</div>
+
+<div id="outline-container-orgd2ed31b" class="outline-3">
+<h3 id="orgd2ed31b"><span class="section-number-3">3.2</span> Memory order in c++</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Inter-thread synchronization and memory ordering determine how evaluations and
+side effects of expressions are ordered between different threads of execution.
+They are defined in the following terms:
+</p>
+</div>
+
+<div id="outline-container-org065d34e" class="outline-4">
+<h4 id="org065d34e"><span class="section-number-4">3.2.1</span> Relaxed - memory_order_relaxed</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+Relaxed operation: there are no synchronization or ordering constraints imposed
+on other reads or writes, only this operation's atomicity is guaranteed (see
+Relaxed ordering below)
+除了保证操作是原子的，没有其他任何保证。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3c03469" class="outline-4">
+<h4 id="org3c03469"><span class="section-number-4">3.2.2</span> Acquire - memory_order_acquire</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+A load operation with this memory order performs the acquire operation on the
+affected memory location: no reads or writes in the current thread can be
+reordered before this load. All writes in other threads that release the same
+atomic variable are visible in the current thread (see Release-Acquire
+ordering below)
+</p>
+
+<p>
+用于load操作，保证当前线程没有读或者写会重排到这个load操作之前。其他线程对同一个原子变量的写入，在当前线程可见。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org35b592d" class="outline-4">
+<h4 id="org35b592d"><span class="section-number-4">3.2.3</span> Release - memory_order_release</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+A store operation with this memory order performs the release operation: no
+reads or writes in the current thread can be reordered after this store.
+All writes in the current thread are visible in other threads that acquire
+the same atomic variable (see Release-Acquire ordering below) and writes
+that carry a dependency into the atomic variable become visible in other
+threads that consume the same atomic (see Release-Consume ordering below).
+</p>
+
+<p>
+用于store操作，保证当前线程没有读或者写会重排到这个操作之后。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgea8909a" class="outline-4">
+<h4 id="orgea8909a"><span class="section-number-4">3.2.4</span> Acquire-Release - memory_order_acq_rel</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+A read-modify-write operation with this memory order is both an acquire
+operation and a release operation. No memory reads or writes in the current
+thread can be reordered before the load, nor after the store. All writes
+in other threads that release the same atomic variable are visible before
+the modification and the modification is visible in other threads that
+acquire the same atomic variable.
+</p>
+
+<p>
+用于读写操作，同时保证acquire和release。保证当前线程读或写不会重排到load之前，也不会重拍到store之后。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb3d412a" class="outline-4">
+<h4 id="orgb3d412a"><span class="section-number-4">3.2.5</span> Sequence - memory_order_seq_cst</h4>
+<div class="outline-text-4" id="text-3-2-5">
+<p>
+A load operation with this memory order performs an acquire operation, a store
+performs a release operation, and read-modify-write performs both an acquire
+operation and a release operation, plus a single total order exists in which
+all threads observe all modifications in the same order (see
+Sequentially-consistent ordering below)
+</p>
+
+<p>
+在seq_cst约束下，load满足acquire约束，store满足release约束。read-modify-write
+满足acquire和release约束。total order这里还没看明白。
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org527500a" class="outline-2">
+<h2 id="org527500a"><span class="section-number-2">4</span> References</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>Cpp references memory order</dt><dd><a href="https://en.cppreference.com/w/cpp/atomic/memory_order">https://en.cppreference.com/w/cpp/atomic/memory_order</a></dd>
+
+<dt>Atomic Weapons: The C++ Memory Model and Modern Hardware</dt><dd><a href="https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/">https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/</a></dd>
+
+<dt>Reader Q&amp;A: Acquire/release and sequential consistency</dt><dd><a href="https://herbsutter.com/2013/10/28/reader-qa-acquirerelease-and-sequential-consistency/">https://herbsutter.com/2013/10/28/reader-qa-acquirerelease-and-sequential-consistency/</a></dd>
+
+<dt>Acquire and Release Semantics</dt><dd><a href="https://preshing.com/20120913/acquire-and-release-semantics/">https://preshing.com/20120913/acquire-and-release-semantics/</a></dd>
+
+<dt>Memory Ordering in P6 and More Recent Processor Families</dt><dd><a href="https://xem.github.io/minix86/manual/intel-x86-and-64-manual-vol3/o_fe12b1e2a880e0ce-262.html">https://xem.github.io/minix86/manual/intel-x86-and-64-manual-vol3/o_fe12b1e2a880e0ce-262.html</a></dd>
+
+<dt>C++ Concurrency in Action</dt><dd><a href="https://github.com/yygcode/books/blob/master/cxx/cxx-concurrency-in-action.pdf">https://github.com/yygcode/books/blob/master/cxx/cxx-concurrency-in-action.pdf</a></dd>
+
+<dt>CppCon 2017: Fedor Pikus "C++ atomics, from basic to advanced. What do they really do?"</dt><dd><a href="https://www.youtube.com/watch?v=ZQFzMfHIxng">https://www.youtube.com/watch?v=ZQFzMfHIxng</a></dd>
+
+<dt>Weak vs. Strong Memory Models</dt><dd><a href="https://preshing.com/20120930/weak-vs-strong-memory-models/">https://preshing.com/20120930/weak-vs-strong-memory-models/</a></dd>
+
+<dt>Memory Barriers Are Like Source Control Operations</dt><dd><a href="https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/">https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/</a></dd>
+
+<dt>Memory Ordering at Compile Time</dt><dd><a href="https://preshing.com/20120625/memory-ordering-at-compile-time/">https://preshing.com/20120625/memory-ordering-at-compile-time/</a></dd>
+
+<dt>Store Buffer Discuss</dt><dd><a href="https://yarchive.net/comp/linux/store_buffer.html">https://yarchive.net/comp/linux/store_buffer.html</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
