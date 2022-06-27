@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>云端块存储实现分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">云端块存储实现分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge08294f">1. 总体介绍</a></li>
+<li><a href="#org53ff4e0">2. AWS</a>
+<ul>
+<li><a href="#orgee78952">2.1. From Patent</a></li>
+<li><a href="#org9518291">2.2. E8 Storage</a></li>
+<li><a href="#org56ee89c">2.3. 产品分析</a></li>
+</ul>
+</li>
+<li><a href="#orgcc79183">3. Azure</a></li>
+<li><a href="#orgc99293e">4. Alibaba</a></li>
+<li><a href="#org6da0898">5. GCP</a></li>
+<li><a href="#org109e5e8">6. 华为</a></li>
+<li><a href="#orgfbf2d99">7. 腾讯</a>
+<ul>
+<li><a href="#org9ee0ef4">7.1. CBS 1.0, 2.0, 3.0(HCBS)</a></li>
+<li><a href="#org599649d">7.2. 极速云盘</a></li>
+</ul>
+</li>
+<li><a href="#orgd582bb1">8. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge08294f" class="outline-2">
+<h2 id="orge08294f"><span class="section-number-2">1</span> 总体介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+本文尝试从公开资料，分析主流云厂商块存储设备的实现。
+</p>
+
+<p>
+这是一个长期工作，Building&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org53ff4e0" class="outline-2">
+<h2 id="org53ff4e0"><span class="section-number-2">2</span> AWS</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+AWS预期没有基于统一分布式文件系统底座实现块存储服务，而是由多种架构合并组成。
+</p>
+
+<p>
+这里是AWS EBS产品页面：
+<a href="https://aws.amazon.com/cn/ebs/features/">https://aws.amazon.com/cn/ebs/features/</a>
+</p>
+</div>
+
+<div id="outline-container-orgee78952" class="outline-3">
+<h3 id="orgee78952"><span class="section-number-3">2.1</span> From Patent</h3>
+<div class="outline-text-3" id="text-2-1">
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://patents.google.com/patent/US20180183868A1/en?oq=US-20180183868-A1">https://patents.google.com/patent/US20180183868A1/en?oq=US-20180183868-A1</a></li>
+<li><a href="https://patentimages.storage.googleapis.com/e6/38/1e/1bf45099e3a6f9/US20180183868A1.pdf">https://patentimages.storage.googleapis.com/e6/38/1e/1bf45099e3a6f9/US20180183868A1.pdf</a></li>
+<li><a href="https://github.com/yygcode/papers/blob/master/patent/aws-ebs-US20180183868A1.pdf">https://github.com/yygcode/papers/blob/master/patent/aws-ebs-US20180183868A1.pdf</a></li>
+</ul>
+
+<p>
+Data storage system with redundant internal networks
+</p>
+
+<p>
+Abstract
+</p>
+
+<p>
+A data storage system includes a rack, multiple head nodes, multiple data
+storage sleds, and at least two networking devices. The at least two network
+devices are configured to implement at least two redundant networks within the
+data storage system. Also, each of the head nodes is assigned at least two
+network addresses for communication with the data storage sleds of the data
+storage system via the at least two networking devices. The data storage sleds
+each include multiple mass storage devices and a sled controller that is
+configured to couple with the at least two network switches. In some
+embodiments, the data storage system further includes redundant power systems
+within a rack in which the head nodes, the data storage sleds, and the at least
+two networking devices are mounted.
+</p>
+</blockquote>
+
+<blockquote>
+<ul class="org-ul">
+<li><a href="https://patents.google.com/patent/US20180181330A1/en?oq=US-20180181330-A1">https://patents.google.com/patent/US20180181330A1/en?oq=US-20180181330-A1</a></li>
+<li><a href="https://patentimages.storage.googleapis.com/a6/31/75/b89bceb1d4177b/US20180181330A1.pdf">https://patentimages.storage.googleapis.com/a6/31/75/b89bceb1d4177b/US20180181330A1.pdf</a></li>
+<li><a href="https://github.com/yygcode/papers/blob/master/patent/aws-ebs-US20180181330A1.pdf">https://github.com/yygcode/papers/blob/master/patent/aws-ebs-US20180181330A1.pdf</a></li>
+</ul>
+
+<p>
+Data storage system with enforced fencing
+</p>
+
+<p>
+Abstract
+</p>
+
+<p>
+A data storage system includes multiple head nodes and data storage sleds. The
+data storage sleds include multiple mass storage devices and a sled controller.
+Respective ones of the head nodes are configured to obtain credentials for
+accessing particular portions of the mass storage devices of the data storage
+sleds. A sled controller of a data storage sled determines whether a head node
+attempting to perform a write on a mass storage device of a data storage sled
+that includes the sled controller is presenting with the write request a valid
+credential for accessing the mass storage devices of the data storage sled. If
+the credentials are valid, the sled controller causes the write to be performed
+and if the credentials are invalid, the sled controller returns a message to the
+head node indicating that it has been fenced off from the mass storage device.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org9518291" class="outline-3">
+<h3 id="org9518291"><span class="section-number-3">2.2</span> E8 Storage</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+2019年7月AWS收购了E8，参见新闻：
+</p>
+<ul class="org-ul">
+<li><a href="https://www.cnbc.com/2019/07/31/aws-acquires-storage-start-up-e8.html">https://www.cnbc.com/2019/07/31/aws-acquires-storage-start-up-e8.html</a></li>
+<li><a href="https://www.datacenterplanet.com/zh-CN/%E7%A1%AC%E4%BB%B6/aws%E6%94%B6%E8%B4%AD%E4%BB%A5%E8%89%B2%E5%88%97%E5%AD%98%E5%82%A8%E5%90%AF%E5%8A%A8e8/">https://www.datacenterplanet.com/zh-CN/%E7%A1%AC%E4%BB%B6/aws%E6%94%B6%E8%B4%AD%E4%BB%A5%E8%89%B2%E5%88%97%E5%AD%98%E5%82%A8%E5%90%AF%E5%8A%A8e8/</a></li>
+</ul>
+
+<p>
+E8 Client相当于AFA Controller，可实现RAID多写。Client有足够的映射信息，知道IO
+应该写到后端某个服务器/盘，不需要后端进行路由。使用电池保护凑满条带写，防止
+Write Hole问题。
+</p>
+
+<p>
+E8与AWS Nitro集成，可以把E8 Client运行到Nitro Card上。
+</p>
+
+<p>
+参考这里：<a href="https://wikibon.com/amazon-acquires-blazing-fast-e8-storage-technology/">https://wikibon.com/amazon-acquires-blazing-fast-e8-storage-technology/</a>
+<img src="file:///img/ebs-aws-e8.png" alt="ebs-aws-e8.png" />
+</p>
+
+<p>
+IO2 Block Express 预期是 E8 实现。E8 延时 40 us，IO2 E2E写岩石在100us以上，有
+60us应该耗费在Virtualization，Nitro，Network上了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org56ee89c" class="outline-3">
+<h3 id="org56ee89c"><span class="section-number-3">2.3</span> 产品分析</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+AWS EBS持久性比较差，只有5个9。下面是一段介绍描述：
+</p>
+<blockquote>
+<p>
+From <a href="https://aws.amazon.com/cn/ebs/features/">https://aws.amazon.com/cn/ebs/features/</a>
+</p>
+
+<p>
+Amazon EBS 的可用性与持久性
+Amazon EBS 卷具有很高的可用性、可靠性和持久性。Amazon EBS 卷的数据可在可用区内多个服务器间进行复制，以防备在任一组件发生故障时丢失数据，无需额外付费。有关更多信息，请参阅 Amazon EC2 和 EBS 服务等级协议。
+</p>
+
+<p>
+Amazon EBS 可提供持久性更高的卷 (io2)，以实现 99.999％ 的持久性和 0.001％ 的年度故障率 (AFR)，其中故障是指完全或部分丢失卷。例如，如果您让 100000 个 EBS io2 卷运行 1 年，则预计其中只有 1 个 io2 卷会出现故障。这使得 io2 成为业务关键型应用程序（例如 SAP HANA、Oracle、Microsoft SQL Server 和 IBM DB2）的理想之选，将延长这些应用程序的正常运行时间。相比于普通硬盘 2％ 左右的 AFR，io2 卷的可靠性提升了
+2000 倍。其他所有 Amazon EBS 卷均可提供 99.8％-99.9％ 的耐久性，且 AFR 在
+0.1％-0.2％ 之间。
+</p>
+
+<p>
+EBS 还支持快照功能，这是对数据进行时间点备份的好方法。要了解更多有关 Amazon EBS
+快照以及如何拍摄卷的时间点备份的信息，请访问此处。
+</p>
+</blockquote>
+
+<p>
+问题在于，假设AWS总共售卖了500万片io2，则一年内可能出现50片坏盘。这个数据还是不小的。估计AWS通过快照恢复（容忍少量丢失）解决了这个问题。
+</p>
+
+<p>
+Azure承诺了0%的失效率，阿里云则是11个9，AWS差的有点远。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcc79183" class="outline-2">
+<h2 id="orgcc79183"><span class="section-number-2">3</span> Azure</h2>
+</div>
+
+<div id="outline-container-orgc99293e" class="outline-2">
+<h2 id="orgc99293e"><span class="section-number-2">4</span> Alibaba</h2>
+</div>
+
+<div id="outline-container-org6da0898" class="outline-2">
+<h2 id="org6da0898"><span class="section-number-2">5</span> GCP</h2>
+</div>
+
+<div id="outline-container-org109e5e8" class="outline-2">
+<h2 id="org109e5e8"><span class="section-number-2">6</span> 华为</h2>
+</div>
+
+<div id="outline-container-orgfbf2d99" class="outline-2">
+<h2 id="orgfbf2d99"><span class="section-number-2">7</span> 腾讯</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+腾讯存储产品线比较复杂。TEG团队实现的HCBS，预期是主要售卖产品的架构：
+<a href="https://cloud.tencent.com/developer/article/1005657">https://cloud.tencent.com/developer/article/1005657</a>
+</p>
+
+<p>
+联合Intel，推出了写延时60us，读延时40us的极速产品。这里是介绍材料：
+<a href="https://www.intel.cn/content/dam/www/central-libraries/us/en/documents/tencent-cloud-cloud-disk-cbs-cloud-storage.pdf">https://www.intel.cn/content/dam/www/central-libraries/us/en/documents/tencent-cloud-cloud-disk-cbs-cloud-storage.pdf</a>
+</p>
+</div>
+
+<div id="outline-container-org9ee0ef4" class="outline-3">
+<h3 id="org9ee0ef4"><span class="section-number-3">7.1</span> CBS 1.0, 2.0, 3.0(HCBS)</h3>
+<div class="outline-text-3" id="text-7-1">
+<ul class="org-ul">
+<li>CBS1.0
+<ul class="org-ul">
+<li>通过iSCSI接入；</li>
+<li>持久化用已有组件TFS, TSSD, CKV；</li>
+<li>Proxy应该实现iSCSI Target，并转发对应IO到后端持久化组件；</li>
+<li>预期Master管理云盘创建/删除/加载等；</li>
+</ul></li>
+<li>CBS2.0
+<ul class="org-ul">
+<li>实现了一个统一的持久化层Chunk(Cell)；Chunk预期是Y型写入；</li>
+<li>Proxy依然是iSCSI Target；</li>
+<li>Master控制和协调整个集群，预期依然是创建/删除/加载等；</li>
+<li>Master如何实现高可用，没有看到材料；</li>
+</ul></li>
+<li>CBS3.0(HCBS)
+<ul class="org-ul">
+<li>去掉Proxy，直接从Client写入到Chunk，公开资料中称为CellPair或DiskPair;</li>
+<li>Master记录元数据到ZK，这样可基于AS架构实现高可用；
+<ul class="org-ul">
+<li>呈现给用户的逻辑卷信息；</li>
+<li>IO路由信息；</li>
+<li>集群监控：流量，流控，报警，topo管理，故障恢复；</li>
+</ul></li>
+<li>Driver运行在云主机母机上，向用户呈现块设备，向后端转发IO；
+<ul class="org-ul">
+<li>Driver分为Client和Agent两部分；</li>
+<li>Agent负责逻辑卷和路由信息管理，与Master交互；</li>
+<li>Client处理IO，与后端CellPair交互；</li>
+<li>Agent与Client通过共享内存交互；</li>
+</ul></li>
+<li>IO路由
+<ul class="org-ul">
+<li>采用一致性Hash实现；</li>
+<li>\(TabletPairIndex=Hash(DiskId, Lba) % N\)</li>
+<li>一块盘分为M个Tablet（预期数GB，千量级）；</li>
+<li>一个CellPair内的所有Tablet，组成一系列TabletPair；</li>
+<li>通过DiskId和Lba，唯一确定TablePairIndex；</li>
+<li>IO下发给TablePair的Primary，由Primary发给两个Slave；</li>
+</ul></li>
+<li>故障检测与恢复
+<ul class="org-ul">
+<li>Cell向Master发送心跳，心跳异常则判定故障，TabletPair Slave提升为Primary；</li>
+<li>Cell出现扇区故障，向Master发送自身错误；</li>
+<li>Driver可能向Master上报IO异常；</li>
+<li>故障时，会提升Slave为Master；</li>
+<li>故障时，以TabletPair为单位，进行Recovery或Move，无法更换Tablet，而是整个从
+srcTabletPair搬到destTabletPair；</li>
+</ul></li>
+<li>进行Driver Version 与 TB Version 比较；
+<ul class="org-ul">
+<li>只有Global/TabletPair Version，没有IO Version，异常场景IO一致性问题比较难处理；</li>
+<li>BinLog + 覆盖写，故障场景下，多副本一致性比较难处理；</li>
+</ul></li>
+</ul></li>
+<li>CBS3.0 缺点分析
+<ul class="org-ul">
+<li>覆盖写实现，分布式场景下数据一致性corner case很多，做正确比较难；</li>
+<li>缺少IO Version，发生多个节点重启，Failover时，预期存在IO无法定序，以及数据不稳定问题；</li>
+<li>EC/架构是保证可靠性，减小放大比的有效手段，这个架构下不太好实现；</li>
+<li>总是先写BinLog后写数据，IO放大六倍（三副本写2次）；</li>
+</ul></li>
+</ul>
+
+<p>
+参考 <a href="https://m.e-works.net.cn/articles/article136779.htm">https://m.e-works.net.cn/articles/article136779.htm</a>
+</p>
+<blockquote>
+<p>
+如何实现云硬盘（弹性块存储）系统？
+</p>
+
+<p>
+CBS云硬盘起初是依赖腾讯已有的3个分布式系统：TFS提供冷数据存储、TSSD提供热数据存储和CKV提供分布式锁，用这三个分布式系统做简化整合从而产生了CBS 存储后台。
+</p>
+
+<p>
+其实最开始CBS是将这3个分布式存储系统拼凑在一起，并在前端封装一个iSCSI的块存储服务，这就是CBS1.0。
+</p>
+
+<p>
+但是这个1.0的产品依赖3个庞大的分布式系统，IO链、运维支撑链太长，系统臃肿，可用性极差；所以又把这3个分布式系统在代码层面做了简化整合，从而产生了CBS2.0。
+</p>
+
+<p>
+CBS2.0的架构是怎样的？
+</p>
+
+<p>
+首先，CBS2.0前端是一个接入集群：
+</p>
+
+<p>
+Client，即客户端，让服务器呈现一块硬盘；Proxy，即块设备的后台接入层，前端的云硬盘通过它才能将数据放到云端；Client和Proxy专业名次叫iSCSI initiator和
+iSCSI target，就像大家比较熟悉的CS结构一样；Master，集群总控节点，控制和协调整个集群的工作。
+</p>
+
+<p>
+同时后端是一个分布式存储集群：
+</p>
+
+<p>
+就像经典的分布式存储系统架构，首先接入模块Access提供接入访问服务；存储模块
+Chunk负责数据存储；同样它也是一个分布式系统，同样也有一个总控节点，就是
+Master。
+</p>
+</blockquote>
+
+<p>
+参考 <a href="https://cloud.tencent.com/developer/article/1005657">https://cloud.tencent.com/developer/article/1005657</a>
+</p>
+<blockquote>
+<p>
+三个对等的Cell进程组成一组cp（cellpair也称diskpair，Cell进程对应管理一块物理盘disk）结对，以cpid标识每个cp；同时给每个Cell进程分配相同数量M的小表
+tb（tablet），以tbid标识每个tb；cp上对等的三个小表组成小表对tp（tabletpair），以tpid标识且全局唯一，tp上的三个tb同样也有主副本之分。如图所示相同色块tb表示属于同一个tp对。
+<img src="file:///img/ebs-hcbs-cellpair.png" alt="ebs-hcbs-cellpair.png" />
+</p>
+
+<p>
+HCBS对于腾讯云分布式存储具有里程碑式意义，其无论是在性能还是成本在云市场都具有很大优势，以HCBS为基础衍生出了许多云产品如NCBS、FCBS、NAS等，HCBS同样支持快照功能。其的优势在于两层架构不仅降低了成本与网络通信，运营也同样变得灵活；同时惰性路由同步策略使得管理数据不需要强一致特性（分布式系统的一大难点在于如何保证各节点数据一致）。扇形多副本写（相比于Driver直接写三副本）不仅降低了Driver端压力，同时也起到了IO封装效果（外部IO转换为存储池内部IO），减少IO
+失败概率。但同样也存在不足，从之前描述可以知道HCBS存在结对概念，即副本之间并没有做到完全离散，这使得一个副本故障必须同时换掉其他两个正常副本，代价稍高，这是后续优化的重点。
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org599649d" class="outline-3">
+<h3 id="org599649d"><span class="section-number-3">7.2</span> 极速云盘</h3>
+<div class="outline-text-3" id="text-7-2">
+<ul class="org-ul">
+<li><a href="https://new.qq.com/omn/20210701/20210701A03F0000.html">https://new.qq.com/omn/20210701/20210701A03F0000.html</a></li>
+<li><a href="https://www.intel.cn/content/dam/www/central-libraries/us/en/documents/tencent-cloud-cloud-disk-cbs-cloud-storage.pdf">https://www.intel.cn/content/dam/www/central-libraries/us/en/documents/tencent-cloud-cloud-disk-cbs-cloud-storage.pdf</a></li>
+</ul>
+
+<p>
+40us Latency, 200W IOPS，让大家眼前一亮。随后阿里云发布对标产品PL-X：
+<a href="https://www.aliyun.com/daily-act/ecs/ebs-plx">https://www.aliyun.com/daily-act/ecs/ebs-plx</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd582bb1" class="outline-2">
+<h2 id="orgd582bb1"><span class="section-number-2">8</span> References</h2>
+<div class="outline-text-2" id="text-8">
+<dl class="org-dl">
+<dt>腾讯HCBS</dt><dd><a href="https://cloud.tencent.com/developer/article/1005657">https://cloud.tencent.com/developer/article/1005657</a></dd>
+<dt>金山 KingStorage EBS</dt><dd></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
