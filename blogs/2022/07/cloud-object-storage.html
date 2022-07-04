@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>云端对象存储实现分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">云端对象存储实现分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org3eb8a97">1. 总体介绍</a>
+<ul>
+<li><a href="#org873e330">1.1. KV选择</a></li>
+</ul>
+</li>
+<li><a href="#orge41ecc3">2. AWS</a></li>
+<li><a href="#org9414777">3. 阿里云</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3eb8a97" class="outline-2">
+<h2 id="org3eb8a97"><span class="section-number-2">1</span> 总体介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+相比块存储，对象存储对延时要求相对宽松。
+</p>
+
+<p>
+对象存储通过HTTP/HTTPS和定制客户端访问。AWS S3, Azure Blob, Google GCS, 阿里云
+OSS，是对象存储的典型产品。S3在市场上占主要的份额。除了Azure Blob，其他各家都提供S3兼容的服务。
+</p>
+
+<p>
+对象存储一般是典型的三层架构：
+</p>
+<ol class="org-ol">
+<li>前端：服务接入层；HTTP/HTTPS服务/客户端；</li>
+<li>元数据：KV存储，实现ObjectName到ObjectData的映射管理；</li>
+<li>持久化层：数据持久化。</li>
+</ol>
+
+<p>
+从论文和公开资料，可以看到Azure Blob和阿里云OSS都是基于底层分布式文件系统的实现。AWS S3没有分布式文件系统层，直接持久化到单机引擎上，引擎实现为ShardStore,
+LSMTree实现。通过Extent/Chunk，是指Zone类型介质。
+</p>
+
+<p>
+对象存储基于分布式文件系统和KV搭建时，核心难点是分区分裂与合并。
+</p>
+</div>
+
+<div id="outline-container-org873e330" class="outline-3">
+<h3 id="org873e330"><span class="section-number-3">1.1</span> KV选择</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+开源的KV有LevelDB，RocksDB，TiKV。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge41ecc3" class="outline-2">
+<h2 id="orge41ecc3"><span class="section-number-2">2</span> AWS</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+S3独立部署元数据系统与数据系统。之前多个版本提供最终一致性，目前已提供强一致性。
+</p>
+
+<p>
+文章<a href="https://www.allthingsdistributed.com/2021/04/s3-strong-consistency.html">Diving Deep S3 Consistency</a>介绍，S3元数据系统是分离的，使用缓存技术提供高的弹性能力，并在缓存不可用时，请求依然能成功。
+</p>
+
+<p>
+S3数据系统使用ShardStore。ShardStore天然支持Zone介质。Zone称为extent，切分为多个
+chunk，chunk顺序写入，类似LSM的追加写。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9414777" class="outline-2">
+<h2 id="org9414777"><span class="section-number-2">3</span> 阿里云</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+阿里云对象存储的优势非常明显。从这里(<a href="https://developer.aliyun.com/article/766513">链接</a>)可以看到，OSS基于女娲、盘古、有巢，以及服务接入，负载均衡构建。
+</p>
+
+<p>
+元数据服务是OSS核心组件之一，基于有巢构建。有巢是KV存储引擎，类似LevelDB, RocksDB。
+2021年阿里云发布了ArkDB论文(<a href="https://dl.acm.org/doi/10.1145/3448016.3457553">https://dl.acm.org/doi/10.1145/3448016.3457553</a> ArkDB:
+A Key-Value Engine for Scalable Cloud Storage Services)，这有可能演化为阿里云下一代KV存储引擎。
+</p>
+
+<p>
+有巢是什么，阿里云developer上有个问题：
+</p>
+<blockquote>
+<p>
+From <a href="https://developer.aliyun.com/ask/429009">https://developer.aliyun.com/ask/429009</a>
+</p>
+
+<p>
+Q: 有巢分布式 KV的功能是什么？
+</p>
+
+<p>
+A: 有巢分布式 KV 实现了多实例冗余的特性，把 KV 分解为由多个副本成的分区组（partition
+group），该分区组通过一致性协议选举出 Leader 节点对外提供服务，当 Leader 节点故障或出现网络分区时，能够快速选出新的 Leader 节点并接管该分区的服务，从而提升 OSS 元数据服务的可用性。
+</p>
+</blockquote>
+
+<p>
+知乎上有一篇关于OSS SLA背后技术体系的文档：
+</p>
+<blockquote>
+<p>
+From <a href="https://zhuanlan.zhihu.com/p/157797766">https://zhuanlan.zhihu.com/p/157797766</a>
+</p>
+
+<p>
+有巢分布式 KV 为 OSS 对象存储提供分布式Key-Value 元数据功能，作为阿里云最早研发的的 KV
+系统，历经多年 OSS 的业务打磨，它在大规模集群下有非常深厚的技术积累。2014 年实现了多实例冗余的特性，把KV 分解为由多个副本成的分区组（partition group），该分区组通过一致性协议选举出 Leader 节点对外提供服务，当 Leader 节点故障或出现网络分区时，能够快速选出新的
+Leader 节点并接管该分区的服务，从而提升 OSS 元数据服务的可用性，如下图所示。
+</p>
+
+<p>
+OSS服务层聚焦数据组织和功能实现，由于底层盘古和有巢的分布式能力，OSS 服务层按照无状态方式设计，从而故障时可以快速切换，提高可用性。但是，由于 OSS是多租户模型设计，做好 QoS 的监控和隔离，是保障租户可用性的关键。
+</p>
+</blockquote>
+
+<p>
+元数据服务通过分区机制实现线性扩展，分区策略一般有Hash-Based和Range-Based两种。从ArkDB论文来看，阿里云基于ArkDB支撑了OSS, NAS, OTS三个核心存储服务。
+</p>
+
+<p>
+分区分裂和合并的难点在于分裂同时保证服务的稳定性。
+</p>
+
+<blockquote>
+<p>
+From <a href="https://developer.aliyun.com/article/766513">https://developer.aliyun.com/article/766513</a>
+</p>
+
+<p>
+提升 10 倍！阿里云对象存储 OSS 可用性 SLA 技术揭秘
+</p>
+
+<p>
+OSS 提供了本地冗余存储（部署在一个 AZ）、同城冗余（部署在三个 AZ）存储类型，它们的逻辑架构相同，主要包含如下模块：女娲一致性服务、盘古分布式文件系统、
+OSS 元数据（有巢分布式 KV 索引）、OSS 服务端、网络负载均衡等。
+</p>
+
+<p>
+同城冗余存储（3AZ）则是在物理架构上是提供机房级别的容灾能力，将用户数据副本分散到同城多个可用区。当出现火灾、台风、洪水、断电、断网等灾难事件，导致某个机房不可用时，OSS 仍然可以提供强一致性的服务能力。故障切换过程用户业务不中断、数据不丢失，可以满足关键业务系统对于 RTO（Recovery Time Objective）和 RPO（
+Recovery Point Objective）为 0 的强需求。同城冗余存储，可以提供 99.9999999999%
+（12 个 9）的数据设计可靠性以及 99.995% 的服务设计可用性。
+</p>
+
+<p>
+有巢分布式 KV(Key-Value) 元数据
+</p>
+
+<p>
+OSS 采用自研的分布式 Key-Value 来保存元数据，它构建在盘古分布式文件系统之上，其大规模集群历经多年的业务打磨，有着非常深厚的技术积累。
+</p>
+
+<p>
+有巢分布式 KV 实现了多实例冗余的特性，把 KV 分解为由多个副本成的分区组（partition
+group），该分区组通过一致性协议选举出 Leader 节点对外提供服务，当 Leader 节点故障或出现网络分区时，能够快速选出新的 Leader 节点并接管该分区的服务，从而提升 OSS
+元数据服务的可用性，如下图所示。
+</p>
+</blockquote>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
