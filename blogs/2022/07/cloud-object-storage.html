@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<title>云端对象存储实现分析</title>
+<title>对象存储实现分析</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +21,7 @@
 </div>
 </div>
 <div id="content">
-<h1 class="title">云端对象存储实现分析</h1>
+<h1 class="title">对象存储实现分析</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
@@ -33,6 +33,7 @@
 </li>
 <li><a href="#orge41ecc3">2. AWS</a></li>
 <li><a href="#org9414777">3. 阿里云</a></li>
+<li><a href="#org95129b7">4. Azure Blob</a></li>
 </ul>
 </div>
 </div>
@@ -60,11 +61,15 @@ OSS，是对象存储的典型产品。S3在市场上占主要的份额。除了
 
 <p>
 从论文和公开资料，可以看到Azure Blob和阿里云OSS都是基于底层分布式文件系统的实现。AWS S3没有分布式文件系统层，直接持久化到单机引擎上，引擎实现为ShardStore,
-LSMTree实现。通过Extent/Chunk，是指Zone类型介质。
+LSMTree实现。通过Extent/Chunk，支持Zone类型介质。
 </p>
 
 <p>
 对象存储基于分布式文件系统和KV搭建时，核心难点是分区分裂与合并。
+</p>
+
+<p>
+考虑硬件生命周期管理，对象存储支持跨集群数据复制/迁移。
 </p>
 </div>
 
@@ -72,7 +77,7 @@ LSMTree实现。通过Extent/Chunk，是指Zone类型介质。
 <h3 id="org873e330"><span class="section-number-3">1.1</span> KV选择</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-开源的KV有LevelDB，RocksDB，TiKV。
+开源的KV引擎有LevelDB，RocksDB，TiKV。在KV引擎上构筑分布式的元数据服务，依然存在较多技术点。主要是高可用，负载均衡，分区分裂与合并，性能平稳，故障快速恢复等。在服务可观测性，系统升级等工程层面，也有较多事情要做。
 </p>
 </div>
 </div>
@@ -86,7 +91,7 @@ S3独立部署元数据系统与数据系统。之前多个版本提供最终一
 </p>
 
 <p>
-文章<a href="https://www.allthingsdistributed.com/2021/04/s3-strong-consistency.html">Diving Deep S3 Consistency</a>介绍，S3元数据系统是分离的，使用缓存技术提供高的弹性能力，并在缓存不可用时，请求依然能成功。
+文章<a href="https://www.allthingsdistributed.com/2021/04/s3-strong-consistency.html">Diving Deep S3 Consistency</a>介绍，S3元数据系统是分离的，使用缓存技术提供高的弹性能力。在缓存不可用时，请求依然能成功。
 </p>
 
 <p>
@@ -154,6 +159,9 @@ OSS服务层聚焦数据组织和功能实现，由于底层盘古和有巢的�
 分区分裂和合并的难点在于分裂同时保证服务的稳定性。
 </p>
 
+<p>
+下面这个PR文章也包含较多信息：
+</p>
 <blockquote>
 <p>
 From <a href="https://developer.aliyun.com/article/766513">https://developer.aliyun.com/article/766513</a>
@@ -189,6 +197,10 @@ group），该分区组通过一致性协议选举出 Leader 节点对外提供�
 </p>
 </blockquote>
 </div>
+</div>
+
+<div id="outline-container-org95129b7" class="outline-2">
+<h2 id="org95129b7"><span class="section-number-2">4</span> Azure Blob</h2>
 </div>
 
 <script src="https://utteranc.es/client.js"
