@@ -34,6 +34,7 @@
 <li><a href="#orge41ecc3">2. AWS</a></li>
 <li><a href="#org9414777">3. 阿里云</a></li>
 <li><a href="#org95129b7">4. Azure Blob</a></li>
+<li><a href="#org1b97cbe">5. Tencent/腾讯</a></li>
 </ul>
 </div>
 </div>
@@ -96,7 +97,9 @@ S3独立部署元数据系统与数据系统。之前多个版本提供最终一
 
 <p>
 S3数据系统使用ShardStore。ShardStore天然支持Zone介质。Zone称为extent，切分为多个
-chunk，chunk顺序写入，类似LSM的追加写。
+chunk，chunk顺序写入，类似LSM的追加写。ShardStore在论文&lt;&lt;Using Lightweight Formal
+Methods to Validate a Key-Value Storage Node in Amazon S3&gt;&gt;中有提及。下载链接：
+<a href="https://assets.amazon.science/07/6c/81bfc2c243249a8b8b65cc2135e4/using-lightweight-formal-methods-to-validate-a-key-value-storage-node-in-amazon-s3.pdf">https://assets.amazon.science/07/6c/81bfc2c243249a8b8b65cc2135e4/using-lightweight-formal-methods-to-validate-a-key-value-storage-node-in-amazon-s3.pdf</a>
 </p>
 </div>
 </div>
@@ -201,6 +204,127 @@ group），该分区组通过一致性协议选举出 Leader 节点对外提供�
 
 <div id="outline-container-org95129b7" class="outline-2">
 <h2 id="org95129b7"><span class="section-number-2">4</span> Azure Blob</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Azure Blob是微软云对象存储。
+</p>
+<blockquote>
+<p>
+From <a href="https://docs.microsoft.com/zh-cn/azure/storage/blobs/storage-blobs-overview">https://docs.microsoft.com/zh-cn/azure/storage/blobs/storage-blobs-overview</a>
+</p>
+
+<p>
+Azure Blob 存储是 Microsoft 提供的适用于云的对象存储解决方案。 Blob 存储最适合存储巨量的非结构化数据。 非结构化数据是不遵循特定数据模型或定义的数据（如文本或二进制数据）。
+</p>
+
+<p>
+Blob 存储用于：
+</p>
+<ul class="org-ul">
+<li>直接向浏览器提供图像或文档。</li>
+<li>存储文件以供分布式访问。</li>
+<li>对视频和音频进行流式处理。</li>
+<li>向日志文件进行写入。</li>
+<li>存储用于备份和还原、灾难恢复及存档的数据。</li>
+<li>存储数据以供本地或 Azure 托管服务执行分析。</li>
+</ul>
+</blockquote>
+
+<p>
+Azure Blob在WAS论文里有描述。论文下载链接：
+</p>
+<ul class="org-ul">
+<li><a href="https://sigops.org/s/conferences/sosp/2011/current/2011-Cascais/printable/11-calder.pdf">https://sigops.org/s/conferences/sosp/2011/current/2011-Cascais/printable/11-calder.pdf</a></li>
+<li><a href="https://azure.microsoft.com/en-us/blog/sosp-paper-windows-azure-storage-a-highly-available-cloud-storage-service-with-strong-consistency/">https://azure.microsoft.com/en-us/blog/sosp-paper-windows-azure-storage-a-highly-available-cloud-storage-service-with-strong-consistency/</a></li>
+</ul>
+
+
+<div id="org3fb3b65" class="figure">
+<p><img src="../../../../../../../img/azure-was.png" alt="azure-was.png" />
+</p>
+</div>
+
+<p>
+WAS在StreamLayer实现数据持久化，在PartitionLayer实现范围分区的Blob, Queue, Table服务。这些服务基于内部数据结构OT(Object Table)，可以达到PB级，支持分区分裂合并。OT支持CRUD
+操作，并支持同一个PartitionRange内的BatchTxn。OT提供快照隔离的一致性。快照隔离存在写倾斜问题，业务调用时，应该通过行锁或事务锁加了保护。
+</p>
+
+<p>
+OT Schema支持简单的数据类型，bool, binary, string, DateTime, Double, GUID, int32, int64.
+以及两个特殊的Type：DictionaryType 和 BlobType。DictionaryType是个(name, type, value)的三元组。BlobType 是外挂数据，数据实际保存在其他位置，这里只存个位置索引，例如，保存多个
+(extent + offset, length)。
+</p>
+
+<p>
+OT预期是LSM的典型实现：
+</p>
+<ul class="org-ul">
+<li>MemTable: 一个活动的内存表，WAL持久化，重启需要Replay再生成；</li>
+<li>Immutable: 不可修改的内存表，WAL持久化，重启后需要Replay再生成；多个Immutable合并生成Checkpoint，以节省内存，加速重启加载时间；</li>
+<li>SSTable：有序索引表，可以多级，可以再次合并(Compaction)生成新的SSTable；通过
+Bloomfilter加速查找；B+Tree或者BwTree数据结构；</li>
+<li>DataFiles：大的数据可以独立放置，减少Compaction的写放大。</li>
+</ul>
+
+<p>
+WAS设计提到了几个点：
+</p>
+<ul class="org-ul">
+<li>计算存储分离扩展；</li>
+<li>范围分区；</li>
+<li>流控与隔离；</li>
+<li>自动负载均衡；</li>
+<li>每个分区一套独立的Log文件；</li>
+<li>日志合并Journaling写入；</li>
+<li>追加写系统；</li>
+<li>E2E数据一致性检测；</li>
+<li>可升级设计；</li>
+<li>一套栈支持多个数据结构抽象（对象，表，队列）
+<ul class="org-ul">
+<li>怀疑块存储也类似，但有内部信息表示块存储已经切到其他实现；</li>
+</ul></li>
+<li>高性能日志；</li>
+<li>压力测试；</li>
+</ul>
+
+<p>
+PartitionLayer包括PM和PS。PM负责调度，PS负责一部分分区。
+</p>
+
+<p>
+快照隔离需要MVCC支持。WAS没有提及这部分如何实现。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1b97cbe" class="outline-2">
+<h2 id="org1b97cbe"><span class="section-number-2">5</span> Tencent/腾讯</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+腾讯新一代对象存储系统YottaStore，2018年开始研发，荣获2021年腾讯最高技术奖。
+</p>
+
+<p>
+分析YottaStore过程中，看到一篇水分太大没法看的文章：
+</p>
+<blockquote>
+<p>
+From <a href="https://zhuanlan.zhihu.com/p/276618798">https://zhuanlan.zhihu.com/p/276618798</a>
+</p>
+
+<p>
+首先，在集群规模上，作为一个云原生的数据存储系统，YottaStore理论上一个集群可以管理超上千万台服务器，而要管理这上千万台的机器，元数据管理只需要用600G左右的空间，仅用一台机器就能存下索引结构，这在业界绝无仅有。
+</p>
+</blockquote>
+
+<p>
+一台管千万台，千万分之一的元数据量，10M数据对应1字节的元数据。这数据太蛋疼，想到了中建四局的优秀员工一年盖7亿次章，华为5G 2000公里0.1毫秒的延时，比光速还快66倍。八卦下，5G超光速视频参见这里：<a href="https://www.zhihu.com/zvideo/1488976122217541632">https://www.zhihu.com/zvideo/1488976122217541632</a>
+</p>
+
+<p>
+YottaStore另一篇PR文稍微好一点：<a href="https://zhuanlan.zhihu.com/p/340834405">https://zhuanlan.zhihu.com/p/340834405</a>
+</p>
+</div>
 </div>
 
 <script src="https://utteranc.es/client.js"
