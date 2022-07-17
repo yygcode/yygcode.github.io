@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Hugepage实现与使用</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Hugepage实现与使用</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd041d18">1. HugePage CPU侧的实现</a></li>
+<li><a href="#org3f28df2">2. Hugepage 在Linux的实现</a></li>
+<li><a href="#orgfa0bf98">3. Linux Hugepage配置管理接口与应用</a></li>
+</ul>
+</div>
+</div>
+<p>
+现代CPU使用虚拟内存地址。每次访问内存时，CPU根据页表，获取对应的物理地址。CPU
+使用TLB(Translation Lookaside Buffer)加速这一过程。为了进一步提高TLB命中率，
+CPU推出HugePage，支持2MB或1GB的大页。相比4KB的内存页，相同的TLB，可以命中更多的映射。另外一方面，大页可以缩减页表层次，进一步提高虚拟地址到物理地址的转换效率。
+</p>
+
+<div id="outline-container-orgd041d18" class="outline-2">
+<h2 id="orgd041d18"><span class="section-number-2">1</span> HugePage CPU侧的实现</h2>
+</div>
+
+<div id="outline-container-org3f28df2" class="outline-2">
+<h2 id="org3f28df2"><span class="section-number-2">2</span> Hugepage 在Linux的实现</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>&lt;2022-07-16<span class="org-whitespace-space"> </span>15:12:38&gt;
+$<span class="org-whitespace-space"> </span>tree<span class="org-whitespace-space"> </span>hub/linux-stable/fs/hugetlbfs/
+hub/linux-stable/fs/hugetlbfs/
+&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>inode.c
+&#9492;&#9472;&#9472;<span class="org-whitespace-space"> </span>Makefile
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa0bf98" class="outline-2">
+<h2 id="orgfa0bf98"><span class="section-number-2">3</span> Linux Hugepage配置管理接口与应用</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>&lt;2022-07-16<span class="org-whitespace-space"> </span>15:10:13&gt;
+$<span class="org-whitespace-space"> </span>tree<span class="org-whitespace-space"> </span>/sys/kernel/mm/hugepages/
+/sys/kernel/mm/hugepages/
+&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>hugepages-1048576kB
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>free_hugepages
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_hugepages
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_hugepages_mempolicy
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_overcommit_hugepages
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>resv_hugepages
+&#9474;<span class="org-whitespace-hspace">&#160;&#160;</span><span class="org-whitespace-space"> </span>&#9492;&#9472;&#9472;<span class="org-whitespace-space"> </span>surplus_hugepages
+&#9492;&#9472;&#9472;<span class="org-whitespace-space"> </span>hugepages-2048kB
+<span class="org-whitespace-space">    </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>free_hugepages
+<span class="org-whitespace-space">    </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_hugepages
+<span class="org-whitespace-space">    </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_hugepages_mempolicy
+<span class="org-whitespace-space">    </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>nr_overcommit_hugepages
+<span class="org-whitespace-space">    </span>&#9500;&#9472;&#9472;<span class="org-whitespace-space"> </span>resv_hugepages
+<span class="org-whitespace-space">    </span>&#9492;&#9472;&#9472;<span class="org-whitespace-space"> </span>surplus_hugepages
+</pre>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

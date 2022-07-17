@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>How To Test</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">How To Test</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2fe0b12">1. 软件开发流程</a></li>
+<li><a href="#orgbefb0e1">2. 测试效率</a></li>
+<li><a href="#orge2288b8">3. 测试Case</a></li>
+<li><a href="#orga4ff952">4. 存量项目如何优化</a></li>
+<li><a href="#orge5071d8">5. K8S cluster</a></li>
+<li><a href="#org9d2d2cd">6. Reference</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2fe0b12" class="outline-2">
+<h2 id="org2fe0b12"><span class="section-number-2">1</span> 软件开发流程</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+需求 -&gt; 设计 -&gt; 编码 -&gt; 测试 -&gt; 发布 -&gt; 反馈；
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbefb0e1" class="outline-2">
+<h2 id="orgbefb0e1"><span class="section-number-2">2</span> 测试效率</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>测试左移，效率与测试反馈周期正相关；// 成比例？
+<ul class="org-ul">
+<li>构建快；</li>
+<li>测试快；</li>
+<li>自动化；</li>
+<li>减少/消除联调；// 测试和接口做干净；</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge2288b8" class="outline-2">
+<h2 id="orge2288b8"><span class="section-number-2">3</span> 测试Case</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Test Sufficiency(充分度)
+<ul class="org-ul">
+<li>Coverage;</li>
+<li>场景；</li>
+<li>状态转移；</li>
+</ul></li>
+
+<li>Test Effectiveness(有效性)
+<ul class="org-ul">
+<li>杀虫剂效应；</li>
+</ul></li>
+
+<li>Test Thinness
+<ul class="org-ul">
+<li>减少冗余；</li>
+</ul></li>
+
+<li>用例
+<ul class="org-ul">
+<li>Fuzz;</li>
+<li>Model;</li>
+<li>场景;</li>
+<li>TLA+ Formal Verification;</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga4ff952" class="outline-2">
+<h2 id="orga4ff952"><span class="section-number-2">4</span> 存量项目如何优化</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+存量项目：
+</p>
+<ul class="org-ul">
+<li>代码质量参差不齐；</li>
+<li>问题遗留多，UT欠缺/CD欠缺；</li>
+<li>不可重复构建，交付周期长；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge5071d8" class="outline-2">
+<h2 id="orge5071d8"><span class="section-number-2">5</span> K8S cluster</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>镜像管理，Pod管理，资源管理；</li>
+<li>存储使用RDMA，DPDK，UserSpace Medium；
+<ul class="org-ul">
+<li>SR-IOV；</li>
+</ul></li>
+
+<li>容器化测试环境：快速，干净，隔离；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9d2d2cd" class="outline-2">
+<h2 id="org9d2d2cd"><span class="section-number-2">6</span> Reference</h2>
+<div class="outline-text-2" id="text-6">
+<dl class="org-dl">
+<dt>Tester Home</dt><dd><a href="http://testerhome.com/">http://testerhome.com/</a></dd>
+<dt>RethinkDB : Why We Failed</dt><dd><a href="https://www.defmacro.org/2017/01/18/why-rethinkdb-failed.html">https://www.defmacro.org/2017/01/18/why-rethinkdb-failed.html</a></dd>
+<dt>Google Testing Blog</dt><dd><a href="https://testing.googleblog.com/">https://testing.googleblog.com/</a></dd>
+<dt>(no term)</dt><dd>TDD</dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
