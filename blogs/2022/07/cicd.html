@@ -22,9 +22,126 @@
 </div>
 <div id="content">
 <h1 class="title">CI &amp; CD (持续交付)</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgffb6e31">1. CI</a></li>
+<li><a href="#org70bb2aa">2. Benefits</a></li>
+<li><a href="#org0654e01">3. Google</a>
+<ul>
+<li><a href="#orge1f26ee">3.1. 硬件引入</a></li>
+</ul>
+</li>
+<li><a href="#orgf94c328">4. Microsoft</a></li>
+<li><a href="#org1b204e1">5. CD</a></li>
+<li><a href="#org374fe3d">6. References</a></li>
+</ul>
+</div>
+</div>
 <p>
 [NOT FINISH]
 </p>
+
+<div id="outline-container-orgffb6e31" class="outline-2">
+<h2 id="orgffb6e31"><span class="section-number-2">1</span> CI</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Code Style;</li>
+<li>UT, ST, FT, Onebox;</li>
+<li>Debug, Release, Asan(Memleak), Coverage;</li>
+<li>X86, Arm, Mips;</li>
+<li>Code Review; Member, Owner;</li>
+<li>Automation, High Frequency;</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org70bb2aa" class="outline-2">
+<h2 id="org70bb2aa"><span class="section-number-2">2</span> Benefits</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>调试更少；</li>
+<li>增强需求实现、发布的信心；</li>
+<li>更高频率的发布；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0654e01" class="outline-2">
+<h2 id="org0654e01"><span class="section-number-2">3</span> Google</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+每个自动化测试有两个维度：资源占用和验证范围；
+</p>
+
+<ul class="org-ul">
+<li>小型测试：单个进程中执行；</li>
+<li>中型测试：单台计算机运行；</li>
+<li>大型测试：</li>
+</ul>
+
+<p>
+测试最重要的是速度和确定性。
+</p>
+</div>
+
+<div id="outline-container-orge1f26ee" class="outline-3">
+<h3 id="orge1f26ee"><span class="section-number-3">3.1</span> 硬件引入</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>定义IDC数据中心环境、测试规范，主要需求；</li>
+<li>完整的ODM流程；</li>
+<li>Hermetic Servers : <a href="https://testing.googleblog.com/2012/10/hermetic-servers.html">https://testing.googleblog.com/2012/10/hermetic-servers.html</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf94c328" class="outline-2">
+<h2 id="orgf94c328"><span class="section-number-2">4</span> Microsoft</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Evolving Test Practices at Microsoft - Azure Devops
+</p>
+
+<p>
+开发人员把代码扔给SDETs(Software Design Engineer Test)。SDETs把自动化测试扔给
+STEs(Software Test Engineer)。不断壮大STE应对，但STE升职机会有限。测试成为了瓶颈，导致了产品的延时。
+</p>
+
+<p>
+Devops:
+</p>
+<ul class="org-ul">
+<li>NAR(Nightly Run), FAR(Full Automation Run);</li>
+<li>L0/L1 Unit Tests; Like as traditional UT;</li>
+<li>L2/L3 Functional Tests
+<ul class="org-ul">
+<li>L2 功能测试类，需要部署服务，但部分依赖服务会通过特定方式断开；</li>
+<li>L3 生产环境中的受限测试，需要完整的产品部署。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1b204e1" class="outline-2">
+<h2 id="org1b204e1"><span class="section-number-2">5</span> CD</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>One branch;</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org374fe3d" class="outline-2">
+<h2 id="org374fe3d"><span class="section-number-2">6</span> References</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>Google: Building Secure and Reliable Systems</li>
+</ul>
+</div>
+</div>
 
 <script src="https://utteranc.es/client.js"
         repo="yygcode/yygcode.github.io"
