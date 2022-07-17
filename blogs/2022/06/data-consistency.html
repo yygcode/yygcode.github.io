@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>数据一致性</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">数据一致性</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgca1f5df">1. 问题定义</a></li>
+<li><a href="#orge9c28a7">2. 顺序一致性与线性一致性</a>
+<ul>
+<li><a href="#orgd67e2e5">2.1. 顺序一致性(Sequential Consistency)</a></li>
+<li><a href="#org04587be">2.2. 线性一致性(Linearizability)</a></li>
+</ul>
+</li>
+<li><a href="#orge34dc6c">3. 事务可见性</a>
+<ul>
+<li><a href="#orgcc72138">3.1. 基本概念</a></li>
+<li><a href="#org9fc1e5c">3.2. 弱隔离级别(Weak Isolation Levels)</a></li>
+</ul>
+</li>
+<li><a href="#org6c68a09">4. 一致性与共识</a></li>
+<li><a href="#orgd6235cc">5. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgca1f5df" class="outline-2">
+<h2 id="orgca1f5df"><span class="section-number-2">1</span> 问题定义</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>线性一致性和顺序一致性是什么意思，有什么区别？</li>
+<li>脏读、脏写、幻读、重复读、读已提交，都是什么含义？</li>
+<li>事务有哪些隔离级别？</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge9c28a7" class="outline-2">
+<h2 id="orge9c28a7"><span class="section-number-2">2</span> 顺序一致性与线性一致性</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgd67e2e5" class="outline-3">
+<h3 id="orgd67e2e5"><span class="section-number-3">2.1</span> 顺序一致性(Sequential Consistency)</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>顺序一致性不要求线程间保序；
+<ul class="org-ul">
+<li>线程间无序()；</li>
+<li>没有可组合性(Not Compositional)；</li>
+</ul></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-text">//<span class="org-whitespace-space"> </span>Books:<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>Art<span class="org-whitespace-space"> </span>of<span class="org-whitespace-space"> </span>Multiprocessor<span class="org-whitespace-space"> </span>Programming
+//<span class="org-whitespace-space"> </span>3.4<span class="org-whitespace-space"> </span>Sequential<span class="org-whitespace-space"> </span>consistency
+//<span class="org-whitespace-space"> </span>Not<span class="org-whitespace-space"> </span>acceptable<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>violation<span class="org-whitespace-space"> </span>program<span class="org-whitespace-space"> </span>order
+<span class="org-whitespace-space"> </span>r.write(7)<span class="org-whitespace-space">        </span>r.write(-3)<span class="org-whitespace-space">        </span>r.read(7)
+|-----------|<span class="org-whitespace-space">     </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|
+
+//<span class="org-whitespace-space"> </span>Two<span class="org-whitespace-space"> </span>possible<span class="org-whitespace-space"> </span>sequential<span class="org-whitespace-space"> </span>order<span class="org-whitespace-space"> </span>that<span class="org-whitespace-space"> </span>can<span class="org-whitespace-space"> </span>justify<span class="org-whitespace-space"> </span>this<span class="org-whitespace-space"> </span>execution.
+Thread1<span class="org-whitespace-space">   </span>q.enq(x)<span class="org-whitespace-space">          </span>q.deq(y)
+<span class="org-whitespace-space">         </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|
+
+Thread2<span class="org-whitespace-space">   </span>q.enq(y)<span class="org-whitespace-space">          </span>q.deq(x)
+<span class="org-whitespace-space">         </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|
+
+//<span class="org-whitespace-space"> </span>The<span class="org-whitespace-space"> </span>follow<span class="org-whitespace-space"> </span>p<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>q<span class="org-whitespace-space"> </span>are<span class="org-whitespace-space"> </span>each<span class="org-whitespace-space"> </span>sequential<span class="org-whitespace-space"> </span>consistency,
+//<span class="org-whitespace-space"> </span>But<span class="org-whitespace-space"> </span>p<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>q<span class="org-whitespace-space"> </span>as<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>whole<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>sequential<span class="org-whitespace-space"> </span>consistency.
+Thread1<span class="org-whitespace-space">   </span>p.enq(x)<span class="org-whitespace-space">          </span>q.enq(x)<span class="org-whitespace-space">           </span>p.deq(y)
+<span class="org-whitespace-space">         </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|
+
+Thread2<span class="org-whitespace-space">   </span>q.enq(y)<span class="org-whitespace-space">          </span>p.enq(y)<span class="org-whitespace-space">           </span>q.deq(x)
+<span class="org-whitespace-space">         </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|<span class="org-whitespace-space">     </span>|-----------|
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org04587be" class="outline-3">
+<h3 id="org04587be"><span class="section-number-3">2.2</span> 线性一致性(Linearizability)</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>全局保序（多线程保序）；</li>
+<li>满足组合性(Compositional)；</li>
+<li>线性一致性一定满足顺序一致性，反之则不然；</li>
+<li><p>
+摘自The Art of Multiprocessor Programming的描述：
+</p>
+<blockquote>
+<p>
+The usual way to show that a concurrent object implementation is linearizable is
+to identify for each method a linearization point where the method takes effect.
+For lock-based implementations, each method’s critical section can serve as its
+linearization point. For implementations that do not use locking, the linearization
+point is typically a single step where the effects of the method call become visible
+to other method calls.
+For example, let us recall the single-enqueuer/single-dequeuer queue of
+Fig. 3.3. This implementation has no critical sections, and yet we can identify its
+linearization points. Here, the linearization points depend on the execution. If it
+returns an item, the deq() method has a linearization point when the head field
+is updated (Line 18). If the queue is empty, the deq() method has a lineariza-
+tion point when it throws Empty Exception (Line 16). The enq() method is
+similar.
+</p>
+</blockquote></li>
+<li>理解
+<ul class="org-ul">
+<li>并发对象实现线性化的常规方式是为每种方法，确定方法生效的线性化点；</li>
+<li>基于锁的实现，每个方法的临界区都可以做为线性化点；</li>
+<li>对于无锁实现，线性化点通常是使得该方法效果对外可见的单步操作；</li>
+<li>考虑3.3(本文前图)队列出入操作，线性化点依赖执行。如果返回一个元素，deq()方法具备一个线性化点，这个点更新了head成员；如果队列是空的，deq()方法的线性化点是抛出异常的点；// 因此，同一方法的多次执行，线性化点可以是程序的不同位置；</li>
+<li>因此必须具备边界效应（Side effect），即状态的改变；</li>
+<li>可以基于非阻塞方法实现（Non-blocking，即Atomic操作）；</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge34dc6c" class="outline-2">
+<h2 id="orge34dc6c"><span class="section-number-2">3</span> 事务可见性</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgcc72138" class="outline-3">
+<h3 id="orgcc72138"><span class="section-number-3">3.1</span> 基本概念</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>事务将多个读写操作捆绑形成一个逻辑操作单元。即事务中的所有读写是一个执行的整体，整个事务要么成功（提交），要么失败（中止或回滚）。如果失败，应该可以安全重试。</li>
+<li>ACID
+<ul class="org-ul">
+<li>Atomicity(原子性): 出错时终止事务，并将部分完成的写入全部丢弃；可终止性；</li>
+<li>Consistency(一致性): 应用借助原子性和隔离性，以及应用本身的逻辑正确性，才可达成一致性；</li>
+<li>隔离性(Isolation): 并发执行的多个事务相互隔离，互不干扰。最好的隔离级别是可串行化(Serializability)，意味着系统要确保事务提交时，其结果与串行执行一致。为了性能优化，很多数据库放松了这个约束。例如，Oracle 11g实现快照隔离；</li>
+<li>持久性(Durability): 写入到持久存储。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9fc1e5c" class="outline-3">
+<h3 id="org9fc1e5c"><span class="section-number-3">3.2</span> 弱隔离级别(Weak Isolation Levels)</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>读已提交：最弱的隔离级别，保证：
+<ul class="org-ul">
+<li>只能看到已提交的数据，不会有脏读；</li>
+<li>写入时，只覆盖已提交的数据，不会有脏写；</li>
+<li>Oracle 11g, PostgreSQL, SQL Server 2012, MemSQL的默认配置;</li>
+<li>什么是脏读：某个事务已部分写入，但没有提交或终止，如果部分写入的数据被其他事务看到，即为脏读；</li>
+<li>什么是脏写：某个事务已部分写入，但没有提交或终止，如果部分写入的数据被其他事务的写入所覆盖，即为脏写；</li>
+<li>行锁防止脏写，维护旧值与当前数值防止脏读；</li>
+</ul></li>
+<li>快照级别隔离与可重复读(Snapshot Isolation and Repeated Read)
+<ul class="org-ul">
+<li>不可重复读/读倾斜：对多个对象操作，看到了部分对象已更新，部分对象未更新；</li>
+<li>行锁隔离写，MVCC提供读；</li>
+<li>MVCC数据，通过事务ID，决定哪些可见，哪些不可见；</li>
+<li>以下两个条件成立时，该数据对象对事务可见：
+<ul class="org-ul">
+<li>事务开始时，创建该数据对象的事务已经完成提交；</li>
+<li>事务开始时，数据对象未被删除，或者删除该数据对象的事务还未提交；</li>
+</ul></li>
+</ul></li>
+<li>串行化(Serializability)
+<ul class="org-ul">
+<li>写倾斜和幻读问题：并发的事务，违背了逻辑约束，或者触发了实体化冲突；</li>
+<li>事务可能会并行执行，但保证并行执行的结果，与串行执行的结果一致；</li>
+<li>VoltDB/H-Store，Redis，Datamic采用串行方式执行事务；</li>
+<li>2阶段加锁：2PL(2 Phase Locking)
+<ul class="org-ul">
+<li>事务A读取了某个对象，事务B要写该对象，则必须等到事务A结束（提交或终止）；</li>
+<li>事务A修改了某个对象，事务B要读该对象，则必须等到事务A结束（提交或终止）；</li>
+<li>MYSQL，SQL Server 串行化隔离实现使用2PL实现；基本思路如下：
+<ul class="org-ul">
+<li>事务要读取对象，先加读锁（共享锁）；</li>
+<li>事务要修改对象，加写锁（互斥）；</li>
+<li>事务先读取对象，后修改对象，则要升级读锁为写锁；</li>
+<li>事务拿到锁后，持续到事务结束才释放锁；</li>
+<li>2PL意思是，第一阶段事务执行前加锁，第二阶段事务结束时释放所有锁；</li>
+<li>性能优化：Predicate Locks, Index-range Locks, 悲观锁与乐观锁;</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c68a09" class="outline-2">
+<h2 id="org6c68a09"><span class="section-number-2">4</span> 一致性与共识</h2>
+</div>
+
+<div id="outline-container-orgd6235cc" class="outline-2">
+<h2 id="orgd6235cc"><span class="section-number-2">5</span> References</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>The art of Multiprocessor Programming: <a href="https://github.com/yygcode/books/blob/master/cs/cs-computer-the-art-of-multiprocessor-programming.pdf">https://github.com/yygcode/books/blob/master/cs/cs-computer-the-art-of-multiprocessor-programming.pdf</a></li>
+<li>How to Make a Correct Multiprocess Program <a href="https://github.com/yygcode/papers/blob/master/cs/cs-how-to-make-a-correct-multiprocess-program.pdf">https://github.com/yygcode/papers/blob/master/cs/cs-how-to-make-a-correct-multiprocess-program.pdf</a></li>
+<li>A Critique of ANSI SQL Isolation Levels: <a href="https://github.com/yygcode/papers/blob/master/db/db-a-critique-of-ANSI-SQL-isolation-levels.pdf">https://github.com/yygcode/papers/blob/master/db/db-a-critique-of-ANSI-SQL-isolation-levels.pdf</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

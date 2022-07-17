@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Python Matplotlib 绘图</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Python Matplotlib 绘图</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd8bc703">1. Example From axa</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd8bc703" class="outline-2">
+<h2 id="orgd8bc703"><span class="section-number-2">1</span> Example From axa</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-whitespace-space"> </span><span class="org-comment">coding=utf8</span>
+<span class="org-keyword">import</span><span class="org-whitespace-space"> </span>matplotlib.pyplot<span class="org-whitespace-space"> </span><span class="org-keyword">as</span><span class="org-whitespace-space"> </span>plt
+<span class="org-keyword">import</span><span class="org-whitespace-space"> </span>numpy<span class="org-whitespace-space"> </span><span class="org-keyword">as</span><span class="org-whitespace-space"> </span>np
+
+<span class="org-keyword">with</span><span class="org-whitespace-space"> </span><span class="org-builtin">open</span><span class="org-whitespace-space"> </span>(<span class="org-string">'d1.data'</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">as</span><span class="org-whitespace-space"> </span>f:
+<span class="org-whitespace-space">    </span><span class="org-variable-name">data1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>[<span class="org-whitespace-space"> </span><span class="org-builtin">float</span>(x)<span class="org-whitespace-space"> </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>f.read().split()<span class="org-whitespace-space"> </span>]
+<span class="org-whitespace-space">    </span><span class="org-keyword">print</span>(data1)
+
+<span class="org-keyword">with</span><span class="org-whitespace-space"> </span><span class="org-builtin">open</span><span class="org-whitespace-space"> </span>(<span class="org-string">'d2.data'</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">as</span><span class="org-whitespace-space"> </span>f:
+<span class="org-whitespace-space">    </span><span class="org-variable-name">data2</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>[<span class="org-whitespace-space"> </span><span class="org-builtin">float</span>(x)<span class="org-whitespace-space"> </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>f.read().split()<span class="org-whitespace-space"> </span>]
+<span class="org-whitespace-space">    </span><span class="org-keyword">print</span>(data2)
+
+<span class="org-keyword">with</span><span class="org-whitespace-space"> </span><span class="org-builtin">open</span><span class="org-whitespace-space"> </span>(<span class="org-string">'d3.data'</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">as</span><span class="org-whitespace-space"> </span>f:
+<span class="org-whitespace-space">    </span><span class="org-variable-name">data3</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>[<span class="org-whitespace-space"> </span><span class="org-builtin">float</span>(x)<span class="org-whitespace-space"> </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span><span class="org-keyword">in</span><span class="org-whitespace-space"> </span>f.read().split()<span class="org-whitespace-space"> </span>]
+<span class="org-whitespace-space">    </span><span class="org-keyword">print</span>(data3)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">fig,</span><span class="org-whitespace-space"> </span><span class="org-comment">ax</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">plt.subplots(1,</span><span class="org-whitespace-space"> </span><span class="org-comment">1)</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">my_plotter(ax,</span><span class="org-whitespace-space"> </span><span class="org-comment">data1,</span><span class="org-whitespace-space"> </span><span class="org-comment">data2,</span><span class="org-whitespace-space"> </span><span class="org-comment">{'marker':</span><span class="org-whitespace-space"> </span><span class="org-comment">'x'})</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">plt.figure(figsize=[9,3])</span>
+plt.figure()
+plt.plot(data1,<span class="org-whitespace-space"> </span>data2,<span class="org-whitespace-space"> </span>label=<span class="org-string">"dynamic</span><span class="org-whitespace-space"> </span><span class="org-string">node"</span>)
+plt.plot(data1,<span class="org-whitespace-space"> </span>data3,<span class="org-whitespace-space"> </span>label=<span class="org-string">"fixed</span><span class="org-whitespace-space"> </span><span class="org-string">node"</span>)
+plt.ylabel(<span class="org-string">'Bytes</span><span class="org-whitespace-space"> </span><span class="org-string">/</span><span class="org-whitespace-space"> </span><span class="org-string">Item'</span>)
+plt.xlabel(<span class="org-string">"Item</span><span class="org-whitespace-space"> </span><span class="org-string">Number"</span>)
+plt.legend()
+plt.title(<span class="org-string">"Memory</span><span class="org-whitespace-space"> </span><span class="org-string">per</span><span class="org-whitespace-space"> </span><span class="org-string">item"</span>)
+plt.savefig(<span class="org-string">"bytes-item.png"</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div id="org0545830" class="figure">
+<p><img src="../../../../../../../img/python-matplotlib-byte-item.png" alt="python-matplotlib-byte-item.png" />
+</p>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

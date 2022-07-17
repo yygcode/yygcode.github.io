@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Emacs orgmode plantuml</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Emacs orgmode plantuml</h1>
+<div class="org-src-container">
+<pre class="src src-plantuml">start
+:Hello world;
+:This is on defined on
+several **lines**;
+stop
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-plantuml">robust "DNS Resolver" as DNS
+robust "Web Browser" as WB
+concise "Web User" as WU
+
+@0
+WU is Idle
+WB is Idle
+DNS is Idle
+
+@+100
+WU -&gt; WB : URL
+WU is Waiting
+WB is Processing
+
+@+200
+WB is Waiting
+WB -&gt; DNS@+50 : Resolve URL
+
+@+100
+DNS is Processing
+
+@+300
+DNS is Idle
+</pre>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

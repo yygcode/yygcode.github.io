@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>C++ 1X 新特性</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C++ 1X 新特性</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge859d66">1. auto</a></li>
+<li><a href="#orgdf2b194">2. decltype</a></li>
+<li><a href="#org1ec6e5a">3. using</a></li>
+<li><a href="#orga6458a9">4. 可变模板参数</a></li>
+</ul>
+</div>
+</div>
+<p>
+最近写一点代码时候，需要用到Callback和Bind。 <code>protobuf</code> (<a href="https://github.com/protocolbuffers/protobuf">github protobuf</a>)的
+<code>callback</code> 是挺合适的实现。考虑将来代码发展，想按照项目特有的命名空间和类/变量名称管理，用到了C++ 1X的几个新特性： <code>auto</code>, <code>decltype</code>, <code>using</code>,
+<code>Template Variadic Args</code>.
+</p>
+
+<p>
+例如，protobuf实现了一个Closure:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++">::<span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::Closure;
+</pre>
+</div>
+
+<p>
+在项目ds中使用，想放在namespace ds中，可以这么做：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">namespace</span><span class="org-whitespace-space"> </span><span class="org-constant">ds</span>
+{
+
+<span class="org-keyword">using</span><span class="org-whitespace-space"> </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>::<span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::Closure;
+
+}
+</pre>
+</div>
+
+<p>
+同时，protobuf提供了一个NewClosure，namespace ds中可以这么做：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-function-name">...</span><span class="org-whitespace-space"> </span><span class="org-type">Args</span>&gt;
+<span class="org-keyword">inline</span><span class="org-whitespace-space"> </span><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-function-name">NewClosure</span>(<span class="org-type">Args</span>&amp;&amp;<span class="org-function-name">...</span><span class="org-variable-name">args</span>)<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span><span class="org-keyword">decltype</span>(
+<span class="org-whitespace-space">    </span>::<span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::NewCallback(<span class="org-constant">std</span>::forward&lt;<span class="org-type">Args</span>&gt;(args)<span class="org-function-name">...</span>))
+{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>::<span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::NewCallback(<span class="org-constant">std</span>::forward&lt;<span class="org-type">Args</span>&gt;(args)<span class="org-function-name">...</span>);
+}
+</pre>
+</div>
+
+<p>
+在代码中就可以这样使用了：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">simpleCallbackValue</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">SimpleCallback</span>()
+{
+<span class="org-whitespace-space">    </span>++simpleCallbackValue;
+}
+
+<span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-function-name">RetCallback</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>x<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>10;
+}
+
+<span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Square</span>
+{
+<span class="org-keyword">public</span>:
+<span class="org-whitespace-space">    </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-function-name">square</span>(<span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">n</span>)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>n<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>n;
+<span class="org-whitespace-space">    </span>}
+};
+
+<span class="org-function-name">TEST</span>(TestClosure,<span class="org-whitespace-space"> </span>Simple)
+{
+<span class="org-whitespace-space">    </span><span class="org-constant">ds</span>::<span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">cb</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">ds</span>::NewClosure(SimpleCallback);
+<span class="org-whitespace-space">    </span>cb-&gt;Run();
+<span class="org-whitespace-space">    </span>ASSERT_EQ(1,<span class="org-whitespace-space"> </span>simpleCallbackValue);
+
+<span class="org-whitespace-space">    </span><span class="org-constant">ds</span>::<span class="org-type">Callback</span>&lt;<span class="org-type">bool</span>&gt;<span class="org-whitespace-space"> </span>*<span class="org-variable-name">cb1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">ds</span>::NewClosure(RetCallback,<span class="org-whitespace-space"> </span>5);
+<span class="org-whitespace-space">    </span>EXPECT_FALSE(cb1-&gt;Run());
+
+<span class="org-whitespace-space">    </span>cb1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">ds</span>::NewClosure(RetCallback,<span class="org-whitespace-space"> </span>10);
+<span class="org-whitespace-space">    </span>EXPECT_TRUE(cb1-&gt;Run());
+
+<span class="org-whitespace-space">    </span><span class="org-type">Square</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sx</span>;
+<span class="org-whitespace-space">    </span><span class="org-constant">ds</span>::<span class="org-type">Callback</span>&lt;<span class="org-type">size_t</span>&gt;<span class="org-whitespace-space"> </span>*<span class="org-variable-name">cb2</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">ds</span>::NewPermanentClosure(
+<span class="org-whitespace-space">        </span>&amp;sx,<span class="org-whitespace-space"> </span>&amp;<span class="org-constant">Square</span>::square,<span class="org-whitespace-space"> </span>(<span class="org-type">size_t</span>)3);
+<span class="org-whitespace-space">    </span>EXPECT_EQ(9,<span class="org-whitespace-space"> </span>cb2-&gt;Run());
+}
+</pre>
+</div>
+
+<div id="outline-container-orge859d66" class="outline-2">
+<h2 id="orge859d66"><span class="section-number-2">1</span> auto</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>auto</code> 实现自动类型推导。这不同于之前C/C++中表示register或类似的含义。例如：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">x</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>100;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">x</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">int;</span>
+<span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">pf</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>sqrt;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">pf</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">function</span><span class="org-whitespace-space"> </span><span class="org-comment">pointer</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">'double</span><span class="org-whitespace-space"> </span><span class="org-comment">sqrt(double</span><span class="org-whitespace-space"> </span><span class="org-comment">x)'</span>
+
+<span class="org-constant">std</span>::<span class="org-type">vector</span>&lt;ComplexClass&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">vec</span>;
+<span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">it</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>vec.begin();<span class="org-whitespace-space"> </span>vec.end()<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>it;<span class="org-whitespace-space"> </span>++it)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">stuff</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdf2b194" class="outline-2">
+<h2 id="orgdf2b194"><span class="section-number-2">2</span> decltype</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<code>decltype</code> 用于将变量的类型声明为指定类型。指定的类型可以包含 <code>const</code>, 引用等修饰。例如:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">i</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3;
+<span class="org-type">int</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">j</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">k</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>i;
+
+<span class="org-keyword">decltype</span>(i)<span class="org-whitespace-space"> </span><span class="org-variable-name">d1</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">d1</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">int</span>
+<span class="org-keyword">decltype</span>(j)<span class="org-whitespace-space"> </span><span class="org-variable-name">d2</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">d2</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">int&amp;</span>
+<span class="org-keyword">decltype</span>(k)<span class="org-whitespace-space"> </span><span class="org-variable-name">d3</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">d3</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">const</span><span class="org-whitespace-space"> </span><span class="org-comment">int&amp;</span>
+<span class="org-keyword">decltype</span>(<span class="org-whitespace-space"> </span>k<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>1)<span class="org-whitespace-space"> </span><span class="org-variable-name">d4</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">d4</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">int</span>
+</pre>
+</div>
+
+<p>
+当函数返回类型使用 <code>auto</code> 时，可以用 <code>decltype</code> 后置说明。例如：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">typename</span><span class="org-whitespace-space"> </span><span class="org-type">U</span>&gt;
+<span class="org-keyword">auto</span><span class="org-whitespace-space"> </span><span class="org-function-name">f</span>(<span class="org-type">T</span><span class="org-whitespace-space"> </span><span class="org-variable-name">t</span>,<span class="org-whitespace-space"> </span><span class="org-type">U</span><span class="org-whitespace-space"> </span><span class="org-variable-name">u</span>)<span class="org-whitespace-space"> </span>-&gt;<span class="org-whitespace-space"> </span><span class="org-keyword">decltype</span>(T*U)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">stuff</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ec6e5a" class="outline-2">
+<h2 id="org1ec6e5a"><span class="section-number-2">3</span> using</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+类似于 <code>typedef</code> ，用于给类或命名空间起别名。
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">using</span><span class="org-whitespace-space"> </span><span class="org-type">StrVecIterator</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">std</span>::<span class="org-constant">vector</span>&lt;<span class="org-constant">std</span>::string&gt;::iterator;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga6458a9" class="outline-2">
+<h2 id="orga6458a9"><span class="section-number-2">4</span> 可变模板参数</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+可变模板参数(Variadic template argument)用于创建任意参数的模板函数和类。语法形式是：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-function-name">...</span><span class="org-whitespace-space"> </span><span class="org-type">Args</span>&gt;
+<span class="org-function-name">xfunc</span>(<span class="org-type">Args</span><span class="org-function-name">...</span><span class="org-whitespace-space"> </span><span class="org-variable-name">args</span>)
+{<span class="org-whitespace-space"> </span><span class="org-function-name">...</span>;<span class="org-whitespace-space"> </span>}
+</pre>
+</div>
+<p>
+Args是一个模板参数包，args是一个函数参数包。Args和args可以是任意符合C++标识符规则的名称。Args与T的区别是，T与一种类型匹配，Args与任意数量（包括0）的类型匹配。
+</p>
+
+<p>
+函数内不能使用索引访问args，例如不能使用args[2]。使用方式是利用模板偏特化：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;iostream&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string&gt;</span>
+
+<span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&gt;
+<span class="org-constant">std</span>::<span class="org-type">ostream</span>&amp;<span class="org-whitespace-space">  </span><span class="org-function-name">xcout</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-constant">std</span>::cout<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>v<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span><span class="org-constant">std</span>::endl;
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">std</span>::cout;
+}
+
+<span class="org-keyword">template</span>&lt;<span class="org-keyword">typename</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">typename</span><span class="org-function-name">...</span><span class="org-whitespace-space"> </span><span class="org-type">Args</span>&gt;
+<span class="org-constant">std</span>::<span class="org-type">ostream</span>&amp;<span class="org-whitespace-space"> </span><span class="org-function-name">xcout</span>(<span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">T</span>&amp;<span class="org-whitespace-space"> </span><span class="org-variable-name">v</span>,<span class="org-whitespace-space"> </span><span class="org-type">Args</span><span class="org-function-name">...</span><span class="org-whitespace-space"> </span><span class="org-variable-name">args</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-constant">std</span>::cout&lt;&lt;<span class="org-whitespace-space"> </span>v<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span><span class="org-string">",</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>;
+<span class="org-whitespace-space">  </span>xcout(args<span class="org-function-name">...</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">std</span>::cout;
+}
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">  </span><span class="org-constant">std</span>::<span class="org-type">string</span><span class="org-whitespace-space"> </span><span class="org-variable-name">s</span>(<span class="org-string">"i'm</span><span class="org-whitespace-space"> </span><span class="org-string">string"</span>);
+<span class="org-whitespace-space">  </span>xcout(<span class="org-string">"hello"</span>,<span class="org-whitespace-space"> </span>100,<span class="org-whitespace-space"> </span>3.5,<span class="org-whitespace-space"> </span><span class="org-string">"world"</span>,<span class="org-whitespace-space"> </span>s);
+<span class="org-whitespace-space">  </span>xcout(200.5,<span class="org-whitespace-space"> </span>30,<span class="org-whitespace-space"> </span><span class="org-string">'x'</span>,<span class="org-whitespace-space"> </span>s);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<p>
+例如上面代码，输出是：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">yanyg@t430:~/test$<span class="org-whitespace-space"> </span>g++<span class="org-whitespace-space"> </span>cxxargs.cc<span class="org-whitespace-space"> </span>-std=c++11
+yanyg@t430:~/test$<span class="org-whitespace-space"> </span>./a.out
+hello,<span class="org-whitespace-space"> </span>100,<span class="org-whitespace-space"> </span>3.5,<span class="org-whitespace-space"> </span>world,<span class="org-whitespace-space"> </span>i<span class="org-string">'m</span><span class="org-whitespace-space"> </span><span class="org-string">string</span>
+<span class="org-string">200.5,</span><span class="org-whitespace-space"> </span><span class="org-string">30,</span><span class="org-whitespace-space"> </span><span class="org-string">x,</span><span class="org-whitespace-space"> </span><span class="org-string">i'</span>m<span class="org-whitespace-space"> </span>string
+</pre>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

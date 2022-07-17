@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Detects arguments number in a macro</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Detects arguments number in a macro</h1>
+<p>
+写C语言代码时经常会有一个函数传递不同数量参数的需求。例如：
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-function-name">PL_ASSERT</span>(OK<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret);
+<span class="org-function-name">PL_ASSERT</span>(OK<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>ret,<span class="org-whitespace-space"> </span><span class="org-string">"error</span><span class="org-whitespace-space"> </span><span class="org-string">code:</span><span class="org-whitespace-space"> </span><span class="org-string">%d\b"</span>,<span class="org-whitespace-space"> </span>ret);
+</pre>
+</div>
+
+<p>
+对于前者，只要检查ASSERT条件，而对于后者，希望触发ASSERT时打印具体的ret数值。
+</p>
+
+<p>
+本文描述如何通过C99语言 <code>__VA_ARGS__</code> 实现此功能。
+</p>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

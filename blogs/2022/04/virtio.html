@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>VirtIO</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">VirtIO</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org98acbc9">1. 总体介绍</a></li>
+<li><a href="#orgd477dca">2. IO Stack</a>
+<ul>
+<li><a href="#org0e32483">2.1. 存算分离全链路</a></li>
+<li><a href="#org3747614">2.2. Guest OS IO Stack for virtio-blk</a></li>
+<li><a href="#org43e21eb">2.3. Guest OS IO Stack Vhost-user</a></li>
+</ul>
+</li>
+<li><a href="#org4d1fc8f">3. Virtio-Blk</a></li>
+<li><a href="#org937a821">4. Virtio-Net</a></li>
+<li><a href="#org58457b7">5. Virtio-PCI</a></li>
+<li><a href="#org09c2e7e">6. Virtio-Ballon</a></li>
+<li><a href="#org48d0faa">7. Virtio-Console</a></li>
+<li><a href="#orgbfc4843">8. Some infomation</a>
+<ul>
+<li><a href="#org26b9761">8.1. Vring - Virtio ring</a></li>
+</ul>
+</li>
+<li><a href="#org849ebee">9. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org98acbc9" class="outline-2">
+<h2 id="org98acbc9"><span class="section-number-2">1</span> 总体介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+KVM虚拟化CPU和内存，QEMU虚拟化IO。
+</p>
+
+<ul class="org-ul">
+<li>Virtio提供一个或多个Queue，GuestOS把IO保存到Queue中；</li>
+<li>通知后端处理；</li>
+</ul>
+
+<p>
+优化：
+</p>
+<ul class="org-ul">
+<li>IO host处理从Qemu旁路；</li>
+<li>Poll替代notify；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd477dca" class="outline-2">
+<h2 id="orgd477dca"><span class="section-number-2">2</span> IO Stack</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org0e32483" class="outline-3">
+<h3 id="org0e32483"><span class="section-number-3">2.1</span> 存算分离全链路</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>VM发送IO到Virtio-Queue；</li>
+<li>VM通过notify机制通知后端驱动处理IO；</li>
+<li>Qemu从VirtIO-Queue取出数据，放入qemu处理线程池；</li>
+<li>Qemu发送IO到分布式客户端，等待完成；</li>
+<li>Qemu通知VM IO完成；</li>
+<li>分布式客户端处理后端交互；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3747614" class="outline-3">
+<h3 id="org3747614"><span class="section-number-3">2.2</span> Guest OS IO Stack for virtio-blk</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-function-name">submit_bio</span>();
+<span class="org-function-name">generic_make_request</span>();
+queue-&gt;queue_rq();<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">-&gt;</span><span class="org-whitespace-space"> </span><span class="org-comment">virtio_queue_rq</span>
+<span class="org-function-name">virtio_queue_rq</span>();
+<span class="org-function-name">vq_kick</span>();
+<span class="org-function-name">virtqueue_notify</span>();
+<span class="org-function-name">vp_notify</span>();
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org43e21eb" class="outline-3">
+<h3 id="org43e21eb"><span class="section-number-3">2.3</span> Guest OS IO Stack Vhost-user</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>VM填充IO，写入Shmring；</li>
+<li>分布式存储客户端Polling查询IO；</li>
+<li>分布式存储客户端完成IO后，通过EventFd注入中断；</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4d1fc8f" class="outline-2">
+<h2 id="org4d1fc8f"><span class="section-number-2">3</span> Virtio-Blk</h2>
+</div>
+
+<div id="outline-container-org937a821" class="outline-2">
+<h2 id="org937a821"><span class="section-number-2">4</span> Virtio-Net</h2>
+</div>
+
+<div id="outline-container-org58457b7" class="outline-2">
+<h2 id="org58457b7"><span class="section-number-2">5</span> Virtio-PCI</h2>
+</div>
+
+<div id="outline-container-org09c2e7e" class="outline-2">
+<h2 id="org09c2e7e"><span class="section-number-2">6</span> Virtio-Ballon</h2>
+</div>
+
+<div id="outline-container-org48d0faa" class="outline-2">
+<h2 id="org48d0faa"><span class="section-number-2">7</span> Virtio-Console</h2>
+</div>
+
+<div id="outline-container-orgbfc4843" class="outline-2">
+<h2 id="orgbfc4843"><span class="section-number-2">8</span> Some infomation</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org26b9761" class="outline-3">
+<h3 id="org26b9761"><span class="section-number-3">8.1</span> Vring - Virtio ring</h3>
+<div class="outline-text-3" id="text-8-1">
+<ul class="org-ul">
+<li>desc;</li>
+<li>avail;</li>
+<li>used;</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org849ebee" class="outline-2">
+<h2 id="org849ebee"><span class="section-number-2">9</span> References</h2>
+<div class="outline-text-2" id="text-9">
+<dl class="org-dl">
+<dt>Direct-Virtio: A New Direct Virtualized I/O Framework for NVMe SSDs</dt><dd><a href="https://www.mdpi.com/2079-9292/10/17/2058">https://www.mdpi.com/2079-9292/10/17/2058</a></dd>
+<dt>IO虚拟化 VirtIO原理</dt><dd><a href="https://blog.csdn.net/tony_vip/article/details/104286588">https://blog.csdn.net/tony_vip/article/details/104286588</a></dd>
+<dt>Virtualized I/O with Vhost-user</dt><dd><a href="https://spdk.io/doc/vhost_processing.html">https://spdk.io/doc/vhost_processing.html</a></dd>
+<dt>Virtio-scsi</dt><dd><a href="https://www.ovirt.org/develop/release-management/features/storage/virtio-scsi.html">https://www.ovirt.org/develop/release-management/features/storage/virtio-scsi.html</a></dd>
+<dt>Virtio packed ring</dt><dd><a href="https://lwn.net/Articles/752745/">https://lwn.net/Articles/752745/</a></dd>
+<dt>Packed VirtQueue</dt><dd><a href="https://www.redhat.com/en/blog/packed-virtqueue-how-reduce-overhead-virtio">https://www.redhat.com/en/blog/packed-virtqueue-how-reduce-overhead-virtio</a></dd>
+<dt>Virtqueues and virtio ring: How the data travels</dt><dd><a href="https://www.redhat.com/en/blog/virtqueues-and-virtio-ring-how-data-travels">https://www.redhat.com/en/blog/virtqueues-and-virtio-ring-how-data-travels</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

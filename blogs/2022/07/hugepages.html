@@ -26,9 +26,9 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd041d18">1. HugePage CPU侧的实现</a></li>
-<li><a href="#org3f28df2">2. Hugepage 在Linux的实现</a></li>
-<li><a href="#orgfa0bf98">3. Linux Hugepage配置管理接口与应用</a></li>
+<li><a href="#orgb979734">1. HugePage CPU侧的实现</a></li>
+<li><a href="#org1727825">2. Hugepage 在Linux的实现</a></li>
+<li><a href="#org159f45d">3. Linux Hugepage配置管理接口与应用</a></li>
 </ul>
 </div>
 </div>
@@ -38,12 +38,12 @@
 CPU推出HugePage，支持2MB或1GB的大页。相比4KB的内存页，相同的TLB，可以命中更多的映射。另外一方面，大页可以缩减页表层次，进一步提高虚拟地址到物理地址的转换效率。
 </p>
 
-<div id="outline-container-orgd041d18" class="outline-2">
-<h2 id="orgd041d18"><span class="section-number-2">1</span> HugePage CPU侧的实现</h2>
+<div id="outline-container-orgb979734" class="outline-2">
+<h2 id="orgb979734"><span class="section-number-2">1</span> HugePage CPU侧的实现</h2>
 </div>
 
-<div id="outline-container-org3f28df2" class="outline-2">
-<h2 id="org3f28df2"><span class="section-number-2">2</span> Hugepage 在Linux的实现</h2>
+<div id="outline-container-org1727825" class="outline-2">
+<h2 id="org1727825"><span class="section-number-2">2</span> Hugepage 在Linux的实现</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>&lt;2022-07-16<span class="org-whitespace-space"> </span>15:12:38&gt;
@@ -56,8 +56,8 @@ hub/linux-stable/fs/hugetlbfs/
 </div>
 </div>
 
-<div id="outline-container-orgfa0bf98" class="outline-2">
-<h2 id="orgfa0bf98"><span class="section-number-2">3</span> Linux Hugepage配置管理接口与应用</h2>
+<div id="outline-container-org159f45d" class="outline-2">
+<h2 id="org159f45d"><span class="section-number-2">3</span> Linux Hugepage配置管理接口与应用</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>&lt;2022-07-16<span class="org-whitespace-space"> </span>15:10:13&gt;

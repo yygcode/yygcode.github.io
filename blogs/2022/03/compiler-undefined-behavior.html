@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>编译器未定义行为与程序正确性</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">编译器未定义行为与程序正确性</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org368af88">1. 几个例子</a>
+<ul>
+<li><a href="#orgc9b4c9f">1.1. 数学运算溢出</a></li>
+<li><a href="#org1aac4d0">1.2. 数组越界问题</a></li>
+</ul>
+</li>
+<li><a href="#orgfd6a50d">2. 编译器未定义行为</a>
+<ul>
+<li><a href="#orgd9e7efa">2.1. WIKI描述</a></li>
+<li><a href="#org0d8dab8">2.2. 编译器优化假设</a></li>
+</ul>
+</li>
+<li><a href="#orgfa2cca0">3. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org368af88" class="outline-2">
+<h2 id="org368af88"><span class="section-number-2">1</span> 几个例子</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgc9b4c9f" class="outline-3">
+<h3 id="orgc9b4c9f"><span class="section-number-3">1.1</span> 数学运算溢出</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdint.h&gt;</span>
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">checkAdd</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">a</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(a<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>100<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>a)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%d</span><span class="org-whitespace-space"> </span><span class="org-string">&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">%d\n"</span>,<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>100,<span class="org-whitespace-space"> </span>a);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">else</span>
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>printf(<span class="org-string">"%d</span><span class="org-whitespace-space"> </span><span class="org-string">&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">%d\n"</span>,<span class="org-whitespace-space"> </span>a<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>100,<span class="org-whitespace-space"> </span>a);
+<span class="org-whitespace-space">    </span>}
+}
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">    </span>checkAdd(100);
+<span class="org-whitespace-space">    </span>checkAdd(<span class="org-preprocessor">INT32_MAX</span>);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+<blockquote>
+<p>
+[yanyg@x1{192.168.0.106} ~/test ]
+$ ./a.out
+200 &gt; 100
+-2147483549 &gt; 2147483647
+</p>
+</blockquote>
+
+<p>
+给编译器加参数可以在运行时捕捉到类似问题：
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~/test<span class="org-whitespace-space"> </span>]
+$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-Wall<span class="org-whitespace-space"> </span>overflow.c<span class="org-whitespace-space"> </span>-ubsan<span class="org-whitespace-space"> </span>-fsanitize=undefined
+[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~/test<span class="org-whitespace-space"> </span>]
+$<span class="org-whitespace-space"> </span>./a.out
+200<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>100
+overflow.c:6:17:<span class="org-whitespace-space"> </span>runtime<span class="org-whitespace-space"> </span>error:<span class="org-whitespace-space"> </span>signed<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>overflow:<span class="org-whitespace-space"> </span>2147483647<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>99<span class="org-whitespace-space"> </span>cannot<span class="org-whitespace-space"> </span><span class="org-whitespace-line">be</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">represented</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">in</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">type</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-string"><span class="org-whitespace-line">'int'</span></span>
+overflow.c:12:9:<span class="org-whitespace-space"> </span>runtime<span class="org-whitespace-space"> </span>error:<span class="org-whitespace-space"> </span>signed<span class="org-whitespace-space"> </span>integer<span class="org-whitespace-space"> </span>overflow:<span class="org-whitespace-space"> </span>2147483647<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>100<span class="org-whitespace-space"> </span>cannot<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">be</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">represented</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-keyword"><span class="org-whitespace-line">in</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">type</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-string"><span class="org-whitespace-line">'int'</span></span>
+-2147483549<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>2147483647
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1aac4d0" class="outline-3">
+<h3 id="org1aac4d0"><span class="section-number-3">1.2</span> 数组越界问题</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+之前有个同事遇到的一个生产bug：想通过min确保长度不会溢出，实际溢出了。
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;string.h&gt;</span>
+
+<span class="org-keyword">typedef</span><span class="org-whitespace-space"> </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">Bar</span>
+{
+<span class="org-whitespace-space">    </span><span class="org-type">char</span><span class="org-whitespace-space"> </span><span class="org-variable-name">name</span>[16];
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">mode</span>;
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">zero</span>;
+}<span class="org-whitespace-space"> </span><span class="org-type">Bar</span>;
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">MIN</span>(<span class="org-variable-name">a</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">b</span>)<span class="org-whitespace-space">       </span>((a)<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-space"> </span>(b)<span class="org-whitespace-space"> </span>?<span class="org-whitespace-space"> </span>(a)<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>(b))
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">    </span><span class="org-type">Bar</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bar</span>;
+<span class="org-whitespace-space">    </span>memset(&amp;bar,<span class="org-whitespace-space"> </span><span class="org-keyword">0x</span><span class="org-constant">ff</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">sizeof</span>(bar));
+<span class="org-whitespace-space">    </span>bar.zero<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">len</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>strlen(bar.name);
+<span class="org-whitespace-space">    </span><span class="org-type">size_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">min</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>MIN(16,<span class="org-whitespace-space"> </span>len);
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"len=%zu,</span><span class="org-whitespace-space"> </span><span class="org-string">min=%zu\n"</span>,<span class="org-whitespace-space"> </span>len,<span class="org-whitespace-space"> </span>min);
+
+<span class="org-whitespace-space">    </span>bar.name[14]<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-string">'\0'</span>;
+<span class="org-whitespace-space">    </span>len<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>strlen(bar.name);
+<span class="org-whitespace-space">    </span>min<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>MIN(16,<span class="org-whitespace-space"> </span>len);
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"len=%zu,</span><span class="org-whitespace-space"> </span><span class="org-string">min=%zu\n"</span>,<span class="org-whitespace-space"> </span>len,<span class="org-whitespace-space"> </span>min);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bash">[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~/test<span class="org-whitespace-space"> </span>]
+$<span class="org-whitespace-space"> </span>gcc<span class="org-whitespace-space"> </span>-Wall<span class="org-whitespace-space"> </span>array-overflow.c<span class="org-whitespace-space"> </span>-O2
+[yanyg@x1{192.168.0.106}<span class="org-whitespace-space"> </span>~/test<span class="org-whitespace-space"> </span>]
+$<span class="org-whitespace-space"> </span>./a.out
+<span class="org-variable-name">len</span>=20,<span class="org-whitespace-space"> </span><span class="org-variable-name">min</span>=20
+<span class="org-variable-name">len</span>=14,<span class="org-whitespace-space"> </span><span class="org-variable-name">min</span>=14
+</pre>
+</div>
+
+<p>
+编译器认为程序员不会错，因此strlen(bar.name)不会比sizeof(bar.name)更大，因此直接优化成了*min = len*; 查看生成的汇编代码：
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">-O0</span>
+<span class="org-function-name">movl</span><span class="org-whitespace-space">    </span><span class="org-keyword">$16</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-function-name">cmpq</span><span class="org-whitespace-space">    </span><span class="org-keyword">$16</span>,<span class="org-whitespace-space"> </span>-8(<span class="org-variable-name">%rbp</span>)
+<span class="org-function-name">cmovbe</span><span class="org-whitespace-space">  </span>-8(<span class="org-variable-name">%rbp</span>),<span class="org-whitespace-space"> </span><span class="org-variable-name">%rax</span>
+<span class="org-function-name">movq</span><span class="org-whitespace-space">    </span><span class="org-keyword">%rax</span>,<span class="org-whitespace-space"> </span>-16(<span class="org-variable-name">%rbp</span>)
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">-O2</span>
+<span class="org-function-name">sbbq</span><span class="org-whitespace-space">    </span><span class="org-keyword">$3</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%rsi</span>
+<span class="org-function-name">xorl</span><span class="org-whitespace-space">    </span><span class="org-keyword">%eax</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%eax</span>
+<span class="org-function-name">subq</span><span class="org-whitespace-space">    </span><span class="org-keyword">%rbx</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%rsi</span>
+<span class="org-function-name">movq</span><span class="org-whitespace-space">    </span><span class="org-keyword">%rsi</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%rdx</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">min</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">MIN(16,</span><span class="org-whitespace-space"> </span><span class="org-comment">len);</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfd6a50d" class="outline-2">
+<h2 id="orgfd6a50d"><span class="section-number-2">2</span> 编译器未定义行为</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgd9e7efa" class="outline-3">
+<h3 id="orgd9e7efa"><span class="section-number-3">2.1</span> WIKI描述</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+UB行为结果是不确定的，发生任何事情都是允许的。
+</p>
+<blockquote>
+<p>
+In computer programming, undefined behavior (UB) is the result of executing
+a program whose behavior is prescribed to be unpredictable, in the language
+specification to which the computer code adheres. This is different from
+unspecified behavior, for which the language specification does not prescribe
+a result, and implementation-defined behavior that defers to the documentation
+of another component of the platform (such as the ABI or the translator
+documentation).
+</p>
+
+<p>
+In the C community, undefined behavior may be humorously referred to as
+"nasal demons", after a comp.std.c post that explained undefined behavior as
+allowing the compiler to do anything it chooses, even "to make demons fly out
+of your nose".
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org0d8dab8" class="outline-3">
+<h3 id="org0d8dab8"><span class="section-number-3">2.2</span> 编译器优化假设</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>编译器在保证单线程正确性的前提下做优化；</li>
+<li>编译器假设代码（程序员）正确的前提下做优化；</li>
+<li>编译器假设没有溢出；</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa2cca0" class="outline-2">
+<h2 id="orgfa2cca0"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>Undefined Behavior</dt><dd><a href="https://en.wikipedia.org/wiki/Undefined_behavior">https://en.wikipedia.org/wiki/Undefined_behavior</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

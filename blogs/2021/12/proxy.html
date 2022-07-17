@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Proxy Config</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Proxy Config</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf70ca32">1. clash config</a></li>
+<li><a href="#org15204ec">2. Reference</a>
+<ul>
+<li><a href="#orgd372fdc">2.1. clash: https://github.com/Dreamacro/clash</a></li>
+<li><a href="#orgfac082d">2.2. clash release: https://github.com/Dreamacro/clash/releases</a></li>
+<li><a href="#orge7ce51c">2.3. mielink: https://www.mielink.com/index</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf70ca32" class="outline-2">
+<h2 id="orgf70ca32"><span class="section-number-2">1</span> clash config</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Download clash from clash release.</li>
+<li>get subscribe address: <a href="https://www.mielink.com/subcenter/index">https://www.mielink.com/subcenter/index</a></li>
+<li>Select "Clash托管" and "复制Clash订阅"</li>
+<li>Download config.yaml: wget -O config.yaml '[Clash订阅 From Above]&amp;log-level=info'</li>
+<li>Save config.yaml and clash in the same directory, then run ./clash -d .</li>
+<li>If connection foreigner web site failed with follow infomation:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-text">[yanyg@x1{192.168.0.104}<span class="org-whitespace-space"> </span>~/clash/1220<span class="org-whitespace-space"> </span>]<span class="org-whitespace-space"> </span>&lt;2021-12-22<span class="org-whitespace-space"> </span>23:50:44&gt;
+$<span class="org-whitespace-space"> </span>./clash<span class="org-whitespace-space"> </span>-d<span class="org-whitespace-space"> </span>.
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#128640;&#30452;&#25509;&#36830;&#25509;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#127345;&#65039;&#21716;&#21737;&#21716;&#21737;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#127757;&#22269;&#22806;&#23186;&#20307;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#127464;&#127475;&#22269;&#20869;&#23186;&#20307;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#8505;&#65039;&#29233;&#22855;&#33402;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#127822;&#33529;&#26524;&#26381;&#21153;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#128304;&#22269;&#22806;&#27969;&#37327;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#128031;&#28431;&#32593;&#20043;&#40060;
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#127909;NETFLIX
+INFO[0000]<span class="org-whitespace-space"> </span>Start<span class="org-whitespace-space"> </span>initial<span class="org-whitespace-space"> </span>compatible<span class="org-whitespace-space"> </span>provider<span class="org-whitespace-space"> </span>&#128242;Telegram
+WARN[0000]<span class="org-whitespace-space"> </span>Failed<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>start<span class="org-whitespace-space"> </span>Redir<span class="org-whitespace-space"> </span>UDP<span class="org-whitespace-space"> </span>Listener:<span class="org-whitespace-space"> </span>operation<span class="org-whitespace-space"> </span>not<span class="org-whitespace-space"> </span>permitted
+INFO[0000]<span class="org-whitespace-space"> </span>Redirect<span class="org-whitespace-space"> </span>proxy<span class="org-whitespace-space"> </span>listening<span class="org-whitespace-space"> </span>at:<span class="org-whitespace-space"> </span>[::]:7892
+INFO[0000]<span class="org-whitespace-space"> </span>Mixed(http+socks)<span class="org-whitespace-space"> </span>proxy<span class="org-whitespace-space"> </span>listening<span class="org-whitespace-space"> </span>at:<span class="org-whitespace-space"> </span>[::]:7890
+INFO[0000]<span class="org-whitespace-space"> </span>DNS<span class="org-whitespace-space"> </span>server<span class="org-whitespace-space"> </span>listening<span class="org-whitespace-space"> </span>at:<span class="org-whitespace-space"> </span>127.0.0.1:5450
+INFO[0000]<span class="org-whitespace-space"> </span>RESTful<span class="org-whitespace-space"> </span>API<span class="org-whitespace-space"> </span>listening<span class="org-whitespace-space"> </span>at:<span class="org-whitespace-space"> </span>[::]:9090
+WARN[0005]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>IPCIDR/172.217.0.0/16)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>beacons3.gvt2.com:4<span class="org-whitespace-line">43</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+WARN[0008]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>DomainKeyword/google)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>www.google.com:443<span class="org-whitespace-space"> </span>e<span class="org-whitespace-line">rror:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+WARN[0010]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>IPCIDR/172.217.0.0/16)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>beacons3.gvt2.com:4<span class="org-whitespace-line">43</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+WARN[0010]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>IPCIDR/172.217.0.0/16)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>beacons.gvt2.com:44<span class="org-whitespace-line">3</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+WARN[0013]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>DomainKeyword/google)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>www.google.com:443<span class="org-whitespace-space"> </span>e<span class="org-whitespace-line">rror:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+WARN[0015]<span class="org-whitespace-space"> </span>[TCP]<span class="org-whitespace-space"> </span>dial<span class="org-whitespace-space"> </span>&#128249;&#35895;&#27468;&#27833;&#31649;<span class="org-whitespace-space"> </span>(match<span class="org-whitespace-space"> </span>IPCIDR/172.217.0.0/16)<span class="org-whitespace-space"> </span>to<span class="org-whitespace-space"> </span>beacons.gvt2.com:44<span class="org-whitespace-line">3</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">kaizen-tw-1.paolu.co:443</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">connect</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">error:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dial</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tcp4</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">1.174.71.122:443:</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i/o</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">timeout</span>
+</pre>
+</div>
+
+<p>
+Open the config.yaml, then search proxies section, copy another usable proxy
+to be the first line:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">proxies:
+<span class="org-whitespace-space">  </span>-<span class="org-whitespace-space"> </span>{"name":"&#127482;&#127474;<span class="org-whitespace-space"> </span>Trojan&#20248;&#21270;&#65372;&#32654;&#22269;-01<span class="org-whitespace-space"> </span>[1.5][&#21407;&#29983;]","type":"trojan","server":"kaizen-us-01<span class="org-whitespace-line">.cn0.me","port":443,"password":"4af1a191-1c71-370e-9a0c-a5f702f416eemielink","udp":true,"sni":"paydiu.com"}</span>
+<span class="org-whitespace-space">  </span>-<span class="org-whitespace-space"> </span>{"name":"&#127484;&#127480;<span class="org-whitespace-space"> </span>Trojan&#20248;&#21270;&#65372;&#21488;&#28286;-1<span class="org-whitespace-space"> </span>[1.0][&#35797;&#29992;]","type":"trojan","server":"kaizen-tw-1.p<span class="org-whitespace-line">aolu.co","port":443,"password":"4af1a191-1c71-370e-9a0c-a5f702f416eemielink","udp":true,"sni":"paydiu.com"}</span>
+</pre>
+</div>
+
+<p>
+If We do not know which proxy is usable, then open site to list the proxies:
+<a href="https://www.mielink.com/subcenter/index">https://www.mielink.com/subcenter/index</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org15204ec" class="outline-2">
+<h2 id="org15204ec"><span class="section-number-2">2</span> Reference</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgd372fdc" class="outline-3">
+<h3 id="orgd372fdc"><span class="section-number-3">2.1</span> clash: <a href="https://github.com/Dreamacro/clash">https://github.com/Dreamacro/clash</a></h3>
+</div>
+<div id="outline-container-orgfac082d" class="outline-3">
+<h3 id="orgfac082d"><span class="section-number-3">2.2</span> clash release: <a href="https://github.com/Dreamacro/clash/releases">https://github.com/Dreamacro/clash/releases</a></h3>
+</div>
+<div id="outline-container-orge7ce51c" class="outline-3">
+<h3 id="orge7ce51c"><span class="section-number-3">2.3</span> mielink: <a href="https://www.mielink.com/index">https://www.mielink.com/index</a></h3>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

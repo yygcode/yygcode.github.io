@@ -26,29 +26,29 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgde642bc">1. 网络发展</a></li>
-<li><a href="#org10c6e09">2. 协议</a></li>
-<li><a href="#org719c20c">3. 单网卡多协议多队列</a></li>
-<li><a href="#orgb393c82">4. 存储网络组件目标</a></li>
-<li><a href="#org31950ed">5. 开源软件</a></li>
-<li><a href="#org7ad07ab">6. 实现基本原理</a>
+<li><a href="#org7142188">1. 网络发展</a></li>
+<li><a href="#orgd6d26a5">2. 协议</a></li>
+<li><a href="#org03f9100">3. 单网卡多协议多队列</a></li>
+<li><a href="#org7a38e8b">4. 存储网络组件目标</a></li>
+<li><a href="#orgc4a4910">5. 开源软件</a></li>
+<li><a href="#orgfed1fdc">6. 实现基本原理</a>
 <ul>
-<li><a href="#orga03ee00">6.1. Queue Pair</a></li>
-<li><a href="#orga6a7a9a">6.2. Packet</a></li>
-<li><a href="#orga0c601c">6.3. Memory Register</a></li>
-<li><a href="#orgd2d8e74">6.4. Connection Pool</a></li>
-<li><a href="#org65ec876">6.5. Congestion Control</a></li>
-<li><a href="#org69c105b">6.6. Multi path</a></li>
-<li><a href="#org0103ddd">6.7. Qos</a></li>
+<li><a href="#orgfa8a381">6.1. Queue Pair</a></li>
+<li><a href="#orgfa8a2ad">6.2. Packet</a></li>
+<li><a href="#org9b38a10">6.3. Memory Register</a></li>
+<li><a href="#org1c8ad6b">6.4. Connection Pool</a></li>
+<li><a href="#org4a9ca2c">6.5. Congestion Control</a></li>
+<li><a href="#orgbaa864a">6.6. Multi path</a></li>
+<li><a href="#orge7f611c">6.7. Qos</a></li>
 </ul>
 </li>
-<li><a href="#org91355ee">7. References</a></li>
+<li><a href="#org315967a">7. References</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgde642bc" class="outline-2">
-<h2 id="orgde642bc"><span class="section-number-2">1</span> 网络发展</h2>
+<div id="outline-container-org7142188" class="outline-2">
+<h2 id="org7142188"><span class="section-number-2">1</span> 网络发展</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 现状：25G网络全面商用，100G网络批量上线，200G网络即将到来。
@@ -56,8 +56,8 @@
 </div>
 </div>
 
-<div id="outline-container-org10c6e09" class="outline-2">
-<h2 id="org10c6e09"><span class="section-number-2">2</span> 协议</h2>
+<div id="outline-container-orgd6d26a5" class="outline-2">
+<h2 id="orgd6d26a5"><span class="section-number-2">2</span> 协议</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 iWARP: Internet Wide Area RDMA Protocol. 2007年OpenFabric联盟(主要成员包括IBM, EMC,
@@ -153,8 +153,8 @@ iWARP Vendor: Intel, Chelsio
 </div>
 </div>
 
-<div id="outline-container-org719c20c" class="outline-2">
-<h2 id="org719c20c"><span class="section-number-2">3</span> 单网卡多协议多队列</h2>
+<div id="outline-container-org03f9100" class="outline-2">
+<h2 id="org03f9100"><span class="section-number-2">3</span> 单网卡多协议多队列</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 内核态TCP/IP, 用户态TCP/IP，以及RDMA传输并存。并通过TCP/IP走控制命令，通过RDMA
@@ -168,8 +168,8 @@ iWARP Vendor: Intel, Chelsio
 </div>
 </div>
 
-<div id="outline-container-orgb393c82" class="outline-2">
-<h2 id="orgb393c82"><span class="section-number-2">4</span> 存储网络组件目标</h2>
+<div id="outline-container-org7a38e8b" class="outline-2">
+<h2 id="org7a38e8b"><span class="section-number-2">4</span> 存储网络组件目标</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>低延时：RDMA网络RoundTrip控制在10us；</li>
@@ -187,8 +187,8 @@ iWARP Vendor: Intel, Chelsio
 </div>
 </div>
 
-<div id="outline-container-org31950ed" class="outline-2">
-<h2 id="org31950ed"><span class="section-number-2">5</span> 开源软件</h2>
+<div id="outline-container-orgc4a4910" class="outline-2">
+<h2 id="orgc4a4910"><span class="section-number-2">5</span> 开源软件</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>DPDK驱动
@@ -217,12 +217,12 @@ iWARP Vendor: Intel, Chelsio
 </div>
 </div>
 
-<div id="outline-container-org7ad07ab" class="outline-2">
-<h2 id="org7ad07ab"><span class="section-number-2">6</span> 实现基本原理</h2>
+<div id="outline-container-orgfed1fdc" class="outline-2">
+<h2 id="orgfed1fdc"><span class="section-number-2">6</span> 实现基本原理</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orga03ee00" class="outline-3">
-<h3 id="orga03ee00"><span class="section-number-3">6.1</span> Queue Pair</h3>
+<div id="outline-container-orgfa8a381" class="outline-3">
+<h3 id="orgfa8a381"><span class="section-number-3">6.1</span> Queue Pair</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Queue Pair包括RQ和SQ，是主机内存，分别描述接收和发送操作描述。
@@ -242,8 +242,8 @@ Queue Pair包括RQ和SQ，是主机内存，分别描述接收和发送操作描
 </div>
 </div>
 
-<div id="outline-container-orga6a7a9a" class="outline-3">
-<h3 id="orga6a7a9a"><span class="section-number-3">6.2</span> Packet</h3>
+<div id="outline-container-orgfa8a2ad" class="outline-3">
+<h3 id="orgfa8a2ad"><span class="section-number-3">6.2</span> Packet</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 ROCEv2定义了UDP传输RDMA包的包头。参见&lt;Infiniband Architecture Specification Volume 1&gt;,
@@ -252,8 +252,8 @@ ROCEv2定义了UDP传输RDMA包的包头。参见&lt;Infiniband Architecture Spe
 </div>
 </div>
 
-<div id="outline-container-orga0c601c" class="outline-3">
-<h3 id="orga0c601c"><span class="section-number-3">6.3</span> Memory Register</h3>
+<div id="outline-container-org9b38a10" class="outline-3">
+<h3 id="org9b38a10"><span class="section-number-3">6.3</span> Memory Register</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 APP分配一段虚拟空间连续的内存（物理位置可能离散）。生成对应内存空间信息，如基地址，空间范围，操作权限，Local Ley，Remote Key。Local Key供本地网卡访问内存，Remote Key供远端网卡访问内存。
@@ -261,8 +261,8 @@ APP分配一段虚拟空间连续的内存（物理位置可能离散）。生�
 </div>
 </div>
 
-<div id="outline-container-orgd2d8e74" class="outline-3">
-<h3 id="orgd2d8e74"><span class="section-number-3">6.4</span> Connection Pool</h3>
+<div id="outline-container-org1c8ad6b" class="outline-3">
+<h3 id="org1c8ad6b"><span class="section-number-3">6.4</span> Connection Pool</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 X个节点，每个节点Y个进程。Fullmesh需要(X-1) * N * N QP。通过Connection QP共享，能节省较多资源，只需要N-1个QP。
@@ -270,8 +270,8 @@ X个节点，每个节点Y个进程。Fullmesh需要(X-1) * N * N QP。通过Con
 </div>
 </div>
 
-<div id="outline-container-org65ec876" class="outline-3">
-<h3 id="org65ec876"><span class="section-number-3">6.5</span> Congestion Control</h3>
+<div id="outline-container-org4a9ca2c" class="outline-3">
+<h3 id="org4a9ca2c"><span class="section-number-3">6.5</span> Congestion Control</h3>
 <div class="outline-text-3" id="text-6-5">
 <p>
 拥塞控制.
@@ -279,12 +279,12 @@ X个节点，每个节点Y个进程。Fullmesh需要(X-1) * N * N QP。通过Con
 </div>
 </div>
 
-<div id="outline-container-org69c105b" class="outline-3">
-<h3 id="org69c105b"><span class="section-number-3">6.6</span> Multi path</h3>
+<div id="outline-container-orgbaa864a" class="outline-3">
+<h3 id="orgbaa864a"><span class="section-number-3">6.6</span> Multi path</h3>
 </div>
 
-<div id="outline-container-org0103ddd" class="outline-3">
-<h3 id="org0103ddd"><span class="section-number-3">6.7</span> Qos</h3>
+<div id="outline-container-orge7f611c" class="outline-3">
+<h3 id="orge7f611c"><span class="section-number-3">6.7</span> Qos</h3>
 <div class="outline-text-3" id="text-6-7">
 <p>
 Tag, Priority.
@@ -293,8 +293,8 @@ Tag, Priority.
 </div>
 </div>
 
-<div id="outline-container-org91355ee" class="outline-2">
-<h2 id="org91355ee"><span class="section-number-2">7</span> References</h2>
+<div id="outline-container-org315967a" class="outline-2">
+<h2 id="org315967a"><span class="section-number-2">7</span> References</h2>
 <div class="outline-text-2" id="text-7">
 <ul class="org-ul">
 <li>RFC 5681, 6582, 3042</li>

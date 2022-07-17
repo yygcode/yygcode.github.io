@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Emacs启动时间分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Emacs启动时间分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd22aafd">1. 介绍</a></li>
+<li><a href="#org5444a60">2. benchmark-init</a></li>
+<li><a href="#org6bc331a">3. esup</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd22aafd" class="outline-2">
+<h2 id="orgd22aafd"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Emacs启动调优需要先分析时间分布。<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>和<a href="https://github.com/jschaf/esup/">esup</a>是两个优秀的候选package。
+benchmark-init有更好的分析粒度，修改配置文件时调用esup函数可即刻查看启动时间花费。
+</p>
+
+<p>
+我的配置]]使用init.el进行最小基本配置，org文学编程维护绝大多数配置项。init.el仅进行proxy、package-archives、use-package配置，其他都位于config.org中，通过
+<code>org-babel-load-file</code> 加载。我将benchmark-init和esup都在config.org起始处，忽略
+init.el本身启动时间分析。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5444a60" class="outline-2">
+<h2 id="org5444a60"><span class="section-number-2">2</span> benchmark-init</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="https://github.com/dholm/benchmark-init-el">benchmark-init</a>是require和load函数的基准测试工具：
+</p>
+<blockquote>
+<p>
+This is a simple benchmark of calls to Emacs require and load functions. It can
+be used to keep track of where time is being spent during Emacs startup in order
+to optimize startup times.
+</p>
+
+<p>
+The code was originally based on init-benchmarking.el by Steve Purcell with many
+additional modifications having gone into it since.
+</p>
+</blockquote>
+
+<p>
+benchmark-init配置如下：
+</p>
+<p class="verse">
+#+BEGIN_SRC emacs-lisp<br />
+(use-package benchmark-init<br />
+&#xa0;&#xa0;:init<br />
+&#xa0;&#xa0;(benchmark-init/activate)<br />
+&#xa0;&#xa0;:hook<br />
+&#xa0;&#xa0;(after-init . benchmark-init/deactivate))<br />
+#+END_SRC<br />
+</p>
+
+<p>
+调用函数 <code>benchmark-init/show-durations-tree</code> 和
+<code>benchmark-init/show-durations-tabulated</code> 以树或表格方式显示结果。
+<code>benchmark-init/show-durations</code> 是 <code>benchmark-init/show-durations-tabulated</code>
+别名。如下是一次启动部分内容截取：
+</p>
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;1&nbsp; </span>benchmark-init/show-durations-tree</label><pre class="src src-text">Benchmark<span class="org-whitespace-space"> </span>results
+
+&#9596;&#9658;[benchmark-init/root<span class="org-whitespace-space"> </span>nil<span class="org-whitespace-space"> </span>619ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[company-dabbrev<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>1ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[company-capf<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>0ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[company-cmake<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>0ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[company-clang<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>1ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[company-eclim<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>1ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9584;&#9472;[company-template<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>1ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[pcase<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>2ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[default<span class="org-whitespace-space"> </span>load<span class="org-whitespace-space"> </span>3ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[ivy-overlay<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>2ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[ffap<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>45ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[auto-complete-c-headers<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>0ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9584;&#9472;[cl<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>2ms]
+<span class="org-whitespace-space">  </span>&#9500;&#9472;[ggtags<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>4ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9500;&#9472;[etags<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>3ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9474;<span class="org-whitespace-space"> </span>&#9584;&#9472;[xref<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>5ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9474;<span class="org-whitespace-space">   </span>&#9584;&#9472;[project<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>4ms]
+<span class="org-whitespace-space">  </span>&#9474;<span class="org-whitespace-space"> </span>&#9584;&#9472;[ewoc<span class="org-whitespace-space"> </span>require<span class="org-whitespace-space"> </span>3ms]
+...
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">&#20195;&#30721;2&nbsp; </span>benchmark-init/show-durations-tabulated</label><pre class="src src-text"><span class="org-whitespace-space">  </span>Module<span class="org-whitespace-space">                                                            </span>Type<span class="org-whitespace-space">      </span>ms<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">^</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">total</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ms</span>
+<span class="org-whitespace-space">  </span>pdf-view<span class="org-whitespace-space">                                                          </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">78</span><span class="org-whitespace-space"><span class="org-whitespace-line">     </span></span><span class="org-whitespace-line">126</span>
+<span class="org-whitespace-space">  </span>ffap<span class="org-whitespace-space">                                                              </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">45</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">45</span>
+<span class="org-whitespace-space">  </span>semantic/loaddefs<span class="org-whitespace-space">                                                 </span>load<span class="org-whitespace-space">        </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">41</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">41</span>
+<span class="org-whitespace-space">  </span>semantic/find<span class="org-whitespace-space">                                                     </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">39</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">39</span>
+<span class="org-whitespace-space">  </span>eieio-speedbar<span class="org-whitespace-space">                                                    </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">37</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">50</span>
+<span class="org-whitespace-space">  </span>pdf-info<span class="org-whitespace-space">                                                          </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">36</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">38</span>
+<span class="org-whitespace-space">  </span>cc-vars<span class="org-whitespace-space">                                                           </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">34</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">34</span>
+<span class="org-whitespace-space">  </span>lisp-mnt<span class="org-whitespace-space">                                                          </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">32</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">32</span>
+<span class="org-whitespace-space">  </span>cc-mode<span class="org-whitespace-space">                                                           </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">10</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">71</span>
+<span class="org-whitespace-space">  </span>cus-edit<span class="org-whitespace-space">                                                          </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">8</span><span class="org-whitespace-space"><span class="org-whitespace-line">       </span></span><span class="org-whitespace-line">8</span>
+<span class="org-whitespace-space">  </span>ede/base<span class="org-whitespace-space">                                                          </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">7</span><span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">10</span>
+<span class="org-whitespace-space">  </span>cc-engine<span class="org-whitespace-space">                                                         </span>require<span class="org-whitespace-space">     </span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">6</span><span class="org-whitespace-space"><span class="org-whitespace-line">       </span></span><span class="org-whitespace-line">6</span>
+...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6bc331a" class="outline-2">
+<h2 id="org6bc331a"><span class="section-number-2">3</span> esup</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<a href="https://github.com/jschaf/esup/">esup</a>对emacs启动时间进行基准分析。esup-0.6版本在emacs-26.0.90版本下有
+package format striing错误，参见<a href="https://github.com/jschaf/esup/issues/46">issues 46</a>描述，此问题已在腌<a href="https://github.com/jschaf/esup/commit/a589005a9a888537deef94d6fe38a9b8790c97c7">a589005</a>
+提交中解决，但截至当前还无法在melpa下安装，git clone esup并替换elpa目录下的
+esup-child.el并手动编译：
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&lt;cd<span class="org-whitespace-space"> </span>your<span class="org-whitespace-space"> </span>directory&gt;
+git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>https://github.com/jschaf/esup.git
+cp<span class="org-whitespace-space"> </span>esup/esup-child.el<span class="org-whitespace-space"> </span>~/.emacs.d/elpa/esup-0.6/
+&lt;start<span class="org-whitespace-space"> </span>your<span class="org-whitespace-space"> </span>emacs<span class="org-whitespace-space"> </span>then<span class="org-whitespace-space"> </span>call<span class="org-whitespace-space"> </span>@byte-compile-file<span class="org-whitespace-space"> </span>file
+<span class="org-whitespace-space"> </span>~/.emacs.d/elpa/esup-0.6/esup-child.el&gt;
+</pre>
+</div>
+
+<p>
+esup无法对org-babel加载文件的子条目进行析（即使设置分析深度变量
+<code>esup-child-profile-require-level</code> 也是如此）。而我的配置绝大多数在
+config.org中，因此写了一个wrapper函数协助：
+</p>
+<p class="verse">
+#+BEGIN_SRC emacs-lisp<br />
+&#xa0;&#xa0;;; evaluate emacs starting time<br />
+&#xa0;&#xa0;(when (getenv "ESUP_PROFILER")<br />
+&#xa0;&#xa0;&#xa0;&#xa0;(progn<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;;; init.el does not evaluated when call y:esup<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;;; then load init.el diretly here<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;(message "Import init.el for ESUP_PROFILER.")<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;(load-file (expand-file-name "init.el" user-emacs-directory))))<br />
+&#xa0;&#xa0;(defun y:esup()<br />
+&#xa0;&#xa0;&#xa0;&#xa0;"Profiler Emacs Startup Time."<br />
+&#xa0;&#xa0;&#xa0;&#xa0;(interactive)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;(when (fboundp 'esup)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;(progn<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;;; First set env then load init.el to avoid recursive includes.<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;(setenv "ESUP_PROFILER" "t")<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;(esup (expand-file-name "config.el" user-emacs-directory)))))<br />
+<br />
+&#xa0;&#xa0;(use-package esup<br />
+&#xa0;&#xa0;&#xa0;&#xa0;:init<br />
+&#xa0;&#xa0;&#xa0;&#xa0;(setq esup-child-profile-require-level 2))<br />
+#+END_SRC<br />
+</p>
+
+<p>
+调用函数 <code>y:esup</code> 查看结果：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">config.el:624<span class="org-whitespace-space">  </span>0.176sec<span class="org-whitespace-space">   </span>8%
+(use-package<span class="org-whitespace-space"> </span>yasnippet
+:diminish<span class="org-whitespace-space"> </span>yas-minor-mode
+:init
+(yas-global-mode<span class="org-whitespace-space"> </span>1))
+
+config.el:506<span class="org-whitespace-space">  </span>0.119sec<span class="org-whitespace-space">   </span>5%
+(use-package<span class="org-whitespace-space"> </span>auto-complete-config
+:diminish<span class="org-whitespace-space"> </span>auto-complete-mode
+:ensure<span class="org-whitespace-space"> </span>auto-complete
+:init
+(ac-config-default))
+
+config.el:103<span class="org-whitespace-space">  </span>0.104sec<span class="org-whitespace-space">   </span>5%
+(when<span class="org-whitespace-space"> </span>(fboundp<span class="org-whitespace-space"> </span>'tool-bar-mode)
+(tool-bar-mode<span class="org-whitespace-space"> </span>-1))
+
+config.el:122<span class="org-whitespace-space">  </span>0.088sec<span class="org-whitespace-space">   </span>4%
+(use-package<span class="org-whitespace-space"> </span>monokai-theme
+:init
+(load-theme<span class="org-whitespace-space"> </span>'monokai<span class="org-whitespace-space"> </span>t))
+...
+</pre>
+</div>
+
+<p>
+也可调用 <code>esup</code> 分析，但只能显示config.org总时间。如果配置全部在init.el文件中，调用esup也可达成分析目的：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">init.el:142<span class="org-whitespace-space">  </span>1.427sec<span class="org-whitespace-space">   </span>73%
+(unless<span class="org-whitespace-space"> </span>(getenv<span class="org-whitespace-space"> </span>"ESUP_PROFILER")
+(org-babel-load-file<span class="org-whitespace-space"> </span>(expand-file-name<span class="org-whitespace-space"> </span>"config.org"<span class="org-whitespace-space"> </span>user-emacs-directory)))
+</pre>
+</div>
+
+<p>
+esup默认分析 <code>user-init-file</code> 文件，执行 <code>C-u M-x esup</code> 可指定其他文件名。
+</p>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

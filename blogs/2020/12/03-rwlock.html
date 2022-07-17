@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>读写锁</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">读写锁</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org20710b4">1. RWLock</a>
+<ul>
+<li><a href="#org16086ec">1.1. WriteFirst</a></li>
+<li><a href="#org5f0dc23">1.2. ReadFirst</a></li>
+</ul>
+</li>
+<li><a href="#org19f9624">2. SequenceLock</a></li>
+<li><a href="#orgf1b2b33">3. Mutex</a></li>
+<li><a href="#orge3877c9">4. SpinLock</a></li>
+<li><a href="#org5c4ab8c">5. Atomic</a></li>
+<li><a href="#org807f4e7">6. CountDown</a></li>
+<li><a href="#org3c47580">7. Future</a></li>
+<li><a href="#orgd5f0eb7">8. SyncClosure</a></li>
+<li><a href="#orgee5849a">9. RCU</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org20710b4" class="outline-2">
+<h2 id="org20710b4"><span class="section-number-2">1</span> RWLock</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org16086ec" class="outline-3">
+<h3 id="org16086ec"><span class="section-number-3">1.1</span> WriteFirst</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>特定位标1表示有写在等待，读排队等待；</li>
+<li>多个写通过写位Xchg实现；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5f0dc23" class="outline-3">
+<h3 id="org5f0dc23"><span class="section-number-3">1.2</span> ReadFirst</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>先自增锁计数；</li>
+<li>只要有写锁就等待，否则完成；</li>
+<li>写锁检查到锁计数不为0等待，否则Xchg设置写锁位；</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19f9624" class="outline-2">
+<h2 id="org19f9624"><span class="section-number-2">2</span> SequenceLock</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-text">//<span class="org-whitespace-space"> </span>Writer:
+{
+<span class="org-whitespace-space">    </span>ScopedSeqLockWriter<span class="org-whitespace-space"> </span>lock_(&amp;mSeqLock);
+<span class="org-whitespace-space">    </span>//<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>something
+}
+
+//<span class="org-whitespace-space"> </span>Reader
+{
+<span class="org-whitespace-space">    </span>ScopedSeqLockReader<span class="org-whitespace-space"> </span>lock_(&amp;mSeqLock);
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span>//<span class="org-whitespace-space"> </span>do<span class="org-whitespace-space"> </span>something
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span>while<span class="org-whitespace-space"> </span>(lock_.NeedRetry());
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf1b2b33" class="outline-2">
+<h2 id="orgf1b2b33"><span class="section-number-2">3</span> Mutex</h2>
+</div>
+
+<div id="outline-container-orge3877c9" class="outline-2">
+<h2 id="orge3877c9"><span class="section-number-2">4</span> SpinLock</h2>
+</div>
+<div id="outline-container-org5c4ab8c" class="outline-2">
+<h2 id="org5c4ab8c"><span class="section-number-2">5</span> Atomic</h2>
+</div>
+<div id="outline-container-org807f4e7" class="outline-2">
+<h2 id="org807f4e7"><span class="section-number-2">6</span> CountDown</h2>
+</div>
+<div id="outline-container-org3c47580" class="outline-2">
+<h2 id="org3c47580"><span class="section-number-2">7</span> Future</h2>
+</div>
+<div id="outline-container-orgd5f0eb7" class="outline-2">
+<h2 id="orgd5f0eb7"><span class="section-number-2">8</span> SyncClosure</h2>
+</div>
+<div id="outline-container-orgee5849a" class="outline-2">
+<h2 id="orgee5849a"><span class="section-number-2">9</span> RCU</h2>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

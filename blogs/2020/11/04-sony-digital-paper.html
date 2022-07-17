@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Sony Digital Paper PDF</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Sony Digital Paper PDF</h1>
+<p>
+手头有个10.3英寸的DPT-CP1。默认的PDF都是A4排版的，看起来有点累。希望做成B5排版的，且为了有效率用屏幕，需要把边距做窄。
+</p>
+
+<p>
+使用texinfo生成手册，一般有文件texinfo.tex。需要参考A4/A5定义，新生成一个页面配置：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">\def\dppaper{{\globaldefs<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1
+<span class="org-whitespace-space">  </span>\parskip<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2pt<span class="org-whitespace-space"> </span>plus<span class="org-whitespace-space"> </span>1pt<span class="org-whitespace-space"> </span>minus<span class="org-whitespace-space"> </span>0.1pt
+<span class="org-whitespace-space">  </span>\textleading<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>12.5pt
+<span class="org-whitespace-space">  </span>%
+<span class="org-whitespace-space">  </span>\internalpagesizes{150mm}{140mm}%
+<span class="org-whitespace-space">                    </span>{20mm}{-17mm}%
+<span class="org-whitespace-space">                    </span>{\bindingoffset}{8pt}%
+<span class="org-whitespace-space">                    </span>{210mm}{156mm}%
+<span class="org-whitespace-space">  </span>%
+<span class="org-whitespace-space">  </span>\lispnarrowing<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0.2in
+<span class="org-whitespace-space">  </span>\tolerance<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>800
+<span class="org-whitespace-space">  </span>\hfuzz<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1.2pt
+<span class="org-whitespace-space">  </span>\contentsrightmargin<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0pt
+<span class="org-whitespace-space">  </span>\defbodyindent<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2mm
+<span class="org-whitespace-space">  </span>\tableindent<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>12mm
+}}
+</pre>
+</div>
+
+<p>
+设置默认页面为dppaper，替换原来的letterpaper:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">%<span class="org-whitespace-space"> </span>\letterpaper
+\dppaper
+</pre>
+</div>
+
+<p>
+需要安装latex.
+</p>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

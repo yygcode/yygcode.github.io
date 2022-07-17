@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>KVM</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">KVM</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbeefcc5">1. Hot Migration</a></li>
+<li><a href="#org6a26522">2. Cold Migration</a></li>
+<li><a href="#org0af1cc2">3. Measurement</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbeefcc5" class="outline-2">
+<h2 id="orgbeefcc5"><span class="section-number-2">1</span> Hot Migration</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Live Migration, Online Migration.
+</p>
+
+<ul class="org-ul">
+<li>VM运行中，内存页标记RO，迁往目的地址；</li>
+<li>VM写入Memory触发PageFault，QEMU-KVM记录Delta Memory；</li>
+<li>VM检测到剩余的内存可以在一个限定短时间内完成，VM停机，传输数据；</li>
+<li>目的机器恢复VM运行；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6a26522" class="outline-2">
+<h2 id="org6a26522"><span class="section-number-2">2</span> Cold Migration</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Static Migration, Offline Migration.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0af1cc2" class="outline-2">
+<h2 id="org0af1cc2"><span class="section-number-2">3</span> Measurement</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Migration time cost;</li>
+<li>Server hang time;</li>
+<li>Influence;</li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

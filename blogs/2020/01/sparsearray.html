@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>XArray/SparseArray</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">XArray/SparseArray</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org52a1bb0">1. 概述</a></li>
+<li><a href="#orgb8bff0d">2. XArray vs. RadixTree in Linux Kernel</a></li>
+<li><a href="#orge300908">3. Adaptive Radix Tree</a></li>
+<li><a href="#org8be7240">4. Implementation</a></li>
+<li><a href="#orgeca4faa">5. Learn from youtube</a>
+<ul>
+<li><a href="#org97cf362">5.1. Xarray: One Data Structure To Rule Them All</a>
+<ul>
+<li><a href="#org916f08b">5.1.1. What is the Xarray</a></li>
+<li><a href="#orgc498e5a">5.1.2. Fundamentals</a></li>
+<li><a href="#org555115a">5.1.3. Three auxiliary bits per non-NULL entry</a></li>
+<li><a href="#orgffa418d">5.1.4. Some users need something a little more complex</a></li>
+<li><a href="#orgf42b44e">5.1.5. The Xarray can trace free entries for you</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org5413fd6">6. Reference</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org52a1bb0" class="outline-2">
+<h2 id="org52a1bb0"><span class="section-number-2">1</span> 概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>XArray(eXtensible ARRAY)/SparseArray</code> 是一种多维数组。 <code>XArray</code> 实现和
+<code>Trie</code> 类似，都是数字查找检索。 <code>XArray</code> 适用于稀疏数组情况（不存在的元素比较多）。典型的使用场景是内核的页缓存，对于块设备或文件，其一是尺寸远小于64位地址空间所能表示的大小，另外实际存在的部分，通常大部分不会在页缓存中。
+</p>
+
+<p>
+数字检索技术在TAOCP卷3的6.3节有详细描述：
+</p>
+<blockquote>
+<p>
+From &lt;The Art of Computer Programming&gt; V3 6.3:
+</p>
+
+<p>
+Instead of basing a search method on comparisons between keys, we can make use
+of their representation as a sequence of digits or alphabetic characters.
+Consider, for example, the thumb index on a large dictionary; from the first
+letter of a given word, we can immediately locate the pages that contain all
+words beginning with that letter.
+</p>
+
+<p>
+If we pursue the thumb-index idea to one of its logical conclusions, we come up
+with a searching scheme based on repeating "subscripting".
+</p>
+
+<p>
+&#x2026;
+</p>
+</blockquote>
+
+<p>
+<code>XArray</code> 内部实现为多层(Multi Layer)检索数据结构，每层有特定数量的bits。最外一层称为Leaf，存放实际数组对象。其他各层存放下一层级的索引地址。
+</p>
+
+<p>
+<code>XArray</code> 在Linux kernel有实现，已经替换掉原来的Radix Tree。参见这里
+<a href="https://elixir.bootlin.com/linux/latest/source/lib/xarray.c">https://elixir.bootlin.com/linux/latest/source/lib/xarray.c</a>
+</p>
+
+<p>
+假定有一个 <code>{2,3,3}</code> 的 <code>XArray</code> ，访问 <code>123</code> 和 <code>234</code> 的示意图如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-text">maxIndex=(1&lt;&lt;(2+3+3))<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>255
+
+1.<span class="org-whitespace-space"> </span>Xarray[123],<span class="org-whitespace-space"> </span>(1&lt;&lt;6)<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>(7&lt;&lt;3)<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>3
+layer1_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>1
+layer2_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>7
+layer3_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3
+
+LayerIdx<span class="org-whitespace-space">   </span>Layer1<span class="org-whitespace-space">          </span>Layer2<span class="org-whitespace-space">         </span>Layer3
+<span class="org-whitespace-space">   </span>0<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space">        </span>|1|------|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>2<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>3<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|-----&gt;|3|&lt;value&gt;
+<span class="org-whitespace-space">   </span>4<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>5<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>6<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>7<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|-----&gt;|7|-----|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+
+2.<span class="org-whitespace-space"> </span>Xarray[234],<span class="org-whitespace-space"> </span>(3&lt;&lt;6)<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>(5&lt;&lt;3)<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>2
+layer1_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>3
+layer2_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>5
+layer3_idx<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>2
+
+LayerIdx<span class="org-whitespace-space">   </span>Layer1<span class="org-whitespace-space">          </span>Layer2<span class="org-whitespace-space">         </span>Layer3
+<span class="org-whitespace-space">   </span>0<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>1<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>2<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|-----&gt;|2|&lt;value&gt;
+<span class="org-whitespace-space">   </span>3<span class="org-whitespace-space">        </span>|3|------|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|3|
+<span class="org-whitespace-space">   </span>4<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">     </span>|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>5<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">      </span>|-----&gt;|5|-----|<span class="org-whitespace-space">      </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>6<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+<span class="org-whitespace-space">   </span>7<span class="org-whitespace-space">        </span>|<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space">             </span>|7|<span class="org-whitespace-space">            </span>|<span class="org-whitespace-space"> </span>|
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb8bff0d" class="outline-2">
+<h2 id="orgb8bff0d"><span class="section-number-2">2</span> XArray vs. RadixTree in Linux Kernel</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>两者实质都是 <code>Trie</code> ，每一层4/6 bits，因此一个大的index需要查找16/11层；</li>
+<li>XArray有更良好的API设计；</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge300908" class="outline-2">
+<h2 id="orge300908"><span class="section-number-2">3</span> Adaptive Radix Tree</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Paper: <a href="https://db.in.tum.de/~leis/papers/ART.pdf">https://db.in.tum.de/~leis/papers/ART.pdf</a>
+</p>
+
+<p>
+XArray也可参考此论文，实现大Index的压缩。比如16Byte UUID的XArray。
+UUID规范：<a href="https://tools.ietf.org/html/rfc4122">https://tools.ietf.org/html/rfc4122</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-text">UUID<span class="org-whitespace-space">                   </span>=<span class="org-whitespace-space"> </span>time-low<span class="org-whitespace-space"> </span>"-"<span class="org-whitespace-space"> </span>time-mid<span class="org-whitespace-space"> </span>"-"
+<span class="org-whitespace-space">                         </span>time-high-and-version<span class="org-whitespace-space"> </span>"-"
+<span class="org-whitespace-space">                         </span>clock-seq-and-reserved
+<span class="org-whitespace-space">                         </span>clock-seq-low<span class="org-whitespace-space"> </span>"-"<span class="org-whitespace-space"> </span>node
+time-low<span class="org-whitespace-space">               </span>=<span class="org-whitespace-space"> </span>4hexOctet
+time-mid<span class="org-whitespace-space">               </span>=<span class="org-whitespace-space"> </span>2hexOctet
+time-high-and-version<span class="org-whitespace-space">  </span>=<span class="org-whitespace-space"> </span>2hexOctet
+clock-seq-and-reserved<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>hexOctet
+clock-seq-low<span class="org-whitespace-space">          </span>=<span class="org-whitespace-space"> </span>hexOctet
+node<span class="org-whitespace-space">                   </span>=<span class="org-whitespace-space"> </span>6hexOctet
+hexOctet<span class="org-whitespace-space">               </span>=<span class="org-whitespace-space"> </span>hexDigit<span class="org-whitespace-space"> </span>hexDigit
+hexDigit<span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">      </span>"0"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"1"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"2"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"3"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"4"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"5"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"6"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"7"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"8"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"9"<span class="org-whitespace-space"> </span>/
+<span class="org-whitespace-space">      </span>"a"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"b"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"c"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"d"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"e"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"f"<span class="org-whitespace-space"> </span>/
+<span class="org-whitespace-space">      </span>"A"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"B"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"C"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"D"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"E"<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>"F"
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8be7240" class="outline-2">
+<h2 id="org8be7240"><span class="section-number-2">4</span> Implementation</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+暂不公开。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeca4faa" class="outline-2">
+<h2 id="orgeca4faa"><span class="section-number-2">5</span> Learn from youtube</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org97cf362" class="outline-3">
+<h3 id="org97cf362"><span class="section-number-3">5.1</span> Xarray: One Data Structure To Rule Them All</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="outline-container-org916f08b" class="outline-4">
+<h4 id="org916f08b"><span class="section-number-4">5.1.1</span> What is the Xarray</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<ul class="org-ul">
+<li>Automatically resizing array of pointers</li>
+<li>Indexed by unsigned long</li>
+<li>All pointers  initially NULL</li>
+<li>Embeds a spinlock</li>
+<li>Loads are store-free (using rcu)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc498e5a" class="outline-4">
+<h4 id="orgc498e5a"><span class="section-number-4">5.1.2</span> Fundamentals</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<ul class="org-ul">
+<li>Some users only need load, store and (maybe) iterate:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_load</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_store</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">entry</span>,<span class="org-whitespace-space"> </span><span class="org-type">gfp_t</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-function-name">xa_erase</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>);
+<span class="org-function-name">xa_for_each</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">entry</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org555115a" class="outline-4">
+<h4 id="org555115a"><span class="section-number-4">5.1.3</span> Three auxiliary bits per non-NULL entry</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_set_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_clear_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+<span class="org-type">bool</span><span class="org-whitespace-space"> </span><span class="org-function-name">xa_get_mark</span>(<span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">xarray</span>*,<span class="org-whitespace-space"> </span><span class="org-type">unsigned</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">index</span>,<span class="org-whitespace-space"> </span><span class="org-type">xa_mark_t</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgffa418d" class="outline-4">
+<h4 id="orgffa418d"><span class="section-number-4">5.1.4</span> Some users need something a little more complex</h4>
+</div>
+
+<div id="outline-container-orgf42b44e" class="outline-4">
+<h4 id="orgf42b44e"><span class="section-number-4">5.1.5</span> The Xarray can trace free entries for you</h4>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5413fd6" class="outline-2">
+<h2 id="org5413fd6"><span class="section-number-2">6</span> Reference</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>LWN Introducing the eXtensible array: <a href="https://lwn.net/Articles/715948/">https://lwn.net/Articles/715948/</a></li>
+<li>LWN The XArray data structure: <a href="https://lwn.net/Articles/745073/">https://lwn.net/Articles/745073/</a></li>
+<li>Xarray: One Data Structure To Rule Them All: <a href="https://2019.linux.conf.au/schedule/presentation/213/">https://2019.linux.conf.au/schedule/presentation/213/</a></li>
+<li>Linux kernel code <a href="../../../code-snippets/linux/xarray.h.html">xarry.h</a> and <a href="../../../code-snippets/linux/xarray.c.html">xarray.c</a></li>
+<li>LWN Radix Tree: <a href="https://lwn.net/Articles/175432/">https://lwn.net/Articles/175432/</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

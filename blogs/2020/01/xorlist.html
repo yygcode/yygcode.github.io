@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>XOR List - A Memory Efficient Doubly Linked List</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">XOR List - A Memory Efficient Doubly Linked List</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5a8a12e">1. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+普通的双向链表需要两个指针分别保存 <code>next</code> 和 <code>prev</code> 。利用 <code>XOR</code> 的特性，可以用一个指针实现双向链表。
+</p>
+
+<p>
+考虑 <code>XOR</code> 特性：
+</p>
+
+\begin{equation}
+A \oplus B = B \oplus A
+\end{equation}
+
+<p>
+\(If\)
+</p>
+\begin{equation}
+C = A \oplus B
+\end{equation}
+<p>
+\(Then\)
+</p>
+\begin{equation}
+B = C \oplus A\\
+A = C \oplus B
+\end{equation}
+
+<p>
+假设链表节点 <code>struct node { struct node *link; }</code> 和链表头 <code>=struct head {};</code> ，初始时有:
+</p>
+<div class="org-src-container">
+<pre class="src src-C">head-&gt;link<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;head;
+</pre>
+</div>
+
+<p>
+插入节点 <code>x1</code> ：
+</p>
+<div class="org-src-container">
+<pre class="src src-C">x1-&gt;link<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;head<span class="org-whitespace-space"> </span>^<span class="org-whitespace-space"> </span>&amp;
+head-&gt;link<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>&amp;head<span class="org-whitespace-space"> </span>^<span class="org-whitespace-space"> </span>x1;
+</pre>
+</div>
+\begin{equation}
+next = prev \oplus cur->link;\\
+prev = next \oplus cur->link;
+\end{equation}
+
+<div id="outline-container-org5a8a12e" class="outline-2">
+<h2 id="org5a8a12e"><span class="section-number-2">1</span> References</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>GeeksForGeeks1: <a href="https://www.geeksforgeeks.org/xor-linked-list-a-memory-efficient-doubly-linked-list-set-1/">https://www.geeksforgeeks.org/xor-linked-list-a-memory-efficient-doubly-linked-list-set-1/</a></li>
+<li>GeeksForGeeks2: <a href="https://www.geeksforgeeks.org/xor-linked-list-a-memory-efficient-doubly-linked-list-set-2/">https://www.geeksforgeeks.org/xor-linked-list-a-memory-efficient-doubly-linked-list-set-2/</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

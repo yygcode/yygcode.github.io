@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>ZZ - AWS Nitro System</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">ZZ - AWS Nitro System</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org75873bf">1. Nitro Card for VPC</a></li>
+<li><a href="#org91a8fdf">2. Nitro Card for EBS</a></li>
+<li><a href="#orga77dc7e">3. Nitro Card for Instance Storage</a></li>
+<li><a href="#orgcc0ccd8">4. Nitro Card Controller</a></li>
+<li><a href="#org261a978">5. Nitro Security Chip</a></li>
+<li><a href="#org358e9d1">6. Summary</a></li>
+</ul>
+</div>
+</div>
+<p>
+From <a href="https://perspectives.mvdirona.com/2019/02/aws-nitro-system/">https://perspectives.mvdirona.com/2019/02/aws-nitro-system/</a>
+</p>
+
+<p>
+At Tuesday Night Live with James Hamilton at the 2016 AWS re:Invent conference,
+I introduced the first Amazon Web Services custom silicon. The ASIC I showed
+formed the foundational core of our second generation custom network interface
+controllers and, even back in 2016, there was at least one of these ASICs going
+into every new server in the AWS fleet. This work has continued for many years
+now and this part and subsequent generations form the hardware basis of the AWS
+Nitro System.  The Nitro system is used to deliver these features for AWS Elastic
+Compute Cluster (EC2) instance types:
+</p>
+<ul class="org-ul">
+<li>High speed networking with hardware offload</li>
+<li>High speed EBS storage with hardware offload</li>
+<li>NVMe local storage</li>
+<li>Remote Direct Memory Access (RDMA) for MPI and Libfabric</li>
+<li>Hardware protection/firmware verification for bare metal instances</li>
+<li>All business logic needed to control EC2 instances</li>
+</ul>
+
+<p>
+We continue to consume millions of the Nitro ASICs every year so, even though
+it's only used by AWS, it's actually a fairly high volume server component.
+This and follow-on technology has been supporting much of the innovation
+going on in EC2 but haven't had a chance to get into much detail on how
+Nitro actually works.
+</p>
+
+<p>
+At re:Invent 2018 Anthony Liguori, one of the lead engineers on the AWS Nitro
+System project gave what was, at least for me, one of the best talks at
+re:Invent outside of the keynotes. It's worth watching the video (URL below)
+but I’ll cover some of what Anthony went through in his talk here.
+</p>
+
+<p>
+The Nitro System powers all EC2 Instance types over the last couple of years.
+There are three major components:
+</p>
+<ul class="org-ul">
+<li>Nitro Card I/O Acceleration</li>
+<li>Nitro Security Chip</li>
+<li>Nitro Hypervisor</li>
+</ul>
+
+<p>
+Different EC2 server instance types include different Nitro System features and
+some server types have many Nitro System cards that implement the five main
+features of the AWS Nitro System:
+</p>
+<ul class="org-ul">
+<li>Nitro Card for VPC (Virtual Private Cloud)</li>
+<li>Nitro Card for EBS (Elastic Block Store)</li>
+<li>Nitro Card for Instance Storage</li>
+<li>Nitro Card Controller</li>
+<li>Nitro Security Chip</li>
+</ul>
+
+<p>
+These features formed the backbone for Anthony Liguori's 2018 re:Invent talk and
+he went through some of the characteristics of each.
+</p>
+
+<div id="outline-container-org75873bf" class="outline-2">
+<h2 id="org75873bf"><span class="section-number-2">1</span> Nitro Card for VPC</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The Nitro card for VPC is essentially a PCIe attached Network Interface Card
+(NIC) often called a network adapter or, in some parts of the industry, a
+network controller. This is the card that implements the hardware interface
+between EC2 servers and the network connection or connections implemented on
+that server type. And, like all NICs, interfacing with it requires that there
+be a specific device driver loaded to support communicating with the network
+adapter.  In the case of AWS NICs, the Elastic Network Adapter (ENA) is the
+device driver support for our NICs. This driver is now included in all major
+operating systems and distributions.
+</p>
+
+<p>
+The Nitro Card for VPC supports network packet encapsulation/decapsulation,
+implements EC2 security groups, enforces limits, and is responsible for
+routing. Having these features implemented off of the server hardware rather
+than in the hypervisor allows customers to fully use the underlying server
+hardware without impacting network performance, impacting other users, and
+we don't have to have some server cores unavailable to customers to handle
+networking tasks. And, it also allows secure networking support without
+requiring server resources to be reserved for AWS use. The largest instance
+types get access to all server cores.
+</p>
+
+<p>
+It wasn't covered in the talk but the Nitro Card for VPC also supports a number
+of network acceleration features. The Elastic Fabric Adapter (EFA) uses the
+Nitro Card network acceleration features to provide user space networking
+capabilities similar to those found on many supercomputers. Customers wishing to
+take advantage of EFA can use the OpenFabrics Alliance Libfabric package or use
+a higher level programming interface like the popular Message Passing Interface
+(MPI) or NVIDIA Collective Communications Library (NCCL).  Whether using
+Libfabric, MPI, or NCCL, applications bypass the operating system when talking
+to EFA, and are able to achieve more consistent performance with lower CPU
+utilization.  MPI and NCCL are commonly used package in science, engineering,
+and machine learning applications and, to a lesser extent, distributed
+databases.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org91a8fdf" class="outline-2">
+<h2 id="org91a8fdf"><span class="section-number-2">2</span> Nitro Card for EBS</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The Nitro Card for EBS supports storage acceleration for EBS.  All instance
+local storage is implemented as NVMe devices and the Nitro Card for EBS
+supports transparent encryption, limits to protect the performance
+characteristics of the system for other users, drive monitoring to monitor
+SSD wear, and it also supports bare metal instance types.
+</p>
+
+<p>
+Remote storage is again implemented as NVMe devices but this time as NVMe over
+Fabrics supporting access to EBS volumes again with encryption and again without
+impacting other EC2 users and with security even in a bare metal environment.
+</p>
+
+<p>
+The Nitro card for EBS was first launched in the EC2 C4 instance family.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga77dc7e" class="outline-2">
+<h2 id="orga77dc7e"><span class="section-number-2">3</span> Nitro Card for Instance Storage</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The Nitro Card for Instance storage also implements NVMe (Non-Volatile Memory
+for PCIe) for local EC2 instance storage.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcc0ccd8" class="outline-2">
+<h2 id="orgcc0ccd8"><span class="section-number-2">4</span> Nitro Card Controller</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The Nitro Card Controller coordinates all other Nitro cards, the server
+hypervisor, and the Nitro Security Chip. It implements the hardware root of
+trust using the Nitro Security Chip and supports instance monitoring functions.
+It also implements the NVMe controller functionality for one or more Nitro Cards
+for EBS.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org261a978" class="outline-2">
+<h2 id="org261a978"><span class="section-number-2">5</span> Nitro Security Chip</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+The Nitro security chip traps all I/O to non-volatile storage including BIOS and
+all I/O device firmware and any other controller firmware on the server. This is
+a simple approach to security where the general purpose processor is simply
+unable to change any firmware or device configuration. Rather than accept the
+error prone and complex task of ensuring access is approved and correct, no
+access is allowed. EC2 servers can't update their firmware. This is GREAT from a
+security perspective but the obvious question is how is the firmware updated.
+It's updated using by AWS and AWS only through the Nitro System.
+</p>
+
+<p>
+The Nitro Security Chip also implements the hardware root of trust. This system
+replaces 10s of millions of lines of code that for the <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">Unified Extensible
+Firmware Interface (UEFI)</a> and supports secure boot. In starts the server up
+untrusted, then measures every firmware system on the server to ensure that none
+have been modified or changed in any unauthorized way. Each checksum (device
+measure) is checked against the verified correct checksum stored in the Nitro
+Security Chip.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org358e9d1" class="outline-2">
+<h2 id="org358e9d1"><span class="section-number-2">6</span> Summary</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The Nitro System supports key network, server, security, firmware patching, and
+monitoring functions freeing up the entire underlying server for customer use.
+This allows EC2 instances to have access to all cores – none need to be reserved
+for storage or network I/O. This both gives more resources over to our largest
+instance types for customer use – we don't need to reserve resource for
+housekeeping, monitoring, security, network I/O, or storage. The Nitro System
+also makes possible the use of a very simple, light weight hypervisor that is
+just about always quiescent and it allows us to securely support bare metal
+instance types.
+</p>
+
+<p>
+More data on the AWS Nitro System from Anthony Liguori, one of the lead
+engineers behind the software systems that make up the AWS Nitro System:
+</p>
+<ul class="org-ul">
+<li>Anthony's video:
+<a href="https://www.youtube.com/watch?v=e8DVmwj3OEs">Powering Next-Gen EC2 Instances: Deep-Dive into the Nitro System</a></li>
+</ul>
+
+<p>
+Three Keynotes for a fast past view for what’s new across all of AWS:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.youtube.com/watch?v=ZOIkOnW640A">Keynote with Andy Jassy</a></li>
+<li><a href="https://www.youtube.com/watch?v=mDNHK-SzXEM">Monday Night Live with Peter DeSantis</a></li>
+<li><a href="https://www.youtube.com/watch?v=femopq3JWJg">Keynote with Werner Vogels</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

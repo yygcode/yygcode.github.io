@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>LINUX IDR/IDA算法分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LINUX IDR/IDA算法分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org84b4150">1. 介绍</a></li>
+<li><a href="#org9e12311">2. 使用示例</a>
+<ul>
+<li><a href="#org29fc78f">2.1. loop</a>
+<ul>
+<li><a href="#org623a72e">2.1.1. 静态初始化</a></li>
+</ul>
+</li>
+<li><a href="#org1ab776c">2.2. loop示例</a></li>
+</ul>
+</li>
+<li><a href="#org2b70948">3. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org84b4150" class="outline-2">
+<h2 id="org84b4150"><span class="section-number-2">1</span> 介绍</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+IDR/IDA用做唯一ID的分配管理。内部使用Bit实现，在内存占用和性能之间有比较好的平衡。IDR/IDA内部使用RADIX实现。
+</p>
+
+<blockquote>
+<p>
+<a href="https://elixir.bootlin.com/linux/v4.16.2/source/include/linux/idr.h">idr.h</a>:
+Small id to pointer translation service avoiding fixed sized tables.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+A common problem to solve is allocating identifiers (IDs); generally small
+numbers which identify a thing. Examples include file descriptors, process IDs,
+packet identifiers in networking protocols, SCSI tags and device instance
+numbers. The IDR and the IDA provide a reasonable solution to the problem to
+avoid everybody inventing their own. The IDR provides the ability to map an ID
+to a pointer, while the IDA provides only ID allocation, and as a result is
+much more memory-efficient.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org9e12311" class="outline-2">
+<h2 id="org9e12311"><span class="section-number-2">2</span> 使用示例</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org29fc78f" class="outline-3">
+<h3 id="org29fc78f"><span class="section-number-3">2.1</span> loop</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+loop是最简单的使用。以<a href="https://elixir.bootlin.com/linux/v4.16.2/source/drivers/block/loop.c">loop.c</a>使用为例阐述：
+</p>
+</div>
+<div id="outline-container-org623a72e" class="outline-4">
+<h4 id="org623a72e"><span class="section-number-4">2.1.1</span> 静态初始化</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<div class="org-src-container">
+<pre class="src src-C"><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">/*</span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">idr.h</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-comment-delimiter">*/</span>
+<span class="org-comment-delimiter">/*</span><span class="org-whitespace-space"> </span><span class="org-comment">Set</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">IDR</span><span class="org-whitespace-space"> </span><span class="org-comment">flag</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">IDR_FREE</span><span class="org-whitespace-space"> </span><span class="org-comment">tag</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">*/</span>
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-variable-name">IDR_RT_MARKER</span><span class="org-whitespace-tab">   </span>(ROOT_IS_IDR<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>(__force<span class="org-whitespace-space"> </span><span class="org-type">gfp_t</span>)<span class="org-whitespace-tab">                  </span>\
+<span class="org-whitespace-space">                                        </span>(1<span class="org-whitespace-space"> </span>&lt;&lt;<span class="org-whitespace-space"> </span>(ROOT_TAG_SHIFT<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>IDR_FREE)))
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">IDR_INIT_BASE</span>(<span class="org-variable-name">name</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">base</span>)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-tab">                                     </span>\
+<span class="org-whitespace-space">        </span>.idr_rt<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RADIX_TREE_INIT(name,<span class="org-whitespace-space"> </span>IDR_RT_MARKER),<span class="org-whitespace-tab">                 </span>\
+<span class="org-whitespace-space">        </span>.idr_base<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(base),<span class="org-whitespace-tab">                                             </span>\
+<span class="org-whitespace-space">        </span>.idr_next<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-tab">                                                  </span>\
+}
+
+<span class="org-doc">/**</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">IDR_INIT()</span></span><span class="org-whitespace-space"> </span><span class="org-doc">-</span><span class="org-whitespace-space"> </span><span class="org-doc">Initialise</span><span class="org-whitespace-space"> </span><span class="org-doc">an</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@name</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">Name</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">A</span><span class="org-whitespace-space"> </span><span class="org-doc">freshly-initialised</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR</span><span class="org-whitespace-space"> </span><span class="org-doc">contains</span><span class="org-whitespace-space"> </span><span class="org-doc">no</span><span class="org-whitespace-space"> </span><span class="org-doc">IDs.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">IDR_INIT</span>(<span class="org-variable-name">name</span>)<span class="org-whitespace-tab">  </span>IDR_INIT_BASE(name,<span class="org-whitespace-space"> </span>0)
+
+<span class="org-doc">/**</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">DEFINE_IDR()</span></span><span class="org-whitespace-space"> </span><span class="org-doc">-</span><span class="org-whitespace-space"> </span><span class="org-doc">Define</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">statically-allocated</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant"><span class="org-constant">@name</span></span></span><span class="org-doc">:</span><span class="org-whitespace-space"> </span><span class="org-doc">Name</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">An</span><span class="org-whitespace-space"> </span><span class="org-doc">IDR</span><span class="org-whitespace-space"> </span><span class="org-doc">defined</span><span class="org-whitespace-space"> </span><span class="org-doc">using</span><span class="org-whitespace-space"> </span><span class="org-doc">this</span><span class="org-whitespace-space"> </span><span class="org-doc">macro</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">ready</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">use</span><span class="org-whitespace-space"> </span><span class="org-doc">with</span><span class="org-whitespace-space"> </span><span class="org-doc">no</span><span class="org-whitespace-space"> </span><span class="org-doc">additional</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">initialisation</span><span class="org-whitespace-space"> </span><span class="org-doc">required.</span><span class="org-whitespace-space">  </span><span class="org-doc">It</span><span class="org-whitespace-space"> </span><span class="org-doc">contains</span><span class="org-whitespace-space"> </span><span class="org-doc">no</span><span class="org-whitespace-space"> </span><span class="org-doc">IDs.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">DEFINE_IDR</span>(<span class="org-variable-name">name</span>)<span class="org-whitespace-tab">        </span><span class="org-keyword">struct</span><span class="org-whitespace-space"> </span><span class="org-type">idr</span><span class="org-whitespace-space"> </span><span class="org-variable-name">name</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>IDR_INIT(name)
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">/*</span><span class="org-comment">-</span><span class="org-whitespace-space"> </span><span class="org-comment">loop.c</span><span class="org-whitespace-space"> </span><span class="org-comment">-</span><span class="org-comment-delimiter">*/</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-function-name">DEFINE_IDR</span>(loop_index_idr);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ab776c" class="outline-3">
+<h3 id="org1ab776c"><span class="section-number-3">2.2</span> loop示例</h3>
+</div>
+</div>
+
+<div id="outline-container-org2b70948" class="outline-2">
+<h2 id="org2b70948"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>LWN A simplified IDR API</dt><dd><a href="https://lwn.net/Articles/536293/">https://lwn.net/Articles/536293/</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

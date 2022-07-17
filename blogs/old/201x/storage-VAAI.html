@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>VAAI技术分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">VAAI技术分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2d49d25">1. Low Level VAAI Behaviour</a>
+<ul>
+<li><a href="#org9875ac5">1.1. Atomic Test &amp; Set (ATS)</a></li>
+<li><a href="#orgec048fb">1.2. Write Same/Zero</a></li>
+<li><a href="#org659e21d">1.3. Full Copy/XCOPY/Extended Copy</a></li>
+</ul>
+</li>
+<li><a href="#orgd2fb25a">2. Reference links</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2d49d25" class="outline-2">
+<h2 id="org2d49d25"><span class="section-number-2">1</span> Low Level VAAI Behaviour</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li><a href="https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html">https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html</a></li>
+</ul>
+<p>
+We’re getting a lot of queries lately around how exactly VAAI behaves at the
+lower level. One assumes more and more VMware customers are seeing the benefit
+of offloading certain storage intensive tasks to the array. Recently the
+questions I have been getting are even more in-depth. I’ve been back over my
+VAAI notes gathered since 4.1, and have put together the following article.
+Hope you find it useful.
+</p>
+
+<p>
+VAAI first appeared in vSphere 4.1, and was only available to block storage
+devices (iSCSI, FC, FCoE). This was enhanced in 5.0 to include support for NAS
+device primitives and also introduced an UNMAP primitive for reclaiming stranded
+space on a thin provisioned VMFS.
+</p>
+
+<p>
+A closer look at the original primitives and a description on how they work
+follows. I've used various references to some of the primitives as they seem to
+have taken on numerous different names since first launched.
+</p>
+</div>
+
+<div id="outline-container-org9875ac5" class="outline-3">
+<h3 id="org9875ac5"><span class="section-number-3">1.1</span> Atomic Test &amp; Set (ATS)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+This is a replacement lock mechanism for SCSI reservations on VMFS volumes when
+doing metadata updates. Basically ATS locks can be considered as a mechanism to
+modify a disk sector, which when successful, allow an ESXi host to do a metadata
+update on a VMFS. This includes allocating space to a VMDK during provisioning,
+as certain characteristics would need to be updated in the metadata to reflect
+the new size of the file. Interestingly enough, in the initial VAAI release, the
+ATS primitives had to be implemented differently on each storage array, so you
+had a different ATS opcode depending on the vendor. ATS is now a standard T10
+and uses opcode 0x89 (COMPARE AND WRITE).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgec048fb" class="outline-3">
+<h3 id="orgec048fb"><span class="section-number-3">1.2</span> Write Same/Zero</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+One of the most common operations on virtual disks is initializing large extents
+of the disk with zeroes to isolate virtual machines and promote security.
+vSphere hosts can be configured to enable the WRITE SAME SCSI command to zero
+out large portions of a disk. With WRITE SAME enabled, VMware ESX/ESXi will
+issue the command to arrays during specific operations. This offload task will
+zero large numbers of disk blocks without transferring the data over the
+transport link. The WRITE SAME opcode is 0x93.
+</p>
+
+<p>
+The following provisioning tasks are accelerated by the use of the WRITE SAME
+command:
+</p>
+
+<ul class="org-ul">
+<li>Cloning operations for eagerzeroedthick target disks.</li>
+<li>Allocating new file blocks for thin provisioned virtual disks.</li>
+<li>Initializing previous unwritten file blocks for zerothick virtual disks.</li>
+</ul>
+
+<p>
+The data out buffer of the WRITE SAME command will contain all 0's. A single
+zero operation has a default zeroing size of 1MB. When monitoring VAAI counters,
+it is possible that you will only observe the WRITE_SAME incrementing in batches
+of 16 in esxtop. This is because we only ever launch 16 parallel worker threads
+for VAAI, so don’t be surprised if you only see a batch increments of 16 Write
+Same commands during a zero operation.
+</p>
+
+<p>
+Note: Not all storage arrays need to do this directly to the disk. Some arrays
+only need do a metadata update to write a page of all zeroes. There is no need
+to actually write zeroes to every location, speeding up this process
+dramatically all round.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org659e21d" class="outline-3">
+<h3 id="org659e21d"><span class="section-number-3">1.3</span> Full Copy/XCOPY/Extended Copy</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+This primitive is used when a clone or migrate operation (such as a Storage
+vMotion) is initiated from a vSphere host, and we want the array to handle the
+operation on our behalf. vSphere hosts can be configured to enable the EXTENDED
+COPY SCSI command. When examining VAAI status in esxtop, you may see this
+counter increment in batches of 8 because the default size of a Full Copy
+transfer is 4MB. With a 32MB I/O size, this gave batches of 8 for a full XCOPY
+I/O. The opcode for XCOPY is 0x83.
+</p>
+
+<ul class="org-ul">
+<li>What VAAI offloads looks like from an I/O perspective?</li>
+</ul>
+
+<p>
+I've had a number of requests to describe exactly what happens under the covers
+when some of these offload operations are taking place. The default XCOPY size
+is 4MB. With a 32MB I/O, one would expect to see this counter in esxtop
+incrementing in batches of 8. The default XCOPY size can be incremented to a
+maximum value of 16MB.
+</p>
+
+<p>
+The default WRITE SAME size is 1MB. With a 32MB I/O, one would expect to see
+this counter in esxtop incrementing in batches of 16, since we only ever launch
+16 parallel worker threads for VAAI. We currently do not support changing the
+WRITE SAME size of 1MB.
+</p>
+
+<ul class="org-ul">
+<li>Differences between VAAI in 4.x &amp; VAAI in 5.x</li>
+</ul>
+
+<p>
+One final piece of information I wanted to share with you is a distinction
+between our first phase/release of VAAI in vSphere 4.1 and our second phase of
+VAAI which was released with vSphere 5.0. A list of differences appears below.
+</p>
+
+<ul class="org-ul">
+<li>VAAI now uses standard T10 primitives rather than bespoke array commands</li>
+<li>Full ATS with VMFS-5. Here is a link to a blog post which talks about
+locking inmore detail.</li>
+<li>Support for NAS Primitives – An overview of the vSphere 5.0 primitives can
+be found here.</li>
+<li>VCAI (View Composer Array Integration) – Read how View is using VAAI to
+offloads clones to the array here</li>
+<li>UNMAP support – Some additional information on the new UNMAP primitive can
+be found here.</li>
+<li>VMware HCL now requires performance of primitives before an array receives
+VAAI certification. This is important as certain storage arrays which appear
+in the vSphere 4.1 HCL may not appear in the vSphere 5.0 HCL if the
+performance of the offload primitives do not meet our requirements.</li>
+</ul>
+
+<p>
+My thanks to Ilia Sokolinski for clarifying some of the behaviours above.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd2fb25a" class="outline-2">
+<h2 id="orgd2fb25a"><span class="section-number-2">2</span> Reference links</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt>VMware ESXi SCSI Sense Code Decoder</dt><dd><a href="http://www.virten.net/vmware/esxi-scsi-sense-code-decoder/">http://www.virten.net/vmware/esxi-scsi-sense-code-decoder/</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

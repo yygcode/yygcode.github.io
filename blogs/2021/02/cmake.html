@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>CMake</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">CMake</h1>
+<p>
+Modern CMake: 3.0.0.
+</p>
+
+<p>
+Books: Large Scale C++ Software Design
+</p>
+<ul class="org-ul">
+<li>Advanced Levelization techniques talk series;</li>
+<li>Bazel at google</li>
+<li>CMAKE_PREFIX_PATH</li>
+</ul>
+
+<p>
+add_library(Foo::Foo ALIAS Foo)
+set(CMAKE_PREFIX_PATH "/prefix")
+set(as_subproject Foo)
+macro(find_package)
+&#x2026;
+endmacro()
+</p>
+
+<p>
+add_subdirectory(Foo)
+add_subdirectory(App)
+</p>
+
+<p>
+set(ENV{CXXFLAGS} "&#x2013;coverage")
+set(CTEST_CMAKE_GENERATOR "Ninja")
+set(CTEST_COVERAGE_COMMAND "gcov")
+set(CTEST_MEMORYCHECK_COMMAND "valgrind")
+ctest_build()
+ctest_test()
+ctest_coverage()
+ctest_memcheck()
+ctest_submit()
+add_test(NAME Foo.Test COMMAND foo_test &#x2013;number 0)
+ctest -R "Foo,*" -j4 &#x2013;output-on-failure
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_ROOT_PATH /usr/x86_64)
+</p>
+
+<p>
+&lt;lang&gt;_CPPLINT
+LINK_WHAT_YOU_USE -Wl,&#x2013;no-as-needed, ldd -r -u.
+</p>
+
+<p>
+install(TARGETS Foo EXPORT FooTargets)
+</p>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
