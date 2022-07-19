@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>RPC Howto</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">RPC Howto</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org18dc9bb">1. 硬件适配层</a></li>
+<li><a href="#orgce1fc7f">2. 网络层</a></li>
+<li><a href="#org40a9253">3. 传输层</a></li>
+<li><a href="#orgedfc390">4. 协议层</a></li>
+<li><a href="#orgf5b4536">5. 接口层</a></li>
+<li><a href="#org37f91be">6. Example</a>
+<ul>
+<li><a href="#org826d61e">6.1. Client</a></li>
+<li><a href="#orgda54172">6.2. Server</a></li>
+</ul>
+</li>
+<li><a href="#orga606e27">7. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org18dc9bb" class="outline-2">
+<h2 id="org18dc9bb"><span class="section-number-2">1</span> 硬件适配层</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+管理网卡，分流(Flow Bifurcation or Flow Director):
+</p>
+<ul class="org-ul">
+<li>传统网卡</li>
+<li>RDMA网卡</li>
+<li>智能网卡</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgce1fc7f" class="outline-2">
+<h2 id="orgce1fc7f"><span class="section-number-2">2</span> 网络层</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+构建Connection语义。
+</p>
+<ul class="org-ul">
+<li>内核Socket, epoll;</li>
+<li>用户态TCP/IP, mTCP;</li>
+<li>RDMA网络层;</li>
+<li>Multipath管理；// 建立，拥塞，负载均衡；</li>
+<li>鉴权认证;</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org40a9253" class="outline-2">
+<h2 id="org40a9253"><span class="section-number-2">3</span> 传输层</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Crc, Compress, Encryption;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgedfc390" class="outline-2">
+<h2 id="orgedfc390"><span class="section-number-2">4</span> 协议层</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Serialize, Deserialize, Packets.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf5b4536" class="outline-2">
+<h2 id="orgf5b4536"><span class="section-number-2">5</span> 接口层</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Channel, Client used to submit a RPC to RPC core.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org37f91be" class="outline-2">
+<h2 id="org37f91be"><span class="section-number-2">6</span> Example</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org826d61e" class="outline-3">
+<h3 id="org826d61e"><span class="section-number-3">6.1</span> Client</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Protobuf service client.
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">RpcChannel</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-constant">google</span>::<span class="org-constant">protobuf</span>::<span class="org-type">RpcChannel</span>
+{
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-variable-name">CallMethod</span>(<span class="org-function-name">...</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">override</span>
+<span class="org-whitespace-space">  </span>{
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">some</span><span class="org-whitespace-space"> </span><span class="org-comment">task,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">dispatch</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">RpcClientCore.</span>
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Non-virtual</span><span class="org-whitespace-space"> </span><span class="org-comment">new</span><span class="org-whitespace-space"> </span><span class="org-comment">method</span><span class="org-whitespace-space"> </span><span class="org-comment">(fast</span><span class="org-whitespace-space"> </span><span class="org-comment">service)</span>
+<span class="org-whitespace-space">  </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">CallMethod</span>(<span class="org-type">uint16_t</span><span class="org-whitespace-space"> </span><span class="org-variable-name">serviceId</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">FastRequest</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">req</span>,<span class="org-whitespace-space"> </span><span class="org-type">FastResponse</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">resp</span><span class="org-whitespace-line">,</span>
+<span class="org-whitespace-space">                  </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>);
+};
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">Write</span>(<span class="org-type">RpcController</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctrl</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">ReadRequestPB</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">req</span>,<span class="org-whitespace-space"> </span><span class="org-type">ReadResponsePB</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">resp</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">protobuf</span><span class="org-whitespace-space"> </span><span class="org-comment">framework</span>
+<span class="org-whitespace-space">  </span><span class="org-type">RpcChannel</span><span class="org-whitespace-space"> </span><span class="org-variable-name">channel</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">channel</span><span class="org-whitespace-space"> </span><span class="org-comment">can</span><span class="org-whitespace-space"> </span><span class="org-comment">be</span><span class="org-whitespace-space"> </span><span class="org-comment">cached</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">reduce</span><span class="org-whitespace-space"> </span><span class="org-comment">cpu.</span>
+<span class="org-whitespace-space">  </span>mRpcClient-&gt;OpenChannel(addr,<span class="org-whitespace-space"> </span>&amp;channel);
+<span class="org-whitespace-space">  </span><span class="org-constant">IoService</span>::<span class="org-type">Stub</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stub</span>(&amp;channel);
+<span class="org-whitespace-space">  </span><span class="org-type">SyncClosure</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sync</span>;
+<span class="org-whitespace-space">  </span>stub.Write(ctrl,<span class="org-whitespace-space"> </span>req,<span class="org-whitespace-space"> </span>resp,<span class="org-whitespace-space"> </span>done,<span class="org-whitespace-space"> </span>&amp;sync);
+<span class="org-whitespace-space">  </span>sync.Wait();
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">parse</span><span class="org-whitespace-space"> </span><span class="org-comment">response</span><span class="org-whitespace-space"> </span><span class="org-comment">and/or</span><span class="org-whitespace-space"> </span><span class="org-comment">update</span><span class="org-whitespace-space"> </span><span class="org-comment">ctrl.</span>
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">Write</span>(<span class="org-type">RpcController</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctrl</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">FastRequest</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">req</span>,<span class="org-whitespace-space"> </span><span class="org-type">FastResponse</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">resp</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">protobuf</span><span class="org-whitespace-space"> </span><span class="org-comment">framework</span>
+<span class="org-whitespace-space">  </span><span class="org-type">RpcChannel</span><span class="org-whitespace-space"> </span><span class="org-variable-name">channel</span>;<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">channel</span><span class="org-whitespace-space"> </span><span class="org-comment">can</span><span class="org-whitespace-space"> </span><span class="org-comment">be</span><span class="org-whitespace-space"> </span><span class="org-comment">cached</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">reduce</span><span class="org-whitespace-space"> </span><span class="org-comment">cpu.</span>
+<span class="org-whitespace-space">  </span>mRpcClient-&gt;OpenChannel(addr,<span class="org-whitespace-space"> </span>&amp;channel);
+<span class="org-whitespace-space">  </span><span class="org-constant">IoService</span>::<span class="org-type">Stub</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stub</span>(&amp;channel);
+<span class="org-whitespace-space">  </span><span class="org-type">SyncClosure</span><span class="org-whitespace-space"> </span><span class="org-variable-name">sync</span>;
+<span class="org-whitespace-space">  </span>stub.Write(ctrl,<span class="org-whitespace-space"> </span>req,<span class="org-whitespace-space"> </span>resp,<span class="org-whitespace-space"> </span>done,<span class="org-whitespace-space"> </span>&amp;sync);
+<span class="org-whitespace-space">  </span>sync.Wait();
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">parse</span><span class="org-whitespace-space"> </span><span class="org-comment">response</span><span class="org-whitespace-space"> </span><span class="org-comment">and/or</span><span class="org-whitespace-space"> </span><span class="org-comment">update</span><span class="org-whitespace-space"> </span><span class="org-comment">ctrl.</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgda54172" class="outline-3">
+<h3 id="orgda54172"><span class="section-number-3">6.2</span> Server</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+Protobuf service server.
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">Start</span>()
+{
+<span class="org-whitespace-space">  </span><span class="org-type">RpcServer</span><span class="org-whitespace-space"> </span><span class="org-variable-name">server</span>;
+<span class="org-whitespace-space">  </span>server.RegisterService(&amp;mIoService);
+<span class="org-whitespace-space">  </span>server.Start();<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">start</span><span class="org-whitespace-space"> </span><span class="org-comment">receive</span><span class="org-whitespace-space"> </span><span class="org-comment">packets</span><span class="org-whitespace-space"> </span><span class="org-comment">from</span><span class="org-whitespace-space"> </span><span class="org-comment">network.</span>
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">Write</span>(<span class="org-type">RpcController</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctrl</span>,
+<span class="org-whitespace-space">           </span><span class="org-keyword">const</span><span class="org-whitespace-space"> </span><span class="org-type">ReadRequestPB</span><span class="org-whitespace-space"> </span>&amp;<span class="org-variable-name">req</span>,<span class="org-whitespace-space"> </span><span class="org-type">ReadResponsePB</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">resp</span>,
+<span class="org-whitespace-space">           </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Write</span><span class="org-whitespace-space"> </span><span class="org-comment">Task:</span>
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">parse</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">check</span><span class="org-whitespace-space"> </span><span class="org-comment">request</span>
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">Write</span><span class="org-whitespace-space"> </span><span class="org-comment">task,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">fill</span><span class="org-whitespace-space"> </span><span class="org-comment">response.</span>
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">result</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>doWriteTask(ctrl,<span class="org-whitespace-space"> </span>req,<span class="org-whitespace-space"> </span>resp);
+<span class="org-whitespace-space">  </span>resp-&gt;set_result(result);
+<span class="org-whitespace-space">  </span>done-&gt;Run();
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga606e27" class="outline-2">
+<h2 id="orga606e27"><span class="section-number-2">7</span> References</h2>
+<div class="outline-text-2" id="text-7">
+<dl class="org-dl">
+<dt>GRPC</dt><dd><a href="https://grpc.io/">https://grpc.io/</a>
+<ul class="org-ul">
+<li>A high performance, open source universal RPC framework</li>
+<li>From google</li>
+</ul></dd>
+<dt>BRPC</dt><dd><a href="https://github.com/apache/incubator-brpc">https://github.com/apache/incubator-brpc</a>
+<ul class="org-ul">
+<li>An industrial-grade RPC framework used throughout Baidu,
+with 1,000,000+ instances(not counting clients) and
+thousands kinds of services. "brpc" means "better RPC".</li>
+<li>From baidu</li>
+</ul></dd>
+<dt>Hadoop RPC</dt><dd><a href="https://github.com/apache/hadoop/tree/trunk/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/ipc">https://github.com/apache/hadoop/tree/trunk/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/ipc</a></dd>
+<dt>Seastar</dt><dd><a href="https://github.com/scylladb/seastar">https://github.com/scylladb/seastar</a>
+<ul class="org-ul">
+<li>SeaStar is an event-driven framework allowing you to write non-blocking,
+asynchronous code in a relatively straightforward manner (once understood).
+It is based on futures.</li>
+</ul></dd>
+<dt>(no term)</dt><dd>Fstack</dd>
+<dt>QUIC</dt><dd><a href="https://en.wikipedia.org/wiki/QUIC">https://en.wikipedia.org/wiki/QUIC</a>
+<ul class="org-ul">
+<li>From google</li>
+<li><a href="https://github.com/yygcode/papers/blob/master/net/net-the-quic-transport-protocol-from-google.pdf">https://github.com/yygcode/papers/blob/master/net/net-the-quic-transport-protocol-from-google.pdf</a></li>
+</ul></dd>
+<dt>(no term)</dt><dd>Flow Director/Flow Bifurcation
+<ul class="org-ul">
+<li>NIC-&gt;FlowDirector-&gt;DPDK-&gt;CustomizedStack-&gt;APP</li>
+<li><a href="https://doc.dpdk.org/guides-20.02/howto/flow_bifurcation.html">https://doc.dpdk.org/guides-20.02/howto/flow_bifurcation.html</a></li>
+</ul></dd>
+<dt>RPC 实战与核心原理</dt><dd><a href="https://time.geekbang.org/column/intro/100046201?tab=catalog">https://time.geekbang.org/column/intro/100046201?tab=catalog</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
