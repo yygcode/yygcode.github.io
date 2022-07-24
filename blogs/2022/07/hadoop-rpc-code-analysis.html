@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Hadoop RPC 代码分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Hadoop RPC 代码分析</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org74c5a64">1. Client</a>
+<ul>
+<li><a href="#org20ca77d">1.1. DFSClient: 实例化例子</a></li>
+<li><a href="#orgd8693ed">1.2. ClientNamenodeProtocolTranslatorPB</a></li>
+<li><a href="#org07970a9">1.3. ProtobufRpcEngine2</a></li>
+</ul>
+</li>
+<li><a href="#org46d48ae">2. Server</a>
+<ul>
+<li><a href="#orgc924a84">2.1. Code Trace</a></li>
+</ul>
+</li>
+<li><a href="#org96b67d7">3. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+典型的RPC要解决如下问题：
+</p>
+<ul class="org-ul">
+<li>Net IO: 网络连接维护、IO收发处理、Async &amp; Event机制(Epoll)；</li>
+<li>Serialize/Deserialize: 数据编解码；</li>
+<li>Request/Response Manage: 请求/应答处理、并发管理、重发、超时处理；</li>
+<li>Interface: 调用入口；</li>
+</ul>
+
+<div id="outline-container-org74c5a64" class="outline-2">
+<h2 id="org74c5a64"><span class="section-number-2">1</span> Client</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Code: <a href="https://github.com/apache/hadoop/tree/trunk/hadoop-hdfs-project/hadoop-hdfs-client/src/main/java/org/apache/hadoop/hdfs">https://github.com/apache/hadoop/tree/trunk/hadoop-hdfs-project/hadoop-hdfs-client/src/main/java/org/apache/hadoop/hdfs</a>
+</p>
+
+<ul class="org-ul">
+<li>两种Serialize方式, ProtobufRpcEngine和WritableRpcEngine;</li>
+<li><code>class Call</code> 获取callId, <code>callIdCounter</code> 维护CallId, 0x7FFFFFFF回绕;</li>
+<li><code>getConnection</code> 获取一个连接，之后在此连接上发送请求 <code>connection.sendRpcRequest(call)</code>;
+<ul class="org-ul">
+<li><code>getRpcResponse</code> 获取应答;</li>
+<li>用户通过接口 <code>connection.sendRpcRequest(call)</code> 调用，阻塞用户线程;</li>
+<li>Connection通过ConcurrentHash维护 <code>ConcurrentMap&lt;ConnectionId, Connection&gt;</code>;</li>
+<li>Connection内的多个Call通过Hash维护 <code>Hashtable&lt;Integer, Call&gt;</code>;</li>
+<li>Connection派生自Thread, 是一个线程，后台run获取server应答；
+<ul class="org-ul">
+<li><code>run() -&gt; while(waitForWork()) receiveRpcResponse();</code></li>
+</ul></li>
+<li><code>getConection</code> 时，通过 <code>setupIOstreams</code> 设置Input/Output Stream;
+生成Input/Output Stream过程中，进行鉴权认证;</li>
+</ul></li>
+</ul>
+</div>
+
+<div id="outline-container-org20ca77d" class="outline-3">
+<h3 id="org20ca77d"><span class="section-number-3">1.1</span> DFSClient: 实例化例子</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+DFSClient构造函数创建proxyInfo，以及构造namenode:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(proxyInfo<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(rpcNamenode<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">This</span><span class="org-whitespace-space"> </span><span class="org-comment">case</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">used</span><span class="org-whitespace-space"> </span><span class="org-comment">for</span><span class="org-whitespace-space"> </span><span class="org-comment">testing.</span>
+}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>Preconditions.checkArgument(nameNodeUri<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>,
+<span class="org-whitespace-space">                                </span><span class="org-string">"null</span><span class="org-whitespace-space"> </span><span class="org-string">URI"</span>);
+<span class="org-whitespace-space">    </span>proxyInfo<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>NameNodeProxiesClient.createProxyWithClientProtocol(
+<span class="org-whitespace-space">        </span>conf,
+<span class="org-whitespace-space">        </span>nameNodeUri,<span class="org-whitespace-space"> </span>nnFallbackToSimpleAuth);
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.dtService<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>proxyInfo.getDelegationTokenService();
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.namenode<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>proxyInfo.getProxy();
+}
+
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">ProxyAndInfo</span>&lt;<span class="org-type">ClientProtocol</span>&gt;<span class="org-whitespace-space"> </span><span class="org-function-name">createProxyWithClientProtocol</span>(
+<span class="org-whitespace-space">    </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,<span class="org-whitespace-space"> </span><span class="org-type">URI</span><span class="org-whitespace-space"> </span><span class="org-variable-name">nameNodeUri</span>,<span class="org-whitespace-space"> </span><span class="org-type">AtomicBoolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fallbackToSimpleAuth</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">AbstractNNFailoverProxyProvider</span>&lt;<span class="org-type">ClientProtocol</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">failoverProxyProvider</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">        </span>createFailoverProxyProvider(conf,<span class="org-whitespace-space"> </span>nameNodeUri,<span class="org-whitespace-space"> </span>ClientProtocol.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">                                    </span><span class="org-constant">true</span>,<span class="org-whitespace-space"> </span>fallbackToSimpleAuth);
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(failoverProxyProvider<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">InetSocketAddress</span><span class="org-whitespace-space"> </span><span class="org-variable-name">nnAddr</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>DFSUtilClient.getNNAddress(nameNodeUri);
+<span class="org-whitespace-space">        </span><span class="org-type">Text</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dtService</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>SecurityUtil.buildTokenService(nnAddr);
+<span class="org-whitespace-space">        </span><span class="org-type">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proxy</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>createNonHAProxyWithClientProtocol(
+<span class="org-whitespace-space">            </span>nnAddr,<span class="org-whitespace-space"> </span>conf,
+<span class="org-whitespace-space">            </span>UserGroupInformation.getCurrentUser(),<span class="org-whitespace-space"> </span><span class="org-constant">true</span>,<span class="org-whitespace-space"> </span>fallbackToSimpleAuth);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ProxyAndInfo</span>&lt;&gt;(proxy,<span class="org-whitespace-space"> </span>dtService,<span class="org-whitespace-space"> </span>nnAddr);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>createHAProxy(conf,<span class="org-whitespace-space"> </span>nameNodeUri,<span class="org-whitespace-space"> </span>ClientProtocol.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">                             </span>failoverProxyProvider);
+<span class="org-whitespace-space">    </span>}
+}
+
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-function-name">createNonHAProxyWithClientProtocol</span>(
+<span class="org-whitespace-space">    </span><span class="org-type">InetSocketAddress</span><span class="org-whitespace-space"> </span><span class="org-variable-name">address</span>,<span class="org-whitespace-space"> </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,<span class="org-whitespace-space"> </span><span class="org-type">UserGroupInformation</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ugi</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">withRetries</span>,<span class="org-whitespace-space"> </span><span class="org-type">AtomicBoolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fallbackToSimpleAuth</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>createProxyWithAlignmentContext(address,<span class="org-whitespace-space"> </span>conf,<span class="org-whitespace-space"> </span>ugi,<span class="org-whitespace-space"> </span>withRetries,
+<span class="org-whitespace-space">                                           </span>fallbackToSimpleAuth,<span class="org-whitespace-space"> </span><span class="org-constant">null</span>);
+}
+
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-function-name">createProxyWithAlignmentContext</span>(
+<span class="org-whitespace-space">    </span><span class="org-type">InetSocketAddress</span><span class="org-whitespace-space"> </span><span class="org-variable-name">address</span>,<span class="org-whitespace-space"> </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,<span class="org-whitespace-space"> </span><span class="org-type">UserGroupInformation</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ugi</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">withRetries</span>,<span class="org-whitespace-space"> </span><span class="org-type">AtomicBoolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">fallbackToSimpleAuth</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">AlignmentContext</span><span class="org-whitespace-space"> </span><span class="org-variable-name">alignmentContext</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>RPC.setProtocolEngine(conf,<span class="org-whitespace-space"> </span>ClientNamenodeProtocolPB.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">                          </span>ProtobufRpcEngine2.<span class="org-keyword">class</span>);
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">RetryPolicy</span><span class="org-whitespace-space"> </span><span class="org-variable-name">defaultPolicy</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">        </span>RetryUtils.getDefaultRetryPolicy(
+<span class="org-whitespace-space">            </span>conf,
+<span class="org-whitespace-space">            </span><span class="org-constant">HdfsClientConfigKeys</span>.<span class="org-constant">Retry</span>.POLICY_ENABLED_KEY,
+<span class="org-whitespace-space">            </span><span class="org-constant">HdfsClientConfigKeys</span>.<span class="org-constant">Retry</span>.POLICY_ENABLED_DEFAULT,
+<span class="org-whitespace-space">            </span><span class="org-constant">HdfsClientConfigKeys</span>.<span class="org-constant">Retry</span>.POLICY_SPEC_KEY,
+<span class="org-whitespace-space">            </span><span class="org-constant">HdfsClientConfigKeys</span>.<span class="org-constant">Retry</span>.POLICY_SPEC_DEFAULT,
+<span class="org-whitespace-space">            </span>SafeModeException.<span class="org-keyword">class</span>.getName());
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">version</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RPC.getProtocolVersion(ClientNamenodeProtocolPB.<span class="org-keyword">class</span>);
+<span class="org-whitespace-space">    </span><span class="org-type">ClientNamenodeProtocolPB</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proxy</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RPC.getProtocolProxy(
+<span class="org-whitespace-space">        </span>ClientNamenodeProtocolPB.<span class="org-keyword">class</span>,<span class="org-whitespace-space"> </span>version,<span class="org-whitespace-space"> </span>address,<span class="org-whitespace-space"> </span>ugi,<span class="org-whitespace-space"> </span>conf,
+<span class="org-whitespace-space">        </span>NetUtils.getDefaultSocketFactory(conf),
+<span class="org-whitespace-space">        </span><span class="org-constant">org</span>.<span class="org-constant">apache</span>.<span class="org-constant">hadoop</span>.<span class="org-constant">ipc</span>.Client.getTimeout(conf),<span class="org-whitespace-space"> </span>defaultPolicy,
+<span class="org-whitespace-space">        </span>fallbackToSimpleAuth,<span class="org-whitespace-space"> </span>alignmentContext).getProxy();
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(withRetries)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">create</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">proxy</span><span class="org-whitespace-space"> </span><span class="org-comment">with</span><span class="org-whitespace-space"> </span><span class="org-comment">retries</span>
+<span class="org-whitespace-space">        </span><span class="org-type">Map</span>&lt;<span class="org-type">String</span>,<span class="org-whitespace-space"> </span><span class="org-type">RetryPolicy</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">methodNameToPolicyMap</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">HashMap</span>&lt;&gt;();
+<span class="org-whitespace-space">        </span><span class="org-type">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-variable-name">translatorProxy</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">            </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ClientNamenodeProtocolTranslatorPB</span>(proxy);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">ClientProtocol</span>)<span class="org-whitespace-space"> </span>RetryProxy.create(
+<span class="org-whitespace-space">            </span>ClientProtocol.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">DefaultFailoverProxyProvider</span>&lt;&gt;(ClientProtocol.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">                                               </span>translatorProxy),
+<span class="org-whitespace-space">            </span>methodNameToPolicyMap,
+<span class="org-whitespace-space">            </span>defaultPolicy);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ClientNamenodeProtocolTranslatorPB</span>(proxy);
+<span class="org-whitespace-space">    </span>}
+}
+</pre>
+</div>
+
+<p>
+<code>NameNodeProxiesClient.createProxyWithClientProtocol</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd8693ed" class="outline-3">
+<h3 id="orgd8693ed"><span class="section-number-3">1.2</span> ClientNamenodeProtocolTranslatorPB</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-doc">/**</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">This</span><span class="org-whitespace-space"> </span><span class="org-doc">class</span><span class="org-whitespace-space"> </span><span class="org-doc">forwards</span><span class="org-whitespace-space"> </span><span class="org-doc">NN's</span><span class="org-whitespace-space"> </span><span class="org-doc">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-doc">calls</span><span class="org-whitespace-space"> </span><span class="org-doc">as</span><span class="org-whitespace-space"> </span><span class="org-doc">RPC</span><span class="org-whitespace-space"> </span><span class="org-doc">calls</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">NN</span><span class="org-whitespace-space"> </span><span class="org-doc">server</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">while</span><span class="org-whitespace-space"> </span><span class="org-doc">translating</span><span class="org-whitespace-space"> </span><span class="org-doc">from</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">parameter</span><span class="org-whitespace-space"> </span><span class="org-doc">types</span><span class="org-whitespace-space"> </span><span class="org-doc">used</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">ClientProtocol</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">new</span><span class="org-whitespace-space"> </span><span class="org-doc">PB</span><span class="org-whitespace-space"> </span><span class="org-doc">types.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+</pre>
+</div>
+
+<p>
+以 <code>create</code> 为例：
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">FSDataOutputStream</span><span class="org-whitespace-space"> </span><span class="org-function-name">create</span>(<span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">Path</span><span class="org-whitespace-space"> </span><span class="org-variable-name">f</span>,
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">EnumSet</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">createFlag</span>,<span class="org-whitespace-space"> </span><span class="org-constant">Options</span>.<span class="org-type">CreateOpts</span>...<span class="org-whitespace-space"> </span><span class="org-variable-name">opts</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">AccessControlException</span>,<span class="org-whitespace-space"> </span><span class="org-type">FileAlreadyExistsException</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">FileNotFoundException</span>,<span class="org-whitespace-space"> </span><span class="org-type">ParentNotDirectoryException</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">UnsupportedFileSystemException</span>,<span class="org-whitespace-space"> </span><span class="org-type">UnresolvedLinkException</span>,<span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span>checkPath(f);
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bufferSize</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-1;
+<span class="org-whitespace-space">  </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-1;
+<span class="org-whitespace-space">  </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-1;
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bytesPerChecksum</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>-1;
+<span class="org-whitespace-space">  </span><span class="org-type">ChecksumOpt</span><span class="org-whitespace-space"> </span><span class="org-variable-name">checksumOpt</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">permission</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">Progressable</span><span class="org-whitespace-space"> </span><span class="org-variable-name">progress</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">  </span><span class="org-type">Boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">for</span><span class="org-whitespace-space"> </span>(<span class="org-type">CreateOpts</span><span class="org-whitespace-space"> </span><span class="org-variable-name">iOpt</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>opts)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-constant">CreateOpts</span>.BlockSize.<span class="org-keyword">class</span>.isInstance(iOpt))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(blockSize<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>-1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">HadoopIllegalArgumentException</span>(
+<span class="org-whitespace-space">            </span><span class="org-string">"BlockSize</span><span class="org-whitespace-space"> </span><span class="org-string">option</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">set</span><span class="org-whitespace-space"> </span><span class="org-string">multiple</span><span class="org-whitespace-space"> </span><span class="org-string">times"</span>);
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">      </span>blockSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>((<span class="org-constant">CreateOpts</span>.<span class="org-type">BlockSize</span>)<span class="org-whitespace-space"> </span>iOpt).getValue();
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-constant">CreateOpts</span>.BufferSize.<span class="org-keyword">class</span>.isInstance(iOpt))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(bufferSize<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>-1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">HadoopIllegalArgumentException</span>(
+<span class="org-whitespace-space">            </span><span class="org-string">"BufferSize</span><span class="org-whitespace-space"> </span><span class="org-string">option</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">set</span><span class="org-whitespace-space"> </span><span class="org-string">multiple</span><span class="org-whitespace-space"> </span><span class="org-string">times"</span>);
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">      </span>bufferSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>((<span class="org-constant">CreateOpts</span>.<span class="org-type">BufferSize</span>)<span class="org-whitespace-space"> </span>iOpt).getValue();
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(...)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">HadoopIllegalArgumentException</span>(<span class="org-string">"Unkown</span><span class="org-whitespace-space"> </span><span class="org-string">CreateOpts</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">type</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">          </span>iOpt.getClass().getName());
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-keyword">this</span>.createInternal(f,<span class="org-whitespace-space"> </span>createFlag,<span class="org-whitespace-space"> </span>permission,<span class="org-whitespace-space"> </span>bufferSize,
+<span class="org-whitespace-space">    </span>replication,<span class="org-whitespace-space"> </span>blockSize,<span class="org-whitespace-space"> </span>progress,<span class="org-whitespace-space"> </span>checksumOpt,<span class="org-whitespace-space"> </span>createParent);
+}
+
+<span class="org-c-annotation">@Override</span>
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">HdfsDataOutputStream</span><span class="org-whitespace-space"> </span><span class="org-function-name">createInternal</span>(<span class="org-type">Path</span><span class="org-whitespace-space"> </span><span class="org-variable-name">f</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">EnumSet</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">createFlag</span>,<span class="org-whitespace-space"> </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">absolutePermission</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bufferSize</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,<span class="org-whitespace-space"> </span><span class="org-type">Progressable</span><span class="org-whitespace-space"> </span><span class="org-variable-name">progress</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">ChecksumOpt</span><span class="org-whitespace-space"> </span><span class="org-variable-name">checksumOpt</span>,<span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">DFSOutputStream</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dfsos</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dfs.primitiveCreate(getUriPath(f),
+<span class="org-whitespace-space">    </span>absolutePermission,<span class="org-whitespace-space"> </span>createFlag,<span class="org-whitespace-space"> </span>createParent,<span class="org-whitespace-space"> </span>replication,<span class="org-whitespace-space"> </span>blockSize,
+<span class="org-whitespace-space">    </span>progress,<span class="org-whitespace-space"> </span>bufferSize,<span class="org-whitespace-space"> </span>checksumOpt);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>dfs.createWrappedOutputStream(dfsos,<span class="org-whitespace-space"> </span>statistics,
+<span class="org-whitespace-space">      </span>dfsos.getInitialLen());
+}
+
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">DFSOutputStream</span><span class="org-whitespace-space"> </span><span class="org-function-name">primitiveCreate</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,<span class="org-whitespace-space"> </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">absPermission</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">EnumSet</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,<span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,<span class="org-whitespace-space"> </span><span class="org-type">Progressable</span><span class="org-whitespace-space"> </span><span class="org-variable-name">progress</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">buffersize</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">ChecksumOpt</span><span class="org-whitespace-space"> </span><span class="org-variable-name">checksumOpt</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span>checkOpen();
+<span class="org-whitespace-space">  </span>CreateFlag.validate(flag);
+<span class="org-whitespace-space">  </span><span class="org-type">DFSOutputStream</span><span class="org-whitespace-space"> </span><span class="org-variable-name">result</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>primitiveAppend(src,<span class="org-whitespace-space"> </span>flag,<span class="org-whitespace-space"> </span>progress);
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(result<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">DataChecksum</span><span class="org-whitespace-space"> </span><span class="org-variable-name">checksum</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dfsClientConf.createChecksum(checksumOpt);
+<span class="org-whitespace-space">    </span>result<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>DFSOutputStream.newStreamForCreate(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>src,<span class="org-whitespace-space"> </span>absPermission,
+<span class="org-whitespace-space">        </span>flag,<span class="org-whitespace-space"> </span>createParent,<span class="org-whitespace-space"> </span>replication,<span class="org-whitespace-space"> </span>blockSize,<span class="org-whitespace-space"> </span>progress,<span class="org-whitespace-space"> </span>checksum,
+<span class="org-whitespace-space">        </span><span class="org-constant">null</span>,<span class="org-whitespace-space"> </span><span class="org-constant">null</span>,<span class="org-whitespace-space"> </span><span class="org-constant">null</span>);
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span>beginFileLease(result.getFileId(),<span class="org-whitespace-space"> </span>result);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>result;
+}
+
+<span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-type">DFSOutputStream</span><span class="org-whitespace-space"> </span><span class="org-function-name">newStreamForCreate</span>(<span class="org-type">DFSClient</span><span class="org-whitespace-space"> </span><span class="org-variable-name">dfsClient</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">masked</span>,<span class="org-whitespace-space"> </span><span class="org-type">EnumSet</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,<span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,<span class="org-whitespace-space"> </span><span class="org-type">Progressable</span><span class="org-whitespace-space"> </span><span class="org-variable-name">progress</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">DataChecksum</span><span class="org-whitespace-space"> </span><span class="org-variable-name">checksum</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">favoredNodes</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ecPolicyName</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">storagePolicy</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>(<span class="org-type">TraceScope</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ignored</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">           </span>dfsClient.newPathTraceScope(<span class="org-string">"newStreamForCreate"</span>,<span class="org-whitespace-space"> </span>src))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stat</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Retry</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">create</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">we</span><span class="org-whitespace-space"> </span><span class="org-comment">get</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">RetryStartFileException</span><span class="org-whitespace-space"> </span><span class="org-comment">up</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">maximum</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">number</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">times</span>
+<span class="org-whitespace-space">    </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">shouldRetry</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">true</span>;
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">retryCount</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>CREATE_RETRY_COUNT;
+<span class="org-whitespace-space">    </span><span class="org-keyword">while</span><span class="org-whitespace-space"> </span>(shouldRetry)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>shouldRetry<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">false</span>;
+<span class="org-whitespace-space">      </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>stat<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>dfsClient.namenode.create(src,<span class="org-whitespace-space"> </span>masked,<span class="org-whitespace-space"> </span>dfsClient.clientName,
+<span class="org-whitespace-space">            </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">EnumSetWritable</span>&lt;&gt;(flag),<span class="org-whitespace-space"> </span>createParent,<span class="org-whitespace-space"> </span>replication,
+<span class="org-whitespace-space">            </span>blockSize,<span class="org-whitespace-space"> </span>SUPPORTED_CRYPTO_VERSIONS,<span class="org-whitespace-space"> </span>ecPolicyName,
+<span class="org-whitespace-space">            </span>storagePolicy);
+<span class="org-whitespace-space">        </span><span class="org-keyword">break</span>;
+<span class="org-whitespace-space">      </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">catch</span><span class="org-whitespace-space"> </span>(<span class="org-type">RemoteException</span><span class="org-whitespace-space"> </span><span class="org-variable-name">re</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span><span class="org-variable-name">e</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>re.unwrapRemoteException(
+<span class="org-whitespace-space">            </span>AccessControlException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>DSQuotaExceededException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>QuotaByStorageTypeExceededException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>FileAlreadyExistsException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>FileNotFoundException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>ParentNotDirectoryException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>NSQuotaExceededException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>RetryStartFileException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>SafeModeException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>UnresolvedPathException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>SnapshotAccessControlException.<span class="org-keyword">class</span>,
+<span class="org-whitespace-space">            </span>UnknownCryptoProtocolVersionException.<span class="org-keyword">class</span>);
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(e<span class="org-whitespace-space"> </span><span class="org-keyword">instanceof</span><span class="org-whitespace-space"> </span>RetryStartFileException)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">          </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(retryCount<span class="org-whitespace-space"> </span>&gt;<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">            </span>shouldRetry<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">true</span>;
+<span class="org-whitespace-space">            </span>retryCount--;
+<span class="org-whitespace-space">          </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">            </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span>(<span class="org-string">"Too</span><span class="org-whitespace-space"> </span><span class="org-string">many</span><span class="org-whitespace-space"> </span><span class="org-string">retries</span><span class="org-whitespace-space"> </span><span class="org-string">because</span><span class="org-whitespace-space"> </span><span class="org-string">of</span><span class="org-whitespace-space"> </span><span class="org-string">encryption"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">                </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">zone</span><span class="org-whitespace-space"> </span><span class="org-string">operations"</span>,<span class="org-whitespace-space"> </span>e);
+<span class="org-whitespace-space">          </span>}
+<span class="org-whitespace-space">        </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">          </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span>e;
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span>Preconditions.checkNotNull(stat,<span class="org-whitespace-space"> </span><span class="org-string">"HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-string">should</span><span class="org-whitespace-space"> </span><span class="org-string">not</span><span class="org-whitespace-space"> </span><span class="org-string">be</span><span class="org-whitespace-space"> </span><span class="org-string">null!"</span>);
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">DFSOutputStream</span><span class="org-whitespace-space"> </span><span class="org-variable-name">out</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span>(stat.getErasureCodingPolicy()<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>out<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">DFSStripedOutputStream</span>(dfsClient,<span class="org-whitespace-space"> </span>src,<span class="org-whitespace-space"> </span>stat,
+<span class="org-whitespace-space">          </span>flag,<span class="org-whitespace-space"> </span>progress,<span class="org-whitespace-space"> </span>checksum,<span class="org-whitespace-space"> </span>favoredNodes);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>out<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">DFSOutputStream</span>(dfsClient,<span class="org-whitespace-space"> </span>src,<span class="org-whitespace-space"> </span>stat,
+<span class="org-whitespace-space">          </span>flag,<span class="org-whitespace-space"> </span>progress,<span class="org-whitespace-space"> </span>checksum,<span class="org-whitespace-space"> </span>favoredNodes,<span class="org-whitespace-space"> </span><span class="org-constant">true</span>);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span>out.start();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>out;
+<span class="org-whitespace-space">  </span>}
+}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">ClientNamenodeProtocolTranslatorPB.java</span>
+<span class="org-c-annotation">@Override</span>
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-function-name">create</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,<span class="org-whitespace-space"> </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">masked</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientName</span>,<span class="org-whitespace-space"> </span><span class="org-type">EnumSetWritable</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">CryptoProtocolVersion</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">supportedVersions</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ecPolicyName</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">storagePolicy</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-constant">CreateRequestProto</span>.<span class="org-type">Builder</span><span class="org-whitespace-space"> </span><span class="org-variable-name">builder</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>CreateRequestProto.newBuilder()
+<span class="org-whitespace-space">        </span>.setSrc(src)
+<span class="org-whitespace-space">        </span>.setMasked(PBHelperClient.convert(masked))
+<span class="org-whitespace-space">        </span>.setClientName(clientName)
+<span class="org-whitespace-space">        </span>.setCreateFlag(PBHelperClient.convertCreateFlag(flag))
+<span class="org-whitespace-space">        </span>.setCreateParent(createParent)
+<span class="org-whitespace-space">        </span>.setReplication(replication)
+<span class="org-whitespace-space">        </span>.setBlockSize(blockSize);
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(ecPolicyName<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>builder.setEcPolicyName(ecPolicyName);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(storagePolicy<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>builder.setStoragePolicy(storagePolicy);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">unmasked</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>masked.getUnmasked();
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(unmasked<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>builder.setUnmasked(PBHelperClient.convert(unmasked));
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span>builder.addAllCryptoProtocolVersion(
+<span class="org-whitespace-space">        </span>PBHelperClient.convert(supportedVersions));
+<span class="org-whitespace-space">    </span><span class="org-type">CreateRequestProto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">req</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>builder.build();
+<span class="org-whitespace-space">    </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">NameNodeProxiesClient.java</span><span class="org-whitespace-space"> </span><span class="org-comment">init</span><span class="org-whitespace-space"> </span><span class="org-comment">rpcProxy</span><span class="org-whitespace-space"> </span><span class="org-comment">from</span><span class="org-whitespace-space"> </span><span class="org-comment">RPC.getProtocolProxy.</span>
+<span class="org-whitespace-space">        </span><span class="org-type">CreateResponseProto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">res</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rpcProxy.create(<span class="org-constant">null</span>,<span class="org-whitespace-space"> </span>req);
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>res.hasFs()<span class="org-whitespace-space"> </span>?<span class="org-whitespace-space"> </span>PBHelperClient.convert(res.getFs())<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">catch</span><span class="org-whitespace-space"> </span>(<span class="org-type">ServiceException</span><span class="org-whitespace-space"> </span><span class="org-variable-name">e</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span>ProtobufHelper.getRemoteException(e);
+<span class="org-whitespace-space">    </span>}
+}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">bind</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">invoke</span>
+<span class="org-c-annotation">@Override</span>
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">Message</span><span class="org-whitespace-space"> </span><span class="org-function-name">invoke</span>(<span class="org-type">Object</span><span class="org-whitespace-space"> </span><span class="org-variable-name">proxy</span>,<span class="org-whitespace-space"> </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">Method</span><span class="org-whitespace-space"> </span><span class="org-variable-name">method</span>,<span class="org-whitespace-space"> </span><span class="org-type">Object</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">args</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">startTime</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(LOG.isDebugEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>startTime<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Time.now();
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(args.length<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>2)<span class="org-whitespace-space"> </span>{<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">RpcController</span><span class="org-whitespace-space"> </span><span class="org-comment">+</span><span class="org-whitespace-space"> </span><span class="org-comment">Message</span>
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span>(
+<span class="org-whitespace-space">          </span><span class="org-string">"Too</span><span class="org-whitespace-space"> </span><span class="org-string">many</span><span class="org-whitespace-space"> </span><span class="org-string">or</span><span class="org-whitespace-space"> </span><span class="org-string">few</span><span class="org-whitespace-space"> </span><span class="org-string">parameters</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">request.</span><span class="org-whitespace-space"> </span><span class="org-string">Method:</span><span class="org-whitespace-space"> </span><span class="org-string">["</span>
+<span class="org-whitespace-space">          </span>+<span class="org-whitespace-space"> </span>method.getName()<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"]"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">",</span><span class="org-whitespace-space"> </span><span class="org-string">Expected:</span><span class="org-whitespace-space"> </span><span class="org-string">2,</span><span class="org-whitespace-space"> </span><span class="org-string">Actual:</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>
+<span class="org-whitespace-space">          </span>+<span class="org-whitespace-space"> </span>args.length);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(args[1]<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span>(<span class="org-string">"null</span><span class="org-whitespace-space"> </span><span class="org-string">param</span><span class="org-whitespace-space"> </span><span class="org-string">while</span><span class="org-whitespace-space"> </span><span class="org-string">calling</span><span class="org-whitespace-space"> </span><span class="org-string">Method:</span><span class="org-whitespace-space"> </span><span class="org-string">["</span>
+<span class="org-whitespace-space">          </span>+<span class="org-whitespace-space"> </span>method.getName()<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"]"</span>);
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">Tracing</span><span class="org-whitespace-space"> </span><span class="org-comment">is</span><span class="org-whitespace-space"> </span><span class="org-comment">on</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">start</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">new</span><span class="org-whitespace-space"> </span><span class="org-comment">span</span><span class="org-whitespace-space"> </span><span class="org-comment">for</span><span class="org-whitespace-space"> </span><span class="org-comment">this</span><span class="org-whitespace-space"> </span><span class="org-comment">rpc.</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">guard</span><span class="org-whitespace-space"> </span><span class="org-comment">it</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">if</span><span class="org-whitespace-space"> </span><span class="org-comment">statement</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">make</span><span class="org-whitespace-space"> </span><span class="org-comment">sure</span><span class="org-whitespace-space"> </span><span class="org-comment">there</span><span class="org-whitespace-space"> </span><span class="org-comment">isn't</span>
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">any</span><span class="org-whitespace-space"> </span><span class="org-comment">extra</span><span class="org-whitespace-space"> </span><span class="org-comment">string</span><span class="org-whitespace-space"> </span><span class="org-comment">manipulation.</span>
+<span class="org-whitespace-space">    </span><span class="org-type">Tracer</span><span class="org-whitespace-space"> </span><span class="org-variable-name">tracer</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Tracer.curThreadTracer();
+<span class="org-whitespace-space">    </span><span class="org-type">TraceScope</span><span class="org-whitespace-space"> </span><span class="org-variable-name">traceScope</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(tracer<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>traceScope<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>tracer.newScope(RpcClientUtil.methodToTraceString(method));
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(LOG.isTraceEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>LOG.trace(Thread.currentThread().getId()<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">":</span><span class="org-whitespace-space"> </span><span class="org-string">Call</span><span class="org-whitespace-space"> </span><span class="org-string">-&gt;</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">          </span>remoteId<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">":</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>method.getName()<span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">          </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">{"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>TextFormat.shortDebugString((<span class="org-type">Message</span>)<span class="org-whitespace-space"> </span>args[1])<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"}"</span>);
+<span class="org-whitespace-space">    </span>}
+
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">Message</span><span class="org-whitespace-space"> </span><span class="org-variable-name">theRequest</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-type">Message</span>)<span class="org-whitespace-space"> </span>args[1];
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-constant">RpcWritable</span>.<span class="org-type">Buffer</span><span class="org-whitespace-space"> </span><span class="org-variable-name">val</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>val<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-constant">RpcWritable</span>.<span class="org-type">Buffer</span>)<span class="org-whitespace-space"> </span>client.call(<span class="org-constant">RPC</span>.<span class="org-constant">RpcKind</span>.RPC_PROTOCOL_BUFFER,
+<span class="org-whitespace-space">          </span>constructRpcRequest(method,<span class="org-whitespace-space"> </span>theRequest),<span class="org-whitespace-space"> </span>remoteId,
+<span class="org-whitespace-space">          </span>fallbackToSimpleAuth,<span class="org-whitespace-space"> </span>alignmentContext);
+
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">catch</span><span class="org-whitespace-space"> </span>(<span class="org-type">Throwable</span><span class="org-whitespace-space"> </span><span class="org-variable-name">e</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(LOG.isTraceEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>LOG.trace(Thread.currentThread().getId()<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">":</span><span class="org-whitespace-space"> </span><span class="org-string">Exception</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;-</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">            </span>remoteId<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">":</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>method.getName()<span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">              </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">{"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>e<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"}"</span>);
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(traceScope<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>traceScope.addTimelineAnnotation(<span class="org-string">"Call</span><span class="org-whitespace-space"> </span><span class="org-string">got</span><span class="org-whitespace-space"> </span><span class="org-string">exception:</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">            </span>e.toString());
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span>(e);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">finally</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(traceScope<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span>traceScope.close();
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(LOG.isDebugEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">callTime</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>Time.now()<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>startTime;
+<span class="org-whitespace-space">      </span>LOG.debug(<span class="org-string">"Call:</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>method.getName()<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">took</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>callTime<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"ms"</span>);
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(Client.isAsynchronousMode())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">AsyncGet</span>&lt;<span class="org-constant">RpcWritable</span>.<span class="org-type">Buffer</span>,<span class="org-whitespace-space"> </span><span class="org-type">IOException</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">arr</span>
+<span class="org-whitespace-space">          </span>=<span class="org-whitespace-space"> </span>Client.getAsyncRpcResponse();
+<span class="org-whitespace-space">      </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">AsyncGet</span>&lt;<span class="org-type">Message</span>,<span class="org-whitespace-space"> </span><span class="org-type">Exception</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">asyncGet</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">          </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">AsyncGet</span>&lt;<span class="org-type">Message</span>,<span class="org-whitespace-space"> </span><span class="org-type">Exception</span>&gt;()<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">            </span><span class="org-c-annotation">@Override</span>
+<span class="org-whitespace-space">            </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span>Message<span class="org-whitespace-space"> </span>get(<span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">timeout</span>,<span class="org-whitespace-space"> </span><span class="org-type">TimeUnit</span><span class="org-whitespace-space"> </span><span class="org-variable-name">unit</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">Exception</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">              </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>getReturnMessage(method,<span class="org-whitespace-space"> </span>arr.get(timeout,<span class="org-whitespace-space"> </span>unit));
+<span class="org-whitespace-space">            </span>}
+
+<span class="org-whitespace-space">            </span><span class="org-c-annotation">@Override</span>
+<span class="org-whitespace-space">            </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-function-name">isDone</span>()<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">          </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>arr.isDone();
+<span class="org-whitespace-space">        </span>}
+<span class="org-whitespace-space">      </span>};
+<span class="org-whitespace-space">      </span>ASYNC_RETURN_MESSAGE.set(asyncGet);
+<span class="org-whitespace-space">      </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>getReturnMessage(method,<span class="org-whitespace-space"> </span>val);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">  </span>}
+</pre>
+</div>
+
+<p>
+rpc请求递交给rpcProxy:
+</p>
+</div>
+</div>
+
+<div id="outline-container-org07970a9" class="outline-3">
+<h3 id="org07970a9"><span class="section-number-3">1.3</span> ProtobufRpcEngine2</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-c-annotation">@Override</span>
+<span class="org-c-annotation">@SuppressWarnings</span>(<span class="org-string">"unchecked"</span>)
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span>&lt;<span class="org-type">T</span>&gt;<span class="org-whitespace-space"> </span><span class="org-type">ProtocolProxy</span>&lt;<span class="org-type">T</span>&gt;<span class="org-whitespace-space"> </span><span class="org-function-name">getProxy</span>(
+<span class="org-whitespace-space">    </span><span class="org-type">Class</span>&lt;<span class="org-type">T</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">protocol</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientVersion</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">ConnectionId</span><span class="org-whitespace-space"> </span><span class="org-variable-name">connId</span>,<span class="org-whitespace-space"> </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,<span class="org-whitespace-space"> </span><span class="org-type">SocketFactory</span><span class="org-whitespace-space"> </span><span class="org-variable-name">factory</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">Invoker</span><span class="org-whitespace-space"> </span><span class="org-variable-name">invoker</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Invoker</span>(protocol,<span class="org-whitespace-space"> </span>connId,<span class="org-whitespace-space"> </span>conf,<span class="org-whitespace-space"> </span>factory);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ProtocolProxy</span>&lt;<span class="org-type">T</span>&gt;(
+<span class="org-whitespace-space">        </span>protocol,<span class="org-whitespace-space"> </span>(<span class="org-type">T</span>)<span class="org-whitespace-space"> </span>Proxy.newProxyInstance(
+<span class="org-whitespace-space">                          </span>protocol.getClassLoader(),
+<span class="org-whitespace-space">                          </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Class</span>[]<span class="org-whitespace-space"> </span>{protocol},<span class="org-whitespace-space"> </span>invoker),<span class="org-whitespace-space"> </span><span class="org-constant">false</span>);
+}
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org46d48ae" class="outline-2">
+<h2 id="org46d48ae"><span class="section-number-2">2</span> Server</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Server通过getServer创建，Reactor模式.
+</p>
+<ul class="org-ul">
+<li>RpcRequestWrapper, RpcResponseWrapper;</li>
+<li>RpcInvoker, 通过反射调用Service方法;</li>
+<li>基于Nio实现Reactor驱动处于Accept,Read,Write;</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">static</span><span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Server</span><span class="org-whitespace-space"> </span><span class="org-keyword">extends</span><span class="org-whitespace-space"> </span><span class="org-constant">RPC</span>.<span class="org-type">Server</span><span class="org-whitespace-space"> </span>{
+}
+<span class="org-c-annotation">@Override</span>
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-constant">RPC</span>.<span class="org-type">Server</span><span class="org-whitespace-space"> </span><span class="org-function-name">getServer</span>(<span class="org-type">Class</span>&lt;?&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">protocol</span>,<span class="org-whitespace-space"> </span><span class="org-type">Object</span><span class="org-whitespace-space"> </span><span class="org-variable-name">protocolImpl</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bindAddress</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">port</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numHandlers</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numReaders</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">queueSizePerHandler</span>,<span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">verbose</span>,<span class="org-whitespace-space"> </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">SecretManager</span>&lt;?<span class="org-whitespace-space"> </span><span class="org-keyword">extends</span><span class="org-whitespace-space"> </span><span class="org-type">TokenIdentifier</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">secretManager</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">portRangeConfig</span>,<span class="org-whitespace-space"> </span><span class="org-type">AlignmentContext</span><span class="org-whitespace-space"> </span><span class="org-variable-name">alignmentContext</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Server</span>(protocol,<span class="org-whitespace-space"> </span>protocolImpl,<span class="org-whitespace-space"> </span>conf,<span class="org-whitespace-space"> </span>bindAddress,<span class="org-whitespace-space"> </span>port,
+<span class="org-whitespace-space">      </span>numHandlers,<span class="org-whitespace-space"> </span>numReaders,<span class="org-whitespace-space"> </span>queueSizePerHandler,<span class="org-whitespace-space"> </span>verbose,<span class="org-whitespace-space"> </span>secretManager,
+<span class="org-whitespace-space">      </span>portRangeConfig,<span class="org-whitespace-space"> </span>alignmentContext);
+}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/ipc/Serve</span><span class="org-comment"><span class="org-whitespace-line">r.java</span></span>
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">abstract</span><span class="org-whitespace-space"> </span><span class="org-keyword">class</span><span class="org-whitespace-space"> </span><span class="org-type">Server</span><span class="org-whitespace-space"> </span>{
+<span class="org-doc">/**</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">Constructs</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">server</span><span class="org-whitespace-space"> </span><span class="org-doc">listening</span><span class="org-whitespace-space"> </span><span class="org-doc">on</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">named</span><span class="org-whitespace-space"> </span><span class="org-doc">port</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">address.</span><span class="org-whitespace-space">  </span><span class="org-doc">Parameters</span><span class="org-whitespace-space"> </span><span class="org-doc">pass</span><span class="org-doc"><span class="org-whitespace-line">ed</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-doc"><span class="org-whitespace-line">must</span></span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">named</span><span class="org-whitespace-space"> </span><span class="org-doc">class.</span><span class="org-whitespace-space">  </span><span class="org-doc">The</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">&lt;code&gt;</span></span><span class="org-doc">handlerCount</span><span class="org-doc"><span class="org-constant">&lt;/code&gt;</span></span><span class="org-whitespace-space"> </span><span class="org-doc">determines</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">number</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">handler</span><span class="org-whitespace-space"> </span><span class="org-doc">threads</span><span class="org-whitespace-space"> </span><span class="org-doc">that</span><span class="org-whitespace-space"> </span><span class="org-doc">will</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">used</span><span class="org-whitespace-space"> </span><span class="org-doc">to</span><span class="org-whitespace-space"> </span><span class="org-doc">process</span><span class="org-whitespace-space"> </span><span class="org-doc">calls.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">If</span><span class="org-whitespace-space"> </span><span class="org-doc">queueSizePerHandler</span><span class="org-whitespace-space"> </span><span class="org-doc">or</span><span class="org-whitespace-space"> </span><span class="org-doc">numReaders</span><span class="org-whitespace-space"> </span><span class="org-doc">are</span><span class="org-whitespace-space"> </span><span class="org-doc">not</span><span class="org-whitespace-space"> </span><span class="org-doc">-1</span><span class="org-whitespace-space"> </span><span class="org-doc">they</span><span class="org-whitespace-space"> </span><span class="org-doc">will</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">used</span><span class="org-whitespace-space"> </span><span class="org-doc">instead</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-whitespace-line">parameters</span></span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">from</span><span class="org-whitespace-space"> </span><span class="org-doc">configuration.</span><span class="org-whitespace-space"> </span><span class="org-doc">Otherwise</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">configuration</span><span class="org-whitespace-space"> </span><span class="org-doc">will</span><span class="org-whitespace-space"> </span><span class="org-doc">be</span><span class="org-whitespace-space"> </span><span class="org-doc">picked</span><span class="org-whitespace-space"> </span><span class="org-doc">up.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">If</span><span class="org-whitespace-space"> </span><span class="org-doc">rpcRequestClass</span><span class="org-whitespace-space"> </span><span class="org-doc">is</span><span class="org-whitespace-space"> </span><span class="org-doc">null</span><span class="org-whitespace-space"> </span><span class="org-doc">then</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">rpcRequestClass</span><span class="org-whitespace-space"> </span><span class="org-doc">must</span><span class="org-whitespace-space"> </span><span class="org-doc">have</span><span class="org-whitespace-space"> </span><span class="org-doc">been</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">registered</span><span class="org-whitespace-space"> </span><span class="org-doc">via</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-warning">{</span></span><span class="org-doc">@link</span><span class="org-whitespace-space"> </span><span class="org-doc">#registerProtocolEngine(RPC.RpcKind,</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space">  </span><span class="org-doc">Class,</span><span class="org-whitespace-space"> </span><span class="org-doc">RPC.RpcInvoker)}</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">This</span><span class="org-whitespace-space"> </span><span class="org-doc">parameter</span><span class="org-whitespace-space"> </span><span class="org-doc">has</span><span class="org-whitespace-space"> </span><span class="org-doc">been</span><span class="org-whitespace-space"> </span><span class="org-doc">retained</span><span class="org-whitespace-space"> </span><span class="org-doc">for</span><span class="org-whitespace-space"> </span><span class="org-doc">compatibility</span><span class="org-whitespace-space"> </span><span class="org-doc">with</span><span class="org-whitespace-space"> </span><span class="org-doc">existing</span><span class="org-whitespace-space"> </span><span class="org-doc">tests</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">usage.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">bindAddress</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">bindAddress.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">port</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">port.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">rpcRequestClass</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">rpcRequestClass.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">handlerCount</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">handlerCount.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">numReaders</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">numReaders.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">queueSizePerHandler</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">queueSizePerHandler.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">conf</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">Configuration.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">serverName</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">serverName.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">secretManager</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">secretManager.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@param</span></span><span class="org-whitespace-space"> </span><span class="org-doc">portRangeConfig</span><span class="org-whitespace-space"> </span><span class="org-doc">input</span><span class="org-whitespace-space"> </span><span class="org-doc">portRangeConfig.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">@throws</span></span><span class="org-whitespace-space"> </span><span class="org-doc">IOException</span><span class="org-whitespace-space"> </span><span class="org-doc">raised</span><span class="org-whitespace-space"> </span><span class="org-doc">on</span><span class="org-whitespace-space"> </span><span class="org-doc">errors</span><span class="org-whitespace-space"> </span><span class="org-doc">performing</span><span class="org-whitespace-space"> </span><span class="org-doc">I/O.</span>
+<span class="org-whitespace-space"> </span><span class="org-doc">*/</span>
+<span class="org-c-annotation">@SuppressWarnings</span>(<span class="org-string">"unchecked"</span>)
+<span class="org-keyword">protected</span><span class="org-whitespace-space"> </span><span class="org-function-name">Server</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">bindAddress</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">port</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">Class</span>&lt;?<span class="org-whitespace-space"> </span><span class="org-keyword">extends</span><span class="org-whitespace-space"> </span><span class="org-type">Writable</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">rpcRequestClass</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">handlerCount</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">numReaders</span>,<span class="org-whitespace-space"> </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">queueSizePerHandler</span>,<span class="org-whitespace-space"> </span><span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">serverName</span>,<span class="org-whitespace-space"> </span><span class="org-type">SecretManager</span>&lt;?<span class="org-whitespace-space"> </span><span class="org-keyword">extends</span><span class="org-whitespace-space"> </span><span class="org-type">TokenIdentifier</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">secretManager</span>,
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">portRangeConfig</span>)
+<span class="org-whitespace-space">  </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.bindAddress<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>bindAddress;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.conf<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.portRangeConfig<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>portRangeConfig;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.port<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>port;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.rpcRequestClass<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>rpcRequestClass;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.handlerCount<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>handlerCount;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.socketSendBufferSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>0;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.serverName<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>serverName;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.auxiliaryListenerMap<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.maxDataLength<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf.getInt(<span class="org-constant">CommonConfigurationKeys</span>.IPC_MAXIMUM_DATA_LENG<span class="org-whitespace-line">TH,</span>
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(queueSizePerHandler<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>-1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.maxQueueSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>handlerCount<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>queueSizePerHandler;
+<span class="org-whitespace-space">  </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.maxQueueSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>handlerCount<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>conf.getInt(
+<span class="org-whitespace-space">        </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_HANDLER_QUEUE_SIZE_KEY,
+<span class="org-whitespace-space">        </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_HANDLER_QUEUE_SIZE_DEFAULT);
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.maxRespSize<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf.getInt(
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_MAX_RESPONSE_SIZE_KEY,
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_MAX_RESPONSE_SIZE_DEFAULT);
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(numReaders<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>-1)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.readThreads<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>numReaders;
+<span class="org-whitespace-space">  </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">else</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">this</span>.readThreads<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf.getInt(
+<span class="org-whitespace-space">        </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_READ_THREADS_KEY,
+<span class="org-whitespace-space">        </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_READ_THREADS_DEFAULT);
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.readerPendingConnectionQueue<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf.getInt(
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_READ_CONNECTION_QUEUE_SIZE_KEY,
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeys</span>.IPC_SERVER_RPC_READ_CONNECTION_QUEUE_SIZE_DEFAULT)<span class="org-whitespace-line">;</span>
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Setup</span><span class="org-whitespace-space"> </span><span class="org-comment">appropriate</span><span class="org-whitespace-space"> </span><span class="org-comment">callqueue</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">final</span><span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">prefix</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>getQueueClassPrefix();
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.callQueue<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">CallQueueManager</span>&lt;&gt;(
+<span class="org-whitespace-space">      </span>getQueueClass(<span class="org-constant">CommonConfigurationKeys</span>.IPC_NAMESPACE,<span class="org-whitespace-space"> </span>port,<span class="org-whitespace-space"> </span>conf),
+<span class="org-whitespace-space">      </span>getSchedulerClass(<span class="org-constant">CommonConfigurationKeys</span>.IPC_NAMESPACE,<span class="org-whitespace-space"> </span>port,<span class="org-whitespace-space"> </span>conf),
+<span class="org-whitespace-space">      </span>getClientBackoffEnable(<span class="org-constant">CommonConfigurationKeys</span>.IPC_NAMESPACE,<span class="org-whitespace-space"> </span>port,<span class="org-whitespace-space"> </span>conf),
+<span class="org-whitespace-space">      </span>maxQueueSize,<span class="org-whitespace-space"> </span>prefix,<span class="org-whitespace-space"> </span>conf);
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.secretManager<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>(<span class="org-type">SecretManager</span>&lt;<span class="org-type">TokenIdentifier</span>&gt;)<span class="org-whitespace-space"> </span>secretManager;
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.authorize<span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">    </span>conf.getBoolean(<span class="org-constant">CommonConfigurationKeys</span>.HADOOP_SECURITY_AUTHORIZATION,
+<span class="org-whitespace-space">                    </span><span class="org-constant">false</span>);
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">configure</span><span class="org-whitespace-space"> </span><span class="org-comment">supported</span><span class="org-whitespace-space"> </span><span class="org-comment">authentications</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.enabledAuthMethods<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>getAuthMethods(secretManager,<span class="org-whitespace-space"> </span>conf);
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.negotiateResponse<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>buildNegotiateResponse(enabledAuthMethods);
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Start</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">listener</span><span class="org-whitespace-space"> </span><span class="org-comment">here</span><span class="org-whitespace-space"> </span><span class="org-comment">and</span><span class="org-whitespace-space"> </span><span class="org-comment">let</span><span class="org-whitespace-space"> </span><span class="org-comment">it</span><span class="org-whitespace-space"> </span><span class="org-comment">bind</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">port</span>
+<span class="org-whitespace-space">  </span>listener<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Listener</span>(port);
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">set</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">server</span><span class="org-whitespace-space"> </span><span class="org-comment">port</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">default</span><span class="org-whitespace-space"> </span><span class="org-comment">listener</span><span class="org-whitespace-space"> </span><span class="org-comment">port.</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.port<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>listener.getAddress().getPort();
+<span class="org-whitespace-space">  </span>connectionManager<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ConnectionManager</span>();
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.rpcMetrics<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RpcMetrics.create(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>conf);
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.rpcDetailedMetrics<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RpcDetailedMetrics.create(<span class="org-keyword">this</span>.port);
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.tcpNoDelay<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>conf.getBoolean(
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_TCPNODELAY_KEY,
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_TCPNODELAY_DEFAULT);
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.setLogSlowRPC(conf.getBoolean(
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_LOG_SLOW_RPC,
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_LOG_SLOW_RPC_DEFAULT));
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.setPurgeIntervalNanos(conf.getInt(
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_PURGE_INTERVAL_MINUTES_KEY,
+<span class="org-whitespace-space">      </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_PURGE_INTERVAL_MINUTES_DEFAULT));
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Create</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">responder</span><span class="org-whitespace-space"> </span><span class="org-comment">here</span>
+<span class="org-whitespace-space">  </span>responder<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Responder</span>();
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(secretManager<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span><span class="org-whitespace-space"> </span>||<span class="org-whitespace-space"> </span>UserGroupInformation.isSecurityEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>SaslRpcServer.init(conf);
+<span class="org-whitespace-space">    </span>saslPropsResolver<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>SaslPropertiesResolver.getInstance(conf);
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.exceptionsHandler.addTerseLoggingExceptions(StandbyException.<span class="org-keyword">class</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.exceptionsHandler.addTerseLoggingExceptions(
+<span class="org-whitespace-space">      </span>HealthCheckFailedException.<span class="org-keyword">class</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.metricsUpdaterInterval<span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">      </span>conf.getLong(<span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_METRICS_UPDATE_RUNNE<span class="org-whitespace-line">R_INTERVAL,</span>
+<span class="org-whitespace-space">          </span><span class="org-constant">CommonConfigurationKeysPublic</span>.IPC_SERVER_METRICS_UPDATE_RUNNER_INTERVA<span class="org-whitespace-line">L_DEFAULT);</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.scheduledExecutorService<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ScheduledThreadPoolExecutor</span>(1,
+<span class="org-whitespace-space">      </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ThreadFactoryBuilder</span>().setDaemon(<span class="org-constant">true</span>).setNameFormat(<span class="org-string">"Hadoop-Metrics-U</span><span class="org-string"><span class="org-whitespace-line">pdater-%d"</span></span><span class="org-whitespace-line">)</span>
+<span class="org-whitespace-space">          </span>.build());
+<span class="org-whitespace-space">  </span><span class="org-keyword">this</span>.scheduledExecutorService.scheduleWithFixedDelay(<span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">MetricsUpdateRunner</span>()<span class="org-whitespace-line">,</span>
+<span class="org-whitespace-space">      </span>metricsUpdaterInterval,<span class="org-whitespace-space"> </span>metricsUpdaterInterval,<span class="org-whitespace-space"> </span><span class="org-constant">TimeUnit</span>.MILLISECONDS);
+}
+
+<span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-keyword">synchronized</span><span class="org-whitespace-space"> </span><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">addAuxiliaryListener</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">auxiliaryPort</span>)
+<span class="org-whitespace-space">    </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(auxiliaryListenerMap<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>auxiliaryListenerMap<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">HashMap</span>&lt;&gt;();
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(auxiliaryListenerMap.containsKey(auxiliaryPort)<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>auxiliaryPort<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>0)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span>(
+<span class="org-whitespace-space">        </span><span class="org-string">"There</span><span class="org-whitespace-space"> </span><span class="org-string">is</span><span class="org-whitespace-space"> </span><span class="org-string">already</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">listener</span><span class="org-whitespace-space"> </span><span class="org-string">binding</span><span class="org-whitespace-space"> </span><span class="org-string">to:</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>auxiliaryPort);
+<span class="org-whitespace-space">  </span>}
+<span class="org-whitespace-space">  </span><span class="org-type">Listener</span><span class="org-whitespace-space"> </span><span class="org-variable-name">newListener</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">Listener</span>(auxiliaryPort);
+<span class="org-whitespace-space">  </span>newListener.setIsAuxiliary();
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">in</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">case</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">port</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">0,</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">listener</span><span class="org-whitespace-space"> </span><span class="org-comment">would</span><span class="org-whitespace-space"> </span><span class="org-comment">be</span><span class="org-whitespace-space"> </span><span class="org-comment">on</span><span class="org-whitespace-space"> </span><span class="org-comment">a</span><span class="org-whitespace-space"> </span><span class="org-comment">!=</span><span class="org-whitespace-space"> </span><span class="org-comment">0</span><span class="org-whitespace-space"> </span><span class="org-comment">port.</span>
+<span class="org-whitespace-space">  </span>LOG.info(<span class="org-string">"Adding</span><span class="org-whitespace-space"> </span><span class="org-string">a</span><span class="org-whitespace-space"> </span><span class="org-string">server</span><span class="org-whitespace-space"> </span><span class="org-string">listener</span><span class="org-whitespace-space"> </span><span class="org-string">on</span><span class="org-whitespace-space"> </span><span class="org-string">port</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+
+<span class="org-whitespace-space">      </span>newListener.getAddress().getPort());
+<span class="org-whitespace-space">  </span>auxiliaryListenerMap.put(newListener.getAddress().getPort(),<span class="org-whitespace-space"> </span>newListener);
+}
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc924a84" class="outline-3">
+<h3 id="orgc924a84"><span class="section-number-3">2.1</span> Code Trace</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">NameNodeRpcServer.java</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-function-name">NameNodeRpcServer</span>(<span class="org-type">Configuration</span><span class="org-whitespace-space"> </span><span class="org-variable-name">conf</span>,<span class="org-whitespace-space"> </span><span class="org-type">NameNode</span><span class="org-whitespace-space"> </span><span class="org-variable-name">nn</span>)
+<span class="org-whitespace-space">      </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-type">ClientNamenodeProtocolServerSideTranslatorPB</span>
+<span class="org-whitespace-space">       </span><span class="org-variable-name">clientProtocolServerTranslator</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">         </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ClientNamenodeProtocolServerSideTranslatorPB</span>(<span class="org-keyword">this</span>);
+<span class="org-whitespace-space">     </span><span class="org-type">BlockingService</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientNNPbService</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>ClientNamenodeProtocol.
+<span class="org-whitespace-space">         </span>newReflectiveBlockingService(clientProtocolServerTranslator);
+
+<span class="org-whitespace-space">    </span><span class="org-type">InetSocketAddress</span><span class="org-whitespace-space"> </span><span class="org-variable-name">serviceRpcAddr</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>nn.getServiceRpcServerAddress(conf);
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(serviceRpcAddr<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">serviceHandlerCount</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">        </span>conf.getInt(DFS_NAMENODE_SERVICE_HANDLER_COUNT_KEY,
+<span class="org-whitespace-space">                    </span>DFS_NAMENODE_SERVICE_HANDLER_COUNT_DEFAULT);
+<span class="org-whitespace-space">      </span>serviceRpcServer<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-constant">RPC</span>.<span class="org-type">Builder</span>(conf)
+<span class="org-whitespace-space">          </span>.setProtocol(
+<span class="org-whitespace-space">              </span><span class="org-constant">org</span>.<span class="org-constant">apache</span>.<span class="org-constant">hadoop</span>.<span class="org-constant">hdfs</span>.<span class="org-constant">protocolPB</span>.ClientNamenodeProtocolPB.<span class="org-keyword">class</span>)
+<span class="org-whitespace-space">          </span>.setInstance(clientNNPbService)
+<span class="org-whitespace-space">          </span>.setBindAddress(bindHost)
+<span class="org-whitespace-space">          </span>.setPort(serviceRpcAddr.getPort())
+<span class="org-whitespace-space">          </span>.setNumHandlers(serviceHandlerCount)
+<span class="org-whitespace-space">          </span>.setVerbose(<span class="org-constant">false</span>)
+<span class="org-whitespace-space">          </span>.setSecretManager(namesystem.getDelegationTokenSecretManager())
+<span class="org-whitespace-space">          </span>.build();
+
+<span class="org-whitespace-space">      </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Update</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">address</span><span class="org-whitespace-space"> </span><span class="org-comment">with</span><span class="org-whitespace-space"> </span><span class="org-comment">the</span><span class="org-whitespace-space"> </span><span class="org-comment">correct</span><span class="org-whitespace-space"> </span><span class="org-comment">port</span>
+<span class="org-whitespace-space">      </span><span class="org-type">InetSocketAddress</span><span class="org-whitespace-space"> </span><span class="org-variable-name">listenAddr</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>serviceRpcServer.getListenerAddress();
+<span class="org-whitespace-space">      </span>serviceRPCAddress<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">InetSocketAddress</span>(
+<span class="org-whitespace-space">            </span>serviceRpcAddr.getHostName(),<span class="org-whitespace-space"> </span>listenAddr.getPort());
+<span class="org-whitespace-space">      </span>nn.setRpcServiceServerAddress(conf,<span class="org-whitespace-space"> </span>serviceRPCAddress);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">ClientNamenodeProtocolServerSideTranslatorPB.java</span>
+<span class="org-whitespace-space">  </span><span class="org-c-annotation">@Override</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">CreateResponseProto</span><span class="org-whitespace-space"> </span><span class="org-function-name">create</span>(<span class="org-type">RpcController</span><span class="org-whitespace-space"> </span><span class="org-variable-name">controller</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">CreateRequestProto</span><span class="org-whitespace-space"> </span><span class="org-variable-name">req</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">masked</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>req.hasUnmasked()<span class="org-whitespace-space"> </span>?
+<span class="org-whitespace-space">          </span>FsCreateModes.create(PBHelperClient.convert(req.getMasked()),
+<span class="org-whitespace-space">              </span>PBHelperClient.convert(req.getUnmasked()))<span class="org-whitespace-space"> </span>:
+<span class="org-whitespace-space">          </span>PBHelperClient.convert(req.getMasked());
+<span class="org-whitespace-space">      </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">result</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>server.create(req.getSrc(),
+<span class="org-whitespace-space">          </span>masked,<span class="org-whitespace-space"> </span>req.getClientName(),
+<span class="org-whitespace-space">          </span>PBHelperClient.convertCreateFlag(req.getCreateFlag()),<span class="org-whitespace-space"> </span>req.getCreatePa<span class="org-whitespace-line">rent(),</span>
+<span class="org-whitespace-space">          </span>(<span class="org-type">short</span>)<span class="org-whitespace-space"> </span>req.getReplication(),<span class="org-whitespace-space"> </span>req.getBlockSize(),
+<span class="org-whitespace-space">          </span>PBHelperClient.convertCryptoProtocolVersions(
+<span class="org-whitespace-space">              </span>req.getCryptoProtocolVersionList()),
+<span class="org-whitespace-space">          </span>req.getEcPolicyName(),<span class="org-whitespace-space"> </span>req.getStoragePolicy());
+
+<span class="org-whitespace-space">      </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(result<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>CreateResponseProto.newBuilder().setFs(PBHelperClient.convert(res<span class="org-whitespace-line">ult))</span>
+<span class="org-whitespace-space">            </span>.build();
+<span class="org-whitespace-space">      </span>}
+<span class="org-whitespace-space">      </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>VOID_CREATE_RESPONSE;
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">catch</span><span class="org-whitespace-space"> </span>(<span class="org-type">IOException</span><span class="org-whitespace-space"> </span><span class="org-variable-name">e</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ServiceException</span>(e);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/java/org/apache/hadoop/hdfs/serv</span><span class="org-comment"><span class="org-whitespace-line">er/federation/router/RouterRpcServer.java</span></span>
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">Optional.</span>
+<span class="org-c-annotation">@Override</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">ClientProtocol</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-function-name">create</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,<span class="org-whitespace-space"> </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">masked</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientName</span>,<span class="org-whitespace-space"> </span><span class="org-type">EnumSetWritable</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">CryptoProtocolVersion</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">supportedVersions</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ecPolicyName</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">storagePolicy</span>)
+<span class="org-whitespace-space">      </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>clientProto.create(src,<span class="org-whitespace-space"> </span>masked,<span class="org-whitespace-space"> </span>clientName,<span class="org-whitespace-space"> </span>flag,<span class="org-whitespace-space"> </span>createParent,
+<span class="org-whitespace-space">        </span>replication,<span class="org-whitespace-space"> </span>blockSize,<span class="org-whitespace-space"> </span>supportedVersions,<span class="org-whitespace-space"> </span>ecPolicyName,<span class="org-whitespace-space"> </span>storagePolicy);
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server</span><span class="org-comment"><span class="org-whitespace-line">/namenode/NameNodeRpcServer.java</span></span>
+<span class="org-whitespace-space">  </span><span class="org-c-annotation">@Override</span><span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">ClientProtocol</span>
+<span class="org-whitespace-space">  </span><span class="org-keyword">public</span><span class="org-whitespace-space"> </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-function-name">create</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,<span class="org-whitespace-space"> </span><span class="org-type">FsPermission</span><span class="org-whitespace-space"> </span><span class="org-variable-name">masked</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientName</span>,<span class="org-whitespace-space"> </span><span class="org-type">EnumSetWritable</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">CryptoProtocolVersion</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">supportedVersions</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ecPolicyName</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">storagePolicy</span>)
+<span class="org-whitespace-space">      </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>checkNNStartup();
+<span class="org-whitespace-space">    </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientMachine</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>getClientMachine();
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(stateChangeLog.isDebugEnabled())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>stateChangeLog.debug(<span class="org-string">"*DIR*</span><span class="org-whitespace-space"> </span><span class="org-string">NameNode.create:</span><span class="org-whitespace-space"> </span><span class="org-string">file</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>
+<span class="org-whitespace-space">          </span>+src+<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">for</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>+clientName+<span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">at</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>+clientMachine);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>checkPathLength(src))<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span>(<span class="org-string">"create:</span><span class="org-whitespace-space"> </span><span class="org-string">Pathname</span><span class="org-whitespace-space"> </span><span class="org-string">too</span><span class="org-whitespace-space"> </span><span class="org-string">long.</span><span class="org-whitespace-space">  </span><span class="org-string">Limit</span><span class="org-whitespace-space"> </span><span class="org-string">"</span>
+<span class="org-whitespace-space">          </span>+<span class="org-whitespace-space"> </span>MAX_PATH_LENGTH<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">characters,</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span>MAX_PATH_DEPTH<span class="org-whitespace-space"> </span>+<span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span><span class="org-string">levels."</span>);
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span>namesystem.checkOperation(<span class="org-constant">OperationCategory</span>.WRITE);
+<span class="org-whitespace-space">    </span><span class="org-type">CacheEntryWithPayload</span><span class="org-whitespace-space"> </span><span class="org-variable-name">cacheEntry</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>RetryCache.waitForCompletion(retryCache,<span class="org-whitespace-space"> </span><span class="org-constant"><span class="org-whitespace-line">null</span></span><span class="org-whitespace-line">);</span>
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(cacheEntry<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span><span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>cacheEntry.isSuccess())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>(<span class="org-type">HdfsFileStatus</span>)<span class="org-whitespace-space"> </span>cacheEntry.getPayload();
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">status</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span><span class="org-type">PermissionStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">perm</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">PermissionStatus</span>(getRemoteUser()
+<span class="org-whitespace-space">          </span>.getShortUserName(),<span class="org-whitespace-space"> </span><span class="org-constant">null</span>,<span class="org-whitespace-space"> </span>masked);
+<span class="org-whitespace-space">      </span>status<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>namesystem.startFile(src,<span class="org-whitespace-space"> </span>perm,<span class="org-whitespace-space"> </span>clientName,<span class="org-whitespace-space"> </span>clientMachine,
+<span class="org-whitespace-space">          </span>flag.get(),<span class="org-whitespace-space"> </span>createParent,<span class="org-whitespace-space"> </span>replication,<span class="org-whitespace-space"> </span>blockSize,<span class="org-whitespace-space"> </span>supportedVersions,
+<span class="org-whitespace-space">          </span>ecPolicyName,<span class="org-whitespace-space"> </span>storagePolicy,<span class="org-whitespace-space"> </span>cacheEntry<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">finally</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>RetryCache.setState(cacheEntry,<span class="org-whitespace-space"> </span>status<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span><span class="org-constant">null</span>,<span class="org-whitespace-space"> </span>status);
+<span class="org-whitespace-space">    </span>}
+
+<span class="org-whitespace-space">    </span>metrics.incrFilesCreated();
+<span class="org-whitespace-space">    </span>metrics.incrCreateFileOps();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>status;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/n</span><span class="org-comment"><span class="org-whitespace-line">amenode/FSNamesystem.java</span></span>
+<span class="org-doc">/**</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">Create</span><span class="org-whitespace-space"> </span><span class="org-doc">a</span><span class="org-whitespace-space"> </span><span class="org-doc">new</span><span class="org-whitespace-space"> </span><span class="org-doc">file</span><span class="org-whitespace-space"> </span><span class="org-doc">entry</span><span class="org-whitespace-space"> </span><span class="org-doc">in</span><span class="org-whitespace-space"> </span><span class="org-doc">the</span><span class="org-whitespace-space"> </span><span class="org-doc">namespace.</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">For</span><span class="org-whitespace-space"> </span><span class="org-doc">description</span><span class="org-whitespace-space"> </span><span class="org-doc">of</span><span class="org-whitespace-space"> </span><span class="org-doc">parameters</span><span class="org-whitespace-space"> </span><span class="org-doc">and</span><span class="org-whitespace-space"> </span><span class="org-doc">exceptions</span><span class="org-whitespace-space"> </span><span class="org-doc">thrown</span><span class="org-whitespace-space"> </span><span class="org-doc">see</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">{@link</span></span><span class="org-whitespace-space"> </span><span class="org-doc"><span class="org-constant">ClientProtocol#create}</span></span><span class="org-doc">,</span><span class="org-whitespace-space"> </span><span class="org-doc">except</span><span class="org-whitespace-space"> </span><span class="org-doc">it</span><span class="org-whitespace-space"> </span><span class="org-doc">returns</span><span class="org-whitespace-space"> </span><span class="org-doc">valid</span><span class="org-whitespace-space"> </span><span class="org-doc">file</span><span class="org-whitespace-space"> </span><span class="org-doc">status</span><span class="org-whitespace-space"> </span><span class="org-doc">upon</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*</span><span class="org-whitespace-space"> </span><span class="org-doc">success</span>
+<span class="org-whitespace-space">   </span><span class="org-doc">*/</span>
+<span class="org-whitespace-space">  </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-function-name">startFile</span>(<span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">src</span>,<span class="org-whitespace-space"> </span><span class="org-type">PermissionStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">permissions</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">holder</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">clientMachine</span>,<span class="org-whitespace-space"> </span><span class="org-type">EnumSet</span>&lt;<span class="org-type">CreateFlag</span>&gt;<span class="org-whitespace-space"> </span><span class="org-variable-name">flag</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">createParent</span>,<span class="org-whitespace-space"> </span><span class="org-type">short</span><span class="org-whitespace-space"> </span><span class="org-variable-name">replication</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">blockSize</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">CryptoProtocolVersion</span>[]<span class="org-whitespace-space"> </span><span class="org-variable-name">supportedVersions</span>,<span class="org-whitespace-space"> </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ecPolicyName</span>,
+<span class="org-whitespace-space">      </span><span class="org-type">String</span><span class="org-whitespace-space"> </span><span class="org-variable-name">storagePolicy</span>,<span class="org-whitespace-space"> </span><span class="org-type">boolean</span><span class="org-whitespace-space"> </span><span class="org-variable-name">logRetryCache</span>)<span class="org-whitespace-space"> </span><span class="org-keyword">throws</span><span class="org-whitespace-space"> </span><span class="org-type">IOException</span><span class="org-whitespace-space"> </span>{
+
+<span class="org-whitespace-space">    </span><span class="org-type">HdfsFileStatus</span><span class="org-whitespace-space"> </span><span class="org-variable-name">status</span>;
+<span class="org-whitespace-space">    </span><span class="org-keyword">try</span><span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>status<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>startFileInt(src,<span class="org-whitespace-space"> </span>permissions,<span class="org-whitespace-space"> </span>holder,<span class="org-whitespace-space"> </span>clientMachine,<span class="org-whitespace-space"> </span>flag,
+<span class="org-whitespace-space">          </span>createParent,<span class="org-whitespace-space"> </span>replication,<span class="org-whitespace-space"> </span>blockSize,<span class="org-whitespace-space"> </span>supportedVersions,<span class="org-whitespace-space"> </span>ecPolicyName,
+<span class="org-whitespace-space">          </span>storagePolicy,<span class="org-whitespace-space"> </span>logRetryCache);
+<span class="org-whitespace-space">    </span>}<span class="org-whitespace-space"> </span><span class="org-keyword">catch</span><span class="org-whitespace-space"> </span>(<span class="org-type">AccessControlException</span><span class="org-whitespace-space"> </span><span class="org-variable-name">e</span>)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">      </span>logAuditEvent(<span class="org-constant">false</span>,<span class="org-whitespace-space"> </span><span class="org-string">"create"</span>,<span class="org-whitespace-space"> </span>src);
+<span class="org-whitespace-space">      </span><span class="org-keyword">throw</span><span class="org-whitespace-space"> </span>e;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span>logAuditEvent(<span class="org-constant">true</span>,<span class="org-whitespace-space"> </span><span class="org-string">"create"</span>,<span class="org-whitespace-space"> </span>src,<span class="org-whitespace-space"> </span>status);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>status;
+<span class="org-whitespace-space">  </span>}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96b67d7" class="outline-2">
+<h2 id="org96b67d7"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>Code</dt><dd><a href="https://github.com/apache/hadoop/tree/trunk/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/ipc">https://github.com/apache/hadoop/tree/trunk/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/ipc</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
