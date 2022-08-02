@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>代码质量(Code Quality)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">代码质量(Code Quality)</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org79d89c1">1. From Books</a>
+<ul>
+<li><a href="#org6769193">1.1. Rules From &lt;The Art Of UNIX&gt;</a></li>
+<li><a href="#orgc860fdf">1.2. Rules From &lt;Clean Code&gt;</a></li>
+<li><a href="#org475dded">1.3. Rules From &lt;Building Secure and Reliable Systems&gt;</a></li>
+<li><a href="#orgf2f6fb7">1.4. Rules From &lt;TDD&gt;</a></li>
+</ul>
+</li>
+<li><a href="#org5aac58c">2. From Experience</a>
+<ul>
+<li><a href="#orgf50a935">2.1. 名副其实</a></li>
+<li><a href="#orge2d874c">2.2. 析构线程/协程上下文</a></li>
+<li><a href="#org9bdf785">2.3. 针对接口编程</a></li>
+<li><a href="#org9273206">2.4. 断言与Debug断言</a></li>
+<li><a href="#org0b47112">2.5. Code Review</a></li>
+<li><a href="#org60552dc">2.6. 分层的, 完整的测试</a>
+<ul>
+<li><a href="#orgff2e1a6">2.6.1. UT</a></li>
+<li><a href="#org9fad3a8">2.6.2. ST</a></li>
+<li><a href="#org803703f">2.6.3. FT(CD)</a></li>
+<li><a href="#org49721fd">2.6.4. E2E</a></li>
+<li><a href="#org3b11985">2.6.5. 预发验证</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7d8460f">3. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org79d89c1" class="outline-2">
+<h2 id="org79d89c1"><span class="section-number-2">1</span> From Books</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org6769193" class="outline-3">
+<h3 id="org6769193"><span class="section-number-3">1.1</span> Rules From &lt;The Art Of UNIX&gt;</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>清晰胜于机巧</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc860fdf" class="outline-3">
+<h3 id="orgc860fdf"><span class="section-number-3">1.2</span> Rules From &lt;Clean Code&gt;</h3>
+</div>
+
+<div id="outline-container-org475dded" class="outline-3">
+<h3 id="org475dded"><span class="section-number-3">1.3</span> Rules From &lt;Building Secure and Reliable Systems&gt;</h3>
+</div>
+
+<div id="outline-container-orgf2f6fb7" class="outline-3">
+<h3 id="orgf2f6fb7"><span class="section-number-3">1.4</span> Rules From &lt;TDD&gt;</h3>
+</div>
+</div>
+
+<div id="outline-container-org5aac58c" class="outline-2">
+<h2 id="org5aac58c"><span class="section-number-2">2</span> From Experience</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgf50a935" class="outline-3">
+<h3 id="orgf50a935"><span class="section-number-3">2.1</span> 名副其实</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>不要在Free里做Malloc事情</li>
+<li>用可读的函数, 变量名称, 代替非必要的注释</li>
+<li>复杂的算法, 用注释高层描述实现</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge2d874c" class="outline-3">
+<h3 id="orge2d874c"><span class="section-number-3">2.2</span> 析构线程/协程上下文</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>不要在析构函数里切换线程/协程</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9bdf785" class="outline-3">
+<h3 id="org9bdf785"><span class="section-number-3">2.3</span> 针对接口编程</h3>
+</div>
+
+<div id="outline-container-org9273206" class="outline-3">
+<h3 id="org9273206"><span class="section-number-3">2.4</span> 断言与Debug断言</h3>
+<div class="outline-text-3" id="text-2-4">
+<ul class="org-ul">
+<li>断言只做读和验证</li>
+<li>Debug断言只做读, 调用const类函数, 以及Inject类非Const函数</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0b47112" class="outline-3">
+<h3 id="org0b47112"><span class="section-number-3">2.5</span> Code Review</h3>
+<div class="outline-text-3" id="text-2-5">
+<ul class="org-ul">
+<li>控制Patch规模, 400L</li>
+<li>控制Review速度, 每小时限制在500L以内</li>
+<li>一次Review时间不要超过60minutes</li>
+<li>Submitter先Review自己的提交
+<ul class="org-ul">
+<li>liufeng做的很好</li>
+</ul></li>
+<li>测试代码也需要仔细看, 理解测试目的</li>
+<li>CheckList</li>
+<li>维护和谐关系, 不同观点会有碰撞</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org60552dc" class="outline-3">
+<h3 id="org60552dc"><span class="section-number-3">2.6</span> 分层的, 完整的测试</h3>
+<div class="outline-text-3" id="text-2-6">
+</div>
+<div id="outline-container-orgff2e1a6" class="outline-4">
+<h4 id="orgff2e1a6"><span class="section-number-4">2.6.1</span> UT</h4>
+<div class="outline-text-4" id="text-2-6-1">
+<ul class="org-ul">
+<li>面向UT设计, 好的代码是可测的
+<ul class="org-ul">
+<li>清晰, 明确的输入输出</li>
+<li>清晰的代码结构, 函数定义</li>
+<li>维护类内部状态, 性能, 错误, 事件等数据, 用作UT验证</li>
+</ul></li>
+
+<li>UT最佳实践
+<ul class="org-ul">
+<li>Fast
+<ul class="org-ul">
+<li>尽量简单</li>
+<li>尽量减少依赖</li>
+<li>Mock外部依赖</li>
+</ul></li>
+<li>Deterministic(or Repeatable, Stability)
+<ul class="org-ul">
+<li>结果是明确的, 稳定的</li>
+<li>测试是可重入的</li>
+<li>测试稳定, 不会概率性失败</li>
+</ul></li>
+<li>Boundary
+<ul class="org-ul">
+<li>上下边界</li>
+</ul></li>
+<li>Coverage
+<ul class="org-ul">
+<li>分支</li>
+<li>合适的coverage, 90%+</li>
+</ul></li>
+<li>Readable
+<ul class="org-ul">
+<li>代码可读性</li>
+<li>结果可读性: 复杂case, 前置条件检测成功后, 再检测后续结果</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9fad3a8" class="outline-4">
+<h4 id="org9fad3a8"><span class="section-number-4">2.6.2</span> ST</h4>
+<div class="outline-text-4" id="text-2-6-2">
+<ul class="org-ul">
+<li>单进程, 多模块/多服务交互</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org803703f" class="outline-4">
+<h4 id="org803703f"><span class="section-number-4">2.6.3</span> FT(CD)</h4>
+<div class="outline-text-4" id="text-2-6-3">
+<ul class="org-ul">
+<li>单物理机, 多服务多进程协作</li>
+<li>测试功能正确性, 完整性</li>
+<li>测试升级, 回滚, 版本兼容性</li>
+<li>组件异常审批测试(DISK, SERVER下线, 扩容等)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org49721fd" class="outline-4">
+<h4 id="org49721fd"><span class="section-number-4">2.6.4</span> E2E</h4>
+<div class="outline-text-4" id="text-2-6-4">
+<ul class="org-ul">
+<li>物理环境测试集群</li>
+<li>功能测试, 压力测试, 性能测试</li>
+<li>故障注入测试</li>
+<li>预埋海量数据, 验证雪崩后的行为</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3b11985" class="outline-4">
+<h4 id="org3b11985"><span class="section-number-4">2.6.5</span> 预发验证</h4>
+<div class="outline-text-4" id="text-2-6-5">
+<ul class="org-ul">
+<li>生产环境, 流量小, 非关键业务</li>
+<li>分批发布上线</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7d8460f" class="outline-2">
+<h2 id="org7d8460f"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Clean Code</li>
+<li>UNIX编程艺术</li>
+<li><a href="https://www.testim.io/blog/unit-testing-best-practices/">https://www.testim.io/blog/unit-testing-best-practices/</a></li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/419328370">https://zhuanlan.zhihu.com/p/419328370</a></li>
+<li><a href="https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/">https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
