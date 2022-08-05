@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>LINUX IO TRACE</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LINUX IO TRACE</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org132a465">1. blktrace</a></li>
+<li><a href="#orgf538bc0">2. trace-cmd</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org132a465" class="outline-2">
+<h2 id="org132a465"><span class="section-number-2">1</span> blktrace</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>blktrace<span class="org-whitespace-space"> </span>-d<span class="org-whitespace-space"> </span>/dev/sda<span class="org-whitespace-space"> </span>-o<span class="org-whitespace-space"> </span>-<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>blkparse<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>-
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf538bc0" class="outline-2">
+<h2 id="orgf538bc0"><span class="section-number-2">2</span> trace-cmd</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>trace-cmd<span class="org-whitespace-space"> </span>record<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span><span class="org-keyword">function</span><span class="org-whitespace-space"> </span><span class="org-function-name">--func-stack</span><span class="org-whitespace-space"> </span>-l<span class="org-whitespace-space"> </span>generic_make_request<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=<span class="org-whitespace-line">/dev/zero</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">of</span></span><span class="org-whitespace-line">=test-f1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">count</span></span><span class="org-whitespace-line">=1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">oflag</span></span><span class="org-whitespace-line">=direct</span>
+
+~$<span class="org-whitespace-space"> </span>trace-cmd<span class="org-whitespace-space"> </span>report
+CPU<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+CPU<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+CPU<span class="org-whitespace-space"> </span>3<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+<span class="org-variable-name">cpus</span>=4
+<span class="org-whitespace-space">              </span>dd-18614<span class="org-whitespace-space"> </span>[000]<span class="org-whitespace-space"> </span>919057.409071:<span class="org-whitespace-space"> </span><span class="org-keyword">function</span>:<span class="org-whitespace-space">             </span>generic_make_r<span class="org-whitespace-line">equest</span>
+<span class="org-whitespace-space">              </span>dd-18614<span class="org-whitespace-space"> </span>[000]<span class="org-whitespace-space"> </span>919057.409098:<span class="org-whitespace-space"> </span>kernel_stack:<span class="org-whitespace-space">         </span>&lt;stack<span class="org-whitespace-space"> </span>trace&gt;
+=&gt;<span class="org-whitespace-space"> </span>generic_make_request<span class="org-whitespace-space"> </span>(ffffffff8f58c5b5)
+=&gt;<span class="org-whitespace-space"> </span>submit_bio<span class="org-whitespace-space"> </span>(ffffffff8f58c9f5)
+=&gt;<span class="org-whitespace-space"> </span>do_blockdev_direct_IO<span class="org-whitespace-space"> </span>(ffffffff8f4ac84d)
+=&gt;<span class="org-whitespace-space"> </span>ext4_direct_IO<span class="org-whitespace-space"> </span>(ffffffffc094b2f9)
+=&gt;<span class="org-whitespace-space"> </span>generic_file_direct_write<span class="org-whitespace-space"> </span>(ffffffff8f3c8e86)
+=&gt;<span class="org-whitespace-space"> </span>__generic_file_write_iter<span class="org-whitespace-space"> </span>(ffffffff8f3c9007)
+=&gt;<span class="org-whitespace-space"> </span>ext4_file_write_iter<span class="org-whitespace-space"> </span>(ffffffffc09368d6)
+=&gt;<span class="org-whitespace-space"> </span>new_sync_write<span class="org-whitespace-space"> </span>(ffffffff8f464d9b)
+=&gt;<span class="org-whitespace-space"> </span>vfs_write<span class="org-whitespace-space"> </span>(ffffffff8f467cb5)
+=&gt;<span class="org-whitespace-space"> </span>ksys_write<span class="org-whitespace-space"> </span>(ffffffff8f467f57)
+=&gt;<span class="org-whitespace-space"> </span>do_syscall_64<span class="org-whitespace-space"> </span>(ffffffff8f204183)
+=&gt;<span class="org-whitespace-space"> </span>entry_SYSCALL_64_after_hwframe<span class="org-whitespace-space"> </span>(ffffffff8fa00088)
+<span class="org-whitespace-space">              </span>dd-18614<span class="org-whitespace-space"> </span>[000]<span class="org-whitespace-space"> </span>919057.409122:<span class="org-whitespace-space"> </span><span class="org-keyword">function</span>:<span class="org-whitespace-space">             </span>generic_make_r<span class="org-whitespace-line">equest</span>
+<span class="org-whitespace-space">              </span>dd-18614<span class="org-whitespace-space"> </span>[000]<span class="org-whitespace-space"> </span>919057.409136:<span class="org-whitespace-space"> </span>kernel_stack:<span class="org-whitespace-space">         </span>&lt;stack<span class="org-whitespace-space"> </span>trace&gt;
+=&gt;<span class="org-whitespace-space"> </span>generic_make_request<span class="org-whitespace-space"> </span>(ffffffff8f58c5b5)
+=&gt;<span class="org-whitespace-space"> </span>blk_queue_split<span class="org-whitespace-space"> </span>(ffffffff8f5933fd)
+=&gt;<span class="org-whitespace-space"> </span>blk_mq_make_request<span class="org-whitespace-space"> </span>(ffffffff8f599aa6)
+=&gt;<span class="org-whitespace-space"> </span>generic_make_request<span class="org-whitespace-space"> </span>(ffffffff8f58c754)
+=&gt;<span class="org-whitespace-space"> </span>submit_bio<span class="org-whitespace-space"> </span>(ffffffff8f58c9f5)
+=&gt;<span class="org-whitespace-space"> </span>do_blockdev_direct_IO<span class="org-whitespace-space"> </span>(ffffffff8f4ac84d)
+=&gt;<span class="org-whitespace-space"> </span>ext4_direct_IO<span class="org-whitespace-space"> </span>(ffffffffc094b2f9)
+=&gt;<span class="org-whitespace-space"> </span>generic_file_direct_write<span class="org-whitespace-space"> </span>(ffffffff8f3c8e86)
+=&gt;<span class="org-whitespace-space"> </span>__generic_file_write_iter<span class="org-whitespace-space"> </span>(ffffffff8f3c9007)
+=&gt;<span class="org-whitespace-space"> </span>ext4_file_write_iter<span class="org-whitespace-space"> </span>(ffffffffc09368d6)
+=&gt;<span class="org-whitespace-space"> </span>new_sync_write<span class="org-whitespace-space"> </span>(ffffffff8f464d9b)
+=&gt;<span class="org-whitespace-space"> </span>vfs_write<span class="org-whitespace-space"> </span>(ffffffff8f467cb5)
+=&gt;<span class="org-whitespace-space"> </span>ksys_write<span class="org-whitespace-space"> </span>(ffffffff8f467f57)
+=&gt;<span class="org-whitespace-space"> </span>do_syscall_64<span class="org-whitespace-space"> </span>(ffffffff8f204183)
+=&gt;<span class="org-whitespace-space"> </span>entry_SYSCALL_64_after_hwframe<span class="org-whitespace-space"> </span>(ffffffff8fa00088)
+
+~$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>trace-cmd<span class="org-whitespace-space"> </span>record<span class="org-whitespace-space"> </span>-p<span class="org-whitespace-space"> </span>function_graph<span class="org-whitespace-space"> </span>-g<span class="org-whitespace-space"> </span>generic_make_request<span class="org-whitespace-space"> </span>dd<span class="org-whitespace-space"> </span><span class="org-variable-name">if</span>=/dev/ze<span class="org-whitespace-line">ro</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">of</span></span><span class="org-whitespace-line">=test-f1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">count</span></span><span class="org-whitespace-line">=1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-variable-name"><span class="org-whitespace-line">oflag</span></span><span class="org-whitespace-line">=direct</span>
+
+CPU<span class="org-whitespace-space"> </span>0<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+CPU<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+CPU<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>empty
+<span class="org-variable-name">cpus</span>=4
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299850:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">generic_make_request()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299852:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">    </span></span><span class="org-whitespace-line">smp_irq_work_interrupt()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299852:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">irq_enter()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299852:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">        </span></span><span class="org-whitespace-line">rcu_irq_enter()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299853:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.153<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">rcu_nmi_enter();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299853:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>0.525<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">        </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299853:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>0.818<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299853:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">__wake_up()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299853:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">        </span></span><span class="org-whitespace-line">__wake_up_common_lock()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299854:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.127<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">_raw_spin_lock_irqsave();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299854:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.143<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">__wake_up_common();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299854:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.146<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">_raw_spin_unlock_irqrestore();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299854:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>0.934<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">        </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>1.193<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">      </span></span><span class="org-whitespace-line">__wake_up()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">        </span></span><span class="org-whitespace-line">__wake_up_common_lock()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.128<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">_raw_spin_lock_irqsave();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">          </span></span><span class="org-whitespace-line">__wake_up_common()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299855:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">            </span></span><span class="org-whitespace-line">autoremove_wake_function()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299856:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">              </span></span><span class="org-whitespace-line">default_wake_function()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299856:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                </span></span><span class="org-whitespace-line">try_to_wake_up()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299856:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.162<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                  </span></span><span class="org-whitespace-line">_raw_spin_lock_irqsave();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299856:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                  </span></span><span class="org-whitespace-line">select_task_rq_fair()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299856:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.125<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                    </span></span><span class="org-whitespace-line">available_idle_cpu();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299857:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.192<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                    </span></span><span class="org-whitespace-line">update_cfs_rq_h_load();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299857:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">                   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                    </span></span><span class="org-whitespace-line">select_idle_sibling()</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299857:<span class="org-whitespace-space"> </span>funcgraph_entry:<span class="org-whitespace-space">        </span>0.149<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                      </span></span><span class="org-whitespace-line">available_idle_cpu();</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299857:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>0.400<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                    </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">              </span>dd-25500<span class="org-whitespace-space"> </span>[003]<span class="org-whitespace-space"> </span>919560.299858:<span class="org-whitespace-space"> </span>funcgraph_exit:<span class="org-whitespace-space">         </span>1.411<span class="org-whitespace-space"> </span>us<span class="org-whitespace-space">   </span>|<span class="org-whitespace-space"><span class="org-whitespace-line">                  </span></span><span class="org-whitespace-line">}</span>
+<span class="org-whitespace-space">            </span>...
+</pre>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

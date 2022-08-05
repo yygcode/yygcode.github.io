@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Page Cache Trace</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Page Cache Trace</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org45ad861">1. page cache tools</a>
+<ul>
+<li><a href="#org240e80d">1.1. vmtouch</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+非direct读取/写入文件时, 文件内容会缓存到Page Cache中. 用多个命令看cache统计:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>free<span class="org-whitespace-space"> </span>-g
+<span class="org-whitespace-space">              </span>total<span class="org-whitespace-space">        </span>used<span class="org-whitespace-space">        </span>free<span class="org-whitespace-space">      </span>shared<span class="org-whitespace-space">  </span>buff/cache<span class="org-whitespace-space">   </span>available
+Mem:<span class="org-whitespace-space">             </span>15<span class="org-whitespace-space">           </span>7<span class="org-whitespace-space">           </span>1<span class="org-whitespace-space">           </span>1<span class="org-whitespace-space">           </span>5<span class="org-whitespace-space">           </span>5
+Swap:<span class="org-whitespace-space">             </span>0<span class="org-whitespace-space">           </span>0<span class="org-whitespace-space">           </span>0
+
+~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/proc/meminfo<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>Cached
+Cached:<span class="org-whitespace-space">          </span>3869192<span class="org-whitespace-space"> </span>kB
+SwapCached:<span class="org-whitespace-space">            </span>0<span class="org-whitespace-space"> </span>kB
+</pre>
+</div>
+
+<p>
+mmap, tmpfs, file, shm 会占用Page Cache. 文件删除时, Page Cache自动回收. 内存紧张时, 同步回收(direct reclaim). 也可通过写入 <code>/proc/sys/vm/drop_caches</code> 手动回收.
+</p>
+
+<p>
+mmap占用的Page Cache, 在munmap之前, 无法回收. tmpfs 文件占有的Page Cache, 文件删除之前, 无法回收.
+</p>
+
+<p>
+Page Cache是系统级别的. cgroup内, 有自己的cache. 那当不同cgroup进程访问同一个文件, 是单个cgroup统计cache, 还是两边都统计?
+</p>
+
+<p>
+pmap, smem用来分析内存使用情况:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>smem
+<span class="org-whitespace-space">  </span>PID<span class="org-whitespace-space"> </span>User<span class="org-whitespace-space">     </span>Command<span class="org-whitespace-space">                         </span>Swap<span class="org-whitespace-space">      </span>USS<span class="org-whitespace-space">      </span>PSS<span class="org-whitespace-space">      </span>RSS
+<span class="org-whitespace-space"> </span>7401<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">    </span>/home/yanyg/bin/emacsc<span class="org-whitespace-space"> </span>-t<span class="org-whitespace-space"> </span>R<span class="org-whitespace-space">        </span>0<span class="org-whitespace-space">       </span>96<span class="org-whitespace-space">      </span>114<span class="org-whitespace-space">     </span>1424
+<span class="org-whitespace-space"> </span>3112<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">    </span>/home/yanyg/bin/emacsc<span class="org-whitespace-space"> </span>-t<span class="org-whitespace-space">          </span>0<span class="org-whitespace-space">       </span>96<span class="org-whitespace-space">      </span>118<span class="org-whitespace-space">     </span>1544
+19712<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">    </span>cat<span class="org-whitespace-space">                                </span>0<span class="org-whitespace-space">       </span>88<span class="org-whitespace-space">      </span>121<span class="org-whitespace-space">     </span>1756
+19711<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">    </span>cat<span class="org-whitespace-space">                                </span>0<span class="org-whitespace-space">       </span>88<span class="org-whitespace-space">      </span>126<span class="org-whitespace-space">     </span>1732
+21062<span class="org-whitespace-space"> </span>yanyg<span class="org-whitespace-space">    </span>sh<span class="org-whitespace-space"> </span>start.sh<span class="org-whitespace-space">                        </span>0<span class="org-whitespace-space">      </span>200<span class="org-whitespace-space">      </span>203<span class="org-whitespace-space">     </span>1436
+</pre>
+</div>
+
+<div id="outline-container-org45ad861" class="outline-2">
+<h2 id="org45ad861"><span class="section-number-2">1</span> page cache tools</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org240e80d" class="outline-3">
+<h3 id="org240e80d"><span class="section-number-3">1.1</span> vmtouch</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Github: <a href="https://github.com/hoytech/vmtouch">https://github.com/hoytech/vmtouch</a>
+</p>
+
+<p>
+Code: <a href="https://github.com/hoytech/vmtouch/blob/master/vmtouch.c">https://github.com/hoytech/vmtouch/blob/master/vmtouch.c</a>
+</p>
+
+<p>
+基于 <code>mmap</code> 和 <code>mincore</code> 实现.
+</p>
+
+<blockquote>
+<p>
+mincore()  returns  a  vector  that indicates whether pages of the
+calling process's virtual memory are resident in core (RAM), and so
+will not cause a disk access (page fault) if referenced.  The kernel
+returns residency information about the pages starting at the address
+addr, and continuing for length bytes.
+</p>
+</blockquote>
+
+<p>
+example:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">~$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>clone<span class="org-whitespace-space"> </span>https://github.com/hoytech/vmtouch.git
+~$<span class="org-whitespace-space"> </span>cd<span class="org-whitespace-space"> </span>vmtouch
+~$<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>&amp;&amp;<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>install
+~$<span class="org-whitespace-space"> </span>vmtouch<span class="org-whitespace-space"> </span>test.img
+<span class="org-whitespace-space">           </span>Files:<span class="org-whitespace-space"> </span>1
+<span class="org-whitespace-space">     </span>Directories:<span class="org-whitespace-space"> </span>0
+<span class="org-whitespace-space">  </span>Resident<span class="org-whitespace-space"> </span>Pages:<span class="org-whitespace-space"> </span>0/320<span class="org-whitespace-space">  </span>0/1M<span class="org-whitespace-space">  </span>0%
+<span class="org-whitespace-space">         </span>Elapsed:<span class="org-whitespace-space"> </span>0.000293<span class="org-whitespace-space"> </span>seconds
+~$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>test.img<span class="org-whitespace-space"> </span>&gt;/dev/null
+~$<span class="org-whitespace-space"> </span>vmtouch<span class="org-whitespace-space"> </span>test.img
+<span class="org-whitespace-space">           </span>Files:<span class="org-whitespace-space"> </span>1
+<span class="org-whitespace-space">     </span>Directories:<span class="org-whitespace-space"> </span>0
+<span class="org-whitespace-space">  </span>Resident<span class="org-whitespace-space"> </span>Pages:<span class="org-whitespace-space"> </span>320/320<span class="org-whitespace-space">  </span>1M/1M<span class="org-whitespace-space">  </span>100%
+<span class="org-whitespace-space">         </span>Elapsed:<span class="org-whitespace-space"> </span>0.0001<span class="org-whitespace-space"> </span>seconds
+~$<span class="org-whitespace-space"> </span>vmtouch<span class="org-whitespace-space"> </span>/var/<span class="org-whitespace-space"> </span>2&gt;/dev/null
+<span class="org-whitespace-space">           </span>Files:<span class="org-whitespace-space"> </span>15756
+<span class="org-whitespace-space">     </span>Directories:<span class="org-whitespace-space"> </span>686
+<span class="org-whitespace-space">  </span>Resident<span class="org-whitespace-space"> </span>Pages:<span class="org-whitespace-space"> </span>1162109/1162110<span class="org-whitespace-space">  </span>4G/4G<span class="org-whitespace-space">  </span>100%
+<span class="org-whitespace-space">         </span>Elapsed:<span class="org-whitespace-space"> </span>0.16369<span class="org-whitespace-space"> </span>seconds
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
