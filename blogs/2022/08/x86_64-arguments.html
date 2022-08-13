@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>X86_64参数传递</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">X86_64参数传递</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge105c77">1. 从一个问题引入</a></li>
+<li><a href="#org0918574">2. 寄存器规范</a>
+<ul>
+<li><a href="#orgf84bb0a">2.1. 通用寄存器</a>
+<ul>
+<li><a href="#org12b96a5">2.1.1. 函数参数传递</a></li>
+<li><a href="#org5ac9dc7">2.1.2. 浮点寄存器</a></li>
+<li><a href="#orga207b66">2.1.3. 使用者需要保存的寄存器</a></li>
+<li><a href="#org1130391">2.1.4. 调用者需要保存的寄存器</a></li>
+<li><a href="#orge43aea9">2.1.5. 特殊寄存器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge105c77" class="outline-2">
+<h2 id="orge105c77"><span class="section-number-2">1</span> 从一个问题引入</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+如下不正确调用的输出是什么?
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">  </span>printf(<span class="org-string">"%d\n"</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<p>
+不给printf提供更多参数, 如何稳定的输出100 ?
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">  </span><span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"movq</span><span class="org-whitespace-space"> </span><span class="org-string">$100,</span><span class="org-whitespace-space"> </span><span class="org-string">%rsi"</span>);
+<span class="org-whitespace-space">  </span>printf(<span class="org-string">"%d\n"</span>);
+<span class="org-whitespace-space">  </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0918574" class="outline-2">
+<h2 id="org0918574"><span class="section-number-2">2</span> 寄存器规范</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+常用寄存器37个, 21个通用寄存器, 16个浮点寄存器.
+</p>
+</div>
+<div id="outline-container-orgf84bb0a" class="outline-3">
+<h3 id="orgf84bb0a"><span class="section-number-3">2.1</span> 通用寄存器</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org12b96a5" class="outline-4">
+<h4 id="org12b96a5"><span class="section-number-4">2.1.1</span> 函数参数传递</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+整型参数入参6个, rdi, rsi, rdx, rcx, r8, r9. 超过6个入参, 压入堆栈.
+</p>
+
+<p>
+写了一个9个参数的demo, 输出如下:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">[yanyg@x1{192.168.1.116}<span class="org-whitespace-space"> </span>~/test<span class="org-whitespace-space"> </span>]
+$<span class="org-whitespace-space"> </span>./a.out
+<span class="org-whitespace-space"> </span>rdi<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=1,<span class="org-whitespace-space"> </span>value=1
+<span class="org-whitespace-space"> </span>rsi<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=2,<span class="org-whitespace-space"> </span>value=2
+<span class="org-whitespace-space"> </span>rdx<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=3,<span class="org-whitespace-space"> </span>value=3
+<span class="org-whitespace-space"> </span>rcx<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=4,<span class="org-whitespace-space"> </span>value=4
+<span class="org-whitespace-space">  </span>r8<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=5,<span class="org-whitespace-space"> </span>value=5
+<span class="org-whitespace-space">  </span>r9<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=6,<span class="org-whitespace-space"> </span>value=6
+sta0<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=0,<span class="org-whitespace-space"> </span>value=7
+sta1<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=1,<span class="org-whitespace-space"> </span>value=8
+sta2<span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span>index=2,<span class="org-whitespace-space"> </span>value=9
+</pre>
+</div>
+
+<p>
+demo代码如下, 为了使汇编能工作, 需要设置优化级别为0. gcc -Wall -O0 demo.c
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdarg.h&gt;</span>
+<span class="org-preprocessor">#include</span><span class="org-whitespace-space"> </span><span class="org-string">&lt;stdio.h&gt;</span>
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">GetRegValueByName</span>(<span class="org-variable-name">reg</span>)<span class="org-whitespace-space">                                  </span>\
+<span class="org-whitespace-space">    </span>({<span class="org-whitespace-space">                                                          </span>\
+<span class="org-whitespace-space">        </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span>;<span class="org-whitespace-space">                                               </span>\
+<span class="org-whitespace-space">        </span><span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"movq</span><span class="org-whitespace-space"> </span><span class="org-string">%%"</span><span class="org-whitespace-space"> </span>#<span class="org-whitespace-space"> </span>reg<span class="org-whitespace-space"> </span><span class="org-string">",</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=m"</span>(ret));<span class="org-whitespace-space">   </span>\
+<span class="org-whitespace-space">        </span>ret;<span class="org-whitespace-space">                                                    </span>\
+<span class="org-whitespace-space">    </span>})
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">GetStackValueByOffset</span>(<span class="org-variable-name">offset</span>)<span class="org-whitespace-space">                           </span>\
+<span class="org-whitespace-space">    </span>({<span class="org-whitespace-space">                                                          </span>\
+<span class="org-whitespace-space">        </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span>;<span class="org-whitespace-space">                                               </span>\
+<span class="org-whitespace-space">        </span><span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"movq</span><span class="org-whitespace-space"> </span><span class="org-string">"</span><span class="org-whitespace-space"> </span>#offset<span class="org-whitespace-space"> </span><span class="org-string">"(%rbp),</span><span class="org-whitespace-space"> </span><span class="org-string">%rax"</span>);<span class="org-whitespace-space">       </span>\
+<span class="org-whitespace-space">        </span><span class="org-keyword">__asm__</span><span class="org-whitespace-space"> </span><span class="org-keyword">volatile</span>(<span class="org-string">"movq</span><span class="org-whitespace-space"> </span><span class="org-string">%%rax,</span><span class="org-whitespace-space"> </span><span class="org-string">%0"</span><span class="org-whitespace-space"> </span>:<span class="org-whitespace-space"> </span><span class="org-string">"=m"</span>(ret));<span class="org-whitespace-space">         </span>\
+<span class="org-whitespace-space">        </span>ret;<span class="org-whitespace-space">                                                    </span>\
+<span class="org-whitespace-space">    </span>})
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">get_gp_index</span>(<span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">reg</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v1</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v2</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v3</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v4</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v5</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v6</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v1)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>1;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v2)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>2;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v3)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>3;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v4)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>4;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v5)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>5;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(reg<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>v6)
+<span class="org-whitespace-space">    </span>{
+<span class="org-whitespace-space">        </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>6;
+<span class="org-whitespace-space">    </span>}
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">PRINT_REG</span>(<span class="org-variable-name">reg</span>)<span class="org-whitespace-space">                                                  </span>\
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"%4s</span><span class="org-whitespace-space"> </span><span class="org-string">:</span><span class="org-whitespace-space"> </span><span class="org-string">index=%d,</span><span class="org-whitespace-space"> </span><span class="org-string">value=%ld\n"</span>,<span class="org-whitespace-space">                               </span>\
+<span class="org-whitespace-space">           </span>#reg,<span class="org-whitespace-space"> </span>get_gp_index(reg,<span class="org-whitespace-space"> </span>v1,<span class="org-whitespace-space"> </span>v2,<span class="org-whitespace-space"> </span>v3,<span class="org-whitespace-space"> </span>v4,<span class="org-whitespace-space"> </span>v5,<span class="org-whitespace-space"> </span>v6),<span class="org-whitespace-space"> </span>reg);
+
+<span class="org-preprocessor">#define</span><span class="org-whitespace-space"> </span><span class="org-function-name">PRINT_STACK</span>(<span class="org-variable-name">stackIdx</span>)<span class="org-whitespace-space">                                           </span>\
+<span class="org-whitespace-space">    </span>printf(<span class="org-string">"sta%d</span><span class="org-whitespace-space"> </span><span class="org-string">:</span><span class="org-whitespace-space"> </span><span class="org-string">index=%d,</span><span class="org-whitespace-space"> </span><span class="org-string">value=%ld\n"</span>,<span class="org-whitespace-space">                             </span>\
+<span class="org-whitespace-space">           </span>stackIdx,<span class="org-whitespace-space"> </span>stackIdx,<span class="org-whitespace-space"> </span>stack<span class="org-whitespace-space"> </span>##<span class="org-whitespace-space"> </span>stackIdx);
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-function-name">print_gp_registers</span>(<span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v1</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v2</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v3</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v4</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v5</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v6</span>,
+<span class="org-whitespace-space">                        </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v7</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v8</span>,<span class="org-whitespace-space"> </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">v9</span>)
+{
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rsi</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(rsi);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rdi</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(rdi);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rdx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(rdx);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">rcx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(rcx);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">r8</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(r8);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">r9</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetRegValueByName(r9);
+<span class="org-whitespace-space">    </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">call</span><span class="org-whitespace-space"> </span><span class="org-comment">+</span><span class="org-whitespace-space"> </span><span class="org-comment">pushq</span><span class="org-whitespace-space"> </span><span class="org-comment">rbp</span><span class="org-whitespace-space"> </span><span class="org-comment">=</span><span class="org-whitespace-space"> </span><span class="org-comment">16</span><span class="org-whitespace-space"> </span><span class="org-comment">bytes</span>
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stack0</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetStackValueByOffset(16);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stack1</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetStackValueByOffset(24);
+<span class="org-whitespace-space">    </span><span class="org-type">long</span><span class="org-whitespace-space"> </span><span class="org-variable-name">stack2</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>GetStackValueByOffset(32);
+<span class="org-whitespace-space">    </span>PRINT_REG(rdi);
+<span class="org-whitespace-space">    </span>PRINT_REG(rsi);
+<span class="org-whitespace-space">    </span>PRINT_REG(rdx);
+<span class="org-whitespace-space">    </span>PRINT_REG(rcx);
+<span class="org-whitespace-space">    </span>PRINT_REG(r8);
+<span class="org-whitespace-space">    </span>PRINT_REG(r9);
+<span class="org-whitespace-space">    </span>PRINT_STACK(0);
+<span class="org-whitespace-space">    </span>PRINT_STACK(1);
+<span class="org-whitespace-space">    </span>PRINT_STACK(2);
+}
+
+<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-function-name">main</span>(<span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">argc</span>,<span class="org-whitespace-space"> </span><span class="org-type">char</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">argv</span>[])
+{
+<span class="org-whitespace-space">    </span>print_gp_registers(1,<span class="org-whitespace-space"> </span>2,<span class="org-whitespace-space"> </span>3,<span class="org-whitespace-space"> </span>4,<span class="org-whitespace-space"> </span>5,<span class="org-whitespace-space"> </span>6,<span class="org-whitespace-space"> </span>7,<span class="org-whitespace-space"> </span>8,<span class="org-whitespace-space"> </span>9);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span><span class="org-whitespace-space"> </span>0;
+}
+</pre>
+</div>
+
+<p>
+优化为0时的部分关联汇编如下:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-function-name">print_gp_registers</span>:
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span><span class="org-variable-name">%rbp</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movq</span><span class="org-whitespace-space">    </span><span class="org-variable-name">%rsp</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%rbp</span>
+<span class="org-whitespace-space">        </span>...
+
+<span class="org-function-name">main</span>:
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$9
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$8
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$7
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$6,<span class="org-whitespace-space"> </span><span class="org-variable-name">%r9d</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$5,<span class="org-whitespace-space"> </span><span class="org-variable-name">%r8d</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$4,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ecx</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$3,<span class="org-whitespace-space"> </span><span class="org-variable-name">%edx</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$2,<span class="org-whitespace-space"> </span><span class="org-variable-name">%esi</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$1,<span class="org-whitespace-space"> </span><span class="org-variable-name">%edi</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">call</span><span class="org-whitespace-space">    </span>print_gp_registers
+<span class="org-whitespace-space">        </span>...
+</pre>
+</div>
+
+<p>
+优化等级为2时的部分关联汇编如下, 可以看出rbp的数值有所差异. 我所在平台上, 优化等级为2
+运行会core, core位置是第一次从栈取数据的位置.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-asm"><span class="org-function-name">print_gp_registers</span>:
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span><span class="org-variable-name">%r15</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movq</span><span class="org-whitespace-space">    </span><span class="org-variable-name">%rcx</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%rax</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movq</span><span class="org-whitespace-space">    </span><span class="org-variable-name">%rdx</span>,<span class="org-whitespace-space"> </span><span class="org-variable-name">%r15</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span><span class="org-variable-name">%r14</span>
+<span class="org-whitespace-space">        </span>...
+
+<span class="org-function-name">main</span>:
+<span class="org-function-name">.LFB13</span>:
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$6,<span class="org-whitespace-space"> </span><span class="org-variable-name">%r9d</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$5,<span class="org-whitespace-space"> </span><span class="org-variable-name">%r8d</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$4,<span class="org-whitespace-space"> </span><span class="org-variable-name">%ecx</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$9
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$3,<span class="org-whitespace-space"> </span><span class="org-variable-name">%edx</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$2,<span class="org-whitespace-space"> </span><span class="org-variable-name">%esi</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">movl</span><span class="org-whitespace-space">    </span>$1,<span class="org-whitespace-space"> </span><span class="org-variable-name">%edi</span>
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$8
+<span class="org-whitespace-space">        </span><span class="org-keyword">pushq</span><span class="org-whitespace-space">   </span>$7
+<span class="org-whitespace-space">        </span><span class="org-keyword">call</span><span class="org-whitespace-space">    </span>print_gp_registers
+<span class="org-whitespace-space">        </span>...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5ac9dc7" class="outline-4">
+<h4 id="org5ac9dc7"><span class="section-number-4">2.1.2</span> 浮点寄存器</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+8个浮点寄存器: xmm0~xmm7. 当浮点参数和整型参数混杂时, 各自独立计算参数位置.
+例如, 参数1为double, 参数2为long, 则xmm0保存参数1, rdi保存参数2.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga207b66" class="outline-4">
+<h4 id="orga207b66"><span class="section-number-4">2.1.3</span> 使用者需要保存的寄存器</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+rbx, r12~r15.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1130391" class="outline-4">
+<h4 id="org1130391"><span class="section-number-4">2.1.4</span> 调用者需要保存的寄存器</h4>
+</div>
+
+<div id="outline-container-orge43aea9" class="outline-4">
+<h4 id="orge43aea9"><span class="section-number-4">2.1.5</span> 特殊寄存器</h4>
+<div class="outline-text-4" id="text-2-1-5">
+<p>
+rbp, rsp, rip.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
