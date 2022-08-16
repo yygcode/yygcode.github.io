@@ -56,7 +56,7 @@
 <li><a href="#org3c62992">1.1.2. 元数据方式</a></li>
 </ul>
 </li>
-<li><a href="#org78dc89b">1.2. 存储引擎</a>
+<li><a href="#orgc6314e7">1.2. 存储引擎</a>
 <ul>
 <li><a href="#org60287e5">1.2.1. 原地覆盖写</a></li>
 <li><a href="#org79fe31a">1.2.2. 追加写</a></li>
@@ -85,7 +85,7 @@
 </li>
 <li><a href="#orgd969920">8. Smartx</a>
 <ul>
-<li><a href="#orgc6314e7">8.1. 存储引擎</a></li>
+<li><a href="#orga6e4cb3">8.1. 存储引擎</a></li>
 <li><a href="#org515715a">8.2. 元数据服务</a></li>
 </ul>
 </li>
@@ -186,8 +186,8 @@ GFS, WAS, Tectonic 都有相关论文，参见<a href="https://github.com/yygcod
 </div>
 </div>
 
-<div id="outline-container-org78dc89b" class="outline-3">
-<h3 id="org78dc89b"><span class="section-number-3">1.2</span> 存储引擎</h3>
+<div id="outline-container-orgc6314e7" class="outline-3">
+<h3 id="orgc6314e7"><span class="section-number-3">1.2</span> 存储引擎</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 存储引擎负责数据的持久化。采用追加写模型，还是原地覆盖写模型，是一个非常核心的架构设计。一致性协议、IO链路、故障处理，都会完全不同。
@@ -459,6 +459,18 @@ Azure承诺了0%的失效率，阿里云则是11个9，AWS差的有点远。
 
 <p>
 最底层是StreamLayer，实现一个追加写的分布式文件系统。之上PartitionLayer，实现云盘的一段空间。PartitionLayer通过PartitionManager进行负载均衡调度。
+</p>
+
+<p>
+Azure Disk最初基于WAS实现了Premium Disk, IO链路经过Blob Cache, Front End, Partition
+Layer. 后来又优化实现了UltraDisk, 直接从Client-&gt;StorageServer-&gt;StorageDevices.
+参见这里:
+<a href="https://azure.microsoft.com/en-us/blog/azure-ultra-disk-storage-microsoft-s-service-for-your-most-i-o-demanding-workloads/">https://azure.microsoft.com/en-us/blog/azure-ultra-disk-storage-microsoft-s-service-for-your-most-i-o-demanding-workloads/</a>
+</p>
+
+<p>
+这个图比较清晰:
+<img src="../../../../../../../img/azure-ultra-disk.png" alt="azure-ultra-disk.png" />
 </p>
 
 <p>
@@ -748,8 +760,8 @@ HCBS对于腾讯云分布式存储具有里程碑式意义，其无论是在性�
 <h2 id="orgd969920"><span class="section-number-2">8</span> Smartx</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-orgc6314e7" class="outline-3">
-<h3 id="orgc6314e7"><span class="section-number-3">8.1</span> 存储引擎</h3>
+<div id="outline-container-orga6e4cb3" class="outline-3">
+<h3 id="orga6e4cb3"><span class="section-number-3">8.1</span> 存储引擎</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 SmartX在专有云/超融合领域市场反馈比较好。在看到的资料里，SmartX在分析KernelSpace，
@@ -758,7 +770,7 @@ Journal使用，数据Dump到HDD后即可回收。HDD是原地写。这种架构
 </p>
 
 
-<div id="org15a099f" class="figure">
+<div id="org1bfd724" class="figure">
 <p><img src="../../../../../../../img/ebs-smartx-storage-engine.png" alt="ebs-smartx-storage-engine.png" />
 </p>
 </div>
@@ -781,7 +793,7 @@ Journal使用，数据Dump到HDD后即可回收。HDD是原地写。这种架构
 </p>
 
 
-<div id="orgbde4f32" class="figure">
+<div id="orgbb8d462" class="figure">
 <p><img src="../../../../../../../img/ebs-smartx-metaserver.png" alt="ebs-smartx-metaserver.png" />
 </p>
 </div>
