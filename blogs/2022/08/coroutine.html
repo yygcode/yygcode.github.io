@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>协程技术</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">协程技术</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org55efd9e">1. 从示例说起</a></li>
+<li><a href="#orga69a5a7">2. 协程实现</a></li>
+<li><a href="#org9059721">3. 协程参考</a></li>
+</ul>
+</div>
+</div>
+<p>
+协程是非抢占式的多任务调度, 用于简化异步代码的实现, 可用同步方式写异步代码, 其代价是协程切换的成本, 以及协程函数对阻塞API的使用限制.
+</p>
+
+<p>
+协程分为有栈协程和无栈协程. 有栈协程可以在任意函数调用里挂起. 无栈协程通过语言提供的特定关键词在特定位置挂起. Platform实现有栈协程.
+</p>
+
+<p>
+协程适合用于逻辑复杂的控制链路. 例如, 分区加载.
+</p>
+
+<div id="outline-container-org55efd9e" class="outline-2">
+<h2 id="org55efd9e"><span class="section-number-2">1</span> 从示例说起</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+考虑KVPartition的加载过程:
+</p>
+<ol class="org-ol">
+<li>KVServer收到Partition加载请求;</li>
+<li>KVServer获取Partition保护锁, 防止对Partition的并发操作;</li>
+<li>KVServer List/Stat Partition目录, 获取基本信息;</li>
+<li>KVServer加载Partition Meta数据;</li>
+</ol>
+
+<p>
+其中每一步操作都涉及IO, 但线程还要服务其他Partition, 因此基于异步IO实现.
+</p>
+
+<p>
+这类操作的典型实现有三种: 异步回调, 状态机加异步回调, 协程.
+</p>
+
+<p>
+异步回调实现异步逐层嵌套, 逻辑复杂, 代码易出错. 如下是部分实现伪码:
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">Load</span>(<span class="org-type">ClosureRInt</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">do</span><span class="org-whitespace-space"> </span><span class="org-comment">some</span><span class="org-whitespace-space"> </span><span class="org-comment">sync</span><span class="org-whitespace-space"> </span><span class="org-comment">non-block</span><span class="org-whitespace-space"> </span><span class="org-comment">task,</span><span class="org-whitespace-space"> </span><span class="org-comment">then</span><span class="org-whitespace-space"> </span><span class="org-comment">call</span><span class="org-whitespace-space"> </span><span class="org-comment">acuqireLock</span><span class="org-whitespace-space"> </span><span class="org-comment">to</span><span class="org-whitespace-space"> </span><span class="org-comment">acuqure</span><span class="org-whitespace-space"> </span><span class="org-comment">Lock</span>
+<span class="org-whitespace-space">  </span><span class="org-type">ClosureRInt</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">loadDone</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>NewClosure(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::onLoadDone,<span class="org-whitespace-space"> </span>done);
+<span class="org-whitespace-space">  </span>acquireLock(loadDone);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">acquireLock</span>(<span class="org-type">ClosureRInt</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">PR/Cas</span><span class="org-whitespace-space"> </span><span class="org-comment">lock,</span><span class="org-whitespace-space"> </span><span class="org-comment">like</span><span class="org-whitespace-space"> </span><span class="org-comment">as</span><span class="org-whitespace-space"> </span><span class="org-comment">zk,</span><span class="org-whitespace-space"> </span><span class="org-comment">chubby</span>
+<span class="org-whitespace-space">  </span><span class="org-type">AcquireLockContext</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">AcquireLockContext</span>(done);
+<span class="org-whitespace-space">  </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">acquireLockDone</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">    </span>NewClosure(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>&amp;<span class="org-constant">KVPartition</span>::onAcuqireLockDone,<span class="org-whitespace-space"> </span>ctx);
+
+<span class="org-whitespace-space">  </span>ctx-&gt;ctrl.SetTimeout(5000<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>1000);
+<span class="org-whitespace-space">  </span>mClient-&gt;Read(&amp;ctx-&gt;ctrl,<span class="org-whitespace-space"> </span>&amp;ctx-&gt;content,<span class="org-whitespace-space"> </span>acquireLockDone);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">onAcquireLockDone</span>(<span class="org-type">AcquireLockContext</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctx</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-type">ScopedContext</span><span class="org-whitespace-space"> </span><span class="org-variable-name">_</span>(ctx);<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">auto</span><span class="org-whitespace-space"> </span><span class="org-comment">free.</span>
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-negation-char">!</span>ctx-&gt;ctrl.IsOk())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>ctx-&gt;done-&gt;SetResult(ctx-&gt;ctrl.GetResult());
+<span class="org-whitespace-space">    </span>ctx-&gt;done-&gt;Run();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">acquire</span><span class="org-whitespace-space"> </span><span class="org-comment">lock</span><span class="org-whitespace-space"> </span><span class="org-comment">success,</span><span class="org-whitespace-space"> </span><span class="org-comment">list</span><span class="org-whitespace-space"> </span><span class="org-comment">task.</span>
+<span class="org-whitespace-space">  </span><span class="org-type">ListDirContext</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">ListDirContext</span>(ctx-&gt;done);
+<span class="org-whitespace-space">  </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">listDone</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>NewClosure(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>&amp;<span class="org-constant">KVPartition</span>::onListDirDone,<span class="org-whitespace-space"> </span>ctx-&gt;done);
+<span class="org-whitespace-space">  </span>ctx-&gt;ctrl.SetTimeout(2000<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>1000);
+<span class="org-whitespace-space">  </span>mClient-&gt;ReadDir(&amp;ctx-&gt;ctrl,<span class="org-whitespace-space"> </span>&amp;ctx-&gt;entries,<span class="org-whitespace-space"> </span>listDone);
+}
+</pre>
+</div>
+
+<p>
+状态机加异步回调方式相对较好:
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">Load</span>(<span class="org-type">ClosureRInt</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(LOAD_INVALID<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>mState)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>done-&gt;SetResult(EBUSY);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span>mLoadDone<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>done;
+<span class="org-whitespace-space">  </span>mState<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>LOAD_INIT;
+<span class="org-whitespace-space">  </span>doLoad();
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">doLoad</span>()
+{
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(OK<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>mLoadResult)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>LOG_ERROR(<span class="org-string">"LoadFailed:</span><span class="org-whitespace-space"> </span><span class="org-string">error</span><span class="org-whitespace-space"> </span><span class="org-string">%d</span><span class="org-whitespace-space"> </span><span class="org-string">in</span><span class="org-whitespace-space"> </span><span class="org-string">state</span><span class="org-whitespace-space"> </span><span class="org-string">%s"</span>,
+<span class="org-whitespace-space">              </span>mLoadReuslt,<span class="org-whitespace-space"> </span>ToString(mState));
+<span class="org-whitespace-space">    </span>mLoadDone-&gt;SetResult(mLoadResult);
+<span class="org-whitespace-space">    </span>mLoadDone-&gt;Run();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-keyword">switch</span><span class="org-whitespace-space"> </span>(mState)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">  </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span>LOAD_INIT:
+<span class="org-whitespace-space">    </span>doAcquireLock();
+<span class="org-whitespace-space">    </span><span class="org-keyword">break</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span>LOAD_LIST:
+<span class="org-whitespace-space">    </span>doListDir();
+<span class="org-whitespace-space">    </span><span class="org-keyword">break</span>;
+<span class="org-whitespace-space">  </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span>LOAD_READMETA:
+<span class="org-whitespace-space">    </span>doReadMeta();
+<span class="org-whitespace-space">    </span>reak;
+<span class="org-whitespace-space">  </span><span class="org-keyword">case</span><span class="org-whitespace-space"> </span>LOAD_DONE:
+<span class="org-whitespace-space">    </span>mLoadDone-&gt;SetResult(OK);
+<span class="org-whitespace-space">    </span>mLoadDone-&gt;Run();
+<span class="org-whitespace-space">    </span><span class="org-keyword">break</span>;
+<span class="org-whitespace-space">  </span>}
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">doAcquireLock</span>()
+{
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">PR/Cas</span><span class="org-whitespace-space"> </span><span class="org-comment">lock,</span><span class="org-whitespace-space"> </span><span class="org-comment">like</span><span class="org-whitespace-space"> </span><span class="org-comment">as</span><span class="org-whitespace-space"> </span><span class="org-comment">zk,</span><span class="org-whitespace-space"> </span><span class="org-comment">chubby</span>
+<span class="org-whitespace-space">  </span><span class="org-type">AcquireLockContext</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctx</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span><span class="org-keyword">new</span><span class="org-whitespace-space"> </span><span class="org-type">AcquireLockContext</span>(done);
+<span class="org-whitespace-space">  </span><span class="org-type">Closure</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">acquireLockDone</span><span class="org-whitespace-space"> </span>=
+<span class="org-whitespace-space">    </span>NewClosure(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>&amp;<span class="org-constant">KVPartition</span>::onAcuqireLockDone,<span class="org-whitespace-space"> </span>ctx);
+
+<span class="org-whitespace-space">  </span>ctx-&gt;ctrl.SetTimeout(5000<span class="org-whitespace-space"> </span>*<span class="org-whitespace-space"> </span>1000);
+<span class="org-whitespace-space">  </span>mClient-&gt;Read(&amp;ctx-&gt;ctrl,<span class="org-whitespace-space"> </span>&amp;ctx-&gt;content,<span class="org-whitespace-space"> </span>acquireLockDone);
+}
+
+<span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">onAcquireLockDone</span>(<span class="org-type">AcquireLockContext</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">ctx</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-type">ScopedContext</span><span class="org-whitespace-space"> </span><span class="org-variable-name">_</span>(ctx);<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">auto</span><span class="org-whitespace-space"> </span><span class="org-comment">free.</span>
+
+<span class="org-whitespace-space">  </span>mLoadResult<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>ctx-&gt;ctrl.GetResult();
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(OK<span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>mLoadResult)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>mLoadState<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>nextLoadState();
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span>doLoad();
+}
+</pre>
+</div>
+
+<p>
+协程实现是最简洁的. 同时考虑加载分区的频率低, 协程切换的成本在可接受范围内:
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span class="org-type">void</span><span class="org-whitespace-space"> </span><span class="org-constant">KVPartition</span>::<span class="org-function-name">Load</span>(<span class="org-type">ClosureRInt</span><span class="org-whitespace-space"> </span>*<span class="org-variable-name">done</span>)
+{
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(<span class="org-constant">nullptr</span><span class="org-whitespace-space"> </span>==<span class="org-whitespace-space"> </span>GetCurrentCoroutine())<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>InvokeCoroutineInCurrentThread(NewClosure(<span class="org-keyword">this</span>,<span class="org-whitespace-space"> </span>&amp;<span class="org-constant">KVPartition</span>::Load,<span class="org-whitespace-space"> </span>done));
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-type">ScopedDone</span><span class="org-whitespace-space"> </span><span class="org-variable-name">scopedDone</span>(done);
+
+<span class="org-whitespace-space">  </span><span class="org-type">int</span><span class="org-whitespace-space"> </span><span class="org-variable-name">ret</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>doAcuqireLock();
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(OK<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>ret)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span>done-&gt;SetResult(ret);
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span>ret<span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>doListDir();
+<span class="org-whitespace-space">  </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>(OK<span class="org-whitespace-space"> </span>!=<span class="org-whitespace-space"> </span>ret)<span class="org-whitespace-space"> </span>{
+<span class="org-whitespace-space">    </span><span class="org-keyword">return</span>;
+<span class="org-whitespace-space">  </span>}
+
+<span class="org-whitespace-space">  </span><span class="org-comment-delimiter">//</span><span class="org-whitespace-space"> </span><span class="org-comment">more</span><span class="org-whitespace-space"> </span><span class="org-comment">...</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga69a5a7" class="outline-2">
+<h2 id="orga69a5a7"><span class="section-number-2">2</span> 协程实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+TODO. 太长了, 抽时间再写完整的吧.
+</p>
+
+<p>
+协程包括协程调度, 协程挂起与恢复, 协程同步, 协程与线程的融合等是想.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9059721" class="outline-2">
+<h2 id="org9059721"><span class="section-number-2">3</span> 协程参考</h2>
+<div class="outline-text-2" id="text-3">
+<dl class="org-dl">
+<dt>云风 Coroutine</dt><dd><a href="https://github.com/cloudwu/coroutine/">https://github.com/cloudwu/coroutine/</a></dd>
+<dt>Tencent Coroutine</dt><dd><a href="https://github.com/Tencent/libco">https://github.com/Tencent/libco</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
