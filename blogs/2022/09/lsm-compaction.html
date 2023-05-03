@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>LSM Compaction</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">LSM Compaction</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9c02172">1. Amplification</a>
+<ul>
+<li><a href="#orgbd9df58">1.1. Write Amplification</a></li>
+<li><a href="#org97db0ee">1.2. Read Amplification</a></li>
+<li><a href="#org188f5ed">1.3. Space Amplification</a></li>
+</ul>
+</li>
+<li><a href="#orgb963e8d">2. Compaction</a>
+<ul>
+<li><a href="#org3e2484f">2.1. 目标</a></li>
+<li><a href="#orgd53ad8e">2.2. 约束</a></li>
+<li><a href="#orgbdd5027">2.3. 策略</a></li>
+</ul>
+</li>
+<li><a href="#org14f61a1">3. Operations</a>
+<ul>
+<li><a href="#orgd422fa9">3.1. Put</a></li>
+<li><a href="#org4615656">3.2. Get</a></li>
+<li><a href="#org7bb91db">3.3. GetRange</a></li>
+<li><a href="#orgb24035e">3.4. Delete</a></li>
+</ul>
+</li>
+<li><a href="#org3e0b0d1">4. Tired</a></li>
+<li><a href="#org44ab030">5. Products</a>
+<ul>
+<li><a href="#orgb1202fc">5.1. LevelDB</a></li>
+<li><a href="#org5b3c31b">5.2. RocksDB</a></li>
+<li><a href="#orgb66bc28">5.3. HBase</a></li>
+<li><a href="#org78c5807">5.4. PebblesDB</a></li>
+<li><a href="#orgb33f174">5.5. Dostoevsky</a></li>
+<li><a href="#org63168c8">5.6. Youchao(Alibaba)</a></li>
+<li><a href="#org9603ca1">5.7. Lethe</a></li>
+<li><a href="#org4709606">5.8. Redis</a></li>
+<li><a href="#org7cd4a87">5.9. Memcached</a></li>
+<li><a href="#orgd1cee81">5.10. InfluxDB</a></li>
+<li><a href="#orgd3d617c">5.11. KeyDB</a></li>
+<li><a href="#orgdd20035">5.12. SkyTable</a></li>
+<li><a href="#org4ba06b2">5.13. Dragonfly</a></li>
+</ul>
+</li>
+<li><a href="#orgad45ac8">6. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+LogAppend简化了写入路径, 带来了高吞吐低延时的写. 相同Key的数据持续累积, 读放大逐渐变得严重, 空间也慢慢膨胀. Compaction用来合并LSM持续写入的多个数据版本, 提升读的性能, 降低空间浪费.
+</p>
+
+<p>
+Compaction合并多个文件到一个文件, 把不再使用的数据丢弃. 在存储水位较高时, Compaction需要把相当一部分的有效数据读写一遍, 存在较多的IO操作. 但这个过程也可引入EC转换, 压缩, 重删,
+进一步降低存储成本.
+</p>
+
+<p>
+Compaction之后会进行CompactedData Import和OriginalData Delete, 这可能导致Cache失效.
+</p>
+
+<div id="outline-container-org9c02172" class="outline-2">
+<h2 id="org9c02172"><span class="section-number-2">1</span> Amplification</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgbd9df58" class="outline-3">
+<h3 id="orgbd9df58"><span class="section-number-3">1.1</span> Write Amplification</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+In PebblesDB paper:
+</p>
+<ul class="org-ul">
+<li>RocksDB: x42;</li>
+<li>HyperLevelDB: x40;</li>
+<li>LevelDB: x27;</li>
+<li>PebblesDB: x17;</li>
+<li>UserData: 45GB;</li>
+</ul>
+
+<p>
+Analysis of HDFS Under HBase: A Facebook Messages Case Study.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org97db0ee" class="outline-3">
+<h3 id="org97db0ee"><span class="section-number-3">1.2</span> Read Amplification</h3>
+</div>
+<div id="outline-container-org188f5ed" class="outline-3">
+<h3 id="org188f5ed"><span class="section-number-3">1.3</span> Space Amplification</h3>
+</div>
+</div>
+
+<div id="outline-container-orgb963e8d" class="outline-2">
+<h2 id="orgb963e8d"><span class="section-number-2">2</span> Compaction</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org3e2484f" class="outline-3">
+<h3 id="org3e2484f"><span class="section-number-3">2.1</span> 目标</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+控制写放大, 读放大, 空间放大;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd53ad8e" class="outline-3">
+<h3 id="orgd53ad8e"><span class="section-number-3">2.2</span> 约束</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>控制Compaction资源占用;</li>
+<li>前端IO的保障;</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbdd5027" class="outline-3">
+<h3 id="orgbdd5027"><span class="section-number-3">2.3</span> 策略</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>Size-Tired Compaction;</li>
+<li>Leveled Compaction;</li>
+<li>Time-based Compaction;</li>
+<li>Time-window Compaction;</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org14f61a1" class="outline-2">
+<h2 id="org14f61a1"><span class="section-number-2">3</span> Operations</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgd422fa9" class="outline-3">
+<h3 id="orgd422fa9"><span class="section-number-3">3.1</span> Put</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>Manifest;</li>
+<li>Version;</li>
+<li>Compress;</li>
+<li>LruCache;</li>
+<li>BloomFilter;</li>
+<li>Optional WAL ?</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4615656" class="outline-3">
+<h3 id="org4615656"><span class="section-number-3">3.2</span> Get</h3>
+</div>
+<div id="outline-container-org7bb91db" class="outline-3">
+<h3 id="org7bb91db"><span class="section-number-3">3.3</span> GetRange</h3>
+</div>
+<div id="outline-container-orgb24035e" class="outline-3">
+<h3 id="orgb24035e"><span class="section-number-3">3.4</span> Delete</h3>
+</div>
+</div>
+
+<div id="outline-container-org3e0b0d1" class="outline-2">
+<h2 id="org3e0b0d1"><span class="section-number-2">4</span> Tired</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+大小接近的文件, 存在N份. 数据范围有层叠. 总量到一定数量时, 合并生成下一级;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org44ab030" class="outline-2">
+<h2 id="org44ab030"><span class="section-number-2">5</span> Products</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgb1202fc" class="outline-3">
+<h3 id="orgb1202fc"><span class="section-number-3">5.1</span> LevelDB</h3>
+</div>
+<div id="outline-container-org5b3c31b" class="outline-3">
+<h3 id="org5b3c31b"><span class="section-number-3">5.2</span> RocksDB</h3>
+</div>
+<div id="outline-container-orgb66bc28" class="outline-3">
+<h3 id="orgb66bc28"><span class="section-number-3">5.3</span> HBase</h3>
+</div>
+<div id="outline-container-org78c5807" class="outline-3">
+<h3 id="org78c5807"><span class="section-number-3">5.4</span> PebblesDB</h3>
+</div>
+<div id="outline-container-orgb33f174" class="outline-3">
+<h3 id="orgb33f174"><span class="section-number-3">5.5</span> Dostoevsky</h3>
+</div>
+<div id="outline-container-org63168c8" class="outline-3">
+<h3 id="org63168c8"><span class="section-number-3">5.6</span> Youchao(Alibaba)</h3>
+</div>
+<div id="outline-container-org9603ca1" class="outline-3">
+<h3 id="org9603ca1"><span class="section-number-3">5.7</span> Lethe</h3>
+</div>
+<div id="outline-container-org4709606" class="outline-3">
+<h3 id="org4709606"><span class="section-number-3">5.8</span> Redis</h3>
+</div>
+<div id="outline-container-org7cd4a87" class="outline-3">
+<h3 id="org7cd4a87"><span class="section-number-3">5.9</span> Memcached</h3>
+</div>
+<div id="outline-container-orgd1cee81" class="outline-3">
+<h3 id="orgd1cee81"><span class="section-number-3">5.10</span> InfluxDB</h3>
+</div>
+<div id="outline-container-orgd3d617c" class="outline-3">
+<h3 id="orgd3d617c"><span class="section-number-3">5.11</span> KeyDB</h3>
+</div>
+<div id="outline-container-orgdd20035" class="outline-3">
+<h3 id="orgdd20035"><span class="section-number-3">5.12</span> SkyTable</h3>
+</div>
+<div id="outline-container-org4ba06b2" class="outline-3">
+<h3 id="org4ba06b2"><span class="section-number-3">5.13</span> Dragonfly</h3>
+</div>
+</div>
+
+<div id="outline-container-orgad45ac8" class="outline-2">
+<h2 id="orgad45ac8"><span class="section-number-2">6</span> References</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li><a href="https://www.scylladb.com/2016/08/30/date-tiered-compaction-strategy/">https://www.scylladb.com/2016/08/30/date-tiered-compaction-strategy/</a></li>
+<li><a href="https://redis.com/blog/redis-architecture-13-years-later/">https://redis.com/blog/redis-architecture-13-years-later/</a></li>
+</ul>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

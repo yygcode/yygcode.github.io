@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>C++ Variadic Template Arguments</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">C++ Variadic Template Arguments</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org77d7eef">1. ERROR1</a></li>
+<li><a href="#org6b3d486">2. ERROR2</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org77d7eef" class="outline-2">
+<h2 id="org77d7eef"><span class="section-number-2">1</span> ERROR1</h2>
+<div class="outline-text-2" id="text-1">
+<blockquote>
+<p>
+closure.h:442:10: error: parameter pack ‘Results’ must be at the end of
+the template parameter list
+ template&lt;typename&#x2026; Results, typename Method&gt;
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org6b3d486" class="outline-2">
+<h2 id="org6b3d486"><span class="section-number-2">2</span> ERROR2</h2>
+<div class="outline-text-2" id="text-2">
+<blockquote>
+<p>
+test_closure.cc:158:26: error: missing template arguments before ‘done’
+             BindClosureF done(&amp;func_a0_r0);
+                          ^~~~
+test_closure2.cc:159:13: error: ‘done’ was not declared in this scope
+             done.Run();
+</p>
+</blockquote>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

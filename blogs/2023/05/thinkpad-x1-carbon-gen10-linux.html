@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>Thinkpad X1 Carbon 2022 Gen 10安装LINUX系统记录</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">Thinkpad X1 Carbon 2022 Gen 10安装LINUX系统记录</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4540a14">1. 安装</a></li>
+<li><a href="#org6a7e26f">2. WIFI</a></li>
+<li><a href="#orge202c89">3. Touchpad 配置</a></li>
+<li><a href="#org81d29ca">4. 声卡配置</a></li>
+<li><a href="#org7495e06">5. 蓝牙配置</a></li>
+<li><a href="#org0e22929">6. 显卡配置</a></li>
+<li><a href="#org1d81829">7. Enjoy Your Thinkpad</a></li>
+<li><a href="#org092caed">8. Thinkpad Carbon 2022 Gen 10 Config</a>
+<ul>
+<li><a href="#org097f691">8.1. CPU</a></li>
+<li><a href="#org39d4b9c">8.2. dmidecode</a></li>
+<li><a href="#orge8d436e">8.3. Storage</a></li>
+<li><a href="#orgfb4c441">8.4. WIFI</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+入手 Thinkpad Carbon 2022 Gen 10, 安装了Debian 11.6. 结果WIFI, 声卡, 触控板蓝牙无法使用, 显卡有部分异常. 解决过程记录如下.
+</p>
+
+<div id="outline-container-org4540a14" class="outline-2">
+<h2 id="org4540a14"><span class="section-number-2">1</span> 安装</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+参见 Blog <a href="../../2020/11/01-env-init.html">Debian Install and Init</a> .
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6a7e26f" class="outline-2">
+<h2 id="org6a7e26f"><span class="section-number-2">2</span> WIFI</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+WIFI 硬件是 Intel AX211 6E 模块. Debian 11.6 内核版本 5.10.0-20-amd64 尚不支持. 直接编译 6.3 内核.
+</p>
+
+<p>
+使用 5.10.0 config 文件做为初始配置, 为支持 touchpad 打开 i2c_hid_acpi 配置.
+编译/安装即可.
+</p>
+
+<p>
+系统启动过程会报 WIFI firmware 缺失, 从 linux-firmware 下载, 并安装即可.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dmesg<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span><span class="org-string">"iwlwifi.*firmware"</span>
+[<span class="org-whitespace-space">    </span>4.763720]<span class="org-whitespace-space"> </span>iwlwifi<span class="org-whitespace-space"> </span>0000:00:14.3:<span class="org-whitespace-space"> </span>loaded<span class="org-whitespace-space"> </span>firmware<span class="org-whitespace-space"> </span>version<span class="org-whitespace-space"> </span>74.fe17486e.0<span class="org-whitespace-space"> </span>so-a0<span class="org-whitespace-line">-gf-a0-74.ucode</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">op_mode</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">iwlmvm</span>
+$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>config<span class="org-whitespace-space"> </span>--get<span class="org-whitespace-space"> </span>remote.origin.url
+git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>git<span class="org-whitespace-space"> </span>log<span class="org-whitespace-space"> </span>-1
+commit<span class="org-whitespace-space"> </span>457391b0380335d5e9a5babdec90ac53928b23b4<span class="org-whitespace-space"> </span>(HEAD,<span class="org-whitespace-space"> </span>tag:<span class="org-whitespace-space"> </span>v6.3)
+Author:<span class="org-whitespace-space"> </span>Linus<span class="org-whitespace-space"> </span>Torvalds<span class="org-whitespace-space"> </span><a href="mailto:torvalds%40linux-foundation.org">&lt;torvalds@linux-foundation.org&gt;</a>
+Date:<span class="org-whitespace-space">   </span>Sun<span class="org-whitespace-space"> </span>Apr<span class="org-whitespace-space"> </span>23<span class="org-whitespace-space"> </span>12:02:52<span class="org-whitespace-space"> </span>2023<span class="org-whitespace-space"> </span>-0700
+
+<span class="org-whitespace-space">    </span>Linux<span class="org-whitespace-space"> </span>6.3
+$<span class="org-whitespace-space"> </span>cp<span class="org-whitespace-space"> </span>/boot/config-5.10.0-20-amd64<span class="org-whitespace-space"> </span>.config
+$<span class="org-whitespace-space"> </span>make<span class="org-whitespace-space"> </span>menuconfig
+$<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>I2C_HID_ACPI<span class="org-whitespace-space"> </span>.config
+<span class="org-variable-name">CONFIG_I2C_HID_ACPI</span>=m
+</pre>
+</div>
+
+<p>
+构建, 安装 modules, 并自己生成 initrd:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>uname<span class="org-whitespace-space"> </span>-a
+Linux<span class="org-whitespace-space"> </span>tp-2023<span class="org-whitespace-space"> </span>6.3.0<span class="org-whitespace-space"> </span><span class="org-comment-delimiter">#</span><span class="org-comment">1</span><span class="org-whitespace-space"> </span><span class="org-comment">SMP</span><span class="org-whitespace-space"> </span><span class="org-comment">PREEMPT_DYNAMIC</span><span class="org-whitespace-space"> </span><span class="org-comment">Mon</span><span class="org-whitespace-space"> </span><span class="org-comment">May</span><span class="org-whitespace-space">  </span><span class="org-comment">1</span><span class="org-whitespace-space"> </span><span class="org-comment">13:09:40</span><span class="org-whitespace-space"> </span><span class="org-comment">CST</span><span class="org-whitespace-space"> </span><span class="org-comment">2023</span><span class="org-whitespace-space"> </span><span class="org-comment">x86_64</span><span class="org-whitespace-space"> </span><span class="org-comment">G</span><span class="org-comment"><span class="org-whitespace-line">NU/Linux</span></span>
+
+$<span class="org-whitespace-space"> </span>ls<span class="org-whitespace-space"> </span>-lhrt<span class="org-whitespace-space"> </span>/boot/
+total<span class="org-whitespace-space"> </span>109M
+drwx------<span class="org-whitespace-space"> </span>6<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>4.0K<span class="org-whitespace-space"> </span>Jan<span class="org-whitespace-space">  </span>1<span class="org-whitespace-space">  </span>1970<span class="org-whitespace-space"> </span>efi
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>6.7M<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space"> </span>14<span class="org-whitespace-space"> </span>04:46<span class="org-whitespace-space"> </span>vmlinuz-5.10.0-20-amd64
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space">   </span>83<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space"> </span>14<span class="org-whitespace-space"> </span>04:46<span class="org-whitespace-space"> </span>System.map-5.10.0-20-amd64
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>231K<span class="org-whitespace-space"> </span>Dec<span class="org-whitespace-space"> </span>14<span class="org-whitespace-space"> </span>04:46<span class="org-whitespace-space"> </span>config-5.10.0-20-amd64
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space">  </span>41M<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>2<span class="org-whitespace-space"> </span>22:08<span class="org-whitespace-space"> </span>initrd.img-5.10.0-20-amd64
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>252K<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>2<span class="org-whitespace-space"> </span>22:14<span class="org-whitespace-space"> </span>config-6.3.0
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>5.6M<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>2<span class="org-whitespace-space"> </span>22:14<span class="org-whitespace-space"> </span>System.map-6.3.0
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>7.2M<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>2<span class="org-whitespace-space"> </span>22:14<span class="org-whitespace-space"> </span>vmlinuz-6.3.0
+-rw-r--r--<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space">  </span>49M<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>6<span class="org-whitespace-space"> </span>00:27<span class="org-whitespace-space"> </span>initrd.img-6.3.0
+drwxr-xr-x<span class="org-whitespace-space"> </span>5<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>root<span class="org-whitespace-space"> </span>4.0K<span class="org-whitespace-space"> </span>May<span class="org-whitespace-space">  </span>6<span class="org-whitespace-space"> </span>00:27<span class="org-whitespace-space"> </span>grub
+
+<span class="org-comment-delimiter">##</span><span class="org-whitespace-space"> </span><span class="org-comment">part</span><span class="org-whitespace-space"> </span><span class="org-comment">of</span><span class="org-whitespace-space"> </span><span class="org-comment">/boot/grub/grub.cfg:</span>
+menuentry<span class="org-whitespace-space"> </span><span class="org-string">'Debian</span><span class="org-whitespace-space"> </span><span class="org-string">GNU/Linux'</span><span class="org-whitespace-space"> </span>--class<span class="org-whitespace-space"> </span>debian<span class="org-whitespace-space"> </span>--class<span class="org-whitespace-space"> </span>gnu-linux<span class="org-whitespace-space"> </span>--class<span class="org-whitespace-space"> </span>gnu<span class="org-whitespace-space"> </span>--clas<span class="org-whitespace-line">s</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">os</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">$</span><span class="org-variable-name"><span class="org-whitespace-line">menuentry_id_option</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-string"><span class="org-whitespace-line">'gnulinux-simple-5fb313ec-dfab-4bb2-b302-c8f599ae2875'</span></span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">{</span>
+<span class="org-whitespace-space">        </span>load_video
+<span class="org-whitespace-space">        </span>insmod<span class="org-whitespace-space"> </span>gzio
+<span class="org-whitespace-space">        </span><span class="org-keyword">if</span><span class="org-whitespace-space"> </span>[<span class="org-whitespace-space"> </span>x$<span class="org-variable-name">grub_platform</span><span class="org-whitespace-space"> </span>=<span class="org-whitespace-space"> </span>xxen<span class="org-whitespace-space"> </span>];<span class="org-whitespace-space"> </span><span class="org-keyword">then</span><span class="org-whitespace-space"> </span>insmod<span class="org-whitespace-space"> </span>xzio;<span class="org-whitespace-space"> </span>insmod<span class="org-whitespace-space"> </span>lzopio;<span class="org-whitespace-space"> </span><span class="org-keyword">fi</span>
+<span class="org-whitespace-space">        </span>insmod<span class="org-whitespace-space"> </span>part_gpt
+<span class="org-whitespace-space">        </span>insmod<span class="org-whitespace-space"> </span>ext2
+<span class="org-whitespace-space">        </span>search<span class="org-whitespace-space"> </span>--no-floppy<span class="org-whitespace-space"> </span>--fs-uuid<span class="org-whitespace-space"> </span>--set=root<span class="org-whitespace-space"> </span>5fb313ec-dfab-4bb2-b302-c8f599ae<span class="org-whitespace-line">2875</span>
+<span class="org-whitespace-space">        </span><span class="org-builtin">echo</span><span class="org-whitespace-space">    </span><span class="org-string">'Loading</span><span class="org-whitespace-space"> </span><span class="org-string">Linux</span><span class="org-whitespace-space"> </span><span class="org-string">6.3.0</span><span class="org-whitespace-space"> </span><span class="org-string">...'</span>
+<span class="org-whitespace-space">        </span>linux<span class="org-whitespace-space">   </span>/boot/vmlinuz-6.3.0<span class="org-whitespace-space"> </span><span class="org-variable-name">root</span>=<span class="org-variable-name">UUID</span>=5fb313ec-dfab-4bb2-b302-c8f599ae28<span class="org-whitespace-line">75</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ro</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i915.enable_psr=0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i915.enable_guc=2</span>
+<span class="org-whitespace-space">        </span><span class="org-builtin">echo</span><span class="org-whitespace-space">    </span><span class="org-string">'Loading</span><span class="org-whitespace-space"> </span><span class="org-string">initial</span><span class="org-whitespace-space"> </span><span class="org-string">ramdisk</span><span class="org-whitespace-space"> </span><span class="org-string">...'</span>
+<span class="org-whitespace-space">        </span>initrd<span class="org-whitespace-space">  </span>/boot/initrd.img-6.3.0
+}
+</pre>
+</div>
+
+<p>
+现在系统有网络了, 可以安装一些软件包. /etc/apt/sources.list 配置如下:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/etc/apt/sources.list
+deb<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+deb-src<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+
+deb<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian-security/<span class="org-whitespace-space"> </span>bullseye-security<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>n<span class="org-whitespace-line">on-free</span>
+deb-src<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian-security/<span class="org-whitespace-space"> </span>bullseye-security<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contr<span class="org-whitespace-line">ib</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">non-free</span>
+
+deb<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye-backports<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+deb-src<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye-backports<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-fr<span class="org-whitespace-line">ee</span>
+
+deb<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye-updates<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+deb-src<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/debian<span class="org-whitespace-space"> </span>bullseye-updates<span class="org-whitespace-space"> </span>main<span class="org-whitespace-space"> </span>contrib<span class="org-whitespace-space"> </span>non-free
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge202c89" class="outline-2">
+<h2 id="orge202c89"><span class="section-number-2">3</span> Touchpad 配置</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Touchpad 打开 I2C_HID_ACPI 构建即可. 在上面的配置中, 已经打开了.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org81d29ca" class="outline-2">
+<h2 id="org81d29ca"><span class="section-number-2">4</span> 声卡配置</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+特化模块参数即可:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/etc/modprobe.d/sof-fix.conf
+options<span class="org-whitespace-space"> </span>snd-intel-dspcfg<span class="org-whitespace-space"> </span><span class="org-variable-name">dsp_driver</span>=1
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7495e06" class="outline-2">
+<h2 id="org7495e06"><span class="section-number-2">5</span> 蓝牙配置</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+缺少 firmware, 根据提示复制. firmware 在 linux-firmware 仓库.
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dmesg<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span><span class="org-string">"Blue.*firmware"</span>
+[<span class="org-whitespace-space">    </span>5.742076]<span class="org-whitespace-space"> </span>Bluetooth:<span class="org-whitespace-space"> </span>hci0:<span class="org-whitespace-space"> </span>Found<span class="org-whitespace-space"> </span>device<span class="org-whitespace-space"> </span>firmware:<span class="org-whitespace-space"> </span>intel/ibt-0040-0041.sfi
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e22929" class="outline-2">
+<h2 id="org0e22929"><span class="section-number-2">6</span> 显卡配置</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+特化模块参数即可 i915.enable_psr=0 i915.enable_guc=2:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">$<span class="org-whitespace-space"> </span>cat<span class="org-whitespace-space"> </span>/boot/grub/grub.cfg<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>i915
+<span class="org-whitespace-space">        </span>linux<span class="org-whitespace-space">   </span>/boot/vmlinuz-6.3.0<span class="org-whitespace-space"> </span><span class="org-variable-name">root</span>=<span class="org-variable-name">UUID</span>=5fb313ec-dfab-4bb2-b302-c8f599ae28<span class="org-whitespace-line">75</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ro</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i915.enable_psr=0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">i915.enable_guc=2</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d81829" class="outline-2">
+<h2 id="org1d81829"><span class="section-number-2">7</span> Enjoy Your Thinkpad</h2>
+</div>
+
+<div id="outline-container-org092caed" class="outline-2">
+<h2 id="org092caed"><span class="section-number-2">8</span> Thinkpad Carbon 2022 Gen 10 Config</h2>
+<div class="outline-text-2" id="text-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Type</td>
+<td class="org-left">21CBA002CD</td>
+</tr>
+
+<tr>
+<td class="org-left">Memory</td>
+<td class="org-left">16GB</td>
+</tr>
+
+<tr>
+<td class="org-left">CPU</td>
+<td class="org-left">i5 * 12 cores</td>
+</tr>
+
+<tr>
+<td class="org-left">Storage</td>
+<td class="org-left">NVMe SSD 512 GB</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-org097f691" class="outline-3">
+<h3 id="org097f691"><span class="section-number-3">8.1</span> CPU</h3>
+<div class="outline-text-3" id="text-8-1">
+<div class="org-src-container">
+<pre class="src src-text">$<span class="org-whitespace-space"> </span>lscpu
+Architecture:<span class="org-whitespace-space">                    </span>x86_64
+CPU<span class="org-whitespace-space"> </span>op-mode(s):<span class="org-whitespace-space">                  </span>32-bit,<span class="org-whitespace-space"> </span>64-bit
+Byte<span class="org-whitespace-space"> </span>Order:<span class="org-whitespace-space">                      </span>Little<span class="org-whitespace-space"> </span>Endian
+Address<span class="org-whitespace-space"> </span>sizes:<span class="org-whitespace-space">                   </span>39<span class="org-whitespace-space"> </span>bits<span class="org-whitespace-space"> </span>physical,<span class="org-whitespace-space"> </span>48<span class="org-whitespace-space"> </span>bits<span class="org-whitespace-space"> </span>virtual
+CPU(s):<span class="org-whitespace-space">                          </span>16
+On-line<span class="org-whitespace-space"> </span>CPU(s)<span class="org-whitespace-space"> </span>list:<span class="org-whitespace-space">             </span>0-15
+Thread(s)<span class="org-whitespace-space"> </span>per<span class="org-whitespace-space"> </span>core:<span class="org-whitespace-space">              </span>1
+Core(s)<span class="org-whitespace-space"> </span>per<span class="org-whitespace-space"> </span>socket:<span class="org-whitespace-space">              </span>12
+Socket(s):<span class="org-whitespace-space">                       </span>1
+NUMA<span class="org-whitespace-space"> </span>node(s):<span class="org-whitespace-space">                    </span>1
+Vendor<span class="org-whitespace-space"> </span>ID:<span class="org-whitespace-space">                       </span>GenuineIntel
+CPU<span class="org-whitespace-space"> </span>family:<span class="org-whitespace-space">                      </span>6
+Model:<span class="org-whitespace-space">                           </span>154
+Model<span class="org-whitespace-space"> </span>name:<span class="org-whitespace-space">                      </span>12th<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>Intel(R)<span class="org-whitespace-space"> </span>Core(TM)<span class="org-whitespace-space"> </span>i5-1240P
+Stepping:<span class="org-whitespace-space">                        </span>3
+CPU<span class="org-whitespace-space"> </span>MHz:<span class="org-whitespace-space">                         </span>554.162
+CPU<span class="org-whitespace-space"> </span>max<span class="org-whitespace-space"> </span>MHz:<span class="org-whitespace-space">                     </span>4400.0000
+CPU<span class="org-whitespace-space"> </span>min<span class="org-whitespace-space"> </span>MHz:<span class="org-whitespace-space">                     </span>400.0000
+BogoMIPS:<span class="org-whitespace-space">                        </span>4224.00
+Virtualization:<span class="org-whitespace-space">                  </span>VT-x
+L1d<span class="org-whitespace-space"> </span>cache:<span class="org-whitespace-space">                       </span>288<span class="org-whitespace-space"> </span>KiB
+L1i<span class="org-whitespace-space"> </span>cache:<span class="org-whitespace-space">                       </span>192<span class="org-whitespace-space"> </span>KiB
+L2<span class="org-whitespace-space"> </span>cache:<span class="org-whitespace-space">                        </span>7.5<span class="org-whitespace-space"> </span>MiB
+NUMA<span class="org-whitespace-space"> </span>node0<span class="org-whitespace-space"> </span>CPU(s):<span class="org-whitespace-space">               </span>0-15
+Vulnerability<span class="org-whitespace-space"> </span>Itlb<span class="org-whitespace-space"> </span>multihit:<span class="org-whitespace-space">     </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>L1tf:<span class="org-whitespace-space">              </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Mds:<span class="org-whitespace-space">               </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Meltdown:<span class="org-whitespace-space">          </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Mmio<span class="org-whitespace-space"> </span>stale<span class="org-whitespace-space"> </span>data:<span class="org-whitespace-space">   </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Retbleed:<span class="org-whitespace-space">          </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Spec<span class="org-whitespace-space"> </span>store<span class="org-whitespace-space"> </span>bypass:<span class="org-whitespace-space"> </span>Mitigation;<span class="org-whitespace-space"> </span>Speculative<span class="org-whitespace-space"> </span>Store<span class="org-whitespace-space"> </span>Bypass<span class="org-whitespace-space"> </span>disabled<span class="org-whitespace-space"> </span>v<span class="org-whitespace-line">ia</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">prctl</span>
+Vulnerability<span class="org-whitespace-space"> </span>Spectre<span class="org-whitespace-space"> </span>v1:<span class="org-whitespace-space">        </span>Mitigation;<span class="org-whitespace-space"> </span>usercopy/swapgs<span class="org-whitespace-space"> </span>barriers<span class="org-whitespace-space"> </span>and<span class="org-whitespace-space"> </span>__user<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pointer</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sanitization</span>
+Vulnerability<span class="org-whitespace-space"> </span>Spectre<span class="org-whitespace-space"> </span>v2:<span class="org-whitespace-space">        </span>Mitigation;<span class="org-whitespace-space"> </span>Enhanced<span class="org-whitespace-space"> </span>/<span class="org-whitespace-space"> </span>Automatic<span class="org-whitespace-space"> </span>IBRS,<span class="org-whitespace-space"> </span>IBPB<span class="org-whitespace-space"> </span>con<span class="org-whitespace-line">ditional,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">RSB</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">filling,</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">PBRSB-eIBRS</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">SW</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sequence</span>
+Vulnerability<span class="org-whitespace-space"> </span>Srbds:<span class="org-whitespace-space">             </span>Not<span class="org-whitespace-space"> </span>affected
+Vulnerability<span class="org-whitespace-space"> </span>Tsx<span class="org-whitespace-space"> </span>async<span class="org-whitespace-space"> </span>abort:<span class="org-whitespace-space">   </span>Not<span class="org-whitespace-space"> </span>affected
+Flags:<span class="org-whitespace-space">                           </span>fpu<span class="org-whitespace-space"> </span>vme<span class="org-whitespace-space"> </span>de<span class="org-whitespace-space"> </span>pse<span class="org-whitespace-space"> </span>tsc<span class="org-whitespace-space"> </span>msr<span class="org-whitespace-space"> </span>pae<span class="org-whitespace-space"> </span>mce<span class="org-whitespace-space"> </span>cx8<span class="org-whitespace-space"> </span>apic<span class="org-whitespace-space"> </span>sep<span class="org-whitespace-space"> </span>mtr<span class="org-whitespace-line">r</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pge</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mca</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cmov</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pat</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pse36</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">clflush</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dts</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">acpi</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">mmx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fxsr</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse2</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ss</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ht</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pbe</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">syscall</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">nx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pdpe1gb</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rd</span>
+<span class="org-whitespace-space">                                 </span>tscp<span class="org-whitespace-space"> </span>lm<span class="org-whitespace-space"> </span>constant_tsc<span class="org-whitespace-space"> </span>art<span class="org-whitespace-space"> </span>arch_perfmon<span class="org-whitespace-space"> </span>pebs<span class="org-whitespace-space"> </span>bts<span class="org-whitespace-space"> </span><span class="org-whitespace-line">rep_good</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">nopl</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xtopology</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">nonstop_tsc</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">cpuid</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">aperfmperf</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tsc_known_freq</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pni</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pclmulqdq</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">dtes64</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">monit</span>
+<span class="org-whitespace-space">                                 </span>or<span class="org-whitespace-space"> </span>ds_cpl<span class="org-whitespace-space"> </span>vmx<span class="org-whitespace-space"> </span>smx<span class="org-whitespace-space"> </span>est<span class="org-whitespace-space"> </span>tm2<span class="org-whitespace-space"> </span>ssse3<span class="org-whitespace-space"> </span>sdbg<span class="org-whitespace-space"> </span>fma<span class="org-whitespace-space"> </span>cx16<span class="org-whitespace-space"> </span>x<span class="org-whitespace-line">tpr</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pdcm</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pcid</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse4_1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sse4_2</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">x2apic</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">movbe</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">popcnt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tsc_deadline_timer</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">aes</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsave</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">avx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">f16c</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rdrand</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">l</span>
+<span class="org-whitespace-space">                                 </span>ahf_lm<span class="org-whitespace-space"> </span>abm<span class="org-whitespace-space"> </span>3dnowprefetch<span class="org-whitespace-space"> </span>cpuid_fault<span class="org-whitespace-space"> </span>epb<span class="org-whitespace-space"> </span>invpci<span class="org-whitespace-line">d_single</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ssbd</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ibrs</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ibpb</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">stibp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ibrs_enhanced</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">tpr_shadow</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">vnmi</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">flexpriority</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ept</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">vpid</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ept_ad</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">fsgsb</span>
+<span class="org-whitespace-space">                                 </span>ase<span class="org-whitespace-space"> </span>tsc_adjust<span class="org-whitespace-space"> </span>bmi1<span class="org-whitespace-space"> </span>avx2<span class="org-whitespace-space"> </span>smep<span class="org-whitespace-space"> </span>bmi2<span class="org-whitespace-space"> </span>erms<span class="org-whitespace-space"> </span>invpcid<span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rdseed</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">adx</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">smap</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">clflushopt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">clwb</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">intel_pt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">sha_ni</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsaveopt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsavec</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xgetbv1</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">xsaves</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">split_lock_det</span>
+<span class="org-whitespace-space">                                 </span>ect<span class="org-whitespace-space"> </span>avx_vnni<span class="org-whitespace-space"> </span>dtherm<span class="org-whitespace-space"> </span>ida<span class="org-whitespace-space"> </span>arat<span class="org-whitespace-space"> </span>pln<span class="org-whitespace-space"> </span>pts<span class="org-whitespace-space"> </span>hwp<span class="org-whitespace-space"> </span>hwp_no<span class="org-whitespace-line">tify</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">hwp_act_window</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">hwp_epp</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">hwp_pkg_req</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">hfi</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">umip</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">pku</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ospke</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">waitpkg</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">gfni</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">vaes</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">vpclmulqdq</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">rdpid</span>
+<span class="org-whitespace-space">                                 </span>movdiri<span class="org-whitespace-space"> </span>movdir64b<span class="org-whitespace-space"> </span>fsrm<span class="org-whitespace-space"> </span>md_clear<span class="org-whitespace-space"> </span>serialize<span class="org-whitespace-space"> </span>arch_<span class="org-whitespace-line">lbr</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">ibt</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">flush_l1d</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">arch_capabilities</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org39d4b9c" class="outline-3">
+<h3 id="org39d4b9c"><span class="section-number-3">8.2</span> dmidecode</h3>
+<div class="outline-text-3" id="text-8-2">
+<div class="org-src-container">
+<pre class="src src-text">Handle<span class="org-whitespace-space"> </span>0x001B,<span class="org-whitespace-space"> </span>DMI<span class="org-whitespace-space"> </span>type<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span>27<span class="org-whitespace-space"> </span>bytes
+System<span class="org-whitespace-space"> </span>Information
+<span class="org-whitespace-space">        </span>Manufacturer:<span class="org-whitespace-space"> </span>LENOVO
+<span class="org-whitespace-space">        </span>Product<span class="org-whitespace-space"> </span>Name:<span class="org-whitespace-space"> </span>21CBA002CD
+<span class="org-whitespace-space">        </span>Version:<span class="org-whitespace-space"> </span>ThinkPad<span class="org-whitespace-space"> </span>X1<span class="org-whitespace-space"> </span>Carbon<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>10
+<span class="org-whitespace-space">        </span>Serial<span class="org-whitespace-space"> </span>Number:<span class="org-whitespace-space"> </span><span class="custom">XXXXXXXX</span>(Masked)
+<span class="org-whitespace-space">        </span>UUID:<span class="org-whitespace-space"> </span>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx(Masked)
+<span class="org-whitespace-space">        </span>Wake-up<span class="org-whitespace-space"> </span>Type:<span class="org-whitespace-space"> </span>Power<span class="org-whitespace-space"> </span>Switch
+<span class="org-whitespace-space">        </span>SKU<span class="org-whitespace-space"> </span>Number:<span class="org-whitespace-space"> </span>LENOVO_MT_21CB_BU_Think_FM_ThinkPad<span class="org-whitespace-space"> </span>X1<span class="org-whitespace-space"> </span>Carbon<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>10
+<span class="org-whitespace-space">        </span>Family:<span class="org-whitespace-space"> </span>ThinkPad<span class="org-whitespace-space"> </span>X1<span class="org-whitespace-space"> </span>Carbon<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>10
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge8d436e" class="outline-3">
+<h3 id="orge8d436e"><span class="section-number-3">8.3</span> Storage</h3>
+<div class="outline-text-3" id="text-8-3">
+<div class="org-src-container">
+<pre class="src src-text">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>nvme<span class="org-whitespace-space"> </span>list<span class="org-whitespace-space"> </span>/dev/nvme0
+Node<span class="org-whitespace-space">             </span>SN<span class="org-whitespace-space">                   </span>Model<span class="org-whitespace-space">                                    </span>N<span class="org-whitespace-line">amespace</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Usage</span><span class="org-whitespace-space"><span class="org-whitespace-line">                      </span></span><span class="org-whitespace-line">Format</span><span class="org-whitespace-space"><span class="org-whitespace-line">           </span></span><span class="org-whitespace-line">FW</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">Rev</span>
+----------------<span class="org-whitespace-space"> </span>--------------------<span class="org-whitespace-space"> </span>----------------------------------------<span class="org-whitespace-space"> </span>-<span class="org-whitespace-line">--------</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">--------------------------</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">----------------</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">--------</span>
+/dev/nvme0n1<span class="org-whitespace-space">     </span>S64KXXXXXXXXXX<span class="org-whitespace-space">       </span>SAMSUNG<span class="org-whitespace-space"> </span>MZVL2512HCJQ-00BL7<span class="org-whitespace-space">               </span>1<span class="org-whitespace-space"><span class="org-whitespace-line">         </span></span><span class="org-whitespace-line">138.33</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">GB</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">/</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">512.11</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">GB</span><span class="org-whitespace-space"><span class="org-whitespace-line">    </span></span><span class="org-whitespace-line">512</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">B</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">+</span><span class="org-whitespace-space"><span class="org-whitespace-line">  </span></span><span class="org-whitespace-line">0</span><span class="org-whitespace-space"><span class="org-whitespace-line"> </span></span><span class="org-whitespace-line">B</span><span class="org-whitespace-space"><span class="org-whitespace-line">   </span></span><span class="org-whitespace-line">CL2QGXA7</span>
+
+Notes:<span class="org-whitespace-space"> </span>SN<span class="org-whitespace-space"> </span>is<span class="org-whitespace-space"> </span>Masked.
+
+$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>nvme<span class="org-whitespace-space"> </span>smart-log<span class="org-whitespace-space"> </span>/dev/nvme0
+Smart<span class="org-whitespace-space"> </span>Log<span class="org-whitespace-space"> </span>for<span class="org-whitespace-space"> </span>NVME<span class="org-whitespace-space"> </span>device:nvme0<span class="org-whitespace-space"> </span>namespace-id:ffffffff
+critical_warning<span class="org-whitespace-space">                        </span>:<span class="org-whitespace-space"> </span>0
+temperature<span class="org-whitespace-space">                             </span>:<span class="org-whitespace-space"> </span>33<span class="org-whitespace-space"> </span>C
+available_spare<span class="org-whitespace-space">                         </span>:<span class="org-whitespace-space"> </span>100%
+available_spare_threshold<span class="org-whitespace-space">               </span>:<span class="org-whitespace-space"> </span>10%
+percentage_used<span class="org-whitespace-space">                         </span>:<span class="org-whitespace-space"> </span>0%
+endurance<span class="org-whitespace-space"> </span>group<span class="org-whitespace-space"> </span>critical<span class="org-whitespace-space"> </span>warning<span class="org-whitespace-space"> </span>summary:<span class="org-whitespace-space"> </span>0
+data_units_read<span class="org-whitespace-space">                         </span>:<span class="org-whitespace-space"> </span>1,725,063
+data_units_written<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span>735,747
+host_read_commands<span class="org-whitespace-space">                      </span>:<span class="org-whitespace-space"> </span>6,116,882
+host_write_commands<span class="org-whitespace-space">                     </span>:<span class="org-whitespace-space"> </span>4,400,572
+controller_busy_time<span class="org-whitespace-space">                    </span>:<span class="org-whitespace-space"> </span>25
+power_cycles<span class="org-whitespace-space">                            </span>:<span class="org-whitespace-space"> </span>102
+power_on_hours<span class="org-whitespace-space">                          </span>:<span class="org-whitespace-space"> </span>9
+unsafe_shutdowns<span class="org-whitespace-space">                        </span>:<span class="org-whitespace-space"> </span>22
+media_errors<span class="org-whitespace-space">                            </span>:<span class="org-whitespace-space"> </span>0
+num_err_log_entries<span class="org-whitespace-space">                     </span>:<span class="org-whitespace-space"> </span>0
+Warning<span class="org-whitespace-space"> </span>Temperature<span class="org-whitespace-space"> </span>Time<span class="org-whitespace-space">                </span>:<span class="org-whitespace-space"> </span>0
+Critical<span class="org-whitespace-space"> </span>Composite<span class="org-whitespace-space"> </span>Temperature<span class="org-whitespace-space"> </span>Time<span class="org-whitespace-space">     </span>:<span class="org-whitespace-space"> </span>0
+Temperature<span class="org-whitespace-space"> </span>Sensor<span class="org-whitespace-space"> </span>1<span class="org-whitespace-space">           </span>:<span class="org-whitespace-space"> </span>33<span class="org-whitespace-space"> </span>C
+Temperature<span class="org-whitespace-space"> </span>Sensor<span class="org-whitespace-space"> </span>2<span class="org-whitespace-space">           </span>:<span class="org-whitespace-space"> </span>28<span class="org-whitespace-space"> </span>C
+Thermal<span class="org-whitespace-space"> </span>Management<span class="org-whitespace-space"> </span>T1<span class="org-whitespace-space"> </span>Trans<span class="org-whitespace-space"> </span>Count<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>0
+Thermal<span class="org-whitespace-space"> </span>Management<span class="org-whitespace-space"> </span>T2<span class="org-whitespace-space"> </span>Trans<span class="org-whitespace-space"> </span>Count<span class="org-whitespace-space">       </span>:<span class="org-whitespace-space"> </span>0
+Thermal<span class="org-whitespace-space"> </span>Management<span class="org-whitespace-space"> </span>T1<span class="org-whitespace-space"> </span>Total<span class="org-whitespace-space"> </span>Time<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>0
+Thermal<span class="org-whitespace-space"> </span>Management<span class="org-whitespace-space"> </span>T2<span class="org-whitespace-space"> </span>Total<span class="org-whitespace-space"> </span>Time<span class="org-whitespace-space">        </span>:<span class="org-whitespace-space"> </span>0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfb4c441" class="outline-3">
+<h3 id="orgfb4c441"><span class="section-number-3">8.4</span> WIFI</h3>
+<div class="outline-text-3" id="text-8-4">
+<div class="org-src-container">
+<pre class="src src-text">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>lspci<span class="org-whitespace-space"> </span>-v<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>-iA12<span class="org-whitespace-space"> </span>net
+00:14.3<span class="org-whitespace-space"> </span>Network<span class="org-whitespace-space"> </span>controller:<span class="org-whitespace-space"> </span>Intel<span class="org-whitespace-space"> </span>Corporation<span class="org-whitespace-space"> </span>Device<span class="org-whitespace-space"> </span>51f0<span class="org-whitespace-space"> </span>(rev<span class="org-whitespace-space"> </span>01)
+<span class="org-whitespace-space">        </span>Subsystem:<span class="org-whitespace-space"> </span>Intel<span class="org-whitespace-space"> </span>Corporation<span class="org-whitespace-space"> </span>Device<span class="org-whitespace-space"> </span>0090
+<span class="org-whitespace-space">        </span>Flags:<span class="org-whitespace-space"> </span>bus<span class="org-whitespace-space"> </span>master,<span class="org-whitespace-space"> </span>fast<span class="org-whitespace-space"> </span>devsel,<span class="org-whitespace-space"> </span>latency<span class="org-whitespace-space"> </span>0,<span class="org-whitespace-space"> </span>IRQ<span class="org-whitespace-space"> </span>16,<span class="org-whitespace-space"> </span>IOMMU<span class="org-whitespace-space"> </span>group<span class="org-whitespace-space"> </span>12
+<span class="org-whitespace-space">        </span>Memory<span class="org-whitespace-space"> </span>at<span class="org-whitespace-space"> </span>603e1dc000<span class="org-whitespace-space"> </span>(64-bit,<span class="org-whitespace-space"> </span>non-prefetchable)<span class="org-whitespace-space"> </span>[size=16K]
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[c8]<span class="org-whitespace-space"> </span>Power<span class="org-whitespace-space"> </span>Management<span class="org-whitespace-space"> </span>version<span class="org-whitespace-space"> </span>3
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[d0]<span class="org-whitespace-space"> </span>MSI:<span class="org-whitespace-space"> </span>Enable-<span class="org-whitespace-space"> </span>Count=1/1<span class="org-whitespace-space"> </span>Maskable-<span class="org-whitespace-space"> </span>64bit+
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[40]<span class="org-whitespace-space"> </span>Express<span class="org-whitespace-space"> </span>Root<span class="org-whitespace-space"> </span>Complex<span class="org-whitespace-space"> </span>Integrated<span class="org-whitespace-space"> </span>Endpoint,<span class="org-whitespace-space"> </span>MSI<span class="org-whitespace-space"> </span>00
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[80]<span class="org-whitespace-space"> </span>MSI-X:<span class="org-whitespace-space"> </span>Enable+<span class="org-whitespace-space"> </span>Count=16<span class="org-whitespace-space"> </span>Masked-
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[100]<span class="org-whitespace-space"> </span>Latency<span class="org-whitespace-space"> </span>Tolerance<span class="org-whitespace-space"> </span>Reporting
+<span class="org-whitespace-space">        </span>Capabilities:<span class="org-whitespace-space"> </span>[164]<span class="org-whitespace-space"> </span>Vendor<span class="org-whitespace-space"> </span>Specific<span class="org-whitespace-space"> </span>Information:<span class="org-whitespace-space"> </span>ID=0010<span class="org-whitespace-space"> </span>Rev=0<span class="org-whitespace-space"> </span>Len=014<span class="org-whitespace-space"> </span>&lt;<span class="org-whitespace-line">?&gt;</span>
+<span class="org-whitespace-space">        </span>Kernel<span class="org-whitespace-space"> </span>driver<span class="org-whitespace-space"> </span>in<span class="org-whitespace-space"> </span>use:<span class="org-whitespace-space"> </span>iwlwifi
+<span class="org-whitespace-space">        </span>Kernel<span class="org-whitespace-space"> </span>modules:<span class="org-whitespace-space"> </span>iwlwifi
+$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>dmesg<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>-i<span class="org-whitespace-space"> </span>"iwlwifi.*intel"
+[<span class="org-whitespace-space">    </span>4.909231]<span class="org-whitespace-space"> </span>iwlwifi<span class="org-whitespace-space"> </span>0000:00:14.3:<span class="org-whitespace-space"> </span>Detected<span class="org-whitespace-space"> </span>Intel(R)<span class="org-whitespace-space"> </span>Wi-Fi<span class="org-whitespace-space"> </span>6E<span class="org-whitespace-space"> </span>AX211<span class="org-whitespace-space"> </span>160MHz,<span class="org-whitespace-space"> </span>RE<span class="org-whitespace-line">V=0x370</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>

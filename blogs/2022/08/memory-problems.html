@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>内存问题集锦</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yanyg" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
+<script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
+</head>
+<body>
+<div id="preamble" class="status">
+<a href="../../../index.html">Yanyg - Software Engineer</a>
+<div class="sitelinks">
+  <a href="../../archives.html">Archives</a> |
+  <a href="../../theindex.html">Index</a> |
+  <a href="../../tags.html">TAGS</a> |
+  <a href="https://github.com/yygcode">Github</a> |
+  <a href="../../../about.html">About Me</a>
+</div>
+</div>
+<div id="content">
+<h1 class="title">内存问题集锦</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2915185">1. 典型内存问题</a>
+<ul>
+<li><a href="#org55cc564">1.1. 泄露</a></li>
+</ul>
+</li>
+<li><a href="#orgc9cbbe1">2. 工具示例</a>
+<ul>
+<li><a href="#org66b897c">2.1. mtrace</a></li>
+<li><a href="#org08c6aff">2.2. valgrind</a></li>
+<li><a href="#org247d598">2.3. sanitizer</a></li>
+<li><a href="#org77431bb">2.4. Google Heap Profiler</a></li>
+<li><a href="#org3ab64dc">2.5. core analysis</a></li>
+</ul>
+</li>
+<li><a href="#orgbab1be2">3. 防范</a>
+<ul>
+<li><a href="#org137ba97">3.1. magic</a></li>
+<li><a href="#org80bd7c8">3.2. list poison</a></li>
+<li><a href="#orgcf46c81">3.3. memory bomb</a></li>
+<li><a href="#org97e14ca">3.4. asan</a></li>
+<li><a href="#org77da4be">3.5. libunwind stack</a></li>
+<li><a href="#org7be03e7">3.6. gdb extend</a></li>
+</ul>
+</li>
+<li><a href="#org55e6aca">4. References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2915185" class="outline-2">
+<h2 id="org2915185"><span class="section-number-2">1</span> 典型内存问题</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+泄漏, 跑飞(释放后使用, double free), 段错误(空指针, 野指针, 栈溢出, 访问越界),
+分配失败.
+</p>
+</div>
+
+<div id="outline-container-org55cc564" class="outline-3">
+<h3 id="org55cc564"><span class="section-number-3">1.1</span> 泄露</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+内存泄漏(memory leak)一般是堆内存管理导致的问题. C主要是malloc/free, c++是
+new/delete.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc9cbbe1" class="outline-2">
+<h2 id="orgc9cbbe1"><span class="section-number-2">2</span> 工具示例</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org66b897c" class="outline-3">
+<h3 id="org66b897c"><span class="section-number-3">2.1</span> mtrace</h3>
+</div>
+
+<div id="outline-container-org08c6aff" class="outline-3">
+<h3 id="org08c6aff"><span class="section-number-3">2.2</span> valgrind</h3>
+</div>
+
+<div id="outline-container-org247d598" class="outline-3">
+<h3 id="org247d598"><span class="section-number-3">2.3</span> sanitizer</h3>
+</div>
+
+<div id="outline-container-org77431bb" class="outline-3">
+<h3 id="org77431bb"><span class="section-number-3">2.4</span> Google Heap Profiler</h3>
+</div>
+
+<div id="outline-container-org3ab64dc" class="outline-3">
+<h3 id="org3ab64dc"><span class="section-number-3">2.5</span> core analysis</h3>
+</div>
+</div>
+
+<div id="outline-container-orgbab1be2" class="outline-2">
+<h2 id="orgbab1be2"><span class="section-number-2">3</span> 防范</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org137ba97" class="outline-3">
+<h3 id="org137ba97"><span class="section-number-3">3.1</span> magic</h3>
+</div>
+
+<div id="outline-container-org80bd7c8" class="outline-3">
+<h3 id="org80bd7c8"><span class="section-number-3">3.2</span> list poison</h3>
+</div>
+
+<div id="outline-container-orgcf46c81" class="outline-3">
+<h3 id="orgcf46c81"><span class="section-number-3">3.3</span> memory bomb</h3>
+</div>
+
+<div id="outline-container-org97e14ca" class="outline-3">
+<h3 id="org97e14ca"><span class="section-number-3">3.4</span> asan</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+野指针.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org77da4be" class="outline-3">
+<h3 id="org77da4be"><span class="section-number-3">3.5</span> libunwind stack</h3>
+</div>
+
+<div id="outline-container-org7be03e7" class="outline-3">
+<h3 id="org7be03e7"><span class="section-number-3">3.6</span> gdb extend</h3>
+</div>
+</div>
+
+<div id="outline-container-org55e6aca" class="outline-2">
+<h2 id="org55e6aca"><span class="section-number-2">4</span> References</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt>使用mtrace分析内存泄漏</dt><dd><a href="https://zhuanlan.zhihu.com/p/83547768">https://zhuanlan.zhihu.com/p/83547768</a></dd>
+<dt>How debugger work part1</dt><dd><a href="https://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1/">https://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1/</a></dd>
+<dt>How debugger work part2</dt><dd><a href="https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints">https://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints</a></dd>
+<dt>How debugger work part2</dt><dd><a href="https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information">https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information</a></dd>
+</dl>
+</div>
+</div>
+
+<script src="https://utteranc.es/client.js"
+        repo="yygcode/yygcode.github.io"
+        issue-term="pathname"
+        label=" Utterances"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+</div>
+<div id="postamble" class="status">
+<div class="copyright">
+2012-2020 Copyright&copy; <i> YANYG<br/>Powered by Emacs Orgmode</i>
+</div>
+</div>
+</body>
+</html>
