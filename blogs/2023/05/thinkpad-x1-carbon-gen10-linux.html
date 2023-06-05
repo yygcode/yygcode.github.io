@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <title>Thinkpad X1 Carbon 2022 Gen 10安装LINUX系统记录</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="yanyg" />
+<meta name="generator" content="Org Mode" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="/themes/blogs/css/blog.css" />
 <script type="text/javascript" src="/themes/blogs/js/blog.js"> </script>
@@ -20,25 +20,25 @@
   <a href="../../../about.html">About Me</a>
 </div>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Thinkpad X1 Carbon 2022 Gen 10安装LINUX系统记录</h1>
-<div id="table-of-contents">
+<div id="table-of-contents" role="doc-toc">
 <h2>&#30446;&#24405;</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4540a14">1. 安装</a></li>
-<li><a href="#org6a7e26f">2. WIFI</a></li>
-<li><a href="#orge202c89">3. Touchpad 配置</a></li>
-<li><a href="#org81d29ca">4. 声卡配置</a></li>
-<li><a href="#org7495e06">5. 蓝牙配置</a></li>
-<li><a href="#org0e22929">6. 显卡配置</a></li>
-<li><a href="#org1d81829">7. Enjoy Your Thinkpad</a></li>
-<li><a href="#org092caed">8. Thinkpad Carbon 2022 Gen 10 Config</a>
+<li><a href="#orgf067dd6">1. 安装</a></li>
+<li><a href="#org5c2cce6">2. WIFI</a></li>
+<li><a href="#orgaa33f41">3. Touchpad 配置</a></li>
+<li><a href="#orgbf9df5e">4. 声卡配置</a></li>
+<li><a href="#orged58977">5. 蓝牙配置</a></li>
+<li><a href="#org1e13487">6. 显卡配置</a></li>
+<li><a href="#orge766f51">7. Enjoy Your Thinkpad</a></li>
+<li><a href="#orgf6d92d4">8. Thinkpad Carbon 2022 Gen 10 Config</a>
 <ul>
-<li><a href="#org097f691">8.1. CPU</a></li>
-<li><a href="#org39d4b9c">8.2. dmidecode</a></li>
-<li><a href="#orge8d436e">8.3. Storage</a></li>
-<li><a href="#orgfb4c441">8.4. WIFI</a></li>
+<li><a href="#org9a243c9">8.1. CPU</a></li>
+<li><a href="#orgcb53892">8.2. dmidecode</a></li>
+<li><a href="#orga64b052">8.3. Storage</a></li>
+<li><a href="#org5ca2dc1">8.4. WIFI</a></li>
 </ul>
 </li>
 </ul>
@@ -48,8 +48,8 @@
 入手 Thinkpad Carbon 2022 Gen 10, 安装了Debian 11.6. 结果WIFI, 声卡, 触控板蓝牙无法使用, 显卡有部分异常. 解决过程记录如下.
 </p>
 
-<div id="outline-container-org4540a14" class="outline-2">
-<h2 id="org4540a14"><span class="section-number-2">1</span> 安装</h2>
+<div id="outline-container-orgf067dd6" class="outline-2">
+<h2 id="orgf067dd6"><span class="section-number-2">1.</span> 安装</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 参见 Blog <a href="../../2020/11/01-env-init.html">Debian Install and Init</a> .
@@ -57,8 +57,8 @@
 </div>
 </div>
 
-<div id="outline-container-org6a7e26f" class="outline-2">
-<h2 id="org6a7e26f"><span class="section-number-2">2</span> WIFI</h2>
+<div id="outline-container-org5c2cce6" class="outline-2">
+<h2 id="org5c2cce6"><span class="section-number-2">2.</span> WIFI</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 WIFI 硬件是 Intel AX211 6E 模块. Debian 11.6 内核版本 5.10.0-20-amd64 尚不支持. 直接编译 6.3 内核.
@@ -151,8 +151,8 @@ deb-src<span class="org-whitespace-space"> </span>https://mirrors.aliyun.com/deb
 </div>
 </div>
 
-<div id="outline-container-orge202c89" class="outline-2">
-<h2 id="orge202c89"><span class="section-number-2">3</span> Touchpad 配置</h2>
+<div id="outline-container-orgaa33f41" class="outline-2">
+<h2 id="orgaa33f41"><span class="section-number-2">3.</span> Touchpad 配置</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Touchpad 打开 I2C_HID_ACPI 构建即可. 在上面的配置中, 已经打开了.
@@ -160,8 +160,8 @@ Touchpad 打开 I2C_HID_ACPI 构建即可. 在上面的配置中, 已经打开�
 </div>
 </div>
 
-<div id="outline-container-org81d29ca" class="outline-2">
-<h2 id="org81d29ca"><span class="section-number-2">4</span> 声卡配置</h2>
+<div id="outline-container-orgbf9df5e" class="outline-2">
+<h2 id="orgbf9df5e"><span class="section-number-2">4.</span> 声卡配置</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 特化模块参数即可:
@@ -174,8 +174,8 @@ options<span class="org-whitespace-space"> </span>snd-intel-dspcfg<span class="o
 </div>
 </div>
 
-<div id="outline-container-org7495e06" class="outline-2">
-<h2 id="org7495e06"><span class="section-number-2">5</span> 蓝牙配置</h2>
+<div id="outline-container-orged58977" class="outline-2">
+<h2 id="orged58977"><span class="section-number-2">5.</span> 蓝牙配置</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 缺少 firmware, 根据提示复制. firmware 在 linux-firmware 仓库.
@@ -188,8 +188,8 @@ options<span class="org-whitespace-space"> </span>snd-intel-dspcfg<span class="o
 </div>
 </div>
 
-<div id="outline-container-org0e22929" class="outline-2">
-<h2 id="org0e22929"><span class="section-number-2">6</span> 显卡配置</h2>
+<div id="outline-container-org1e13487" class="outline-2">
+<h2 id="org1e13487"><span class="section-number-2">6.</span> 显卡配置</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 特化模块参数即可 i915.enable_psr=0 i915.enable_guc=2:
@@ -202,12 +202,12 @@ options<span class="org-whitespace-space"> </span>snd-intel-dspcfg<span class="o
 </div>
 </div>
 
-<div id="outline-container-org1d81829" class="outline-2">
-<h2 id="org1d81829"><span class="section-number-2">7</span> Enjoy Your Thinkpad</h2>
+<div id="outline-container-orge766f51" class="outline-2">
+<h2 id="orge766f51"><span class="section-number-2">7.</span> Enjoy Your Thinkpad</h2>
 </div>
 
-<div id="outline-container-org092caed" class="outline-2">
-<h2 id="org092caed"><span class="section-number-2">8</span> Thinkpad Carbon 2022 Gen 10 Config</h2>
+<div id="outline-container-orgf6d92d4" class="outline-2">
+<h2 id="orgf6d92d4"><span class="section-number-2">8.</span> Thinkpad Carbon 2022 Gen 10 Config</h2>
 <div class="outline-text-2" id="text-8">
 <table>
 
@@ -241,8 +241,8 @@ options<span class="org-whitespace-space"> </span>snd-intel-dspcfg<span class="o
 </table>
 </div>
 
-<div id="outline-container-org097f691" class="outline-3">
-<h3 id="org097f691"><span class="section-number-3">8.1</span> CPU</h3>
+<div id="outline-container-org9a243c9" class="outline-3">
+<h3 id="org9a243c9"><span class="section-number-3">8.1.</span> CPU</h3>
 <div class="outline-text-3" id="text-8-1">
 <div class="org-src-container">
 <pre class="src src-text">$<span class="org-whitespace-space"> </span>lscpu
@@ -293,8 +293,8 @@ Flags:<span class="org-whitespace-space">                           </span>fpu<s
 </div>
 </div>
 
-<div id="outline-container-org39d4b9c" class="outline-3">
-<h3 id="org39d4b9c"><span class="section-number-3">8.2</span> dmidecode</h3>
+<div id="outline-container-orgcb53892" class="outline-3">
+<h3 id="orgcb53892"><span class="section-number-3">8.2.</span> dmidecode</h3>
 <div class="outline-text-3" id="text-8-2">
 <div class="org-src-container">
 <pre class="src src-text">Handle<span class="org-whitespace-space"> </span>0x001B,<span class="org-whitespace-space"> </span>DMI<span class="org-whitespace-space"> </span>type<span class="org-whitespace-space"> </span>1,<span class="org-whitespace-space"> </span>27<span class="org-whitespace-space"> </span>bytes
@@ -302,7 +302,7 @@ System<span class="org-whitespace-space"> </span>Information
 <span class="org-whitespace-space">        </span>Manufacturer:<span class="org-whitespace-space"> </span>LENOVO
 <span class="org-whitespace-space">        </span>Product<span class="org-whitespace-space"> </span>Name:<span class="org-whitespace-space"> </span>21CBA002CD
 <span class="org-whitespace-space">        </span>Version:<span class="org-whitespace-space"> </span>ThinkPad<span class="org-whitespace-space"> </span>X1<span class="org-whitespace-space"> </span>Carbon<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>10
-<span class="org-whitespace-space">        </span>Serial<span class="org-whitespace-space"> </span>Number:<span class="org-whitespace-space"> </span><span class="custom">XXXXXXXX</span>(Masked)
+<span class="org-whitespace-space">        </span>Serial<span class="org-whitespace-space"> </span>Number:<span class="org-whitespace-space"> </span><span class="org-hl-todo"><span class="custom">XXXXXXXX</span></span>(Masked)
 <span class="org-whitespace-space">        </span>UUID:<span class="org-whitespace-space"> </span>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx(Masked)
 <span class="org-whitespace-space">        </span>Wake-up<span class="org-whitespace-space"> </span>Type:<span class="org-whitespace-space"> </span>Power<span class="org-whitespace-space"> </span>Switch
 <span class="org-whitespace-space">        </span>SKU<span class="org-whitespace-space"> </span>Number:<span class="org-whitespace-space"> </span>LENOVO_MT_21CB_BU_Think_FM_ThinkPad<span class="org-whitespace-space"> </span>X1<span class="org-whitespace-space"> </span>Carbon<span class="org-whitespace-space"> </span>Gen<span class="org-whitespace-space"> </span>10
@@ -312,8 +312,8 @@ System<span class="org-whitespace-space"> </span>Information
 </div>
 </div>
 
-<div id="outline-container-orge8d436e" class="outline-3">
-<h3 id="orge8d436e"><span class="section-number-3">8.3</span> Storage</h3>
+<div id="outline-container-orga64b052" class="outline-3">
+<h3 id="orga64b052"><span class="section-number-3">8.3.</span> Storage</h3>
 <div class="outline-text-3" id="text-8-3">
 <div class="org-src-container">
 <pre class="src src-text">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>nvme<span class="org-whitespace-space"> </span>list<span class="org-whitespace-space"> </span>/dev/nvme0
@@ -354,8 +354,8 @@ Thermal<span class="org-whitespace-space"> </span>Management<span class="org-whi
 </div>
 </div>
 
-<div id="outline-container-orgfb4c441" class="outline-3">
-<h3 id="orgfb4c441"><span class="section-number-3">8.4</span> WIFI</h3>
+<div id="outline-container-org5ca2dc1" class="outline-3">
+<h3 id="org5ca2dc1"><span class="section-number-3">8.4.</span> WIFI</h3>
 <div class="outline-text-3" id="text-8-4">
 <div class="org-src-container">
 <pre class="src src-text">$<span class="org-whitespace-space"> </span>sudo<span class="org-whitespace-space"> </span>lspci<span class="org-whitespace-space"> </span>-v<span class="org-whitespace-space"> </span>|<span class="org-whitespace-space"> </span>grep<span class="org-whitespace-space"> </span>-iA12<span class="org-whitespace-space"> </span>net
